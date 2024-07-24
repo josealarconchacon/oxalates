@@ -1,0 +1,310 @@
+@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap");
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: "Poppins", sans-serif;
+}
+
+body {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background: #4070f4;
+}
+
+/* Main Container Styles */
+.main-container {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  width: 100%;
+  padding: 20px;
+  box-sizing: border-box;
+}
+
+/* Filter Component Styles */
+app-filter {
+  flex: 0 0 300px; /* Adjust width as needed */
+  max-width: 100%;
+  padding: 20px;
+  box-sizing: border-box;
+  margin-right: 20px; /* Add margin to move it to the right */
+}
+
+.filter-menu {
+  width: 100%;
+  max-width: 400px;
+  padding: 20px;
+  border-radius: 8px;
+}
+
+.filter-menu h2 {
+  text-align: center;
+  margin-bottom: 20px;
+  color: #333;
+}
+
+.filter-section {
+  margin-bottom: 15px;
+}
+
+.filter-section label {
+  display: block;
+  margin-bottom: 5px;
+  font-weight: 500;
+}
+
+.filter-section input,
+.filter-section select,
+.filter-section textarea {
+  width: 100%;
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+.filter-button {
+  width: 100%;
+  padding: 10px;
+  background-color: #4070f4;
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 16px;
+}
+
+.filter-button:hover {
+  background-color: #3050c4;
+}
+
+/* Oxalate Component Styles */
+.container {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 20px;
+  margin-right: 150px;
+  box-sizing: border-box;
+}
+
+.input-box {
+  position: relative;
+  height: 76px;
+  max-width: 900px;
+  width: 100%;
+  background: #fff;
+  border-radius: 8px;
+  box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
+  display: flex;
+  align-items: center;
+  overflow: hidden;
+  margin-bottom: 5px;
+}
+
+.input-box i {
+  margin-left: 20px;
+  font-size: 30px;
+  color: #707070;
+}
+
+.input-box input {
+  height: 100%;
+  flex: 1;
+  outline: none;
+  font-size: 18px;
+  font-weight: 400;
+  border: none;
+  padding: 0 15px;
+  background-color: transparent;
+}
+
+.input-box .button {
+  height: 100%;
+  padding: 0 30px;
+  font-size: 16px;
+  font-weight: 400;
+  color: #fff;
+  border: none;
+  background-color: #4070f4;
+  cursor: pointer;
+  border-top-right-radius: 8px;
+  border-bottom-right-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.input-box .button:active {
+  transform: scale(0.98);
+}
+
+.card-wrapper {
+  max-width: 900px;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+h1 {
+  padding-top: 10vh;
+  text-align: center;
+  color: #4181ee;
+}
+
+.wrapper {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+  width: 100%;
+  max-width: 900px;
+}
+
+.card {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  max-width: 300px;
+  min-height: 250px;
+  padding: 30px;
+  border-radius: 3px;
+  box-sizing: border-box;
+  color: #0c0c0c;
+  box-shadow: rgb(50 50 93 / 25%) 0px 10px 30px -12px;
+}
+
+.card-title {
+  margin-top: 0;
+  font-size: 16px;
+  font-weight: 600;
+  letter-spacing: 1.2px;
+  margin-bottom: 1px;
+}
+
+.card-content {
+  font-size: 14px;
+  letter-spacing: 0.5px;
+  line-height: 1.5;
+  margin-top: 10px;
+}
+
+.card-btn {
+  align-self: flex-end;
+  border: 0.2px solid #101010;
+  padding: 10px 15px;
+  border-radius: 25px;
+  font-size: 10px;
+  font-weight: 600;
+  transition: all 0.5s;
+  cursor: pointer;
+  letter-spacing: 1.2px;
+}
+
+/* Responsive Styles */
+@media screen and (max-width: 1200px) {
+  .input-box {
+    height: 70px;
+  }
+
+  .input-box i {
+    font-size: 28px;
+  }
+
+  .input-box .button {
+    font-size: 15px;
+    padding: 0 25px;
+  }
+
+  .wrapper {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+@media screen and (max-width: 768px) {
+  .main-container {
+    flex-direction: column;
+  }
+
+  app-filter {
+    flex: 1 1 auto;
+    margin-right: 0; /* Remove right margin on smaller screens */
+  }
+
+  .container {
+    width: 100%;
+  }
+
+  .filter-menu {
+    padding: 15px;
+  }
+
+  .filter-button {
+    font-size: 14px;
+  }
+
+  .input-box {
+    height: 66px;
+  }
+
+  .input-box i {
+    font-size: 25px;
+  }
+
+  .input-box .button {
+    font-size: 14px;
+    padding: 0 20px;
+  }
+
+  .wrapper {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media screen and (max-width: 500px) {
+  .main-container {
+    flex-direction: column;
+  }
+
+  app-filter {
+    flex: 1 1 auto;
+    margin-right: 0; /* Remove right margin on smaller screens */
+  }
+
+  .filter-menu {
+    padding: 10px;
+  }
+
+  .filter-button {
+    font-size: 13px;
+  }
+
+  .input-box {
+    height: 60px;
+    margin: 0 10px;
+  }
+
+  .input-box i {
+    font-size: 22px;
+    margin-left: 10px;
+  }
+
+  .input-box input {
+    font-size: 16px;
+    padding: 0 10px;
+  }
+
+  .input-box .button {
+    font-size: 13px;
+    padding: 0 15px;
+  }
+
+  .wrapper {
+    grid-template-columns: 1fr;
+  }
+}

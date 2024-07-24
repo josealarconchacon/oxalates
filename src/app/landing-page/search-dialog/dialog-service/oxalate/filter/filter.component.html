@@ -1,0 +1,194 @@
+<!-- <div class="filter-menu">
+  <h2>Filter Menu</h2>
+  <div class="filter-section">
+    <label for="category">Category:</label>
+    <select id="category" name="category">
+      <option value="">Select category</option>
+      <option value="Fast Food Items">Fast Food Items</option>
+      <option value="Fast Food Items">Fruits</option>
+      <option value="Fast Food Items">Baking Items</option>
+      <option value="Fast Food Items">Beverages</option>
+      <option value="Fast Food Items">Carob and Chocolates</option>
+      <option value="Fast Food Items">Commercial Food Products</option>
+      <option value="Fast Food Items">Condiments</option>
+      <option value="Fast Food Items">Dairy</option>
+      <option value="Fast Food Items">Fats and Oils</option>
+      <option value="Fast Food Items">Flours</option>
+      <option value="Fast Food Items">Fruits</option>
+      <option value="Fast Food Items">Grains and Grain Products</option>
+      <option value="Fast Food Items">Herbs and Spices</option>
+      <option value="Fast Food Items">Legumes</option>
+      <option value="Fast Food Items">Meats, Poultry, and Seafood</option>
+      <option value="Fast Food Items">Nuts and Seeds</option>
+      <option value="Fast Food Items">Spice Drops and Essential Oils</option>
+      <option value="Fast Food Items">Supplements</option>
+      <option value="Fast Food Items">Sweets and Sweeteners</option>
+      <option value="Fast Food Items">Vegetables</option>
+    </select>
+  </div>
+  <div class="filter-section">
+    <label for="calc_level">Calc Level:</label>
+    <select id="calc_level" name="calc_level">
+      <option value="">Select calc level</option>
+      <option value="H">H</option>
+      <option value="M">M</option>
+      <option value="L">L</option>
+      <option value="L">VH</option>
+      <option value="L">EH</option>
+      <option value="L">VL</option>
+    </select>
+  </div>
+  <div class="filter-section">
+    <label for="level">Level:</label>
+    <select id="level" name="level">
+      <option value="">Select level</option>
+      <option value="1">1</option>
+      <option value="2">2</option>
+      <option value="3">3</option>
+      <option value="4">4</option>
+      <option value="4">5</option>
+      <option value="4">6</option>
+      <option value="4">7</option>
+      <option value="4">8</option>
+      <option value="4">9</option>
+      <option value="4">10</option>
+    </select>
+  </div>
+  <div class="filter-section">
+    <label for="item">Item:</label>
+    <input type="text" id="item" name="item" placeholder="Enter item" />
+  </div>
+  <div class="filter-section">
+    <label for="total_oxalate_mg_per_100g">Total Oxalate (mg/100g):</label>
+    <input
+      type="number"
+      id="total_oxalate_mg_per_100g"
+      name="total_oxalate_mg_per_100g"
+      placeholder="Enter total oxalate"
+    />
+  </div>
+  <div class="filter-section">
+    <label for="total_soluble_oxalate_mg_per_100g"
+      >Total Soluble Oxalate (mg/100g):</label
+    >
+    <input
+      type="number"
+      id="total_soluble_oxalate_mg_per_100g"
+      name="total_soluble_oxalate_mg_per_100g"
+      placeholder="Enter total soluble oxalate"
+    />
+  </div>
+  <div class="filter-section">
+    <label for="serving_size">Serving Size:</label>
+    <input
+      type="text"
+      id="serving_size"
+      name="serving_size"
+      placeholder="Enter serving size"
+    />
+  </div>
+  <div class="filter-section">
+    <label for="serving_g">Serving (g):</label>
+    <input
+      type="number"
+      id="serving_g"
+      name="serving_g"
+      placeholder="Enter serving in grams"
+    />
+  </div>
+  <button type="submit" class="filter-button">Apply Filters</button>
+</div> -->
+
+<!-- src/app/filter/filter.component.html -->
+<div class="filter-menu">
+  <h2>Filter Menu</h2>
+  <form (ngSubmit)="applyFilters()">
+    <div class="filter-section">
+      <label for="category">Category:</label>
+      <select id="category" name="category" [(ngModel)]="filters.category">
+        <option value="">Select category</option>
+        <option value="Fast Food Items">Fast Food Items</option>
+        <option value="Fruits">Fruits</option>
+        <option value="Baking Items">Baking Items</option>
+        <option value="Beverages">Beverages</option>
+        <option value="Carob and Chocolates">Carob and Chocolates</option>
+        <option value="Commercial Food Products">
+          Commercial Food Products
+        </option>
+        <option value="Condiments">Condiments</option>
+        <option value="Dairy">Dairy</option>
+        <option value="Fats and Oils">Fats and Oils</option>
+        <option value="Flours">Flours</option>
+        <option value="Grains and Grain Products">
+          Grains and Grain Products
+        </option>
+        <option value="Herbs and Spices">Herbs and Spices</option>
+        <option value="Legumes">Legumes</option>
+        <option value="Meats, Poultry, and Seafood">
+          Meats, Poultry, and Seafood
+        </option>
+        <option value="Nuts and Seeds">Nuts and Seeds</option>
+        <option value="Spice Drops and Essential Oils">
+          Spice Drops and Essential Oils
+        </option>
+        <option value="Supplements">Supplements</option>
+        <option value="Sweets and Sweeteners">Sweets and Sweeteners</option>
+        <option value="Vegetables">Vegetables</option>
+      </select>
+    </div>
+    <div class="filter-section">
+      <label for="calc_level">Calc Level:</label>
+      <select
+        id="calc_level"
+        name="calc_level"
+        [(ngModel)]="filters.calc_level"
+      >
+        <option value="">Select calc level</option>
+        <option value="H">H</option>
+        <option value="M">M</option>
+        <option value="L">L</option>
+        <option value="VH">VH</option>
+        <option value="EH">EH</option>
+        <option value="VL">VL</option>
+      </select>
+    </div>
+    <div class="filter-section">
+      <label for="level">Level:</label>
+      <select id="level" name="level" [(ngModel)]="filters.level">
+        <option value="">Select level</option>
+        <option value="1">1</option>
+        <option value="2">2</option>
+        <option value="3">3</option>
+        <option value="4">4</option>
+        <option value="5">5</option>
+        <option value="6">6</option>
+        <option value="7">7</option>
+        <option value="8">8</option>
+        <option value="9">9</option>
+        <option value="10">10</option>
+      </select>
+    </div>
+
+    <div class="filter-section">
+      <label for="serving_size">Serving Size:</label>
+      <input
+        type="text"
+        id="serving_size"
+        name="serving_size"
+        [(ngModel)]="filters.serving_size"
+        placeholder="Enter serving size"
+      />
+    </div>
+    <div class="filter-section">
+      <label for="serving_g">Serving (g):</label>
+      <input
+        type="number"
+        id="serving_g"
+        name="serving_g"
+        [(ngModel)]="filters.serving_g"
+        placeholder="Enter serving in grams"
+      />
+    </div>
+    <button type="submit" class="filter-button">Apply Filters</button>
+  </form>
+</div>

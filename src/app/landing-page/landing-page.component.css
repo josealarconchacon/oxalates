@@ -1,0 +1,272 @@
+/* global */
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  font-family: "Nunito", sans-serif;
+  font-size: 20px;
+  color: rgb(20, 20, 20);
+}
+
+.wrapper {
+  max-width: 1000px;
+  padding: 0 16px;
+  margin: 0 auto;
+}
+
+img {
+  max-width: 100%;
+  height: 100%;
+}
+
+h1 {
+  font-size: 48px;
+}
+
+h1 span {
+  color: rgb(213, 148, 201);
+}
+
+@media screen and (max-width: 1200px) {
+  h1 {
+    font-size: 42px;
+  }
+}
+
+@media screen and (max-width: 768px) {
+  h1 {
+    font-size: 36px;
+  }
+}
+
+h2 {
+  font-size: 42px;
+  text-align: center;
+}
+
+@media screen and (max-width: 1200px) {
+  h2 {
+    font-size: 36px;
+  }
+}
+
+@media screen and (max-width: 768px) {
+  h2 {
+    font-size: 28px;
+  }
+}
+
+section {
+  padding: 96px 0;
+}
+
+/* hero */
+.hero {
+  padding: 24px 0;
+}
+
+.hero-content {
+  display: flex;
+  gap: 32px;
+  max-width: 1000px;
+  margin: 0 auto;
+  height: 500px;
+}
+
+.hero-details {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  padding-inline: 24px;
+  box-sizing: content-box;
+}
+
+/* fix image layout  */
+.hero-img {
+  height: 250px;
+  padding-top: 15vh;
+  flex: 1;
+  /* flex-shrink: 1; */
+  text-align: center;
+}
+
+@media screen and (max-width: 768px) {
+  .hero-content {
+    display: block;
+    height: auto;
+  }
+}
+
+/* main */
+
+.we-content {
+  width: 60%;
+  text-align: center;
+  margin: 0 auto;
+}
+
+@media screen and (max-width: 768px) {
+  .we {
+    width: auto;
+  }
+
+  .we-content {
+    text-align: left;
+  }
+}
+
+.video {
+  display: block;
+  aspect-ratio: 16/9;
+}
+
+.video iframe {
+  inline-size: 100%;
+  height: 100%;
+  display: block;
+}
+
+.beneficios {
+  background: rgb(235, 198, 228);
+}
+
+.beneficios-title {
+  position: relative;
+}
+
+.beneficios-title::after {
+  content: " ";
+  display: block;
+  width: 15%;
+  height: 2px;
+  position: absolute;
+  bottom: -5px;
+  left: 50%;
+  transform: translateX(-50%);
+  border-radius: 3px;
+  background: rgb(20, 20, 20);
+}
+
+.beneficios-content {
+  display: flex;
+  align-items: start;
+  gap: 16px;
+  justify-content: space-between;
+}
+
+@media screen and (max-width: 768px) {
+  .beneficios-content {
+    display: block;
+  }
+}
+
+.beneficios-beneficio {
+  text-align: center;
+  flex: 1;
+}
+
+.testimonios-title {
+  position: relative;
+}
+
+.testimonios-title::after {
+  content: " ";
+  display: block;
+  width: 15%;
+  height: 2px;
+  position: absolute;
+  bottom: -5px;
+  left: 50%;
+  transform: translateX(-50%);
+  border-radius: 3px;
+  background: rgb(213, 145, 207);
+}
+
+.testimonios-content {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  justify-content: space-between;
+}
+
+.testimonio {
+  padding: 16px 16px;
+  border-radius: 8px;
+  border: 5px solid rgb(213, 145, 207);
+}
+
+.testimonio-text::after,
+.testimonio-text::before {
+  content: "''";
+}
+
+.testimonio-autor {
+  font-size: 16px;
+  font-weight: 700;
+}
+
+.testimonio-autor::before {
+  content: "- ";
+}
+
+@media screen and (max-width: 768px) {
+  .testimonios-content {
+    display: block;
+  }
+
+  .testimonio {
+    margin-bottom: 20px;
+  }
+}
+
+.use {
+  background: rgb(235, 198, 228);
+}
+
+.use-content {
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.form {
+  display: flex;
+  /* flex-direction: column; */
+  align-items: center;
+  gap: 18px;
+}
+
+.form input[type="email"] {
+  padding: 8px 16px;
+  border-radius: 8px;
+  border: none;
+  background: rgb(235, 198, 228);
+  color: rgb(20, 20, 20);
+  width: 100%;
+  box-sizing: border-box;
+  font-size: 20px;
+}
+
+.form input[type="email"]::placeholder {
+  color: rgb(20, 20, 20);
+}
+
+.form input[type="submit"] {
+  color: rgb(20, 20, 20);
+  background: rgb(213, 145, 207);
+  border: none;
+  border-radius: 8px;
+  padding: 8px;
+  font-weight: 700;
+  text-transform: uppercase;
+  width: 200px;
+  font-size: 20px;
+  cursor: pointer;
+}
+
+@media screen and (max-width: 768px) {
+  .form {
+    flex-direction: column;
+  }
+}
