@@ -1,4 +1,3 @@
-// src/app/landing-page/model/oxalate.ts
 export interface OxalateData {
   category: string;
   calc_level: string;
