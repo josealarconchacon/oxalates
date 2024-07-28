@@ -85,8 +85,8 @@ section {
 
 /* fix image layout  */
 .hero-img {
-  height: 250px;
-  padding-top: 15vh;
+  /* height: 250px; */
+  padding-top: 10vh;
   flex: 1;
   /* flex-shrink: 1; */
   text-align: center;
@@ -129,7 +129,7 @@ section {
 }
 
 .beneficios {
-  background: rgb(235, 198, 228);
+  background: #faf8ff;
 }
 
 .beneficios-title {
@@ -181,7 +181,7 @@ section {
   left: 50%;
   transform: translateX(-50%);
   border-radius: 3px;
-  background: rgb(213, 145, 207);
+  background: #faf8ff;
 }
 
 .testimonios-content {
@@ -194,7 +194,7 @@ section {
 .testimonio {
   padding: 16px 16px;
   border-radius: 8px;
-  border: 5px solid rgb(213, 145, 207);
+  border: 5px solid #faf8ff;
 }
 
 .testimonio-text::after,
@@ -222,7 +222,7 @@ section {
 }
 
 .use {
-  background: rgb(235, 198, 228);
+  background: #faf8ff;
 }
 
 .use-content {
