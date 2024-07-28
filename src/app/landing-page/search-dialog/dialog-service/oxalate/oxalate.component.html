@@ -1,5 +1,5 @@
-<div class="main-container">
-  <app-filter></app-filter>
+<!-- <div class="main-container">
+  <app-filter (filterChanged)="applyFilters($event)"></app-filter>
   <div class="container">
     <div class="input-box">
       <i class="uil uil-search"></i>
@@ -27,12 +27,31 @@
       </div>
     </div>
   </div>
-</div>
-<!-- ---------------------------  -->
-<!-- in review  -->
-<!-- src/app/oxalate/oxalate.component.html -->
+  <div *ngIf="displayedOxalates.length > 0; else noResults">
+    <div *ngFor="let oxalate of displayedOxalates" class="oxalate-item card">
+      <h3 class="card-title">{{ oxalate.item }}</h3>
+      <p class="card-content">
+        Category: {{ oxalate.category }} <br />
+        Calc Level: {{ oxalate.calc_level }} <br />
+        Level: {{ oxalate.level }} <br />
+        Total Oxalate (mg/100g): {{ oxalate.total_oxalate_mg_per_100g }} <br />
+        Total Soluble Oxalate (mg/100g):
+        {{ oxalate.total_soluble_oxalate_mg_per_100g }} <br />
+        Serving Size: {{ oxalate.serving_size }} <br />
+        Serving (g): {{ oxalate.serving_g }}
+      </p>
+      <button class="card-btn">VIEW MORE</button>
+    </div>
+  </div>
+  <ng-template #noResults>
+    <p>No results found</p>
+  </ng-template>
+</div> -->
+
+<!-- WORKING CODE   -->
+
 <!-- <div class="main-container">
-  <app-filter (filterChanged)="onFilterChanged($event)"></app-filter>
+  <app-filter (filterChanged)="applyFilters($event)"></app-filter>
   <div class="container">
     <div class="input-box">
       <i class="uil uil-search"></i>
@@ -45,19 +64,108 @@
       <button class="button" (click)="search()">Search</button>
     </div>
 
-    <div class="card-wrapper">
-      <h1>Oxalate Items</h1>
-      <div class="wrapper">
-        <div class="card" *ngFor="let item of displayedOxalates">
-          <h3 class="card-title">{{ item.item }}</h3>
+    <div *ngIf="isFilterApplied; else defaultView">
+      <div *ngIf="displayedOxalates.length > 0; else noResults">
+        <div
+          *ngFor="let oxalate of displayedOxalates"
+          class="oxalate-item card"
+        >
+          <h3 class="card-title">{{ oxalate.item }}</h3>
           <p class="card-content">
-            Category: {{ item.category }} <br />
-            Calc Level: {{ item.calc_level }} <br />
-            Level: {{ item.level }}
+            Category: {{ oxalate.category }} <br />
+            Calc Level: {{ oxalate.calc_level }} <br />
+            Level: {{ oxalate.level }} <br />
+            Total Oxalate (mg/100g): {{ oxalate.total_oxalate_mg_per_100g }}
+            <br />
+            Total Soluble Oxalate (mg/100g):
+            {{ oxalate.total_soluble_oxalate_mg_per_100g }} <br />
+            Serving Size: {{ oxalate.serving_size }} <br />
+            Serving (g): {{ oxalate.serving_g }}
           </p>
           <button class="card-btn">VIEW MORE</button>
         </div>
       </div>
+      <ng-template #noResults>
+        <p>No results found</p>
+      </ng-template>
     </div>
+
+    <ng-template #defaultView>
+      <div class="card-wrapper">
+        <h1>Oxalate Items</h1>
+        <div class="wrapper">
+          <div class="card" *ngFor="let item of displayedOxalates">
+            <h3 class="card-title">{{ item.item }}</h3>
+            <p class="card-content">
+              Category: {{ item.category }} <br />
+              Calc Level: {{ item.calc_level }} <br />
+              Level: {{ item.level }}
+            </p>
+            <button class="card-btn">VIEW MORE</button>
+          </div>
+        </div>
+      </div>
+    </ng-template>
   </div>
 </div> -->
+
+<div class="main-container">
+  <app-filter (filterChanged)="applyFilters($event)"></app-filter>
+  <div class="container">
+    <div class="input-box">
+      <i class="uil uil-search"></i>
+      <input
+        type="text"
+        placeholder="Search here..."
+        [(ngModel)]="searchQuery"
+        (input)="search()"
+      />
+      <button class="button" (click)="search()">Search</button>
+    </div>
+
+    <div *ngIf="isFilterApplied; else defaultView">
+      <!-- Detailed view when filter is applied -->
+      <div
+        *ngIf="displayedOxalates.length > 0; else noResults"
+        class="card-wrapper"
+      >
+        <div *ngFor="let oxalate of displayedOxalates" class="card">
+          <h3 class="card-title">{{ oxalate.item }}</h3>
+          <p class="card-content">
+            Category: {{ oxalate.category }} <br />
+            Calc Level: {{ oxalate.calc_level }} <br />
+            Level: {{ oxalate.level }} <br />
+            Total Oxalate (mg/100g): {{ oxalate.total_oxalate_mg_per_100g }}
+            <br />
+            Total Soluble Oxalate (mg/100g):
+            {{ oxalate.total_soluble_oxalate_mg_per_100g }} <br />
+            Serving Size: {{ oxalate.serving_size }} <br />
+            Serving (g): {{ oxalate.serving_g }}
+          </p>
+          <button class="card-btn">VIEW MORE</button>
+        </div>
+      </div>
+      <ng-template #noResults>
+        <p>No results found</p>
+      </ng-template>
+    </div>
+
+    <ng-template #defaultView>
+      <!-- Default view -->
+      <div class="card-wrapper">
+        <h1>Oxalate Items</h1>
+        <div class="wrapper">
+          <div class="card" *ngFor="let item of displayedOxalates">
+            <h3 class="card-title">{{ item.item }}</h3>
+            <p class="card-content">
+              Category: {{ item.category }} <br />
+              Calc Level: {{ item.calc_level }} <br />
+              Level: {{ item.level }}
+            </p>
+            <button class="card-btn">VIEW MORE</button>
+          </div>
+        </div>
+      </div>
+    </ng-template>
+  </div>
+</div>
