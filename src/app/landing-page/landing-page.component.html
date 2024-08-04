@@ -7,7 +7,7 @@
       <img
         class="hero-image"
         src="../../assets/app-logo/oxalate-home-preview.png"
-        alt=""
+        alt="Oxalate Home Preview"
       />
     </div>
   </div>
@@ -60,19 +60,17 @@
   <section class="testimonios" id="testimonios">
     <h2 class="testimonios-title">Resources</h2>
     <div class="testimonios-content wrapper">
-      <div class="testimonio">
-        <p class="testimonio-text">
-          ¡Increíble! Noté resultados visibles en solo dos semanas. Mi piel luce
-          más joven y radiante
-        </p>
-        <p class="testimonio-autor">Ana G. de 42 años</p>
-      </div>
-      <div class="testimonio">
-        <p class="testimonio-text">
-          Lo mejor que he probado. Mi piel sensible lo ama, sin irritaciones y
-          resultados asombrosos.
-        </p>
-        <p class="testimonio-autor">Javier M. de 35 años.</p>
+      <div class="testimonio" *ngFor="let resource of foodResources">
+        <div class="testimonio-header">
+          <img
+            [src]="resource.image"
+            alt="{{ resource.name }}"
+            class="testimonio-image"
+          />
+          <h4>{{ resource.name }}</h4>
+        </div>
+        <p class="testimonio-text">{{ resource.description }}</p>
+        <p><a [href]="resource.link" target="_blank">Learn more</a></p>
       </div>
     </div>
   </section>
@@ -96,7 +94,7 @@
   </section>
   <section class="buy" id="comprar">
     <div class="buy-content wrapper">
-      <h2>¡Transforma tu piel hoy!</h2>
+      <h2>Want to get recommendations?</h2>
       <p>Compra Ahora y obtén un 10% de descuento en tu primera compra.</p>
       <form
         class="form"
