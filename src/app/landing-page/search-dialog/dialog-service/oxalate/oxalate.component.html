@@ -14,7 +14,7 @@
 
     <div *ngIf="isFilterApplied; else defaultView">
       <div class="card-wrapper">
-        <h1>Oxalate Items</h1>
+        <h1 class="title">Oxalate Items</h1>
         <div class="wrapper">
           <div *ngFor="let oxalate of displayedOxalates" class="card">
             <h3 class="card-title">{{ oxalate.item }}</h3>
@@ -35,7 +35,7 @@
     <ng-template #defaultView>
       <!-- Default view -->
       <div class="card-wrapper">
-        <h1>Oxalate Items</h1>
+        <h1 class="title">Oxalate Items</h1>
         <div class="wrapper">
           <div class="card" *ngFor="let item of displayedOxalates">
             <h3 class="card-title">{{ item.item }}</h3>
