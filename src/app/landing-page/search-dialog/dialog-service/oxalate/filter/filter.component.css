@@ -4,7 +4,7 @@
   margin: 0 auto;
   padding: 20px;
   border-radius: 8px;
-  background: #fff; /* Added background for better visibility */
+  background: #fff;
 }
 
 .filter-menu h2 {
@@ -26,13 +26,13 @@
 .filter-section input,
 .filter-section select,
 .filter-section textarea {
-  width: 100%; /* Ensures all fields use full container width */
-  max-width: 100%; /* Prevents overflow */
+  width: 100%;
+  max-width: 100%;
   padding: 8px;
   border: 1px solid #ccc;
   border-radius: 4px;
-  box-sizing: border-box; /* Includes padding and border in width calculation */
-  font-size: 16px; /* Ensures consistent font size */
+  box-sizing: border-box;
+  font-size: 16px;
 }
 
 .filter-button {
@@ -44,7 +44,7 @@
   border-radius: 4px;
   cursor: pointer;
   font-size: 16px;
-  margin-top: 10px; /* Ensures space between the last input and the button */
+  margin-top: 10px;
 }
 
 .filter-button:hover {
@@ -59,7 +59,7 @@
   .filter-section input,
   .filter-section select,
   .filter-section textarea {
-    font-size: 14px; /* Adjust font size for smaller screens */
+    font-size: 14px;
   }
 
   .filter-button {
