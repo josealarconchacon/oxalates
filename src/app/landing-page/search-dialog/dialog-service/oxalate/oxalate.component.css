@@ -16,7 +16,6 @@ body {
   background: #4070f4;
 }
 
-/* Main Container Styles */
 .main-container {
   display: flex;
   flex-direction: row;
@@ -26,13 +25,12 @@ body {
   box-sizing: border-box;
 }
 
-/* Filter Component Styles */
 app-filter {
-  flex: 0 0 300px; /* Adjust width as needed */
+  flex: 0 0 300px;
   max-width: 100%;
   padding: 20px;
   box-sizing: border-box;
-  margin-right: 20px; /* Add margin to move it to the right */
+  margin-right: 20px;
 }
 
 .filter-menu {
@@ -82,7 +80,6 @@ app-filter {
   background-color: #3050c4;
 }
 
-/* Oxalate Component Styles */
 .container {
   flex: 1;
   display: flex;
@@ -206,7 +203,6 @@ h1 {
   letter-spacing: 1.2px;
 }
 
-/* Responsive Styles */
 @media screen and (max-width: 1200px) {
   .input-box {
     height: 70px;
@@ -233,7 +229,7 @@ h1 {
 
   app-filter {
     flex: 1 1 auto;
-    margin-right: 0; /* Remove right margin on smaller screens */
+    margin-right: 0;
   }
 
   .container {
@@ -273,7 +269,7 @@ h1 {
 
   app-filter {
     flex: 1 1 auto;
-    margin-right: 0; /* Remove right margin on smaller screens */
+    margin-right: 0;
   }
 
   .filter-menu {

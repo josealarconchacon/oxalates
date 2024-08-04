@@ -13,25 +13,18 @@
     </div>
 
     <div *ngIf="isFilterApplied; else defaultView">
-      <!-- Detailed view when filter is applied -->
-      <div
-        *ngIf="displayedOxalates.length > 0; else noResults"
-        class="card-wrapper"
-      >
-        <div *ngFor="let oxalate of displayedOxalates" class="card">
-          <h3 class="card-title">{{ oxalate.item }}</h3>
-          <p class="card-content">
-            Category: {{ oxalate.category }} <br />
-            Calc Level: {{ oxalate.calc_level }} <br />
-            Level: {{ oxalate.level }} <br />
-            Total Oxalate (mg/100g): {{ oxalate.total_oxalate_mg_per_100g }}
-            <br />
-            Total Soluble Oxalate (mg/100g):
-            {{ oxalate.total_soluble_oxalate_mg_per_100g }} <br />
-            Serving Size: {{ oxalate.serving_size }} <br />
-            Serving (g): {{ oxalate.serving_g }}
-          </p>
-          <button class="card-btn">VIEW MORE</button>
+      <div class="card-wrapper">
+        <h1>Oxalate Items</h1>
+        <div class="wrapper">
+          <div *ngFor="let oxalate of displayedOxalates" class="card">
+            <h3 class="card-title">{{ oxalate.item }}</h3>
+            <p class="card-content">
+              Category: {{ oxalate.category }} <br />
+              Calc Level: {{ oxalate.calc_level }} <br />
+              Level: {{ oxalate.level }} <br />
+            </p>
+            <button class="card-btn">VIEW MORE</button>
+          </div>
         </div>
       </div>
       <ng-template #noResults>
