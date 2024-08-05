@@ -309,3 +309,57 @@ h1 {
     grid-template-columns: 1fr;
   }
 }
+
+.pagination {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 20px;
+  flex-wrap: wrap;
+}
+
+.pagination button {
+  background-color: #2a86f7;
+  border: none;
+  color: white;
+  padding: 10px 15px;
+  text-align: center;
+  text-decoration: none;
+  font-size: 16px;
+  margin: 5px;
+  cursor: pointer;
+  border-radius: 25px;
+  transition: background-color 0.3s ease;
+}
+
+.pagination button:hover:not(.active) {
+  background-color: #2a86f7;
+}
+
+.pagination button:disabled {
+  background-color: #cccccc;
+  cursor: not-allowed;
+}
+
+.pagination button.active {
+  background-color: #2a86f7;
+}
+
+.pagination span {
+  margin: 0 10px;
+  font-size: 16px;
+}
+
+@media screen and (max-width: 768px) {
+  .pagination button {
+    font-size: 14px;
+    padding: 8px 12px;
+  }
+}
+
+@media screen and (max-width: 480px) {
+  .pagination button {
+    font-size: 12px;
+    padding: 6px 10px;
+  }
+}
