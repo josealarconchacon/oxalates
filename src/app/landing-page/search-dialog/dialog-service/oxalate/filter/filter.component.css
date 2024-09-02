@@ -3,17 +3,18 @@
   margin: 0 auto;
   padding: 20px;
   border-radius: 8px;
-  background: #fff;
+  background: #222222;
 }
 
 .filter-menu h2 {
   text-align: center;
   margin-bottom: 20px;
-  color: #333;
+  color: aliceblue;
 }
 
 .filter-section {
   margin-bottom: 15px;
+  color: aliceblue;
 }
 
 .filter-section label {
@@ -34,20 +35,30 @@
   font-size: 16px;
 }
 
+.button-container {
+  display: flex;
+  gap: 10px;
+  margin-top: 20px;
+}
+
 .filter-button {
-  width: 100%;
+  flex: 1;
   padding: 10px;
-  background-color: #4070f4;
-  color: #fff;
+  background: linear-gradient(45deg, #222222, #333333);
+  color: #ffffff;
   border: none;
   border-radius: 4px;
   cursor: pointer;
   font-size: 16px;
-  margin-top: 10px;
+  transition: background 0.3s ease;
 }
 
 .filter-button:hover {
-  background-color: #3050c4;
+  background: linear-gradient(45deg, #333333, #444444);
+}
+
+.filter-button:focus {
+  outline: none;
 }
 
 @media screen and (max-width: 768px) {
