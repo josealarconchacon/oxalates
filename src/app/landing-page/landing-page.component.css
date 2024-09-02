@@ -43,6 +43,7 @@ h1 span {
 h2 {
   font-size: 42px;
   text-align: center;
+  color: #000;
 }
 
 @media screen and (max-width: 1200px) {
@@ -100,6 +101,9 @@ section {
   margin: 0 auto;
   color: aliceblue;
 }
+.we-content h2 {
+  color: aliceblue;
+}
 
 @media screen and (max-width: 768px) {
   .we {
@@ -128,6 +132,7 @@ section {
 
 .beneficios-title {
   position: relative;
+  color: #000;
 }
 
 .beneficios-title::after {
@@ -163,6 +168,7 @@ section {
 
 .testimonios-title {
   position: relative;
+  color: aliceblue;
 }
 
 .testimonios-title::after {
@@ -267,6 +273,10 @@ section {
 
 .buy-content {
   text-align: center;
+  color: aliceblue;
+}
+.buy-content h2 {
+  color: aliceblue;
 }
 
 .form {

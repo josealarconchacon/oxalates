@@ -1,118 +1,64 @@
 <div class="main-container">
-  <app-filter (filterChanged)="applyFilters($event)"></app-filter>
-  <div class="container">
-    <div class="input-box">
-      <i class="uil uil-search"></i>
+  <!-- Sidebar for Filters and Search -->
+  <div class="sidebar">
+    <div class="search-box">
       <input
         type="text"
         placeholder="Search here..."
         [(ngModel)]="searchQuery"
         (input)="search()"
       />
-      <button class="button" (click)="search()">Search</button>
+      <button class="search-btn" (click)="search()">Search</button>
     </div>
+    <app-filter (filterChanged)="applyFilters($event)"></app-filter>
+  </div>
 
-    <div *ngIf="isFilterApplied; else defaultView">
-      <div class="card-wrapper">
-        <h1 class="title">Oxalate Items</h1>
-        <div class="wrapper">
-          <div *ngFor="let oxalate of displayedOxalates" class="card">
-            <h3 class="card-title">{{ oxalate.item }}</h3>
-            <p class="card-content">
-              Category: {{ oxalate.category }} <br />
-              Calc Level: {{ oxalate.calc_level }} <br />
-              Level: {{ oxalate.level }} <br />
-            </p>
-            <button class="card-btn">VIEW MORE</button>
-          </div>
+  <!-- Main Content Area -->
+  <div class="content">
+    <h1 class="section-title">Oxalate Items</h1>
+    <div class="card-container">
+      <div *ngFor="let oxalate of displayedOxalates" class="card">
+        <div class="card-content">
+          <h2 class="card-title">{{ oxalate.item }}</h2>
+          <p class="card-details">Category: {{ oxalate.category }}</p>
+          <p class="card-details">Calc Level: {{ oxalate.calc_level }}</p>
+          <p class="card-details">Level: {{ oxalate.level }}</p>
+          <button class="view-more-btn">VIEW MORE</button>
         </div>
       </div>
-      <ng-template #noResults>
-        <p>No results found</p>
-      </ng-template>
-
-      <div class="pagination">
-        <button (click)="changePage(1)" [disabled]="currentPage === 1">
-          First
-        </button>
-        <button
-          (click)="changePage(currentPage - 1)"
-          [disabled]="currentPage === 1"
-        >
-          Previous
-        </button>
-        <ng-container *ngFor="let page of getPages()">
-          <button
-            (click)="changePage(page)"
-            [class.active]="page === currentPage"
-            [disabled]="page === '...'"
-          >
-            {{ page }}
-          </button>
-        </ng-container>
-        <button
-          (click)="changePage(currentPage + 1)"
-          [disabled]="currentPage === totalPages"
-        >
-          Next
-        </button>
-        <button
-          (click)="changePage(totalPages)"
-          [disabled]="currentPage === totalPages"
-        >
-          Last
-        </button>
-      </div>
     </div>
-
-    <ng-template #defaultView>
-      <div class="card-wrapper">
-        <h1 class="title">Oxalate Items</h1>
-        <div class="wrapper">
-          <div class="card" *ngFor="let item of displayedOxalates">
-            <h3 class="card-title">{{ item.item }}</h3>
-            <p class="card-content">
-              Category: {{ item.category }} <br />
-              Calc Level: {{ item.calc_level }} <br />
-              Level: {{ item.level }}
-            </p>
-            <button class="card-btn">VIEW MORE</button>
-          </div>
-        </div>
-      </div>
-
-      <div class="pagination">
-        <button (click)="changePage(1)" [disabled]="currentPage === 1">
-          First
-        </button>
+    <!-- Pagination -->
+    <div class="pagination">
+      <button (click)="changePage(1)" [disabled]="currentPage === 1">
+        First
+      </button>
+      <button
+        (click)="changePage(currentPage - 1)"
+        [disabled]="currentPage === 1"
+      >
+        Previous
+      </button>
+      <ng-container *ngFor="let page of getPages()">
         <button
-          (click)="changePage(currentPage - 1)"
-          [disabled]="currentPage === 1"
+          (click)="changePage(page)"
+          [class.active]="page === currentPage"
+          [disabled]="page === '...'"
         >
-          Previous
+          {{ page }}
         </button>
-        <ng-container *ngFor="let page of getPages()">
-          <button
-            (click)="changePage(page)"
-            [class.active]="page === currentPage"
-            [disabled]="page === '...'"
-          >
-            {{ page }}
-          </button>
-        </ng-container>
-        <button
-          (click)="changePage(currentPage + 1)"
-          [disabled]="currentPage === totalPages"
-        >
-          Next
-        </button>
-        <button
-          (click)="changePage(totalPages)"
-          [disabled]="currentPage === totalPages"
-        >
-          Last
-        </button>
-      </div>
-    </ng-template>
+      </ng-container>
+      <button
+        (click)="changePage(currentPage + 1)"
+        [disabled]="currentPage === totalPages"
+      >
+        Next
+      </button>
+      <button
+        (click)="changePage(totalPages)"
+        [disabled]="currentPage === totalPages"
+      >
+        Last
+      </button>
+    </div>
   </div>
 </div>
