@@ -6,7 +6,6 @@ body {
   margin: 0;
   font-family: "Nunito", sans-serif;
   font-size: 20px;
-  color: rgb(20, 20, 20);
 }
 
 .wrapper {
@@ -22,6 +21,7 @@ img {
 
 h1 {
   font-size: 48px;
+  color: aliceblue;
 }
 
 h1 span {
