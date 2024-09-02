@@ -6,13 +6,6 @@ import { BehaviorSubject, Subject } from 'rxjs';
   providedIn: 'root',
 })
 export class StateService {
-  // private showOxalateComponentSubject = new BehaviorSubject<boolean>(false);
-  // showOxalateComponent$ = this.showOxalateComponentSubject.asObservable();
-
-  // showOxalateComponent(show: boolean) {
-  //   this.showOxalateComponentSubject.next(show);
-  // }
-
   private scrollSubject = new Subject<void>();
   scroll$ = this.scrollSubject.asObservable();
 
