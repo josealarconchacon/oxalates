@@ -1,5 +1,6 @@
 .header {
-  background: rgb(255, 255, 255);
+  background-color: #121212;
+  color: aliceblue;
   padding: 24px 0;
   position: sticky;
   top: 0;
@@ -15,11 +16,11 @@
   align-items: center;
   max-width: 1366px;
   margin: 0 auto;
-  height: 80px; /* Explicit height for the header content */
+  height: 80px;
 }
 
 .material-symbols-outlined {
-  font-size: 0; /* Hides the icon text */
+  font-size: 0;
 }
 
 .nav {
@@ -29,7 +30,7 @@
 }
 
 .nav-link {
-  color: rgb(20, 20, 20);
+  color: aliceblue;
   font-size: 18px;
   text-decoration: none;
   font-weight: 700;
@@ -43,7 +44,7 @@
 }
 
 .nav-logo {
-  width: 80px; /* Adjust width as needed to make the logo bigger */
+  width: 80px;
   height: auto;
 }
 
