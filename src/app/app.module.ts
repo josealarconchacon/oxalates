@@ -17,6 +17,10 @@ import { LandingPageComponent } from './landing-page/landing-page.component';
 import { HeaderComponent } from './landing-page/header/header.component';
 import { OxalateComponent } from './landing-page/search-dialog/dialog-service/oxalate/oxalate.component';
 import { FilterComponent } from './landing-page/search-dialog/dialog-service/oxalate/filter/filter.component';
+import { ScrollingModule } from '@angular/cdk/scrolling';
+import { FooterComponent } from './landing-page/footer/footer.component';
+import { ResourcesComponent } from './landing-page/resources/resources.component';
+import { BenefitsComponent } from './landing-page/benefits/benefits.component';
 
 @NgModule({
   declarations: [
@@ -25,6 +29,9 @@ import { FilterComponent } from './landing-page/search-dialog/dialog-service/oxa
     HeaderComponent,
     OxalateComponent,
     FilterComponent,
+    FooterComponent,
+    ResourcesComponent,
+    BenefitsComponent,
   ],
   imports: [
     BrowserModule,
@@ -40,6 +47,7 @@ import { FilterComponent } from './landing-page/search-dialog/dialog-service/oxa
     MatFormFieldModule,
     FormsModule,
     ReactiveFormsModule,
+    ScrollingModule,
   ],
   providers: [],
   bootstrap: [AppComponent],

@@ -1,0 +1,16 @@
+<section class="testimonios" id="testimonios">
+  <h2 class="resource-title">Common Foods High in Oxalate</h2>
+  <div class="resource-content wrapper">
+    <div class="resource-info" *ngFor="let resource of foodResources">
+      <div class="resource-header">
+        <img
+          [src]="resource.image"
+          alt="{{ resource.name }}"
+          class="resource-image"
+        />
+        <h4>{{ resource.name }}</h4>
+      </div>
+      <p class="resource-text">{{ resource.description }}</p>
+    </div>
+  </div>
+</section>

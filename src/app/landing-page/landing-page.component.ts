@@ -1,7 +1,5 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { ResourceService } from './service/resource.service';
-import { Resource } from './model/resource';
 
 @Component({
   selector: 'app-landing-page',
@@ -9,13 +7,9 @@ import { Resource } from './model/resource';
   styleUrls: ['./landing-page.component.css'],
 })
 export class LandingPageComponent implements OnInit {
-  foodResources: Resource[] = [];
   showOxalateComponent = false;
 
-  constructor(
-    private route: ActivatedRoute,
-    private resourceService: ResourceService
-  ) {
+  constructor(private route: ActivatedRoute) {
     this.route.queryParams.subscribe((params) => {
       if (params['showOxalate']) {
         this.showOxalateComponent = true;
@@ -24,9 +18,7 @@ export class LandingPageComponent implements OnInit {
     });
   }
 
-  ngOnInit(): void {
-    this.foodResources = this.resourceService.getFoodResources();
-  }
+  ngOnInit(): void {}
 
   onRegister() {
     console.log('Register button clicked');

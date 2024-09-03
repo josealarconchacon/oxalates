@@ -1,7 +1,9 @@
 <div class="hero">
   <div class="hero-content wrapper">
     <div class="hero-details">
-      <h1 class="hero-title">Build Your <br />Oxalates Habits</h1>
+      <h1 class="hero-title">
+        Search for <br />Oxalates Levels in Common Foods
+      </h1>
     </div>
     <div class="hero-img">
       <img
@@ -15,7 +17,7 @@
 <main>
   <section class="we">
     <div class="we-content">
-      <h2>What is Oxalate in food about?</h2>
+      <h2>What are Oxalates?</h2>
       <p>
         Oxalates in food are naturally occurring compounds found in many plants.
         They are a type of organic acid that can bind with minerals like
@@ -25,54 +27,13 @@
       </p>
     </div>
   </section>
-  <section class="beneficios" id="beneficios">
-    <h2 class="beneficios-title">Benefits of Low Oxalate Intake</h2>
-    <div class="beneficios-content wrapper">
-      <div class="beneficios-beneficio">
-        <span class="material-symbols-outlined">
-          Reduced Kidney Stone Risk
-        </span>
-        <p>
-          Lowering oxalate intake can prevent <br />
-          the formation of calcium oxalate stones
-        </p>
-      </div>
-      <div class="beneficios-beneficio">
-        <span class="material-symbols-outlined">
-          Enhanced Mineral Absorption
-        </span>
-        <p>
-          Avoiding oxalates helps improve the <br />absorption of essential
-          minerals like calcium, magnesium, and iron
-        </p>
-      </div>
-      <div class="beneficios-beneficio">
-        <span class="material-symbols-outlined">
-          Less Joint Pain and Inflammation:
-        </span>
-        <p>
-          Reducing oxalate consumption may <br />
-          alleviate symptoms for those sensitive to oxalates
-        </p>
-      </div>
-    </div>
+  <section>
+    <app-benefits></app-benefits>
   </section>
-  <section class="testimonios" id="testimonios">
-    <h2 class="testimonios-title">Common Foods High in Oxalate</h2>
-    <div class="testimonios-content wrapper">
-      <div class="testimonio" *ngFor="let resource of foodResources">
-        <div class="testimonio-header">
-          <img
-            [src]="resource.image"
-            alt="{{ resource.name }}"
-            class="testimonio-image"
-          />
-          <h4>{{ resource.name }}</h4>
-        </div>
-        <p class="testimonio-text">{{ resource.description }}</p>
-      </div>
-    </div>
+  <section>
+    <app-resources></app-resources>
   </section>
+
   <section class="use">
     <h2>Managing Oxalate Intake</h2>
     <div class="use-content">

@@ -1,0 +1,40 @@
+.beneficios {
+  background: #878689;
+}
+
+.benefits-title {
+  position: relative;
+  color: #000;
+}
+
+.benefits-title::after {
+  content: " ";
+  display: block;
+  width: 15%;
+  height: 2px;
+  position: absolute;
+  bottom: -5px;
+  left: 50%;
+  transform: translateX(-50%);
+  border-radius: 3px;
+  background: rgb(20, 20, 20);
+}
+
+.benefits-content {
+  display: flex;
+  padding: 20px;
+  align-items: start;
+  gap: 16px;
+  justify-content: space-between;
+}
+
+@media screen and (max-width: 768px) {
+  .benefits-content {
+    display: block;
+  }
+}
+
+.benefits-benefits {
+  text-align: center;
+  flex: 1;
+}
