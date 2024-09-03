@@ -21,6 +21,7 @@ import { ScrollingModule } from '@angular/cdk/scrolling';
 import { FooterComponent } from './landing-page/footer/footer.component';
 import { ResourcesComponent } from './landing-page/resources/resources.component';
 import { BenefitsComponent } from './landing-page/benefits/benefits.component';
+import { ManagingOxalateComponent } from './landing-page/managing-oxalate/managing-oxalate.component';
 
 @NgModule({
   declarations: [
@@ -32,6 +33,7 @@ import { BenefitsComponent } from './landing-page/benefits/benefits.component';
     FooterComponent,
     ResourcesComponent,
     BenefitsComponent,
+    ManagingOxalateComponent,
   ],
   imports: [
     BrowserModule,

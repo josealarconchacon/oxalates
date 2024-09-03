@@ -1,86 +1,89 @@
-.resource-title {
-  color: aliceblue;
+.testimonios {
+  background: #f5f5f5;
+  padding: 60px 20px;
   text-align: center;
+}
+
+.resource-title {
+  color: #333;
+  font-size: 2.5rem;
+  font-weight: 600;
+  margin-bottom: 40px;
   position: relative;
-  margin-bottom: 10px;
+  display: inline-block;
 }
 
 .resource-title::after {
   content: "";
   display: block;
-  width: 10%;
-  height: 1px;
+  width: 80px;
+  height: 4px;
   position: absolute;
-  bottom: -5px;
+  bottom: -10px;
   left: 50%;
   transform: translateX(-50%);
-  border-radius: 3px;
-  background: #faf8ff;
+  border-radius: 2px;
+  background: #007aff;
 }
 
 .resource-content {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
-  grid-gap: 15px;
+  grid-template-rows: repeat(2, auto);
+  gap: 20px;
   padding: 0 20px;
-  margin: 0 auto;
   max-width: 1200px;
+  margin: 0 auto;
 }
 
 .resource-info {
-  padding: 12px;
-  border-radius: 6px;
+  background: #ffffff;
+  border-radius: 12px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   padding: 20px;
-  border: 1px solid #e0e0e0;
-  background: #878689;
   text-align: center;
+  transition: transform 0.3s, box-shadow 0.3s;
+}
+
+.resource-info:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
 }
 
 .resource-header {
   display: flex;
   align-items: center;
-  gap: 12px;
-  margin-bottom: 12px;
+  justify-content: center;
+  gap: 16px;
+  margin-bottom: 16px;
 }
 
 .resource-image {
-  width: 40px;
-  height: 40px;
+  width: 60px;
+  height: 60px;
   border-radius: 50%;
-  object-fit: cover;
+  object-fit: scale-down;
+  border: 0.01px solid #adadad;
 }
 
 .resource-info h4 {
-  font-size: 16px;
+  font-size: 1.25rem;
+  color: #333;
   margin: 0;
-  color: aliceblue;
+  font-weight: 500;
 }
 
 .resource-text {
-  font-size: 12px;
-  color: aliceblue;
-  margin-bottom: 12px;
-  text-align: center;
-}
-
-.resource-info a {
-  color: #007bff;
-  text-decoration: none;
-  font-weight: bold;
-}
-
-.resource-info a:hover {
-  text-decoration: underline;
+  font-size: 1rem;
+  color: #555;
+  line-height: 1.6;
+  margin-top: 10px;
 }
 
 @media screen and (max-width: 768px) {
   .resource-content {
     grid-template-columns: 1fr;
-    padding: 0 5px;
-    max-width: 100%;
-  }
-
-  .resource-info {
-    margin-bottom: 15px;
+    grid-template-rows: auto;
+    padding: 0 10px;
   }
 }
