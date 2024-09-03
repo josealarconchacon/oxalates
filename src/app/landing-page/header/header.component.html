@@ -9,7 +9,10 @@
         aria-hidden="true"
       />
     </span>
-    <nav class="nav" id="nav-bar">
+
+    <button class="hamburger" (click)="toggleNav()">☰</button>
+
+    <nav class="nav" id="nav-bar" [class.open]="isNavOpen">
       <a href="#beneficios" class="nav-link">Benefits</a>
       <a href="#testimonios" class="nav-link">Resources</a>
       <a href="#comprar" class="nav-link">FAQ</a>

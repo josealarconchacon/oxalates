@@ -17,6 +17,7 @@
   max-width: 1366px;
   margin: 0 auto;
   height: 80px;
+  position: relative;
 }
 
 .material-symbols-outlined {
@@ -27,6 +28,7 @@
   display: flex;
   align-items: center;
   gap: 20px;
+  transition: max-height 0.3s ease-out, opacity 0.3s ease-out;
 }
 
 .nav-link {
@@ -36,6 +38,7 @@
   font-weight: 700;
   padding: 8px 16px;
   border-radius: 8px;
+  text-align: left;
 }
 
 .nav-link:hover,
@@ -48,13 +51,36 @@
   height: auto;
 }
 
+.hamburger {
+  display: none;
+  font-size: 24px;
+  background: none;
+  border: none;
+  color: aliceblue;
+  cursor: pointer;
+  margin-left: auto;
+  z-index: 2;
+}
+
 @media screen and (max-width: 767px) {
-  .header {
-    padding: 24px 16px;
-    position: relative;
+  .nav {
+    display: block;
+    max-height: 0;
+    opacity: 0;
+    position: absolute;
+    top: 100%;
+    right: 0;
+    background-color: #121212;
+    flex-direction: column;
+    width: auto;
   }
 
-  .nav {
-    display: none;
+  .nav.open {
+    max-height: 200px;
+    opacity: 1;
+  }
+
+  .hamburger {
+    display: block;
   }
 }
