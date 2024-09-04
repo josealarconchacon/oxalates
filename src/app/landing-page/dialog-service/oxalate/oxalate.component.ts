@@ -1,8 +1,9 @@
 import { Component, OnInit } from '@angular/core';
-import { Oxalate } from '../../model/oxalate';
+import { Oxalate } from 'src/app/landing-page/model/oxalate';
 import { OxalateService } from '../service/oxalate.service';
 import { FilterService } from './service/filter.service';
 import { Filter } from './filter/model/filter';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-oxalate',
@@ -23,7 +24,8 @@ export class OxalateComponent implements OnInit {
 
   constructor(
     private oxalateService: OxalateService,
-    private filterService: FilterService
+    private filterService: FilterService,
+    private router: Router
   ) {}
 
   ngOnInit(): void {
@@ -128,5 +130,11 @@ export class OxalateComponent implements OnInit {
       this.currentPage = page;
       this.updateDisplayedOxalates();
     }
+  }
+
+  viewMore(oxalate: Oxalate): void {
+    console.log('View More Clicked:', oxalate);
+    // Assuming you want to pass the oxalate ID to the route
+    this.router.navigate(['/view-more', oxalate.id]);
   }
 }

@@ -23,7 +23,9 @@
           <p class="card-details">Category: {{ oxalate.category }}</p>
           <p class="card-details">Calc Level: {{ oxalate.calc_level }}</p>
           <p class="card-details">Level: {{ oxalate.level }}</p>
-          <button class="view-more-btn">VIEW MORE</button>
+          <button class="view-more-btn" (click)="viewMore(oxalate)">
+            VIEW MORE
+          </button>
         </div>
       </div>
     </div>

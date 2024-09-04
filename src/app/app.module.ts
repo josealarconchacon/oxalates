@@ -22,6 +22,7 @@ import { FooterComponent } from './landing-page/footer/footer.component';
 import { ResourcesComponent } from './landing-page/resources/resources.component';
 import { BenefitsComponent } from './landing-page/benefits/benefits.component';
 import { ManagingOxalateComponent } from './landing-page/managing-oxalate/managing-oxalate.component';
+import { ViewMoreComponent } from './landing-page/dialog-service/oxalate/view-more/view-more.component';
 
 @NgModule({
   declarations: [
@@ -34,6 +35,7 @@ import { ManagingOxalateComponent } from './landing-page/managing-oxalate/managi
     ResourcesComponent,
     BenefitsComponent,
     ManagingOxalateComponent,
+    ViewMoreComponent,
   ],
   imports: [
     BrowserModule,

@@ -1,4 +1,5 @@
 export interface Oxalate {
+  id: string;
   category: string;
   calc_level: string;
   level: string;

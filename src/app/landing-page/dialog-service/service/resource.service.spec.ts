@@ -1,6 +1,6 @@
 import { TestBed } from '@angular/core/testing';
 import { ResourceService } from './resource.service';
-import { Resource } from '../model/resource'; // Adjust import path if necessary
+import { Resource } from '../../model/resource';
 
 fdescribe('ResourceService', () => {
   let service: ResourceService;
