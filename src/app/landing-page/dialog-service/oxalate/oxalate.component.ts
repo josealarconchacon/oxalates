@@ -139,8 +139,12 @@ export class OxalateComponent implements OnInit {
       return;
     }
 
-    console.log('View More Clicked:', oxalate);
-    alert('It Works');
-    this.router.navigate(['/view-more', oxalate.id]);
+    // Save the selected oxalate to be passed to the child component
+    this.selectedOxalate = oxalate;
+
+    // Navigate to the ViewMoreComponent while passing the ID as a route parameter
+    this.router.navigate(['/view-more', oxalate.id], {
+      state: { selectedOxalate: this.selectedOxalate },
+    });
   }
 }

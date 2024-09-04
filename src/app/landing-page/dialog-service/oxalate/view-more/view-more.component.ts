@@ -1,5 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { Oxalate } from 'src/app/landing-page/model/oxalate';
 import { OxalateService } from '../../service/oxalate.service';
 
@@ -9,18 +9,28 @@ import { OxalateService } from '../../service/oxalate.service';
   styleUrls: ['./view-more.component.css'],
 })
 export class ViewMoreComponent implements OnInit {
-  @Input() oxalateData: Oxalate | undefined;
+  oxalateData: Oxalate | undefined;
 
   constructor(
     private route: ActivatedRoute,
+    private router: Router,
     private oxalateService: OxalateService
   ) {}
 
   ngOnInit(): void {
-    const id = this.route.snapshot.paramMap.get('id');
-    if (id) {
-      this.oxalateService.getOxalateById(id).subscribe((data) => {
-        this.oxalateData = data;
+    const navigation = this.router.getCurrentNavigation();
+    if (navigation?.extras.state) {
+      // Receive the passed oxalate data from the state
+      this.oxalateData = navigation.extras.state['selectedOxalate'];
+    } else {
+      // If no state data, fallback to fetching by ID
+      this.route.paramMap.subscribe((params) => {
+        const id = params.get('id');
+        if (id) {
+          this.oxalateService.getOxalateById(id).subscribe((data) => {
+            this.oxalateData = data;
+          });
+        }
       });
     }
   }

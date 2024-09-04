@@ -15,7 +15,6 @@ import { Oxalate } from '../../model/oxalate';
 export class OxalateService {
   private dataUrl = 'assets/mock-oxalate/oxolateListData.json';
   private searchTerms = new Subject<string>();
-  private apiUrl = '../../../../assets/mock-oxalate/oxolateListData.json';
 
   constructor(private http: HttpClient) {}
 
@@ -67,8 +66,8 @@ export class OxalateService {
   }
 
   getOxalateById(id: string): Observable<Oxalate | undefined> {
-    return this.http
-      .get<Oxalate[]>(this.apiUrl)
-      .pipe(map((oxalates) => oxalates.find((oxalate) => oxalate.id === id)));
+    return this.getOxalateData().pipe(
+      map((oxalates) => oxalates.find((oxalate) => oxalate.id === id))
+    );
   }
 }
