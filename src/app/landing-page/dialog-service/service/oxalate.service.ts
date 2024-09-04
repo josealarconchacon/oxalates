@@ -7,7 +7,7 @@ import {
   distinctUntilChanged,
   switchMap,
 } from 'rxjs/operators';
-import { Oxalate } from '../model/oxalate';
+import { Oxalate } from '../../model/oxalate';
 
 @Injectable({
   providedIn: 'root',

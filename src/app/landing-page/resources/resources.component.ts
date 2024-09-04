@@ -1,8 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-import { ResourceService } from '../service/resource.service';
-{
-}
+
 import { Resource } from '../model/resource';
+import { ResourceService } from '../dialog-service/service/resource.service';
 @Component({
   selector: 'app-resources',
   templateUrl: './resources.component.html',

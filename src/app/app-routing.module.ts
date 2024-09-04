@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { OxalateComponent } from './landing-page/search-dialog/dialog-service/oxalate/oxalate.component';
+import { OxalateComponent } from './landing-page/dialog-service/oxalate/oxalate.component';
 import { LandingPageComponent } from './landing-page/landing-page.component';
 
 const routes: Routes = [

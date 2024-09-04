@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { Oxalate } from 'src/app/landing-page/model/oxalate';
-import { OxalateService } from 'src/app/landing-page/service/oxalate.service';
+import { Oxalate } from '../../model/oxalate';
+import { OxalateService } from '../service/oxalate.service';
 import { FilterService } from './service/filter.service';
 import { Filter } from './filter/model/filter';
 
