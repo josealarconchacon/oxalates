@@ -16,6 +16,7 @@ export class OxalateComponent implements OnInit {
   displayedOxalates: Oxalate[] = [];
   searchQuery: string = '';
   isFilterApplied: boolean = false;
+  selectedOxalate: Oxalate | undefined;
 
   itemsPerPage: number = 12;
   currentPage: number = 1;
@@ -133,8 +134,13 @@ export class OxalateComponent implements OnInit {
   }
 
   viewMore(oxalate: Oxalate): void {
+    if (!oxalate || !oxalate.id) {
+      console.error('Invalid oxalate data:', oxalate);
+      return;
+    }
+
     console.log('View More Clicked:', oxalate);
-    // Assuming you want to pass the oxalate ID to the route
+    alert('It Works');
     this.router.navigate(['/view-more', oxalate.id]);
   }
 }
