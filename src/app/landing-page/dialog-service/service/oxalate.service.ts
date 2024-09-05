@@ -65,6 +65,7 @@ export class OxalateService {
     this.searchTerms.next(query); // Emit the search term to trigger the dynamic search
   }
 
+  // OxalateService.ts
   getOxalateById(id: string): Observable<Oxalate | undefined> {
     return this.getOxalateData().pipe(
       map((oxalates) => oxalates.find((oxalate) => oxalate.id === id))

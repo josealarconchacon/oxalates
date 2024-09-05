@@ -1,7 +1,14 @@
-<div *ngIf="oxalateData">
-  <h2>{{ oxalateData.item }}</h2>
-  <p>Category: {{ oxalateData.category }}</p>
-  <p>Calc Level: {{ oxalateData.calc_level }}</p>
-  <p>Level: {{ oxalateData.level }}</p>
-  <!-- Additional details -->
+<div class="oxalate-detail" *ngIf="oxalateData">
+  <h2 class="oxalate-title">{{ oxalateData.item }}</h2>
+  <div class="oxalate-info">
+    <p>
+      <span class="oxalate-label">Category:</span> {{ oxalateData.category }}
+    </p>
+    <p>
+      <span class="oxalate-label">Calc Level:</span>
+      {{ oxalateData.calc_level }}
+    </p>
+    <p><span class="oxalate-label">Level:</span> {{ oxalateData.level }}</p>
+    <!-- Additional details -->
+  </div>
 </div>

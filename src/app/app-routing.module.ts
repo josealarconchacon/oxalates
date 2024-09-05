@@ -7,7 +7,8 @@ import { ViewMoreComponent } from './landing-page/dialog-service/oxalate/view-mo
 const routes: Routes = [
   { path: '', component: LandingPageComponent },
   { path: 'oxalate', component: OxalateComponent },
-  { path: 'view-more/:id', component: ViewMoreComponent },
+  { path: 'view-more', component: ViewMoreComponent },
+  // { path: '', redirectTo: '/oxalates', pathMatch: 'full' },
   // Add other routes as needed
 ];
 

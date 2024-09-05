@@ -38,6 +38,7 @@ import { ViewMoreComponent } from './landing-page/dialog-service/oxalate/view-mo
     ViewMoreComponent,
   ],
   imports: [
+    FormsModule,
     BrowserModule,
     AppRoutingModule,
     BrowserAnimationsModule,

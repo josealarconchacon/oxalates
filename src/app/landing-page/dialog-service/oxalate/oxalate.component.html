@@ -1,5 +1,4 @@
-<div class="main-container">
-  <!-- Sidebar for Filters and Search -->
+<!-- <div class="main-container">
   <div class="sidebar">
     <div class="search-box">
       <input
@@ -13,23 +12,23 @@
     <app-filter (filterChanged)="applyFilters($event)"></app-filter>
   </div>
 
-  <!-- Main Content Area -->
   <div class="content">
     <h1 class="section-title">Oxalate Items</h1>
     <div class="card-container">
-      <div *ngFor="let oxalate of displayedOxalates" class="card">
+      <div
+        *ngFor="let oxalate of displayedOxalates"
+        class="card"
+        (click)="viewMore(oxalate)"
+      >
         <div class="card-content">
           <h2 class="card-title">{{ oxalate.item }}</h2>
           <p class="card-details">Category: {{ oxalate.category }}</p>
           <p class="card-details">Calc Level: {{ oxalate.calc_level }}</p>
           <p class="card-details">Level: {{ oxalate.level }}</p>
-          <button class="view-more-btn" (click)="viewMore(oxalate)">
-            VIEW MORE
-          </button>
         </div>
       </div>
     </div>
-    <!-- Pagination -->
+
     <div class="pagination">
       <button (click)="changePage(1)" [disabled]="currentPage === 1">
         First
@@ -63,8 +62,80 @@
       </button>
     </div>
   </div>
-  <app-view-more
-    *ngIf="selectedOxalate"
-    oxalateData="selectedOxalate"
-  ></app-view-more>
+
+  <div class="details" *ngIf="selectedOxalate">
+    <button class="close-btn" (click)="closeDetail()">×</button>
+    <app-view-more [oxalateData]="selectedOxalate"></app-view-more>
+  </div>
+</div> -->
+
+<div class="main-container">
+  <div class="sidebar">
+    <div class="search-box">
+      <input
+        type="text"
+        placeholder="Search here..."
+        [(ngModel)]="searchQuery"
+        (input)="search()"
+      />
+      <button class="search-btn" (click)="search()">Search</button>
+    </div>
+    <app-filter (filterChanged)="applyFilters($event)"></app-filter>
+  </div>
+
+  <div class="content">
+    <h1 class="section-title">Oxalate Items</h1>
+    <div class="card-container">
+      <div
+        *ngFor="let oxalate of displayedOxalates"
+        class="card"
+        (click)="viewMore(oxalate)"
+      >
+        <div class="card-content">
+          <h2 class="card-title">{{ oxalate.item }}</h2>
+          <p class="card-details">Category: {{ oxalate.category }}</p>
+          <p class="card-details">Calc Level: {{ oxalate.calc_level }}</p>
+          <p class="card-details">Level: {{ oxalate.level }}</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="pagination">
+      <button (click)="changePage(1)" [disabled]="currentPage === 1">
+        First
+      </button>
+      <button
+        (click)="changePage(currentPage - 1)"
+        [disabled]="currentPage === 1"
+      >
+        Previous
+      </button>
+      <ng-container *ngFor="let page of getPages()">
+        <button
+          (click)="changePage(page)"
+          [class.active]="page === currentPage"
+          [disabled]="page === '...'"
+        >
+          {{ page }}
+        </button>
+      </ng-container>
+      <button
+        (click)="changePage(currentPage + 1)"
+        [disabled]="currentPage === totalPages"
+      >
+        Next
+      </button>
+      <button
+        (click)="changePage(totalPages)"
+        [disabled]="currentPage === totalPages"
+      >
+        Last
+      </button>
+    </div>
+  </div>
+
+  <div class="details" *ngIf="selectedOxalate">
+    <button class="close-btn" (click)="closeDetail()">×</button>
+    <app-view-more [oxalateData]="selectedOxalate"></app-view-more>
+  </div>
 </div>

@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { Oxalate } from 'src/app/landing-page/model/oxalate';
 import { OxalateService } from '../service/oxalate.service';
 import { FilterService } from './service/filter.service';
@@ -26,7 +26,8 @@ export class OxalateComponent implements OnInit {
   constructor(
     private oxalateService: OxalateService,
     private filterService: FilterService,
-    private router: Router
+    private router: Router,
+    private cdr: ChangeDetectorRef
   ) {}
 
   ngOnInit(): void {
@@ -134,17 +135,11 @@ export class OxalateComponent implements OnInit {
   }
 
   viewMore(oxalate: Oxalate): void {
-    if (!oxalate || !oxalate.id) {
-      console.error('Invalid oxalate data:', oxalate);
-      return;
-    }
-
-    // Save the selected oxalate to be passed to the child component
     this.selectedOxalate = oxalate;
+    this.cdr.detectChanges(); // Ensure Angular detects changes and updates the view
+  }
 
-    // Navigate to the ViewMoreComponent while passing the ID as a route parameter
-    this.router.navigate(['/view-more', oxalate.id], {
-      state: { selectedOxalate: this.selectedOxalate },
-    });
+  closeDetail(): void {
+    this.selectedOxalate = undefined; // Clear the selected oxalate
   }
 }

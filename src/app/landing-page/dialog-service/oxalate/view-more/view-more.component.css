@@ -1,0 +1,28 @@
+.oxalate-detail {
+  max-width: 600px;
+  margin: 0 auto;
+  padding: 20px;
+  background-color: #ffffff;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+    "Helvetica Neue", Arial, sans-serif;
+}
+
+.oxalate-title {
+  font-size: 24px;
+  font-weight: 600;
+  margin-bottom: 10px;
+  color: #222222;
+}
+
+.oxalate-info {
+  line-height: 1.6;
+  font-size: 16px;
+  color: #333333;
+}
+
+.oxalate-label {
+  font-weight: 500;
+  color: #555555;
+}
