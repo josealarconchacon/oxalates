@@ -21,4 +21,9 @@ export class FilterComponent {
     console.log('Clearing filters'); // Log when filters are cleared
     this.filterChanged.emit(this.filters); // Emit empty filters
   }
+  isFilterMenuActive = false;
+
+  toggleFilterMenu() {
+    this.isFilterMenuActive = !this.isFilterMenuActive;
+  }
 }

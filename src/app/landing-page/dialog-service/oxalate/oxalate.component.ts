@@ -134,12 +134,22 @@ export class OxalateComponent implements OnInit {
     }
   }
 
+  // viewMore(oxalate: Oxalate): void {
+  //   this.selectedOxalate = oxalate;
+  //   this.cdr.detectChanges(); // Ensure Angular detects changes and updates the view
+  // }
+
+  // closeDetail(): void {
+  //   this.selectedOxalate = undefined; // Clear the selected oxalate
+  // }
+
   viewMore(oxalate: Oxalate): void {
     this.selectedOxalate = oxalate;
-    this.cdr.detectChanges(); // Ensure Angular detects changes and updates the view
+    document.body.style.overflow = 'hidden'; // Prevent background scroll
   }
 
   closeDetail(): void {
-    this.selectedOxalate = undefined; // Clear the selected oxalate
+    this.selectedOxalate = undefined;
+    document.body.style.overflow = ''; // Restore scroll
   }
 }
