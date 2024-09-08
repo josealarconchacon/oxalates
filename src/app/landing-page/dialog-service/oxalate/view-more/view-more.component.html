@@ -1,14 +1,34 @@
 <div class="oxalate-detail" *ngIf="oxalateData">
-  <h2 class="oxalate-title">{{ oxalateData.item }}</h2>
+  <div class="oxalate-header">
+    <h2 class="oxalate-title">{{ oxalateData.item }}</h2>
+    <button class="view-more-button">View More</button>
+  </div>
   <div class="oxalate-info">
-    <p>
-      <span class="oxalate-label">Category:</span> {{ oxalateData.category }}
-    </p>
-    <p>
-      <span class="oxalate-label">Calc Level:</span>
-      {{ oxalateData.calc_level }}
-    </p>
-    <p><span class="oxalate-label">Level:</span> {{ oxalateData.level }}</p>
-    <!-- Additional details -->
+    <div class="info-grid">
+      <div class="info-item">
+        <span class="oxalate-label">Category</span>
+        <span class="oxalate-value">{{ oxalateData.category }}</span>
+      </div>
+      <div class="info-item">
+        <span class="oxalate-label">Calc Level</span>
+        <span class="oxalate-value">{{ oxalateData.calc_level }}</span>
+      </div>
+      <div class="info-item">
+        <span class="oxalate-label">Level</span>
+        <span class="oxalate-value">{{ oxalateData.level }}</span>
+      </div>
+      <div class="info-item">
+        <span class="oxalate-label">Total Oxalate (MG/100g)</span>
+        <span class="oxalate-value">{{
+          oxalateData.total_oxalate_mg_per_100g
+        }}</span>
+      </div>
+      <div class="info-item">
+        <span class="oxalate-label">Total Soluble Oxalate (MG/100g)</span>
+        <span class="oxalate-value">{{
+          oxalateData.total_soluble_oxalate_mg_per_100g
+        }}</span>
+      </div>
+    </div>
   </div>
 </div>

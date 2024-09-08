@@ -26,4 +26,12 @@ export class FilterComponent {
   toggleFilterMenu() {
     this.isFilterMenuActive = !this.isFilterMenuActive;
   }
+  activeSection: string | null = null;
+  isSectionActive(section: string): boolean {
+    // Replace this with your own logic for determining if the section is active
+    return this.activeSection === section;
+  }
+  toggleSection(section: string): void {
+    this.activeSection = this.activeSection === section ? null : section;
+  }
 }

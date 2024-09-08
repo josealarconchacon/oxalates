@@ -152,4 +152,10 @@ export class OxalateComponent implements OnInit {
     this.selectedOxalate = undefined;
     document.body.style.overflow = ''; // Restore scroll
   }
+
+  isSidebarOpen = false;
+
+  toggleSidebar() {
+    this.isSidebarOpen = !this.isSidebarOpen;
+  }
 }
