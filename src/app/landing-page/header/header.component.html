@@ -1,3 +1,26 @@
+<!-- <header id="header" class="header">
+  <div class="header-content">
+    <span class="material-symbols-outlined" (click)="goToLandingPage()">
+      <img
+        src="../../../assets/app-logo/logo-o.png"
+        alt="App Logo"
+        id="header-img"
+        class="nav-logo"
+        aria-hidden="true"
+      />
+    </span>
+
+    <button class="hamburger" (click)="toggleNav()">☰</button>
+
+    <nav class="nav" id="nav-bar" [class.open]="isNavOpen">
+      <a href="#beneficios" class="nav-link">Benefits</a>
+      <a href="#testimonios" class="nav-link">Resources</a>
+      <a href="#comprar" class="nav-link">FAQ</a>
+      <mat-icon (click)="search()">search</mat-icon>
+    </nav>
+  </div>
+</header> -->
+
 <header id="header" class="header">
   <div class="header-content">
     <span class="material-symbols-outlined" (click)="goToLandingPage()">
@@ -17,6 +40,10 @@
       <a href="#testimonios" class="nav-link">Resources</a>
       <a href="#comprar" class="nav-link">FAQ</a>
       <mat-icon (click)="search()">search</mat-icon>
+      <mat-icon class="user-icon" (click)="goToProfile()"
+        >account_circle</mat-icon
+      >
+      <!-- Added user icon -->
     </nav>
   </div>
 </header>
