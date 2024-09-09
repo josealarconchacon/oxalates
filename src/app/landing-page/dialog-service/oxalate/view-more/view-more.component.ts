@@ -9,6 +9,7 @@ import { Oxalate } from 'src/app/landing-page/model/oxalate';
 })
 export class ViewMoreComponent implements OnInit {
   @Input() oxalateData: Oxalate | undefined;
+  savedItems: Oxalate[] = [];
 
   constructor(private router: Router) {}
 
@@ -22,6 +23,16 @@ export class ViewMoreComponent implements OnInit {
       console.log('Received oxalate data:', this.oxalateData); // Debugging line
     } else {
       console.warn('No state data found for selected oxalate.');
+    }
+  }
+
+  onSave(): void {
+    if (this.oxalateData) {
+      this.savedItems.push(this.oxalateData);
+      console.log('Item saved:', this.oxalateData);
+      alert('Item saved successfully!');
+    } else {
+      console.warn('No oxalate data available to save.');
     }
   }
 }
