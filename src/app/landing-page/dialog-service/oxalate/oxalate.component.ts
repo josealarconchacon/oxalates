@@ -18,6 +18,8 @@ export class OxalateComponent implements OnInit {
   isFilterApplied: boolean = false;
   selectedOxalate: Oxalate | undefined;
 
+  showAlert: boolean = false;
+  alertMessage: string = '';
   itemsPerPage: number = 12;
   currentPage: number = 1;
   totalPages: number = 1;
@@ -44,16 +46,37 @@ export class OxalateComponent implements OnInit {
     });
   }
 
+  // search(): void {
+  //   if (this.searchQuery.trim() !== '') {
+  //     this.oxalateService
+  //       .searchOxalateData(this.searchQuery.trim())
+  //       .subscribe((data) => {
+  //         this.oxalates = data;
+  //         this.updateDisplayedOxalates();
+  //       });
+  //   } else {
+  //     this.resetData();
+  //   }
+  // }
+
   search(): void {
     if (this.searchQuery.trim() !== '') {
       this.oxalateService
         .searchOxalateData(this.searchQuery.trim())
         .subscribe((data) => {
-          this.oxalates = data;
-          this.updateDisplayedOxalates();
+          if (data.length === 0) {
+            this.showAlert = true;
+            this.alertMessage = 'No results found for your search.';
+            this.resetData();
+          } else {
+            this.oxalates = data;
+            this.updateDisplayedOxalates();
+            this.showAlert = false; // Hide the alert when data is found
+          }
         });
     } else {
       this.resetData();
+      this.showAlert = false; // Hide the alert when resetting data
     }
   }
 
