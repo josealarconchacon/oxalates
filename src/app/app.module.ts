@@ -1,4 +1,4 @@
-import { APP_INITIALIZER, NgModule } from '@angular/core';
+import { APP_INITIALIZER, NgModule, OnInit } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatToolbarModule } from '@angular/material/toolbar';
@@ -29,6 +29,7 @@ import { ManagingOxalateComponent } from './landing-page/managing-oxalate/managi
 import { ViewMoreComponent } from './landing-page/dialog-service/oxalate/view-more/view-more.component';
 import { AlertComponent } from './landing-page/dialog-service/oxalate/shared/alert/alert.component';
 import { ConfigService } from 'src/assets/config/config.service';
+import { AuthComponent } from './user-auth/auth/auth.component';
 
 export function initializeApp(configService: ConfigService) {
   return (): Promise<void> => {
@@ -58,6 +59,7 @@ export function initializeApp(configService: ConfigService) {
     ManagingOxalateComponent,
     ViewMoreComponent,
     AlertComponent,
+    AuthComponent,
   ],
   imports: [
     FormsModule,
@@ -91,4 +93,11 @@ export function initializeApp(configService: ConfigService) {
   ],
   bootstrap: [AppComponent],
 })
-export class AppModule {}
+export class AppModule implements OnInit {
+  constructor(private configService: ConfigService) {}
+  ngOnInit() {
+    this.configService.getConfig().subscribe(() => {
+      console.log('Firebase configuration initialized');
+    });
+  }
+}

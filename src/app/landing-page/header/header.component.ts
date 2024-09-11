@@ -7,14 +7,14 @@ import { Router } from '@angular/router';
   styleUrls: ['./header.component.css'],
 })
 export class HeaderComponent implements OnInit {
-  isNavOpen = false; // Tracks whether the nav is open
+  isNavOpen = false;
 
   constructor(private router: Router) {}
 
   ngOnInit(): void {}
 
   toggleNav() {
-    this.isNavOpen = !this.isNavOpen; // Toggle the navigation state
+    this.isNavOpen = !this.isNavOpen;
   }
 
   search() {
@@ -25,5 +25,7 @@ export class HeaderComponent implements OnInit {
     this.router.navigate(['/']);
   }
 
-  goToProfile() {}
+  goToProfile() {
+    this.router.navigate(['/auth']);
+  }
 }
