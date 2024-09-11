@@ -46,19 +46,6 @@ export class OxalateComponent implements OnInit {
     });
   }
 
-  // search(): void {
-  //   if (this.searchQuery.trim() !== '') {
-  //     this.oxalateService
-  //       .searchOxalateData(this.searchQuery.trim())
-  //       .subscribe((data) => {
-  //         this.oxalates = data;
-  //         this.updateDisplayedOxalates();
-  //       });
-  //   } else {
-  //     this.resetData();
-  //   }
-  // }
-
   search(): void {
     if (this.searchQuery.trim() !== '') {
       this.oxalateService
