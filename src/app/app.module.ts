@@ -14,6 +14,7 @@ import { environment } from 'src/environments/environment.development';
 import { AngularFireModule } from '@angular/fire/compat';
 import { AngularFireAnalyticsModule } from '@angular/fire/compat/analytics';
 import { AngularFireAuthModule } from '@angular/fire/compat/auth';
+import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -32,6 +33,7 @@ import { AlertComponent } from './landing-page/dialog-service/oxalate/shared/ale
 import { ConfigService } from 'src/assets/config/config.service';
 import { AuthComponent } from './user-auth/auth/auth.component';
 import { ProfileComponent } from './user-auth/profile/profile.component';
+import { CommonModule } from '@angular/common';
 
 export function initializeApp(configService: ConfigService) {
   return (): Promise<void> => {
@@ -65,6 +67,7 @@ export function initializeApp(configService: ConfigService) {
     ProfileComponent,
   ],
   imports: [
+    CommonModule,
     FormsModule,
     BrowserModule,
     AppRoutingModule,
@@ -86,6 +89,7 @@ export function initializeApp(configService: ConfigService) {
     AngularFireAnalyticsModule,
     AngularFireAuthModule,
   ],
+  schemas: [CUSTOM_ELEMENTS_SCHEMA],
   providers: [
     ConfigService,
     {
