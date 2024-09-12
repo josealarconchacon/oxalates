@@ -13,6 +13,7 @@ import { MatExpansionModule } from '@angular/material/expansion';
 import { environment } from 'src/environments/environment.development';
 import { AngularFireModule } from '@angular/fire/compat';
 import { AngularFireAnalyticsModule } from '@angular/fire/compat/analytics';
+import { AngularFireAuthModule } from '@angular/fire/compat/auth';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -30,6 +31,7 @@ import { ViewMoreComponent } from './landing-page/dialog-service/oxalate/view-mo
 import { AlertComponent } from './landing-page/dialog-service/oxalate/shared/alert/alert.component';
 import { ConfigService } from 'src/assets/config/config.service';
 import { AuthComponent } from './user-auth/auth/auth.component';
+import { ProfileComponent } from './user-auth/profile/profile.component';
 
 export function initializeApp(configService: ConfigService) {
   return (): Promise<void> => {
@@ -60,6 +62,7 @@ export function initializeApp(configService: ConfigService) {
     ViewMoreComponent,
     AlertComponent,
     AuthComponent,
+    ProfileComponent,
   ],
   imports: [
     FormsModule,
@@ -81,6 +84,7 @@ export function initializeApp(configService: ConfigService) {
     MatExpansionModule,
     AngularFireModule.initializeApp(environment.firebaseConfig),
     AngularFireAnalyticsModule,
+    AngularFireAuthModule,
   ],
   providers: [
     ConfigService,

@@ -4,13 +4,17 @@ import { OxalateComponent } from './landing-page/dialog-service/oxalate/oxalate.
 import { LandingPageComponent } from './landing-page/landing-page.component';
 import { ViewMoreComponent } from './landing-page/dialog-service/oxalate/view-more/view-more.component';
 import { AuthComponent } from './user-auth/auth/auth.component';
+import { ProfileComponent } from './user-auth/profile/profile.component';
+import { AuthGuard } from './user-auth/service/auth.guard';
 
 const routes: Routes = [
+  { path: 'auth', component: AuthComponent },
   { path: '', component: LandingPageComponent },
   { path: 'oxalate', component: OxalateComponent },
   { path: 'view-more', component: ViewMoreComponent },
-  { path: 'auth', component: AuthComponent },
-  { path: '**', redirectTo: '' },
+  { path: 'profile', component: ProfileComponent, canActivate: [AuthGuard] },
+  { path: '', redirectTo: '/auth', pathMatch: 'full' }, // Default route
+  { path: '**', redirectTo: '/auth' }, // Fallback route
 ];
 
 @NgModule({
