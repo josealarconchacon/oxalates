@@ -2,17 +2,23 @@ import { Injectable } from '@angular/core';
 import { AngularFireAuth } from '@angular/fire/compat/auth';
 import { Router } from '@angular/router';
 import firebase from 'firebase/compat/app';
+import { BehaviorSubject } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
 })
 export class AuthService {
+  private userProfileSubject = new BehaviorSubject<any>(null);
+  userProfile$ = this.userProfileSubject.asObservable();
+
   constructor(private afAuth: AngularFireAuth, private router: Router) {
     this.afAuth.authState.subscribe((user) => {
       if (user) {
         localStorage.setItem('user', JSON.stringify(user));
+        this.setUserProfile(user); // Update the profile
       } else {
         localStorage.removeItem('user');
+        this.setUserProfile(null); // Clear the profile
       }
     });
   }
@@ -48,11 +54,11 @@ export class AuthService {
   getCurrentUser() {
     return this.afAuth.authState;
   }
-
   async googleSignIn(): Promise<void> {
     try {
       const provider = new firebase.auth.GoogleAuthProvider();
-      await this.afAuth.signInWithPopup(provider);
+      const result = await this.afAuth.signInWithPopup(provider);
+      this.setUserProfile(result.user); // Set the user profile
       this.router.navigate(['/oxalate']);
     } catch (error) {
       console.error('Error during Google sign-in:', error);
@@ -71,5 +77,20 @@ export class AuthService {
 
   isAuthenticated(): boolean {
     return localStorage.getItem('user') !== null;
+  }
+
+  // Call this method when the user signs in
+  setUserProfile(profile: any) {
+    this.userProfileSubject.next(profile);
+  }
+
+  // Call this method to get the user profile data
+  getUserProfile() {
+    return this.userProfile$;
+  }
+
+  logout() {
+    // Clear user data on logout
+    this.userProfileSubject.next(null);
   }
 }
