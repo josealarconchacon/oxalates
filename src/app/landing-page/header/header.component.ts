@@ -26,6 +26,6 @@ export class HeaderComponent implements OnInit {
   }
 
   goToProfile() {
-    this.router.navigate(['/auth']);
+    this.router.navigate(['/profile']);
   }
 }
