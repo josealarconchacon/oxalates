@@ -34,6 +34,7 @@ import { ConfigService } from 'src/assets/config/config.service';
 import { AuthComponent } from './user-auth/auth/auth.component';
 import { ProfileComponent } from './user-auth/profile/profile.component';
 import { CommonModule } from '@angular/common';
+import { ChangePasswordComponent } from './user-auth/change-password/change-password.component';
 
 export function initializeApp(configService: ConfigService) {
   return (): Promise<void> => {
@@ -65,6 +66,7 @@ export function initializeApp(configService: ConfigService) {
     AlertComponent,
     AuthComponent,
     ProfileComponent,
+    ChangePasswordComponent,
   ],
   imports: [
     CommonModule,

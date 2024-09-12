@@ -93,4 +93,26 @@ export class AuthService {
     // Clear user data on logout
     this.userProfileSubject.next(null);
   }
+
+  async changePassword(
+    currentPassword: string,
+    newPassword: string
+  ): Promise<void> {
+    try {
+      const user = await this.afAuth.currentUser;
+      if (user && user.email) {
+        // Re-authenticate the user with the current password
+        const credential = firebase.auth.EmailAuthProvider.credential(
+          user.email,
+          currentPassword
+        );
+        await user.reauthenticateWithCredential(credential);
+        // Update the password
+        await user.updatePassword(newPassword);
+      }
+    } catch (error) {
+      console.error('Error changing password:', error);
+      throw error;
+    }
+  }
 }

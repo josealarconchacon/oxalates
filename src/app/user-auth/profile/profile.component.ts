@@ -8,20 +8,27 @@ import { AuthService } from '../service/auth-service.service';
 })
 export class ProfileComponent implements OnInit {
   activeSection: string = 'profile';
-  isAddressModalVisible: boolean = false;
+  userProfile: any;
+  isChangePasswordVisible: boolean = false;
 
   constructor(private authService: AuthService) {}
 
   ngOnInit(): void {
-    // Fetch and display user profile details
+    this.getUserInfo();
+  }
+
+  getUserInfo() {
+    this.authService.getUserProfile().subscribe((response) => {
+      this.userProfile = response;
+    });
   }
 
   showSection(section: string): void {
     this.activeSection = section;
   }
 
-  toggleAddressModal(): void {
-    this.isAddressModalVisible = !this.isAddressModalVisible;
+  toggleChangePassword(): void {
+    this.isChangePasswordVisible = !this.isChangePasswordVisible;
   }
 
   onLogout(): void {

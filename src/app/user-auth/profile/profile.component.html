@@ -7,18 +7,19 @@
             <div class="profile-card-body">
               <div class="profile-info">
                 <img
-                  src="https://banner2.cleanpng.com/20180619/tyr/aa66mfh81.webp"
-                  alt="Profile Image of Jyoti"
+                  [src]="
+                    userProfile?.profileImage ||
+                    'https://banner2.cleanpng.com/20180619/tyr/aa66mfh81.webp'
+                  "
+                  alt="Profile Image of {{ userProfile?.username }}"
                   class="profile-image"
                 />
                 <div class="profile-details">
-                  <h4>Username</h4>
-                  <p class="profile-location">User Email</p>
+                  <h4>{{ userProfile?.displayName || "Username" }}</h4>
                 </div>
               </div>
               <nav class="profile-nav">
                 <a
-                  href="#"
                   class="nav-item"
                   [class.active]="activeSection === 'profile'"
                   (click)="showSection('profile')"
@@ -26,26 +27,20 @@
                   >Profile Information</a
                 >
                 <a
-                  href="#"
                   class="nav-item"
-                  [class.active]="activeSection === 'orders'"
-                  (click)="showSection('orders')"
-                  aria-label="Orders"
+                  [class.active]="activeSection === 'saveItem'"
+                  (click)="showSection('saveItem')"
+                  aria-label="Save Items"
                   >Save Items</a
                 >
                 <a
-                  href="#"
                   class="nav-item"
                   [class.active]="activeSection === 'address'"
                   (click)="showSection('address')"
                   aria-label="Address Book"
                   >Address Book</a
                 >
-                <a
-                  href="#"
-                  class="nav-item"
-                  aria-label="Logout"
-                  (click)="onLogout()"
+                <a class="nav-item" aria-label="Logout" (click)="onLogout()"
                   >Logout</a
                 >
               </nav>
@@ -56,27 +51,32 @@
           <div *ngIf="activeSection === 'profile'" class="profile-details-card">
             <div class="card-body">
               <h5>Profile Information</h5>
-              <p><strong>Name:</strong> Username</p>
-              <p><strong>Email Address:</strong>username-gmail.com</p>
+              <p>
+                <strong>Name:</strong>
+                {{ userProfile?.displayName || "Username" }}
+              </p>
+              <p>
+                <strong>Email Address:</strong>
+                {{ userProfile?.email || "username@gmail.com" }}
+              </p>
+              <p>
+                <strong>Password:</strong>
+                <button (click)="toggleChangePassword()">
+                  Change Password
+                </button>
+              </p>
             </div>
           </div>
+          <app-change-password
+            *ngIf="isChangePasswordVisible"
+            (close)="toggleChangePassword()"
+          ></app-change-password>
         </div>
-        <div *ngIf="activeSection === 'orders'" class="order-details">
-          <div class="card-body">
-            <h5>Save Items</h5>
-            <button class="add-address-btn" (click)="toggleAddressModal()">
-              Save items
-            </button>
-            <div id="addressList"></div>
-          </div>
-        </div>
-        <div *ngIf="activeSection === 'address'" class="address-book">
-          <div class="card-body">
-            <h5>Address Book</h5>
-            <button class="add-address-btn" (click)="toggleAddressModal()">
-              Add Address
-            </button>
-            <div id="addressList"></div>
+        <div class="save-content">
+          <div *ngIf="activeSection === 'saveItem'" class="save-details-card">
+            <div class="card-body">
+              <h5>Saved Items</h5>
+            </div>
           </div>
         </div>
       </div>

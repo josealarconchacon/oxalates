@@ -1,53 +1,58 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { AuthService } from '../service/auth-service.service';
 
 @Component({
   selector: 'app-auth',
   templateUrl: './auth.component.html',
   styleUrls: ['./auth.component.css'],
 })
-export class AuthComponent {
+export class AuthComponent implements OnInit {
   authForm!: FormGroup;
-  isSignInMode = true; // Toggle between sign-in and sign-up modes
+  isSignInMode = true;
 
-  constructor(private fb: FormBuilder) {
+  constructor(private fb: FormBuilder, private authService: AuthService) {}
+
+  ngOnInit(): void {
     this.initializeForm();
   }
 
-  initializeForm() {
+  initializeForm(): void {
     this.authForm = this.fb.group({
       email: ['', [Validators.required, Validators.email]],
       password: ['', Validators.required],
-      confirmPassword: ['', Validators.required], // Only needed in sign-up mode
+      confirmPassword: [''], // Only needed in sign-up mode
     });
   }
 
-  onSubmit(): void {
-    if (this.authForm.valid) {
-      if (this.isSignInMode) {
-        // Perform sign-in logic
-        console.log('Signing in with:', this.authForm.value);
-      } else {
-        // Perform sign-up logic
-        console.log('Signing up with:', this.authForm.value);
-      }
+  async onSubmit(): Promise<void> {
+    if (this.authForm.invalid) {
+      this.authForm.markAllAsTouched();
+      return;
+    }
+
+    const { email, password, confirmPassword } = this.authForm.value;
+    if (this.isSignInMode) {
+      await this.authService.signIn(email, password);
     } else {
-      this.authForm.markAllAsTouched(); // Ensure all fields are validated
+      if (password !== confirmPassword) {
+        console.error('Passwords do not match');
+        return;
+      }
+      await this.authService.signUp(email, password);
     }
   }
 
   toggleAuthMode(): void {
     this.isSignInMode = !this.isSignInMode;
-    this.initializeForm(); // Reset the form on mode change
+    this.initializeForm();
   }
 
-  onGoogleSignIn() {
-    // Handle Google Sign-In Logic here
-    console.log('Google Sign-In clicked');
+  onGoogleSignIn(): void {
+    this.authService.googleSignIn();
   }
 
-  onFacebookSignIn() {
-    // Handle Facebook Sign-In Logic here
-    console.log('Facebook Sign-In clicked');
+  onFacebookSignIn(): void {
+    this.authService.facebookSignIn();
   }
 }
