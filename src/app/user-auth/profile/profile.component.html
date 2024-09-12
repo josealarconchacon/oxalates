@@ -1,0 +1,85 @@
+<section class="profile-section">
+  <div class="profile-container">
+    <div class="profile-main">
+      <div class="profile-row">
+        <aside class="profile-sidebar">
+          <div class="profile-card">
+            <div class="profile-card-body">
+              <div class="profile-info">
+                <img
+                  src="https://banner2.cleanpng.com/20180619/tyr/aa66mfh81.webp"
+                  alt="Profile Image of Jyoti"
+                  class="profile-image"
+                />
+                <div class="profile-details">
+                  <h4>Username</h4>
+                  <p class="profile-location">User Email</p>
+                </div>
+              </div>
+              <nav class="profile-nav">
+                <a
+                  href="#"
+                  class="nav-item"
+                  [class.active]="activeSection === 'profile'"
+                  (click)="showSection('profile')"
+                  aria-label="Profile Information"
+                  >Profile Information</a
+                >
+                <a
+                  href="#"
+                  class="nav-item"
+                  [class.active]="activeSection === 'orders'"
+                  (click)="showSection('orders')"
+                  aria-label="Orders"
+                  >Save Items</a
+                >
+                <a
+                  href="#"
+                  class="nav-item"
+                  [class.active]="activeSection === 'address'"
+                  (click)="showSection('address')"
+                  aria-label="Address Book"
+                  >Address Book</a
+                >
+                <a
+                  href="#"
+                  class="nav-item"
+                  aria-label="Logout"
+                  (click)="onLogout()"
+                  >Logout</a
+                >
+              </nav>
+            </div>
+          </div>
+        </aside>
+        <div class="profile-content">
+          <div *ngIf="activeSection === 'profile'" class="profile-details-card">
+            <div class="card-body">
+              <h5>Profile Information</h5>
+              <p><strong>Name:</strong> Username</p>
+              <p><strong>Email Address:</strong>username-gmail.com</p>
+            </div>
+          </div>
+        </div>
+        <div *ngIf="activeSection === 'orders'" class="order-details">
+          <div class="card-body">
+            <h5>Save Items</h5>
+            <button class="add-address-btn" (click)="toggleAddressModal()">
+              Save items
+            </button>
+            <div id="addressList"></div>
+          </div>
+        </div>
+        <div *ngIf="activeSection === 'address'" class="address-book">
+          <div class="card-body">
+            <h5>Address Book</h5>
+            <button class="add-address-btn" (click)="toggleAddressModal()">
+              Add Address
+            </button>
+            <div id="addressList"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

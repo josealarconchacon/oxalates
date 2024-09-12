@@ -1,0 +1,140 @@
+.profile-section {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 3rem 0;
+}
+
+.profile-container {
+  max-width: 1140px;
+  width: 100%;
+  padding: 0 15px;
+  box-sizing: border-box;
+}
+
+.profile-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 15px;
+}
+
+.profile-sidebar {
+  flex: 1;
+  max-width: 33.333%;
+  padding: 0 15px;
+  box-sizing: border-box;
+}
+
+.profile-content {
+  flex: 2;
+  max-width: 66.666%;
+  padding: 0 15px;
+  box-sizing: border-box;
+  color: #fefefe;
+}
+
+.profile-card {
+  background-color: #fff;
+  border-radius: 0.25rem;
+  box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+}
+
+.profile-card-body {
+  padding: 1.25rem;
+}
+
+.profile-info {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+.profile-image {
+  width: 110px;
+  height: 110px;
+  border-radius: 50%;
+  background-color: #ffc107;
+  margin-bottom: 1rem;
+  object-fit: cover;
+}
+
+.profile-nav {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  margin-top: 1.5rem;
+}
+
+.nav-item {
+  padding: 0.75rem 1.25rem;
+  color: #495057;
+  text-decoration: none;
+  background-color: #fff;
+  border: 1px solid rgba(0, 0, 0, 0.125);
+  margin-bottom: -1px;
+}
+
+.nav-item.active {
+  background-color: #ffc107;
+  border-color: #ffc107;
+}
+
+.address-modal {
+  position: fixed;
+  z-index: 1000;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.modal-content {
+  background-color: #fefefe;
+  padding: 20px;
+  border: 1px solid #888;
+  width: 70%;
+  max-width: 500px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.close-btn {
+  float: right;
+  font-size: 28px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.form-actions {
+  text-align: center;
+  margin-top: 1rem;
+}
+
+.form-actions button {
+  margin: 0 0.5rem;
+  padding: 0.5rem 1rem;
+  background-color: #ffc107;
+  border: none;
+  color: #fff;
+  cursor: pointer;
+}
+
+@media (max-width: 768px) {
+  .profile-row {
+    flex-direction: column;
+  }
+
+  .profile-sidebar,
+  .profile-content {
+    max-width: 100%;
+  }
+
+  .modal-content {
+    width: 95%;
+    padding: 10px;
+  }
+}
