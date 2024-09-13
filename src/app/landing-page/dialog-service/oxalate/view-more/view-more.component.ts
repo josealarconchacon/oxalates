@@ -27,19 +27,21 @@ export class ViewMoreComponent implements OnInit {
     }
   }
 
-  // onSave(): void {
-  //   if (!this.authService.checkAuth()) {
-  //     // Redirect to sign-in page if not authenticated
-  //     this.authService.redirectToSignIn();
-  //     return;
-  //   }
+  async onSave(): Promise<void> {
+    const user = await this.authService.getCurrentUser();
 
-  //   if (this.oxalateData) {
-  //     this.savedItems.push(this.oxalateData);
-  //     console.log('Item saved:', this.oxalateData);
-  //     alert('Item saved successfully!');
-  //   } else {
-  //     console.warn('No oxalate data available to save.');
-  //   }
-  // }
+    if (!user) {
+      // If no user is authenticated, redirect to the sign-in page
+      this.authService.redirectToSignIn();
+      return;
+    }
+
+    if (this.oxalateData) {
+      this.savedItems.push(this.oxalateData);
+      console.log('Item saved:', this.oxalateData);
+      alert('Item saved successfully!');
+    } else {
+      console.warn('No oxalate data available to save.');
+    }
+  }
 }
