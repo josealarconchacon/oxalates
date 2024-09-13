@@ -23,6 +23,14 @@ export class AuthComponent implements OnInit {
       password: ['', Validators.required],
       confirmPassword: [''], // Only needed in sign-up mode
     });
+    if (!this.isSignInMode) {
+      this.authForm.controls['confirmPassword'].setValidators(
+        Validators.required
+      );
+    } else {
+      this.authForm.controls['confirmPassword'].clearValidators();
+    }
+    this.authForm.controls['confirmPassword'].updateValueAndValidity();
   }
 
   async onSubmit(): Promise<void> {
@@ -39,7 +47,7 @@ export class AuthComponent implements OnInit {
         console.error('Passwords do not match');
         return;
       }
-      await this.authService.signUp(email, password);
+      await this.authService.signUp(email, password, confirmPassword);
     }
   }
 
