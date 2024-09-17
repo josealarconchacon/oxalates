@@ -2,6 +2,7 @@ import { Component, Input, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { Oxalate } from 'src/app/landing-page/model/oxalate';
 import { AuthService } from 'src/app/user-auth/service/auth-service.service';
+import { OxalateService } from '../../service/oxalate.service';
 
 @Component({
   selector: 'app-view-more',
@@ -12,7 +13,11 @@ export class ViewMoreComponent implements OnInit {
   @Input() oxalateData: Oxalate | undefined;
   savedItems: Oxalate[] = [];
 
-  constructor(private router: Router, private authService: AuthService) {}
+  constructor(
+    private router: Router,
+    private authService: AuthService,
+    private oxalateService: OxalateService
+  ) {}
 
   ngOnInit(): void {
     const navigation = this.router.getCurrentNavigation();
@@ -28,20 +33,26 @@ export class ViewMoreComponent implements OnInit {
   }
 
   async onSave(): Promise<void> {
-    const user = await this.authService.getCurrentUser();
+    try {
+      const user = await this.authService.getCurrentUser(); // Ensure the user is authenticated
 
-    if (!user) {
-      // If no user is authenticated, redirect to the sign-in page
-      this.authService.redirectToSignIn();
-      return;
-    }
+      if (!user) {
+        // If no user is authenticated, redirect to the sign-in page
+        this.authService.redirectToSignIn();
+        return;
+      }
 
-    if (this.oxalateData) {
-      this.savedItems.push(this.oxalateData);
-      console.log('Item saved:', this.oxalateData);
-      alert('Item saved successfully!');
-    } else {
-      console.warn('No oxalate data available to save.');
+      if (this.oxalateData) {
+        // Save data to Firestore under the authenticated user's ID
+        await this.oxalateService.saveOxalate(this.oxalateData);
+        alert('Item saved successfully!');
+      } else {
+        console.warn('No oxalate data available to save.');
+      }
+    } catch (error) {
+      console.error('Error saving oxalate:', error);
+      alert('An error occurred while saving the item. Please try again.');
     }
+    console.log('Saving oxalate:', this.oxalateData);
   }
 }
