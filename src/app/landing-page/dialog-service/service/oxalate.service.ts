@@ -1,3 +1,4 @@
+import firebase from 'firebase/compat/app';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable, Subject, from, of } from 'rxjs';
@@ -83,21 +84,55 @@ export class OxalateService {
     );
   }
 
+  // Retrieves all saved oxalates from Firestore.
+  private async getCurrentUser(): Promise<any> {
+    const user = await this.authService.getCurrentUser();
+    if (!user) {
+      throw new Error('User not authenticated');
+    }
+    return user;
+  }
+  private async itemExists(
+    oxalateData: Oxalate,
+    userId: string
+  ): Promise<boolean> {
+    const existingItems = await this.firestore
+      .collection(this.collectionName)
+      .doc(userId)
+      .collection('oxalates')
+      .ref.get();
+
+    return existingItems.docs.some((doc) => {
+      const data = doc.data() as Oxalate;
+      return data.item === oxalateData.item;
+    });
+  }
+
+  private async saveNewItem(
+    oxalateData: Oxalate,
+    userId: string
+  ): Promise<void> {
+    const docRef = this.firestore
+      .collection(this.collectionName)
+      .doc(userId)
+      .collection('oxalates')
+      .doc(); // Creates a new document with auto-generated ID
+
+    await docRef.set({ ...oxalateData, userId });
+  }
+
   async saveOxalate(oxalateData: Oxalate): Promise<void> {
     try {
-      const user = await this.authService.getCurrentUser();
-      if (!user) {
-        throw new Error('User not authenticated');
+      const user = await this.getCurrentUser();
+      const userId = user.uid;
+
+      const exists = await this.itemExists(oxalateData, userId);
+      if (exists) {
+        console.log('Item already saved!');
+        return;
       }
 
-      // Use `doc` to specify a document ID if necessary, or use auto-generated ID
-      const docRef = this.firestore
-        .collection(this.collectionName)
-        .doc(user.uid)
-        .collection('oxalates')
-        .doc(); // Creates a new document with auto-generated ID
-
-      await docRef.set({ ...oxalateData, userId: user.uid });
+      await this.saveNewItem(oxalateData, userId);
       console.log('Oxalate saved successfully');
     } catch (error) {
       console.error('Error saving oxalate:', error);
@@ -105,7 +140,6 @@ export class OxalateService {
     }
   }
 
-  // Retrieves all saved oxalates from Firestore.
   getSavedOxalates(): Observable<Oxalate[]> {
     return from(this.authService.getCurrentUser()).pipe(
       switchMap((user) => {

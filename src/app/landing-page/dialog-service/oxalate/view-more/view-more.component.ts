@@ -43,7 +43,6 @@ export class ViewMoreComponent implements OnInit {
       }
 
       if (this.oxalateData) {
-        // Save data to Firestore under the authenticated user's ID
         await this.oxalateService.saveOxalate(this.oxalateData);
         alert('Item saved successfully!');
       } else {
@@ -53,6 +52,5 @@ export class ViewMoreComponent implements OnInit {
       console.error('Error saving oxalate:', error);
       alert('An error occurred while saving the item. Please try again.');
     }
-    console.log('Saving oxalate:', this.oxalateData);
   }
 }
