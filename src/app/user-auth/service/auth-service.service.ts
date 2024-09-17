@@ -3,7 +3,7 @@ import { AngularFireAuth } from '@angular/fire/compat/auth';
 import { AngularFirestore } from '@angular/fire/compat/firestore';
 import { Router } from '@angular/router';
 import firebase from 'firebase/compat/app';
-import { BehaviorSubject } from 'rxjs';
+import { BehaviorSubject, first } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
@@ -42,10 +42,11 @@ export class AuthService {
         email,
         password
       );
-      await this.updateUserData(result.user); // Store user data in Firestore
+      await this.updateUserData(result.user);
       this.router.navigate(['/oxalate']);
     } catch (error) {
-      console.error('Error during sign up:', error);
+      console.error('Sign-up failed.'); // Avoid detailed logging
+      alert('Sign-up failed. Please try again.');
     }
   }
 
@@ -55,10 +56,12 @@ export class AuthService {
         email,
         password
       );
-      await this.updateUserData(result.user); // Store user data in Firestore
+      await this.updateUserData(result.user); // Update user data
       this.router.navigate(['/oxalate']);
     } catch (error) {
-      console.error('Error during sign in:', error);
+      console.error('Error during sign in'); // Avoid logging sensitive error details
+      // Display a user-friendly error message
+      alert('Login failed. Please check your credentials.');
     }
   }
 
@@ -109,6 +112,12 @@ export class AuthService {
       lastLogin: new Date(),
     };
 
+    // Validate data before setting in Firestore
+    if (!user.uid || !user.email) {
+      console.error('Invalid user data:', userData);
+      return Promise.reject(new Error('Invalid user data'));
+    }
+
     const userRef = this.afs.collection('users').doc(user.uid);
     return userRef.set(userData, { merge: true });
   }
@@ -138,12 +147,21 @@ export class AuthService {
           currentPassword
         );
         await user.reauthenticateWithCredential(credential);
-        // Update the passwor
+        // Update the password
         await user.updatePassword(newPassword);
       }
     } catch (error) {
       console.error('Error changing password:', error);
       throw error;
     }
+  }
+
+  async getCurrentUser(): Promise<firebase.User | null> {
+    const user = await this.afAuth.currentUser;
+    return user ?? null; // Use null if user is undefined
+  }
+
+  redirectToSignIn(): void {
+    this.router.navigate(['/auth']); // Redirect to the authentication page
   }
 }
