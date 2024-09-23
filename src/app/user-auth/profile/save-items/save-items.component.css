@@ -26,7 +26,7 @@ h2 {
 }
 
 .card {
-  background-color: rgba(231, 127, 103, 0.1);
+  background-color: #1e1e1e;
   border-radius: 8px;
   overflow: hidden;
   transition: background 0.3s;
@@ -34,14 +34,19 @@ h2 {
 }
 
 .card:hover {
-  background-color: rgba(231, 127, 103, 0.2);
+  background-color: #222222;
 }
 
 .header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 15px 20px;
+  padding: 10px 15px;
+}
+
+.button-container {
+  display: flex;
+  gap: 5px;
 }
 
 .header h3 {
@@ -64,9 +69,18 @@ button:hover {
   background-color: #d06d57;
 }
 
+.delete-button {
+  background-color: #ff4c4c;
+}
+
+.delete-button:hover {
+  background-color: #e03e3e;
+}
+
 .details {
   padding: 15px 20px;
-  line-height: 1.6;
+  border-top: 1px solid #e77f67;
+  line-height: 1.5;
   opacity: 0;
   max-height: 0;
   transition: max-height 0.5s ease, opacity 0.5s ease;
@@ -74,7 +88,29 @@ button:hover {
 
 .card.expanded .details {
   opacity: 1;
-  max-height: 200px;
+  max-height: 550px;
+}
+
+.details p {
+  margin: 10px 0;
+  display: flex;
+  align-items: center;
+}
+
+.details p::before {
+  content: "•";
+  margin-right: 10px;
+  color: #e77f67;
+}
+
+.details p span.key {
+  font-weight: bold;
+  color: #333;
+}
+
+.details p span.value {
+  margin-left: 5px;
+  color: #555;
 }
 
 .delete-button {
@@ -84,7 +120,7 @@ button:hover {
   border-radius: 5px;
   color: white;
   cursor: pointer;
-  margin-left: 10px; /* Space between buttons */
+  margin-left: 10px;
   transition: background 0.3s;
 }
 

@@ -11,12 +11,14 @@
     >
       <div class="header">
         <h3>{{ oxalate.item }}</h3>
-        <button (click)="handleCardClick(oxalate.id)">
-          {{ expandedCardId === oxalate.id ? "Collapse" : "Expand" }}
-        </button>
-        <button (click)="deleteOxalate(oxalate.id)" class="delete-button">
-          Delete
-        </button>
+        <div class="button-container">
+          <button (click)="handleCardClick(oxalate.id)">
+            {{ expandedCardId === oxalate.id ? "Collapse" : "Expand" }}
+          </button>
+          <button (click)="deleteOxalate(oxalate.id)" class="delete-button">
+            Delete
+          </button>
+        </div>
       </div>
       <div *ngIf="expandedCardId === oxalate.id" class="details">
         <div *ngFor="let detail of oxalate | keyvalue">
