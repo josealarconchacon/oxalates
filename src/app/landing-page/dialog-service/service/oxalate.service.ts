@@ -8,6 +8,7 @@ import {
   distinctUntilChanged,
   switchMap,
   catchError,
+  tap,
 } from 'rxjs/operators';
 import { Oxalate } from '../../model/oxalate';
 import { AuthService } from 'src/app/user-auth/service/auth-service.service';
@@ -41,15 +42,15 @@ export class OxalateService {
         if (query && typeof query === 'string' && query.trim() !== '') {
           const searchResults: Oxalate[] = [];
           for (const item of data) {
-            // Perform a case-insensitive search for the query within each property of the item
+            // case-insensitive search for the query within each property of the item
             for (const key of Object.keys(item)) {
-              const propertyValue = item[key as keyof Oxalate]; // Explicitly define the type of the property value
+              const propertyValue = item[key as keyof Oxalate];
               if (
                 typeof propertyValue === 'string' &&
                 propertyValue.toLowerCase().includes(query.trim().toLowerCase())
               ) {
                 searchResults.push(item);
-                break; // Add the item once and move to the next item
+                break;
               }
             }
           }
@@ -64,8 +65,8 @@ export class OxalateService {
   initiateDynamicSearch(): void {
     this.searchTerms
       .pipe(
-        debounceTime(300), // Debounce user input for 300ms
-        distinctUntilChanged(), // Ensure the search term has changed
+        debounceTime(300),
+        distinctUntilChanged(),
         switchMap((query: string) => this.searchOxalateData(query))
       )
       .subscribe((data) => {
@@ -75,7 +76,7 @@ export class OxalateService {
   }
 
   updateSearchQuery(query: string): void {
-    this.searchTerms.next(query); // Emit the search term to trigger the dynamic search
+    this.searchTerms.next(query);
   }
 
   getOxalateById(id: string): Observable<Oxalate | undefined> {
@@ -92,10 +93,7 @@ export class OxalateService {
     }
     return user;
   }
-  private async itemExists(
-    oxalateData: Oxalate,
-    userId: string
-  ): Promise<boolean> {
+  async itemExists(oxalateData: Oxalate, userId: string): Promise<boolean> {
     const existingItems = await this.firestore
       .collection(this.collectionName)
       .doc(userId)
@@ -112,13 +110,15 @@ export class OxalateService {
     oxalateData: Oxalate,
     userId: string
   ): Promise<void> {
-    const docRef = this.firestore
+    const userDocRef = this.firestore
       .collection(this.collectionName)
-      .doc(userId)
-      .collection('oxalates')
-      .doc(); // Creates a new document with auto-generated ID
+      .doc(userId);
 
-    await docRef.set({ ...oxalateData, userId });
+    // Save the document and get the document reference (which contains the generated ID)
+    const docRef = await userDocRef
+      .collection('oxalates')
+      .add({ ...oxalateData });
+    console.log('Oxalate saved with ID:', docRef.id);
   }
 
   async saveOxalate(oxalateData: Oxalate): Promise<void> {
@@ -140,22 +140,52 @@ export class OxalateService {
     }
   }
 
-  getSavedOxalates(): Observable<Oxalate[]> {
-    return from(this.authService.getCurrentUser()).pipe(
-      switchMap((user) => {
-        if (user) {
-          return this.firestore
-            .collection(this.collectionName)
-            .doc(user.uid)
-            .collection('oxalates')
-            .valueChanges() as Observable<Oxalate[]>;
-        } else {
-          return of([]); // Return an empty array if no user is authenticated
+  async deleteOxalate(userId: string, id: string): Promise<void> {
+    const docRef = this.firestore
+      .collection(this.collectionName)
+      .doc(userId)
+      .collection('oxalates')
+      .doc(id);
+
+    console.log('Attempting to delete document with ID:', id);
+
+    try {
+      const snapshot = await docRef.get().toPromise();
+      if (!snapshot || !snapshot.exists) {
+        throw new Error(
+          `Document with ID ${id} for user ${userId} does not exist`
+        );
+      }
+
+      await docRef.delete();
+      console.log(`Oxalate with ID ${id} deleted successfully`);
+    } catch (error) {
+      console.error('Error deleting oxalate:', error);
+      throw error;
+    }
+  }
+
+  getSavedOxalates(userId: string): Observable<Oxalate[]> {
+    const oxalatesRef = this.firestore
+      .collection(this.collectionName)
+      .doc(userId)
+      .collection('oxalates')
+      .get();
+
+    return from(oxalatesRef).pipe(
+      map((oxalatesSnapshot) => {
+        // Check if oxalatesSnapshot is undefined or empty
+        if (!oxalatesSnapshot || oxalatesSnapshot.empty) {
+          console.warn('No oxalates found or the snapshot is undefined');
+          return [];
         }
-      }),
-      catchError((error) => {
-        console.error('Error fetching saved oxalates:', error);
-        return of([]); // Return an empty array in case of error
+        return oxalatesSnapshot.docs.map((doc) => {
+          const data = doc.data() as Oxalate; // Type assertion to Oxalate
+          return {
+            ...data,
+            id: doc.id,
+          };
+        });
       })
     );
   }

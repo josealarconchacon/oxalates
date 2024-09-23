@@ -1,1 +1,31 @@
-<p>save-items works!</p>
+<div class="saved-items">
+  <h2>Saved Items</h2>
+  <div *ngIf="savedOxalates$ | async as savedOxalates; else noItems">
+    <div
+      *ngFor="let oxalate of savedOxalates"
+      class="card"
+      [ngClass]="{
+        expanded: expandedCardId === oxalate.id,
+        collapsed: expandedCardId !== oxalate.id
+      }"
+    >
+      <div class="header">
+        <h3>{{ oxalate.item }}</h3>
+        <button (click)="handleCardClick(oxalate.id)">
+          {{ expandedCardId === oxalate.id ? "Collapse" : "Expand" }}
+        </button>
+        <button (click)="deleteOxalate(oxalate.id)" class="delete-button">
+          Delete
+        </button>
+      </div>
+      <div *ngIf="expandedCardId === oxalate.id" class="details">
+        <div *ngFor="let detail of oxalate | keyvalue">
+          <p>{{ detail.key | titlecase }}: {{ detail.value }}</p>
+        </div>
+      </div>
+    </div>
+  </div>
+  <ng-template #noItems>
+    <p>No saved items found.</p>
+  </ng-template>
+</div>

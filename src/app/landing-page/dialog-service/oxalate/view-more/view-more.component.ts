@@ -24,6 +24,7 @@ export class ViewMoreComponent implements OnInit {
 
   ngOnInit(): void {
     const navigation = this.router.getCurrentNavigation();
+
     if (
       navigation?.extras.state &&
       navigation.extras.state['selectedOxalate']
@@ -34,11 +35,25 @@ export class ViewMoreComponent implements OnInit {
       console.warn('No state data found for selected oxalate.');
     }
 
-    // Fetch saved items from Firebase when the component initializes
-    this.oxalateService
-      .getSavedOxalates()
-      .subscribe((savedOxalates: Oxalate[]) => {
-        this.savedItems = savedOxalates;
+    // Fetch the current user and then get saved items from Firebase
+    this.authService
+      .getCurrentUser()
+      .then((user) => {
+        if (user) {
+          const userId = user.uid;
+          this.oxalateService
+            .getSavedOxalates(userId)
+            .subscribe((savedOxalates: Oxalate[]) => {
+              this.savedItems = savedOxalates;
+            });
+        } else {
+          console.warn('No authenticated user found.');
+          this.savedItems = []; // Handle case where no user is authenticated
+        }
+      })
+      .catch((error) => {
+        console.error('Error fetching user:', error);
+        this.savedItems = []; // Handle error case
       });
   }
 

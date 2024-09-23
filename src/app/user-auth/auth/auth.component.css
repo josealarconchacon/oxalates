@@ -2,71 +2,125 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 100vh;
+  height: 75vh;
+  padding: 20px;
 }
 
 .auth-card {
   background: #ffffff;
-  padding: 30px;
-  border-radius: 8px;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-  width: 300px;
+  padding: 40px;
+  border-radius: 16px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+  max-width: 800px;
+  width: 100%;
+  animation: fadeInUp 0.6s ease-out;
+}
+
+h2 {
+  font-size: 28px;
+  margin-bottom: 30px;
+  color: #333;
+  font-weight: 700;
   text-align: center;
+  animation: fadeInDown 0.6s ease-out;
+}
+
+.auth-form-wrapper {
+  display: flex;
+  justify-content: space-between;
+  gap: 40px;
+}
+
+.form-left,
+.form-right {
+  flex: 1;
+}
+
+@media (max-width: 768px) {
+  .auth-form-wrapper {
+    flex-direction: column;
+    gap: 20px;
+  }
 }
 
 .form-group {
   margin-bottom: 20px;
+  animation: fadeInLeft 0.6s ease-out;
 }
 
 .form-control {
   width: 100%;
-  padding: 10px;
+  padding: 15px;
   border: 1px solid #ddd;
-  border-radius: 4px;
+  border-radius: 8px;
+  font-size: 16px;
   margin-bottom: 10px;
+  transition: box-shadow 0.3s ease;
+}
+
+.form-control:focus {
+  box-shadow: 0 0 5px rgba(0, 123, 255, 0.3);
 }
 
 .error-message {
-  color: red;
+  color: #e74c3c;
   font-size: 12px;
+  margin-top: -8px;
   text-align: left;
-  margin-top: -10px;
 }
 
 .auth-button {
   width: 100%;
-  padding: 10px;
+  padding: 12px;
   background-color: #007bff;
   color: white;
   border: none;
-  border-radius: 4px;
+  border-radius: 50px;
   cursor: pointer;
   margin-top: 10px;
+  font-size: 18px;
+  transition: background-color 0.3s ease, transform 0.2s ease;
 }
 
 .auth-button:hover {
   background-color: #0056b3;
+  transform: translateY(-3px);
 }
 
 .toggle-text {
   font-size: 14px;
   margin-top: 15px;
+  text-align: center;
+  color: #666;
+}
+
+.toggle-text a {
+  color: #007bff;
+  cursor: pointer;
+  transition: color 0.3s ease;
+}
+
+.toggle-text a:hover {
+  color: #0056b3;
 }
 
 .social-auth {
-  margin-top: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  animation: fadeInRight 0.6s ease-out;
 }
 
 .google-button,
 .facebook-button {
-  width: 100%;
-  padding: 10px;
-  margin-top: 10px;
+  padding: 12px;
+  background-color: #f1f1f1;
+  border-radius: 50px;
+  font-size: 16px;
   display: flex;
   align-items: center;
   justify-content: center;
-  border: none;
-  border-radius: 4px;
+  transition: background-color 0.3s ease, transform 0.2s ease;
   cursor: pointer;
 }
 
@@ -80,9 +134,58 @@
   color: white;
 }
 
+.google-button:hover,
+.facebook-button:hover {
+  transform: translateY(-3px);
+}
+
 .google-button img,
 .facebook-button img {
   width: 20px;
   height: 20px;
   margin-right: 10px;
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeInDown {
+  from {
+    opacity: 0;
+    transform: translateY(-30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeInLeft {
+  from {
+    opacity: 0;
+    transform: translateX(-30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes fadeInRight {
+  from {
+    opacity: 0;
+    transform: translateX(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
 }
