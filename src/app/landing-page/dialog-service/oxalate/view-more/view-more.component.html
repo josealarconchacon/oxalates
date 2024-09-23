@@ -1,7 +1,9 @@
 <div class="oxalate-detail" *ngIf="oxalateData">
   <div class="oxalate-header">
     <h2 class="oxalate-title">{{ oxalateData.item }}</h2>
-    <button class="save-button" (click)="onSave()">Save</button>
+    <button class="save-button" [disabled]="isSaving" (click)="onSave()">
+      {{ isSaving ? "Saving..." : "Save" }}
+    </button>
   </div>
   <div class="oxalate-info">
     <div class="info-grid">

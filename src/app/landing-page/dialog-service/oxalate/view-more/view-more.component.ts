@@ -3,6 +3,7 @@ import { Router } from '@angular/router';
 import { Oxalate } from 'src/app/landing-page/model/oxalate';
 import { AuthService } from 'src/app/user-auth/service/auth-service.service';
 import { OxalateService } from '../../service/oxalate.service';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-view-more',
@@ -12,11 +13,13 @@ import { OxalateService } from '../../service/oxalate.service';
 export class ViewMoreComponent implements OnInit {
   @Input() oxalateData: Oxalate | undefined;
   savedItems: Oxalate[] = [];
+  isSaving = false;
 
   constructor(
     private router: Router,
     private authService: AuthService,
-    private oxalateService: OxalateService
+    private oxalateService: OxalateService,
+    private snackBar: MatSnackBar
   ) {}
 
   ngOnInit(): void {
@@ -30,27 +33,59 @@ export class ViewMoreComponent implements OnInit {
     } else {
       console.warn('No state data found for selected oxalate.');
     }
+
+    // Fetch saved items from Firebase when the component initializes
+    this.oxalateService
+      .getSavedOxalates()
+      .subscribe((savedOxalates: Oxalate[]) => {
+        this.savedItems = savedOxalates;
+      });
   }
 
   async onSave(): Promise<void> {
     try {
-      const user = await this.authService.getCurrentUser(); // Ensure the user is authenticated
+      const user = await this.authService.getCurrentUser();
 
       if (!user) {
-        // If no user is authenticated, redirect to the sign-in page
         this.authService.redirectToSignIn();
         return;
       }
 
       if (this.oxalateData) {
+        const itemAlreadySaved = await this.oxalateService.itemExists(
+          this.oxalateData,
+          user.uid
+        );
+
+        if (itemAlreadySaved) {
+          this.showNotification('Item already was saved!', 'error-snackbar');
+          return;
+        }
+
+        this.isSaving = true;
         await this.oxalateService.saveOxalate(this.oxalateData);
-        alert('Item saved successfully!');
+        this.showNotification('Item saved successfully!', 'success-snackbar');
       } else {
         console.warn('No oxalate data available to save.');
       }
     } catch (error) {
       console.error('Error saving oxalate:', error);
-      alert('An error occurred while saving the item. Please try again.');
+      this.showNotification(
+        'An error occurred while saving the item.',
+        'error-snackbar'
+      );
+    } finally {
+      this.isSaving = false;
     }
+  }
+
+  // display  snackbar at the top
+  private showNotification(message: string, panelClass: string) {
+    this.snackBar.open(message, 'Close', {
+      duration: 3000,
+      horizontalPosition: 'center',
+      verticalPosition: 'top',
+      panelClass: [panelClass],
+    });
   }
 }

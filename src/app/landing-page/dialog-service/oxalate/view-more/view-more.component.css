@@ -48,6 +48,26 @@
   transform: translateY(-2px);
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
 }
+.save-button[disabled] {
+  background-color: #cccccc;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
+}
+
+.success-snackbar {
+  background-color: #4caf50; /* Success - Green */
+  color: white;
+  font-size: 1rem;
+  font-weight: 600;
+}
+
+.error-snackbar {
+  background-color: #f44336; /* Error - Red */
+  color: white;
+  font-size: 1rem;
+  font-weight: 600;
+}
 
 .oxalate-info {
   font-size: 0.9rem;
