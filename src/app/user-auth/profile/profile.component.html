@@ -15,7 +15,9 @@
                   class="profile-image"
                 />
                 <div class="profile-details">
-                  <h4>{{ userProfile?.displayName || "Username" }}</h4>
+                  <h4 class="profile-name">
+                    {{ userProfile?.displayName || "Username" }}
+                  </h4>
                 </div>
               </div>
               <nav class="profile-nav">
@@ -40,9 +42,9 @@
                   aria-label="Address Book"
                   >Address Book</a
                 >
-                <a class="nav-item" aria-label="Logout" (click)="onLogout()">
-                  Logout
-                </a>
+                <a class="nav-item" aria-label="Logout" (click)="onLogout()"
+                  >Logout</a
+                >
               </nav>
             </div>
           </div>
@@ -50,7 +52,7 @@
         <div class="profile-content">
           <div *ngIf="activeSection === 'profile'" class="profile-details-card">
             <div class="card-body">
-              <h5>Profile Information</h5>
+              <h5 class="card-title">Profile Information</h5>
               <p>
                 <strong>Name:</strong>
                 {{ userProfile?.displayName || "Username" }}
@@ -61,7 +63,7 @@
               </p>
               <p>
                 <strong>Password:</strong>
-                <button (click)="toggleChangePassword()">
+                <button (click)="toggleChangePassword()" class="change-pass">
                   Change Password
                 </button>
               </p>
