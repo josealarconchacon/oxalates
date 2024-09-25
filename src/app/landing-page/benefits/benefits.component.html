@@ -1,10 +1,28 @@
-<section class="benefits" id="beneficios">
-  <h2 class="benefits-title">Benefits of Low Oxalate Intake</h2>
-  <div class="benefits-content">
-    <div class="benefits-item" *ngFor="let benefit of benefits">
-      <span class="material-symbols-outlined">{{ benefit.icon }}</span>
-      <h3>{{ benefit.title }}</h3>
-      <p>{{ benefit.description }}</p>
+<div class="container" id="benefits">
+  <div class="header">
+    <div class="header-text">
+      <h1>Benefits of Low Oxalate Intake</h1>
+      <p>
+        Pet food subscription makes sure your pet never runs out of food. You
+        can choose to receive regular shipments.
+      </p>
+    </div>
+    <div class="header-image">
+      <img
+        src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQHrj_ZTBMHnWwAuFUcsQpf3VGBM97e3XZf7Q&s"
+        alt="Cat with pet food"
+      />
     </div>
   </div>
-</section>
+
+  <div class="steps">
+    <div class="step" *ngFor="let benefit of benefits; let i = index">
+      <div class="step-number">{{ i + 1 }}</div>
+      <div class="benefits-item">
+        <span class="material-symbols-outlined">{{ benefit.icon }}</span>
+        <h3>{{ benefit.title }}</h3>
+        <p>{{ benefit.description }}</p>
+      </div>
+    </div>
+  </div>
+</div>

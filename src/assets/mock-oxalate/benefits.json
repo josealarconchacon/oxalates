@@ -1,0 +1,29 @@
+{
+  "benefits": [
+    {
+      "icon": "local_hospita",
+      "title": "Risk of Kidney Stones",
+      "description": "A low oxalate diet reduces the risk of calcium oxalate kidney stones by decreasing the amount of oxalate available to bind with calcium in the kidneys, thereby preventing crystal formation."
+    },
+    {
+      "icon": "wellness",
+      "title": "Better Mineral Absorption",
+      "description": "Lowering oxalate intake allows the body to better absorb calcium and other minerals, as high oxalate levels compete with these nutrients in the digestive system."
+    },
+    {
+      "icon": "handshake",
+      "title": "Less Gut Distress",
+      "description": "Eating less oxalate can improve digestion for those who experience bloating and gut distress."
+    },
+    {
+      "icon": "handshake",
+      "title": "Better Management of Chronic Conditions",
+      "description": "Reducing oxalate intake can be beneficial for conditions like hyperoxaluria and inflammatory bowel diseases, such as Crohn’s."
+    },
+    {
+      "icon": "handshake",
+      "title": "Low Oxalate Help For People With Kidney Disease",
+      "description": "Individuals with impaired kidney function can benefit from a low-oxalate diet because their kidneys cannot effectively excrete oxalates."
+    }
+  ]
+}

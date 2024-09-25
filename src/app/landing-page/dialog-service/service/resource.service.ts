@@ -18,6 +18,13 @@ export class ResourceService {
         link: 'https://www.webmd.com/diet/foods-high-in-oxalates',
       },
       {
+        name: 'Swiss Chard',
+        description:
+          'Contains significant amounts of oxalate, A half-cup of this greens can contain approximately 500 mg of oxalate',
+        image: '../../../../assets/resources/spinach_5520610.png',
+        link: 'https://www.webmd.com/diet/foods-high-in-oxalates',
+      },
+      {
         name: 'Almonds',
         description:
           'Considered high in oxalates and are part of the top ten highest oxalate foods as studied by Harvard',
