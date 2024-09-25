@@ -23,7 +23,7 @@
   left: 50%;
   transform: translateX(-50%);
   border-radius: 2px;
-  background: #007aff;
+  background: #333;
 }
 
 .resource-content {

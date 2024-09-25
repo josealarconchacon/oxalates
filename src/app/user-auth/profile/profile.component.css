@@ -44,6 +44,17 @@
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
+.upload-button {
+  background-color: transparent;
+  border: none;
+  cursor: pointer;
+  color: #007aff;
+  margin-left: 10px;
+}
+.upload-button i {
+  font-size: 1.2em;
+}
+
 .profile-card-body {
   padding: 1.5rem;
 }

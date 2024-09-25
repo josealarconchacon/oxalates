@@ -108,21 +108,18 @@ export class AuthService {
       uid: user.uid,
       email: user.email,
       displayName: user.displayName || '',
-      profileImage: '', // Initialize with an empty string or any default image
+      photoURL: user.photoURL || '',
       lastLogin: new Date(),
     };
 
+    // Validate data before setting in Firestore
+    if (!user.uid || !user.email) {
+      console.error('Invalid user data:', userData);
+      return Promise.reject(new Error('Invalid user data'));
+    }
+
     const userRef = this.afs.collection('users').doc(user.uid);
     return userRef.set(userData, { merge: true });
-  }
-
-  async getCurrentUserId(): Promise<string | null> {
-    const user = await this.afAuth.currentUser;
-    return user ? user.uid : null; // Use the current user's UID
-  }
-
-  getUserProfileFromFirestore(userId: string) {
-    return this.afs.collection('users').doc(userId).valueChanges();
   }
 
   setUserProfile(profile: any) {
@@ -166,13 +163,5 @@ export class AuthService {
 
   redirectToSignIn(): void {
     this.router.navigate(['/auth']); // Redirect to the authentication page
-  }
-
-  async updateUserProfile(updates: Partial<any>): Promise<void> {
-    const user = await this.afAuth.currentUser;
-    if (user) {
-      const userRef = this.afs.collection('users').doc(user.uid);
-      return userRef.update(updates);
-    }
   }
 }

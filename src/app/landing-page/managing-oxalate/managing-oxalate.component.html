@@ -1,18 +1,37 @@
-<section class="use">
-  <h2>Managing Oxalate Intake</h2>
+<section class="use" id="frq">
+  <h2>{{ content?.title }}</h2>
   <div class="use-content">
-    <div class="video">
-      <iframe
-        id="video"
-        width="560"
-        height="315"
-        src="https://www.youtube.com/embed/5oqxg7woNLs?si=yq8Dssyx4N1qOfLE"
-        title="YouTube video player"
-        frameborder="0"
-        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-        referrerpolicy="strict-origin-when-cross-origin"
-        allowfullscreen
-      ></iframe>
+    <div class="info">
+      <p>{{ content?.description }}</p>
+
+      <h3>Food Choices</h3>
+      <ul class="food-list">
+        <li *ngFor="let food of content?.foodChoices">
+          <strong>{{ food.meal }}:</strong> {{ food.item }}
+        </li>
+      </ul>
+
+      <h3>Tips for Managing Oxalate Intake</h3>
+      <div class="tips">
+        <div class="tip-item" *ngFor="let tip of content?.tips">
+          <h4>{{ tip.title }}</h4>
+          <p>{{ tip.description }}</p>
+        </div>
+      </div>
+
+      <h3>Alternative Ingredients</h3>
+      <p>{{ content?.alternativeIngredients }}</p>
+
+      <h3>Low-Oxalate Recipes</h3>
+      <ul>
+        <li *ngFor="let recipe of content?.lowOxalateRecipes">{{ recipe }}</li>
+      </ul>
+
+      <h3>Resources</h3>
+      <p>{{ content?.resources }}</p>
+
+      <h3>Community Support</h3>
+      <p>{{ content?.communitySupport }}</p>
     </div>
   </div>
 </section>
