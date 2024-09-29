@@ -1,93 +1,6 @@
-/* .header {
-  background-color: #121212;
-  color: aliceblue;
-  padding: 24px 0;
-  position: sticky;
-  top: 0;
-  left: 0;
-  right: 0;
-  z-index: 1;
-  margin-bottom: 16px;
-}
-
-.header-content {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  max-width: 1366px;
-  margin: 0 auto;
-  height: 80px;
-  position: relative;
-}
-
-.material-symbols-outlined {
-  font-size: 0;
-}
-
-.nav {
-  display: flex;
-  align-items: center;
-  gap: 20px;
-  transition: max-height 0.3s ease-out, opacity 0.3s ease-out;
-}
-
-.nav-link {
-  color: aliceblue;
-  font-size: 18px;
-  text-decoration: none;
-  font-weight: 700;
-  padding: 8px 16px;
-  border-radius: 8px;
-  text-align: left;
-}
-
-.nav-link:hover,
-.nav-link:focus {
-  background: rgba(218, 218, 218, 0.515);
-}
-
-.nav-logo {
-  width: 80px;
-  height: auto;
-}
-
-.hamburger {
-  display: none;
-  font-size: 24px;
-  background: none;
-  border: none;
-  color: aliceblue;
-  cursor: pointer;
-  margin-left: auto;
-  z-index: 2;
-}
-
-@media screen and (max-width: 767px) {
-  .nav {
-    display: block;
-    max-height: 0;
-    opacity: 0;
-    position: absolute;
-    top: 100%;
-    right: 0;
-    background-color: #121212;
-    flex-direction: column;
-    width: auto;
-  }
-
-  .nav.open {
-    max-height: 200px;
-    opacity: 1;
-  }
-
-  .hamburger {
-    display: block;
-  }
-} */
-
 .header {
   background-color: #121212;
-  color: aliceblue;
+  color: #969696;
   padding: 24px 0;
   position: sticky;
   top: 0;
@@ -119,7 +32,7 @@
 }
 
 .nav-link {
-  color: aliceblue;
+  color: #969696;
   font-size: 18px;
   text-decoration: none;
   font-weight: 700;
@@ -130,7 +43,8 @@
 
 .nav-link:hover,
 .nav-link:focus {
-  background: rgba(218, 218, 218, 0.515);
+  background: #888b90;
+  color: #faf8ff;
 }
 
 .nav-logo {
@@ -143,7 +57,7 @@
   font-size: 24px;
   background: none;
   border: none;
-  color: aliceblue;
+  color: #969696;
   cursor: pointer;
   margin-left: auto;
   z-index: 2;
@@ -151,14 +65,14 @@
 
 .mat-icon {
   font-size: 24px;
-  color: aliceblue;
+  color: #969696;
   cursor: pointer;
   transition: color 0.3s ease, transform 0.3s ease;
 }
 
 .mat-icon:hover {
-  color: #007aff; /* Change color on hover */
-  transform: scale(1.1); /* Slightly enlarge icon on hover */
+  color: #faf8ff;
+  transform: scale(1.1);
 }
 
 .user-icon {
