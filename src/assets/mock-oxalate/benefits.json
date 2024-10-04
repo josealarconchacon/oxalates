@@ -1,7 +1,7 @@
 {
   "benefits": [
     {
-      "icon": "local_hospita",
+      "icon": "assets/resources/kidneys.png",
       "title": "Risk of Kidney Stones",
       "description": "A low oxalate diet reduces the risk of calcium oxalate kidney stones by decreasing the amount of oxalate available to bind with calcium in the kidneys, thereby preventing crystal formation."
     },
