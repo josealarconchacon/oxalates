@@ -1,0 +1,51 @@
+{
+  "title": "Managing Oxalate Intake",
+  "description": "Oxalate, better known as oxalic acid, is an organic compound found in many fruits and vegetables. Although it may provide health benefits when consumed in large quantities, it's important to note that high levels of oxalate can guide liver failure. This suggests that some meals, such as spinach, walnuts, and almonds, retain more oxalate than others. So, even though these foods can be healthy, consuming them in moderation is the key to maintaining good health",
+  "foodChoices": [
+    {
+      "meal": "Breakfast",
+      "item": "Oatmeal with sliced bananas"
+    },
+    {
+      "meal": "Lunch",
+      "item": "Grilled chicken salad with lettuce and cucumber"
+    },
+    {
+      "meal": "Dinner",
+      "item": "Baked fish with rice and steamed carrots"
+    }
+  ],
+  "tips": [
+    {
+      "title": "Stay Hydrated",
+      "description": "Drink at least 8-10 glasses of water daily to help dilute oxalates in your urine."
+    },
+    {
+      "title": "Calcium Intake",
+      "description": "Pair high-oxalate foods with calcium-rich foods, like yogurt or cheese, to reduce absorption."
+    },
+    {
+      "title": "Portion Control",
+      "description": "Eat smaller portions of high-oxalate foods occasionally to minimize risks."
+    },
+    {
+      "title": "Regular Monitoring",
+      "description": "Keep a food diary to track oxalate intake and identify triggers."
+    },
+    {
+      "title": "Consultation",
+      "description": "Consider consulting a dietitian to receive tailored dietary recommendations that suit your individual needs"
+    }
+  ],
+  "alternativeIngredients": "Consider these substitutions: Use almond milk instead of spinach in smoothies.",
+  "lowOxalateRecipes": [
+    "Grilled chicken",
+    "Parmesan Roasted Broccoli",
+    "Oatmeal topped with berries",
+    "Braised Red Cabbage with Apples",
+    "Zucchini noodles tossed in pesto",
+    "Baked salmon with lemon and herbs"
+  ],
+  "resources": "For more information, check out reputable resources on oxalate management.",
+  "communitySupport": "Join a community where others share similar interests and experiences"
+}
