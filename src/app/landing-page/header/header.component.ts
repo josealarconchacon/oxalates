@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+import { AuthService } from 'src/app/user-auth/service/auth-service.service';
 
 @Component({
   selector: 'app-header',
@@ -8,10 +9,15 @@ import { Router } from '@angular/router';
 })
 export class HeaderComponent implements OnInit {
   isNavOpen = false;
+  isLoggedIn = false;
 
-  constructor(private router: Router) {}
+  constructor(private router: Router, private authService: AuthService) {}
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    this.authService.userProfile$.subscribe((user) => {
+      this.isLoggedIn = !!user;
+    });
+  }
 
   toggleNav() {
     this.isNavOpen = !this.isNavOpen;
@@ -26,6 +32,10 @@ export class HeaderComponent implements OnInit {
   }
 
   goToProfile() {
-    this.router.navigate(['/profile']);
+    if (this.isLoggedIn) {
+      this.router.navigate(['/profile']);
+    } else {
+      this.router.navigate(['/auth']);
+    }
   }
 }

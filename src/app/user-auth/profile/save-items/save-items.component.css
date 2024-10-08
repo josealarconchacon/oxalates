@@ -80,6 +80,7 @@ button:hover {
 .details {
   padding: 15px 20px;
   border-top: 1px solid #e77f67;
+  color: #999595;
   line-height: 1.5;
   opacity: 0;
   max-height: 0;
@@ -105,12 +106,12 @@ button:hover {
 
 .details p span.key {
   font-weight: bold;
-  color: #333;
+  color: #999595;
 }
 
 .details p span.value {
   margin-left: 5px;
-  color: #555;
+  color: #999595;
 }
 
 .delete-button {

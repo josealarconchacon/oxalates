@@ -1,5 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { AuthService } from '../service/auth-service.service';
+import { AngularFireStorage } from '@angular/fire/compat/storage';
+import { finalize } from 'rxjs/operators';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-profile',
@@ -10,11 +13,20 @@ export class ProfileComponent implements OnInit {
   activeSection: string = 'profile';
   userProfile: any;
   isChangePasswordVisible: boolean = false;
+  selectedFile: File | null = null;
 
-  constructor(private authService: AuthService) {}
+  constructor(
+    private authService: AuthService,
+    private storage: AngularFireStorage,
+    private router: Router
+  ) {}
 
   ngOnInit(): void {
-    this.getUserInfo();
+    if (!this.authService.isAuthenticated()) {
+      this.router.navigate(['/auth']);
+    } else {
+      this.getUserInfo();
+    }
   }
 
   getUserInfo() {
@@ -31,6 +43,32 @@ export class ProfileComponent implements OnInit {
     this.isChangePasswordVisible = !this.isChangePasswordVisible;
   }
 
+  onFileSelected(event: any): void {
+    this.selectedFile = event.target.files[0] as File;
+    if (this.selectedFile) {
+      this.uploadImage();
+    }
+  }
+  uploadImage(): void {
+    if (this.selectedFile) {
+      const filePath = `profile-images/${Date.now()}_${this.selectedFile.name}`;
+      const fileRef = this.storage.ref(filePath);
+      const task = this.storage.upload(filePath, this.selectedFile);
+
+      task
+        .snapshotChanges()
+        .pipe(
+          finalize(() => {
+            fileRef.getDownloadURL().subscribe((url) => {
+              this.authService.updateProfileImage(url).then(() => {
+                // The userProfile will be updated automatically through the subscription
+              });
+            });
+          })
+        )
+        .subscribe();
+    }
+  }
   onLogout(): void {
     this.authService.signOut();
   }

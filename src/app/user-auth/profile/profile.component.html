@@ -6,46 +6,56 @@
           <div class="profile-card">
             <div class="profile-card-body">
               <div class="profile-info">
-                <img
-                  [src]="
-                    userProfile?.profileImage ||
-                    'https://banner2.cleanpng.com/20180619/tyr/aa66mfh81.webp'
-                  "
-                  alt="Profile Image of {{ userProfile?.username }}"
-                  class="profile-image"
-                />
+                <div class="profile-image-container">
+                  <img
+                    [src]="
+                      userProfile?.photoURL ||
+                      'https://banner2.cleanpng.com/20180619/tyr/aa66mfh81.webp'
+                    "
+                    alt="Profile Image of {{ userProfile?.displayName }}"
+                    class="profile-image"
+                  />
+                  <label for="file-upload" class="upload-button">
+                    <i class="fas fa-camera"></i>
+                  </label>
+                  <input
+                    id="file-upload"
+                    type="file"
+                    (change)="onFileSelected($event)"
+                    accept="image/*"
+                    style="display: none"
+                  />
+                </div>
                 <div class="profile-details">
                   <h4 class="profile-name">
                     {{ userProfile?.displayName || "Username" }}
                   </h4>
                 </div>
+                <nav class="profile-nav">
+                  <a
+                    class="nav-item"
+                    [class.active]="activeSection === 'profile'"
+                    (click)="showSection('profile')"
+                  >
+                    Profile Information
+                  </a>
+                  <a
+                    class="nav-item"
+                    [class.active]="activeSection === 'saveItem'"
+                    (click)="showSection('saveItem')"
+                  >
+                    Save Items
+                  </a>
+                  <a
+                    class="nav-item"
+                    [class.active]="activeSection === 'address'"
+                    (click)="showSection('address')"
+                  >
+                    Address Book
+                  </a>
+                  <a class="nav-item" (click)="onLogout()">Logout</a>
+                </nav>
               </div>
-              <nav class="profile-nav">
-                <a
-                  class="nav-item"
-                  [class.active]="activeSection === 'profile'"
-                  (click)="showSection('profile')"
-                  aria-label="Profile Information"
-                  >Profile Information</a
-                >
-                <a
-                  class="nav-item"
-                  [class.active]="activeSection === 'saveItem'"
-                  (click)="showSection('saveItem')"
-                  aria-label="Save Items"
-                  >Save Items</a
-                >
-                <a
-                  class="nav-item"
-                  [class.active]="activeSection === 'address'"
-                  (click)="showSection('address')"
-                  aria-label="Address Book"
-                  >Address Book</a
-                >
-                <a class="nav-item" aria-label="Logout" (click)="onLogout()"
-                  >Logout</a
-                >
-              </nav>
             </div>
           </div>
         </aside>
