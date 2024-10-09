@@ -17,12 +17,14 @@ body {
 
 .saved-items {
   max-width: 1200px;
-  padding: 0 40px;
+  width: 100%;
+  padding: 0 20px;
 }
 
 h2 {
   margin-bottom: 20px;
   color: #cacaca;
+  text-align: center;
 }
 
 .card {
@@ -50,7 +52,7 @@ h2 {
 }
 
 .header h3 {
-  font-size: 20px;
+  font-size: 1.5em;
   font-weight: 600;
   color: #999595;
 }
@@ -131,10 +133,47 @@ button:hover {
 
 @media screen and (max-width: 960px) {
   .saved-items {
-    max-width: 600px;
+    padding: 0 10px;
+  }
+
+  h2 {
+    font-size: 1.8em;
+  }
+
+  .header h3 {
+    font-size: 1.2em;
+  }
+
+  button {
+    font-size: 0.9em;
+    padding: 8px 12px;
+  }
+
+  .details {
+    padding: 10px 15px;
+  }
+}
+
+@media screen and (max-width: 480px) {
+  .saved-items {
+    padding: 0 5px;
   }
 
   h2 {
     font-size: 1.5em;
+  }
+
+  .header h3 {
+    font-size: 1em;
+  }
+
+  button {
+    font-size: 0.8em;
+    padding: 6px 10px;
+  }
+
+  .details {
+    padding: 8px 10px;
+    margin-bottom: 10px;
   }
 }

@@ -4,6 +4,7 @@ import { AngularFirestore } from '@angular/fire/compat/firestore';
 import { Router } from '@angular/router';
 import firebase from 'firebase/compat/app';
 import { BehaviorSubject, Observable, take } from 'rxjs';
+import { UserProfile } from '../profile/model/user-profile';
 
 @Injectable({
   providedIn: 'root',
@@ -104,10 +105,21 @@ export class AuthService {
     }
   }
 
-  private async getUserData(uid: string): Promise<any> {
+  private async getUserData(uid: string): Promise<UserProfile | null> {
     const userRef = this.afs.collection('users').doc(uid);
     const userData = await userRef.get().toPromise();
-    return userData?.data();
+
+    if (userData?.exists) {
+      const data = userData.data() as UserProfile;
+      if (!data.photoURL) {
+        const user = await this.afAuth.currentUser;
+        if (user && user.photoURL) {
+          data.photoURL = user.photoURL;
+        }
+      }
+      return data;
+    }
+    return null;
   }
 
   private updateUserData(user: firebase.User | null): Promise<void> {
@@ -117,7 +129,7 @@ export class AuthService {
       uid: user.uid,
       email: user.email,
       displayName: user.displayName || '',
-      photoURL: user.photoURL || '',
+      profileImage: user.photoURL || '',
       lastLogin: new Date(),
     };
 
@@ -184,9 +196,12 @@ export class AuthService {
     if (user) {
       const userRef = this.afs.collection('users').doc(user.uid);
       await userRef.update({ photoURL: imageUrl });
+      await user.updateProfile({ photoURL: imageUrl });
 
-      const currentProfile = await this.getUserData(user.uid);
-      const updatedProfile = { ...currentProfile, photoURL: imageUrl };
+      const updatedProfile = {
+        ...this.userProfileSubject.value,
+        photoURL: imageUrl,
+      };
       this.setUserProfile(updatedProfile);
     }
   }

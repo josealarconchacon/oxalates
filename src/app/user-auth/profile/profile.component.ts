@@ -28,10 +28,10 @@ export class ProfileComponent implements OnInit {
       this.getUserInfo();
     }
   }
-
   getUserInfo() {
     this.authService.getUserProfile().subscribe((response) => {
       this.userProfile = response;
+      console.log('User Profile: ', this.userProfile); // Check if photoURL is present
     });
   }
 
@@ -49,6 +49,7 @@ export class ProfileComponent implements OnInit {
       this.uploadImage();
     }
   }
+
   uploadImage(): void {
     if (this.selectedFile) {
       const filePath = `profile-images/${Date.now()}_${this.selectedFile.name}`;
@@ -61,7 +62,7 @@ export class ProfileComponent implements OnInit {
           finalize(() => {
             fileRef.getDownloadURL().subscribe((url) => {
               this.authService.updateProfileImage(url).then(() => {
-                // The userProfile will be updated automatically through the subscription
+                // profile will be updated through subscription
               });
             });
           })
@@ -69,6 +70,7 @@ export class ProfileComponent implements OnInit {
         .subscribe();
     }
   }
+
   onLogout(): void {
     this.authService.signOut();
   }

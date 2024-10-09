@@ -47,13 +47,13 @@ export class SaveItemsComponent implements OnInit {
   }
 
   deleteOxalate(id: string): void {
-    console.log('Attempting to delete oxalate with ID:', id); // Log the ID being deleted
+    console.log('Attempting to delete oxalate with ID:', id);
     from(this.authService.getCurrentUser()).subscribe((user) => {
       if (user) {
         this.oxalateService
           .deleteOxalate(user.uid, id)
           .then(() => {
-            this.loadSavedOxalates(); // Refresh the list after deleting
+            this.loadSavedOxalates();
           })
           .catch((error) => {
             console.error('Error deleting oxalate:', error);
