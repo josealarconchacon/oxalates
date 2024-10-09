@@ -7,14 +7,13 @@ import { environment } from 'src/environments/environment.development';
   providedIn: 'root',
 })
 export class ConfigService {
-  private configUrl = 'assets/config/firebase-config.json'; // Path to your JSON file
+  private configUrl = 'assets/config/firebase-config.json';
 
   constructor(private http: HttpClient) {}
 
   getConfig(): Observable<any> {
     return this.http.get<any>(this.configUrl).pipe(
       tap((config) => {
-        console.log('Firebase config loaded:', config);
         // set the Firebase config in environment for use
         environment.firebaseConfig = config;
       })
