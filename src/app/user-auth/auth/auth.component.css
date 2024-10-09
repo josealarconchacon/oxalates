@@ -7,28 +7,34 @@
 }
 
 .auth-card {
-  background: #ffffff;
+  background: #121212;
   padding: 40px;
   border-radius: 16px;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 45px 65px rgba(0, 0, 0, 0.5), 0 35px 22px rgba(0, 0, 0, 0.16);
   max-width: 800px;
   width: 100%;
   animation: fadeInUp 0.6s ease-out;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.auth-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 50px 70px rgba(0, 0, 0, 0.7), 0 40px 30px rgba(0, 0, 0, 0.25);
 }
 
 h2 {
   font-size: 28px;
-  margin-bottom: 30px;
-  color: #333;
-  font-weight: 700;
-  text-align: center;
+  margin-bottom: 25px;
+  color: #e0e0e0;
+  font-weight: 600;
+  text-align: left;
   animation: fadeInDown 0.6s ease-out;
 }
 
 .auth-form-wrapper {
   display: flex;
   justify-content: space-between;
-  gap: 40px;
+  gap: 30px;
 }
 
 .form-left,
@@ -50,16 +56,19 @@ h2 {
 
 .form-control {
   width: 100%;
-  padding: 15px;
-  border: 1px solid #ddd;
+  padding: 14px;
+  border: 1px solid #444;
   border-radius: 8px;
   font-size: 16px;
-  margin-bottom: 10px;
-  transition: box-shadow 0.3s ease;
+  background-color: #1a1a1a;
+  color: #d1d1d1;
+  margin-bottom: 12px;
+  transition: border 0.3s ease, box-shadow 0.3s ease;
 }
 
 .form-control:focus {
-  box-shadow: 0 0 5px rgba(0, 123, 255, 0.3);
+  border-color: #2675c9;
+  box-shadow: 0 0 8px rgba(38, 117, 201, 0.5);
 }
 
 .error-message {
@@ -72,30 +81,34 @@ h2 {
 .auth-button {
   width: 100%;
   padding: 12px;
-  background-color: #007bff;
+  background-color: #2675c9;
   color: white;
   border: none;
   border-radius: 50px;
   cursor: pointer;
   margin-top: 10px;
   font-size: 18px;
-  transition: background-color 0.3s ease, transform 0.2s ease;
+  transition: background-color 0.3s ease, transform 0.3s ease,
+    box-shadow 0.3s ease;
 }
 
 .auth-button:hover {
   background-color: #0056b3;
-  transform: translateY(-3px);
+  transform: translateY(-5px);
+  box-shadow: 0 8px 20px rgba(0, 86, 179, 0.5);
 }
 
 .toggle-text {
   font-size: 14px;
   margin-top: 15px;
   text-align: center;
-  color: #666;
+  color: #888;
 }
 
 .toggle-text a {
-  color: #007bff;
+  color: #2675c9;
+  text-decoration: none;
+  font-weight: bold;
   cursor: pointer;
   transition: color 0.3s ease;
 }
@@ -114,29 +127,33 @@ h2 {
 .google-button,
 .facebook-button {
   padding: 12px;
-  background-color: #f1f1f1;
+  background-color: #1a1a1a;
   border-radius: 50px;
   font-size: 16px;
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: background-color 0.3s ease, transform 0.2s ease;
+  transition: transform 0.3s ease, background-color 0.3s ease,
+    box-shadow 0.3s ease;
   cursor: pointer;
 }
 
 .google-button {
-  background-color: #db4437;
+  background-color: #1a1a1a;
   color: white;
+  border: none;
 }
 
 .facebook-button {
-  background-color: #4267b2;
-  color: white;
+  background-color: #fff;
+  color: #000;
+  border: none;
 }
 
 .google-button:hover,
 .facebook-button:hover {
-  transform: translateY(-3px);
+  transform: translateY(-5px);
+  box-shadow: 0 8px 15px rgba(0, 0, 0, 0.3);
 }
 
 .google-button img,
