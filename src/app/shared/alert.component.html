@@ -1,0 +1,8 @@
+<div
+  class="alert"
+  [class.active]="isVisible"
+  [class.error]="alertType === 'error'"
+  [class.success]="alertType === 'success'"
+>
+  {{ message }}
+</div>
