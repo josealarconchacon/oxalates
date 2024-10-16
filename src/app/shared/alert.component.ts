@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Input } from '@angular/core';
 import { AlertService } from './alert-service/alert.service';
 
 @Component({
@@ -7,15 +7,15 @@ import { AlertService } from './alert-service/alert.service';
   styleUrls: ['./alert.component.css'],
 })
 export class AlertComponent implements OnInit {
-  message: string = '';
+  @Input() message: string = '';
   isVisible: boolean = false;
 
   constructor(private alertService: AlertService) {}
 
   ngOnInit() {
-    this.alertService.getAlertObservable().subscribe((message) => {
-      this.message = message;
-      this.isVisible = message ? true : false;
+    this.alertService.getAlertObservable().subscribe((newMessage) => {
+      this.message = newMessage;
+      this.isVisible = !!newMessage;
     });
   }
 

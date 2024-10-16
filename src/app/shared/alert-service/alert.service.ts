@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Subject } from 'rxjs';
+import { Observable, Subject } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
@@ -7,15 +7,16 @@ import { Subject } from 'rxjs';
 export class AlertService {
   private alertSubject = new Subject<string>();
 
-  getAlertObservable() {
-    return this.alertSubject.asObservable();
-  }
-
   showAlert(message: string) {
+    console.log('Sending alert message:', message);
     this.alertSubject.next(message);
   }
 
+  getAlertObservable(): Observable<string> {
+    return this.alertSubject.asObservable();
+  }
+
   closeAlert() {
-    this.alertSubject.next(''); // Clear the alert message to hide the alert
+    this.alertSubject.next('');
   }
 }
