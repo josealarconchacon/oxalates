@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { AuthService } from '../service/auth-service.service';
+import { AlertService } from 'src/app/shared/alert-service/alert.service';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-auth',
@@ -10,11 +12,25 @@ import { AuthService } from '../service/auth-service.service';
 export class AuthComponent implements OnInit {
   authForm!: FormGroup;
   isSignInMode = true;
+  showAlert: boolean = false;
+  alertMessage: string = '';
+  private alertSubscription!: Subscription;
 
-  constructor(private fb: FormBuilder, private authService: AuthService) {}
+  constructor(
+    private fb: FormBuilder,
+    private authService: AuthService,
+    private alertService: AlertService
+  ) {}
 
   ngOnInit(): void {
     this.initializeForm();
+    this.setupAlertSubscription();
+  }
+
+  ngOnDestroy(): void {
+    if (this.alertSubscription) {
+      this.alertSubscription.unsubscribe();
+    }
   }
 
   initializeForm(): void {
@@ -40,14 +56,20 @@ export class AuthComponent implements OnInit {
     }
 
     const { email, password, confirmPassword } = this.authForm.value;
-    if (this.isSignInMode) {
-      await this.authService.signIn(email, password);
-    } else {
-      if (password !== confirmPassword) {
-        console.error('Passwords do not match');
-        return;
+
+    try {
+      if (this.isSignInMode) {
+        await this.authService.signIn(email, password);
+      } else {
+        if (password !== confirmPassword) {
+          this.alertService.showAlert('Passwords do not match');
+          return;
+        }
+        await this.authService.signUp(email, password, confirmPassword);
+        this.alertService.showAlert('Passwords do not match');
       }
-      await this.authService.signUp(email, password, confirmPassword);
+    } catch (error) {
+      console.error('Authentication error:', error);
     }
   }
 
@@ -62,5 +84,14 @@ export class AuthComponent implements OnInit {
 
   onFacebookSignIn(): void {
     this.authService.facebookSignIn();
+  }
+
+  setupAlertSubscription(): void {
+    this.alertSubscription = this.alertService
+      .getAlertObservable()
+      .subscribe((message) => {
+        this.alertMessage = message;
+        this.showAlert = !!message;
+      });
   }
 }
