@@ -1,4 +1,5 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
+import { AlertService } from './alert-service/alert.service';
 
 @Component({
   selector: 'app-alert',
@@ -6,20 +7,20 @@ import { Component, Input, OnInit } from '@angular/core';
   styleUrls: ['./alert.component.css'],
 })
 export class AlertComponent implements OnInit {
-  @Input() message: string = ''; // Message to display
-  @Input() isVisible: boolean = false; // Controls visibility
-  @Input() alertType: string = 'error'; // Type of alert (error, success, etc.)
+  message: string = '';
+  isVisible: boolean = false;
 
-  constructor() {}
+  constructor(private alertService: AlertService) {}
 
-  ngOnInit(): void {}
+  ngOnInit() {
+    this.alertService.getAlertObservable().subscribe((message) => {
+      this.message = message;
+      this.isVisible = message ? true : false;
+    });
+  }
 
-  // Dismiss the alert automatically after 5 seconds
-  ngOnChanges(): void {
-    if (this.isVisible) {
-      setTimeout(() => {
-        this.isVisible = false;
-      }, 5000); // 5 seconds duration
-    }
+  closeAlert() {
+    this.isVisible = false;
+    this.alertService.closeAlert();
   }
 }

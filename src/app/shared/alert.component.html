@@ -1,8 +1,4 @@
-<div
-  class="alert"
-  [class.active]="isVisible"
-  [class.error]="alertType === 'error'"
-  [class.success]="alertType === 'success'"
->
-  {{ message }}
+<div *ngIf="isVisible" class="alert alert-danger">
+  <p>{{ message }}</p>
+  <button (click)="closeAlert()">Close</button>
 </div>

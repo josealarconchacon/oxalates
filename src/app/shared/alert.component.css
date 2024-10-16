@@ -1,22 +1,16 @@
 .alert {
-  display: none;
-  padding: 15px;
-  background-color: #f44336; /* Default: error color */
+  background-color: #f44336;
   color: white;
-  opacity: 0;
-  transition: opacity 0.5s ease-in-out;
-  position: fixed;
-  top: 20px;
-  right: 20px;
-  z-index: 9999;
-  border-radius: 5px;
+  padding: 15px;
+  margin-bottom: 20px;
+  border-radius: 4px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
-
-.alert.success {
-  background-color: #4caf50; /* Success color */
-}
-
-.alert.active {
-  display: block;
-  opacity: 1;
+button {
+  background: none;
+  border: none;
+  color: white;
+  cursor: pointer;
 }
