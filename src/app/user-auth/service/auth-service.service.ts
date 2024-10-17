@@ -5,6 +5,7 @@ import { Router } from '@angular/router';
 import firebase from 'firebase/compat/app';
 import { BehaviorSubject, Observable, take } from 'rxjs';
 import { UserProfile } from '../profile/model/user-profile';
+import { AlertService } from 'src/app/shared/alert-service/alert.service';
 
 @Injectable({
   providedIn: 'root',
@@ -16,7 +17,8 @@ export class AuthService {
   constructor(
     private afAuth: AngularFireAuth,
     private afs: AngularFirestore,
-    private router: Router
+    private router: Router,
+    private alertService: AlertService
   ) {
     this.initAuthListener();
   }
@@ -39,18 +41,40 @@ export class AuthService {
     confirmPassword: string
   ): Promise<void> {
     try {
-      if (password !== confirmPassword) {
-        throw new Error('Passwords do not match');
-      }
       const result = await this.afAuth.createUserWithEmailAndPassword(
         email,
         password
       );
       await this.updateUserData(result.user);
       this.router.navigate(['/oxalate']);
-    } catch (error) {
-      console.error('Sign-up failed.');
-      alert('Sign-up failed. Please try again.');
+    } catch (error: any) {
+      console.error('Sign-up failed', error);
+
+      switch (error.code) {
+        case 'auth/email-already-in-use':
+          this.alertService.showAlert(
+            'This email is already in use. Please log in or use a different email.'
+          );
+          break;
+        case 'auth/invalid-email':
+          this.alertService.showAlert(
+            'The email address is badly formatted. Please check your email.'
+          );
+          break;
+        case 'auth/weak-password':
+          this.alertService.showAlert(
+            'Your password is too weak. Please use a stronger password.'
+          );
+          break;
+        case 'auth/operation-not-allowed':
+          this.alertService.showAlert(
+            'Email/password accounts are not enabled. Please contact support.'
+          );
+          break;
+        default:
+          this.alertService.showAlert('Sign-up failed. Please try again.');
+          break;
+      }
     }
   }
 
@@ -62,9 +86,37 @@ export class AuthService {
       );
       await this.updateUserData(result.user);
       this.router.navigate(['/oxalate']);
-    } catch (error) {
-      console.error('Error during sign in');
-      alert('Login failed. Please check your credentials.');
+    } catch (error: any) {
+      console.error('Error during sign-in', error);
+
+      switch (error.code) {
+        case 'auth/user-not-found':
+          this.alertService.showAlert(
+            'No account found for this email. Please sign up first.'
+          );
+          break;
+        case 'auth/wrong-password':
+          this.alertService.showAlert('Incorrect password. Please try again.');
+          break;
+        case 'auth/invalid-email':
+          this.alertService.showAlert('The email address is badly formatted.');
+          break;
+        case 'auth/user-disabled':
+          this.alertService.showAlert(
+            'This account has been disabled. Please contact support.'
+          );
+          break;
+        case 'auth/too-many-requests':
+          this.alertService.showAlert(
+            'Too many unsuccessful login attempts. Please try again later.'
+          );
+          break;
+        default:
+          this.alertService.showAlert(
+            'Login failed. Please check your credentials and try again.'
+          );
+          break;
+      }
     }
   }
 

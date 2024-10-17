@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { AuthService } from '../service/auth-service.service';
 import { AlertService } from 'src/app/shared/alert-service/alert.service';
@@ -9,7 +9,7 @@ import { Subscription } from 'rxjs';
   templateUrl: './auth.component.html',
   styleUrls: ['./auth.component.css'],
 })
-export class AuthComponent implements OnInit {
+export class AuthComponent implements OnInit, OnDestroy {
   authForm!: FormGroup;
   isSignInMode = true;
   showAlert: boolean = false;
@@ -39,6 +39,7 @@ export class AuthComponent implements OnInit {
       password: ['', Validators.required],
       confirmPassword: [''], // Only needed in sign-up mode
     });
+
     if (!this.isSignInMode) {
       this.authForm.controls['confirmPassword'].setValidators(
         Validators.required
@@ -46,6 +47,7 @@ export class AuthComponent implements OnInit {
     } else {
       this.authForm.controls['confirmPassword'].clearValidators();
     }
+
     this.authForm.controls['confirmPassword'].updateValueAndValidity();
   }
 
@@ -66,7 +68,6 @@ export class AuthComponent implements OnInit {
           return;
         }
         await this.authService.signUp(email, password, confirmPassword);
-        this.alertService.showAlert('Passwords do not match');
       }
     } catch (error) {
       console.error('Authentication error:', error);
