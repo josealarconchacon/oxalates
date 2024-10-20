@@ -40,39 +40,61 @@ export class AuthService {
     password: string,
     confirmPassword: string
   ): Promise<void> {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+    // Check if the email is valid
+    if (!emailRegex.test(email)) {
+      this.alertService.showAlert('Please enter a valid email address.');
+      return;
+    }
+
     try {
+      // Create a new user with the email and password
       const result = await this.afAuth.createUserWithEmailAndPassword(
         email,
         password
       );
+
+      await result.user?.sendEmailVerification();
+
+      this.alertService.showAlert(
+        'A verification email has been sent. Please verify your email before logging in.'
+      );
+
       await this.updateUserData(result.user);
-      this.router.navigate(['/oxalate']);
+
+      this.router.navigate(['/verification-pending']);
     } catch (error: any) {
-      console.error('Sign-up failed', error);
+      console.error('Error during sign-up:', error);
 
       switch (error.code) {
         case 'auth/email-already-in-use':
           this.alertService.showAlert(
-            'This email is already in use. Please log in or use a different email.'
-          );
-          break;
-        case 'auth/invalid-email':
-          this.alertService.showAlert(
-            'The email address is badly formatted. Please check your email.'
+            'This email is already in use. Please try logging in.'
           );
           break;
         case 'auth/weak-password':
           this.alertService.showAlert(
-            'Your password is too weak. Please use a stronger password.'
+            'The password is too weak. Please choose a stronger password.'
           );
+          break;
+        case 'auth/invalid-email':
+          this.alertService.showAlert('The email address is badly formatted.');
           break;
         case 'auth/operation-not-allowed':
           this.alertService.showAlert(
-            'Email/password accounts are not enabled. Please contact support.'
+            'Email/password sign-up is disabled. Please contact support.'
+          );
+          break;
+        case 'auth/too-many-requests':
+          this.alertService.showAlert(
+            'Too many requests. Please try again later.'
           );
           break;
         default:
-          this.alertService.showAlert('Sign-up failed. Please try again.');
+          this.alertService.showAlert(
+            'Sign-up failed. Please check your input and try again.'
+          );
           break;
       }
     }
@@ -84,10 +106,16 @@ export class AuthService {
         email,
         password
       );
+      if (!result.user?.emailVerified) {
+        this.alertService.showAlert(
+          'Please verify your email before logging in.'
+        );
+        return;
+      }
       await this.updateUserData(result.user);
       this.router.navigate(['/oxalate']);
     } catch (error: any) {
-      console.error('Error during sign-in', error);
+      console.error('Error during sign-in:', error);
 
       switch (error.code) {
         case 'auth/user-not-found':
@@ -109,6 +137,11 @@ export class AuthService {
         case 'auth/too-many-requests':
           this.alertService.showAlert(
             'Too many unsuccessful login attempts. Please try again later.'
+          );
+          break;
+        case 'auth/invalid-credential':
+          this.alertService.showAlert(
+            'Invalid credentials. Please try logging in again or contact support.'
           );
           break;
         default:
