@@ -22,7 +22,9 @@
       </div>
       <div *ngIf="expandedCardId === oxalate.id" class="details">
         <div *ngFor="let detail of oxalate | keyvalue">
-          <p>{{ detail.key | titlecase }}: {{ detail.value }}</p>
+          <p *ngIf="detail.key !== 'id'">
+            {{ detail.key | titlecase }}: {{ detail.value }}
+          </p>
         </div>
       </div>
     </div>
