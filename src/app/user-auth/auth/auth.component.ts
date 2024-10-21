@@ -84,7 +84,14 @@ export class AuthComponent implements OnInit, OnDestroy {
   }
 
   onFacebookSignIn(): void {
-    this.authService.facebookSignIn();
+    this.authService
+      .facebookSignIn()
+      .then(() => {
+        console.log('Successfully signed in with Facebook');
+      })
+      .catch((error) => {
+        console.error('Facebook sign-in failed:', error);
+      });
   }
 
   setupAlertSubscription(): void {

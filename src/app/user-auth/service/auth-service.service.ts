@@ -159,8 +159,23 @@ export class AuthService {
       const result = await this.afAuth.signInWithPopup(provider);
       await this.updateUserData(result.user);
       this.router.navigate(['/oxalate']);
-    } catch (error) {
+    } catch (error: any) {
       console.error('Error during Google sign-in:', error);
+
+      // Handle specific errors
+      switch (error.code) {
+        case 'auth/account-exists-with-different-credential':
+          this.alertService.showAlert(
+            'An account already exists with this email using a different sign-in method.'
+          );
+          break;
+        case 'auth/cancelled-popup-request':
+          this.alertService.showAlert('Sign-in request was cancelled.');
+          break;
+        default:
+          this.alertService.showAlert('Failed to sign in with Google.');
+          break;
+      }
     }
   }
 
@@ -170,8 +185,23 @@ export class AuthService {
       const result = await this.afAuth.signInWithPopup(provider);
       await this.updateUserData(result.user);
       this.router.navigate(['/oxalate']);
-    } catch (error) {
+    } catch (error: any) {
       console.error('Error during Facebook sign-in:', error);
+
+      // Handle specific errors
+      switch (error.code) {
+        case 'auth/account-exists-with-different-credential':
+          this.alertService.showAlert(
+            'An account already exists with this email using a different sign-in method.'
+          );
+          break;
+        case 'auth/cancelled-popup-request':
+          this.alertService.showAlert('Sign-in request was cancelled.');
+          break;
+        default:
+          this.alertService.showAlert('Failed to sign in with Facebook.');
+          break;
+      }
     }
   }
 
