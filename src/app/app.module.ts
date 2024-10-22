@@ -8,7 +8,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { HttpClientModule } from '@angular/common/http';
+import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { environment } from 'src/environments/environment.development';
 import { AngularFireModule } from '@angular/fire/compat';
@@ -54,61 +54,55 @@ export function initializeApp(configService: ConfigService) {
   };
 }
 
-@NgModule({
-  declarations: [
-    AppComponent,
-    LandingPageComponent,
-    HeaderComponent,
-    OxalateComponent,
-    FilterComponent,
-    FooterComponent,
-    ResourcesComponent,
-    BenefitsComponent,
-    ManagingOxalateComponent,
-    ViewMoreComponent,
-    AlertComponent,
-    AuthComponent,
-    ProfileComponent,
-    ChangePasswordComponent,
-    SaveItemsComponent,
-  ],
-  imports: [
-    CommonModule,
-    FormsModule,
-    BrowserModule,
-    AppRoutingModule,
-    BrowserAnimationsModule,
-    MatSnackBarModule,
-    HttpClientModule,
-    MatSidenavModule,
-    MatToolbarModule,
-    MatListModule,
-    MatCardModule,
-    MatIconModule,
-    MatDialogModule,
-    MatFormFieldModule,
-    FormsModule,
-    ReactiveFormsModule,
-    ScrollingModule,
-    MatIconModule,
-    MatExpansionModule,
-    AngularFireModule.initializeApp(environment.firebaseConfig),
-    AngularFireAnalyticsModule,
-    AngularFireAuthModule,
-  ],
-  schemas: [CUSTOM_ELEMENTS_SCHEMA],
-  providers: [
-    ConfigService,
-    AlertService,
-    {
-      provide: APP_INITIALIZER,
-      useFactory: initializeApp,
-      deps: [ConfigService],
-      multi: true,
-    },
-  ],
-  bootstrap: [AppComponent],
-})
+@NgModule({ declarations: [
+        AppComponent,
+        LandingPageComponent,
+        HeaderComponent,
+        OxalateComponent,
+        FilterComponent,
+        FooterComponent,
+        ResourcesComponent,
+        BenefitsComponent,
+        ManagingOxalateComponent,
+        ViewMoreComponent,
+        AlertComponent,
+        AuthComponent,
+        ProfileComponent,
+        ChangePasswordComponent,
+        SaveItemsComponent,
+    ],
+    schemas: [CUSTOM_ELEMENTS_SCHEMA],
+    bootstrap: [AppComponent], imports: [CommonModule,
+        FormsModule,
+        BrowserModule,
+        AppRoutingModule,
+        BrowserAnimationsModule,
+        MatSnackBarModule,
+        MatSidenavModule,
+        MatToolbarModule,
+        MatListModule,
+        MatCardModule,
+        MatIconModule,
+        MatDialogModule,
+        MatFormFieldModule,
+        FormsModule,
+        ReactiveFormsModule,
+        ScrollingModule,
+        MatIconModule,
+        MatExpansionModule,
+        AngularFireModule.initializeApp(environment.firebaseConfig),
+        AngularFireAnalyticsModule,
+        AngularFireAuthModule], providers: [
+        ConfigService,
+        AlertService,
+        {
+            provide: APP_INITIALIZER,
+            useFactory: initializeApp,
+            deps: [ConfigService],
+            multi: true,
+        },
+        provideHttpClient(withInterceptorsFromDi()),
+    ] })
 export class AppModule implements OnInit {
   constructor(private configService: ConfigService) {}
   ngOnInit() {
