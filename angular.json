@@ -63,10 +63,10 @@
           "builder": "@angular-devkit/build-angular:dev-server",
           "configurations": {
             "production": {
-              "browserTarget": "oxalates:build:production"
+              "buildTarget": "oxalates:build:production"
             },
             "development": {
-              "browserTarget": "oxalates:build:development"
+              "buildTarget": "oxalates:build:development"
             }
           },
           "defaultConfiguration": "development"
@@ -74,7 +74,7 @@
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
           "options": {
-            "browserTarget": "oxalates:build"
+            "buildTarget": "oxalates:build"
           }
         },
         "test": {
