@@ -46,6 +46,12 @@ export class SaveItemsComponent implements OnInit {
     this.expandedCardId = this.expandedCardId === id ? null : id;
   }
 
+  formatKey(key: string): string {
+    return key
+      .replace(/_/g, ' ')
+      .replace(/\b\w/g, (char) => char.toUpperCase());
+  }
+
   deleteOxalate(id: string): void {
     console.log('Attempting to delete oxalate with ID:', id);
     from(this.authService.getCurrentUser()).subscribe((user) => {

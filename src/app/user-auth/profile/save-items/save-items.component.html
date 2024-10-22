@@ -1,35 +1,38 @@
 <div class="saved-items">
-  <h2>Saved Items</h2>
-  <div *ngIf="savedOxalates$ | async as savedOxalates; else noItems">
-    <div
-      *ngFor="let oxalate of savedOxalates"
-      class="card"
-      [ngClass]="{
-        expanded: expandedCardId === oxalate.id,
-        collapsed: expandedCardId !== oxalate.id
-      }"
-    >
-      <div class="header">
-        <h3>{{ oxalate.item }}</h3>
-        <div class="button-container">
-          <button (click)="handleCardClick(oxalate.id)">
-            {{ expandedCardId === oxalate.id ? "Collapse" : "Expand" }}
-          </button>
-          <button (click)="deleteOxalate(oxalate.id)" class="delete-button">
-            Delete
-          </button>
+  <ng-container *ngIf="savedOxalates$ | async as savedOxalates">
+    <h2 *ngIf="savedOxalates.length > 0">Saved Items</h2>
+    <div *ngIf="savedOxalates.length > 0; else noItems">
+      <div
+        *ngFor="let oxalate of savedOxalates"
+        class="card"
+        [ngClass]="{
+          expanded: expandedCardId === oxalate.id,
+          collapsed: expandedCardId !== oxalate.id
+        }"
+      >
+        <div class="header">
+          <h3>{{ oxalate.item }}</h3>
+          <div class="button-container">
+            <button (click)="handleCardClick(oxalate.id)">
+              {{ expandedCardId === oxalate.id ? "Collapse" : "Expand" }}
+            </button>
+            <button (click)="deleteOxalate(oxalate.id)" class="delete-button">
+              Delete
+            </button>
+          </div>
         </div>
-      </div>
-      <div *ngIf="expandedCardId === oxalate.id" class="details">
-        <div *ngFor="let detail of oxalate | keyvalue">
-          <p *ngIf="detail.key !== 'id'">
-            {{ detail.key | titlecase }}: {{ detail.value }}
-          </p>
+        <div *ngIf="expandedCardId === oxalate.id" class="details">
+          <div *ngFor="let detail of oxalate | keyvalue">
+            <p *ngIf="detail.key !== 'id'">
+              {{ formatKey(detail.key) }}: {{ detail.value }}
+            </p>
+          </div>
         </div>
       </div>
     </div>
-  </div>
+  </ng-container>
+
   <ng-template #noItems>
-    <p>No saved items found.</p>
+    <h2>No saved items found.</h2>
   </ng-template>
 </div>
