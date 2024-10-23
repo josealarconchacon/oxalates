@@ -4,6 +4,7 @@
   "scripts": {
     "ng": "ng start",
     "start": "ng serve",
+    "prebuild": "node load-env.js",
     "build": "ng build",
     "watch": "ng build --watch --configuration development",
     "test": "ng test"
@@ -28,10 +29,13 @@
     "zone.js": "~0.14.10"
   },
   "devDependencies": {
+    "@angular-builders/custom-webpack": "^18.0.0",
     "@angular-devkit/build-angular": "^18.2.9",
     "@angular/cli": "~18.2.9",
     "@angular/compiler-cli": "^18.2.8",
     "@types/jasmine": "~4.3.0",
+    "@types/node": "^22.7.9",
+    "dotenv": "^16.4.5",
     "jasmine-core": "~4.6.0",
     "jasmine-spec-reporter": "^7.0.0",
     "karma": "~6.4.0",
