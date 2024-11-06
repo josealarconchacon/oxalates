@@ -30,7 +30,6 @@
 }
 
 .profile-card {
-  /* box-shadow: rgb(38, 57, 77) 0px 20px 30px -10px; */
   box-shadow: 0 45px 65px rgba(0, 0, 0, 0.5), 0 35px 22px rgba(0, 0, 0, 0.16);
   transition: all 0.3s ease;
   padding: 2rem;
