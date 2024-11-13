@@ -4,6 +4,7 @@ import { Oxalate } from 'src/app/landing-page/model/oxalate';
 import { AuthService } from 'src/app/user-auth/service/auth-service.service';
 import { OxalateService } from '../../service/oxalate.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { OXALATE_INFO_FIELDS } from '../filter/model/oxalate-constants';
 
 @Component({
   selector: 'app-view-more',
@@ -14,6 +15,7 @@ export class ViewMoreComponent implements OnInit {
   @Input() oxalateData: Oxalate | undefined;
   savedItems: Oxalate[] = [];
   isSaving = false;
+  OXALATE_INFO_FIELDS = OXALATE_INFO_FIELDS;
 
   constructor(
     private router: Router,
@@ -35,7 +37,6 @@ export class ViewMoreComponent implements OnInit {
       console.warn('No state data found for selected oxalate.');
     }
 
-    // Fetch the current user and then get saved items from Firebase
     this.authService
       .getCurrentUser()
       .then((user) => {
@@ -48,12 +49,12 @@ export class ViewMoreComponent implements OnInit {
             });
         } else {
           console.warn('No authenticated user found.');
-          this.savedItems = []; // Handle case where no user is authenticated
+          this.savedItems = [];
         }
       })
       .catch((error) => {
         console.error('Error fetching user:', error);
-        this.savedItems = []; // Handle error case
+        this.savedItems = [];
       });
   }
 
@@ -94,7 +95,6 @@ export class ViewMoreComponent implements OnInit {
     }
   }
 
-  // display  snackbar at the top
   private showNotification(message: string, panelClass: string) {
     this.snackBar.open(message, 'Close', {
       duration: 3000,

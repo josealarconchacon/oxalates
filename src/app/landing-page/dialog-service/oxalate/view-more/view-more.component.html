@@ -7,49 +7,11 @@
   </div>
   <div class="oxalate-info">
     <div class="info-grid">
-      <div class="info-item">
-        <span class="oxalate-label">Category:</span>
-        <span class="oxalate-value">{{ oxalateData.category }}</span>
-      </div>
-      <div class="info-item">
-        <span class="oxalate-label">Calc Level:</span>
-        <span class="oxalate-value">{{ oxalateData.calc_level }}</span>
-      </div>
-      <div class="info-item">
-        <span class="oxalate-label">Level:</span>
-        <span class="oxalate-value">{{ oxalateData.level }}</span>
-      </div>
-      <div class="info-item">
-        <span class="oxalate-label">Total Oxalate (MG/100g):</span>
-        <span class="oxalate-value">{{
-          oxalateData.total_oxalate_mg_per_100g
-        }}</span>
-      </div>
-      <div class="info-item">
-        <span class="oxalate-label">Total Soluble Oxalate (MG/100g):</span>
-        <span class="oxalate-value">{{
-          oxalateData.total_soluble_oxalate_mg_per_100g
-        }}</span>
-      </div>
-      <div class="info-item">
-        <span class="oxalate-label">Serving Size:</span>
-        <span class="oxalate-value">{{ oxalateData.serving_size }}</span>
-      </div>
-      <div class="info-item">
-        <span class="oxalate-label">Serving G:</span>
-        <span class="oxalate-value">{{ oxalateData.serving_g }}</span>
-      </div>
-      <div class="info-item">
-        <span class="oxalate-label">Calc Oxalate Per Serving:</span>
-        <span class="oxalate-value">{{
-          oxalateData.calc_oxalate_per_serving
-        }}</span>
-      </div>
-      <div class="info-item">
-        <span class="oxalate-label">Calc Soluble MG Oxalate Per Serving:</span>
-        <span class="oxalate-value">{{
-          oxalateData.calc_soluble_mg_oxalate_per_serving
-        }}</span>
+      <div *ngFor="let field of OXALATE_INFO_FIELDS" class="info-item">
+        <span class="oxalate-label">{{ field.label }}:</span>
+        <span class="oxalate-value">
+          {{ oxalateData[field.field] || "N/A" }}
+        </span>
       </div>
     </div>
   </div>
