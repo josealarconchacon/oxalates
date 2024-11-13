@@ -9,6 +9,7 @@ import { AuthService } from '../service/auth-service.service';
 })
 export class ChangePasswordComponent implements OnInit {
   passwordForm!: FormGroup;
+  isSubmitting = false; // Add the isSubmitting property
 
   @Output() close = new EventEmitter<void>();
 
@@ -39,6 +40,8 @@ export class ChangePasswordComponent implements OnInit {
 
     const { currentPassword, newPassword } = this.passwordForm.value;
 
+    this.isSubmitting = true; // Set isSubmitting to true
+
     this.authService
       .changePassword(currentPassword, newPassword)
       .then(() => {
@@ -49,6 +52,9 @@ export class ChangePasswordComponent implements OnInit {
       .catch((error) => {
         console.error('Error changing password:', error);
         alert('Failed to change password. Please try again.');
+      })
+      .finally(() => {
+        this.isSubmitting = false; // Reset isSubmitting to false after request completes
       });
   }
 
