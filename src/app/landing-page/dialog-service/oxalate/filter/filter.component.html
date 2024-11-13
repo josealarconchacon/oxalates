@@ -5,41 +5,9 @@
       <label for="category">Category:</label>
       <select id="category" name="category" [(ngModel)]="filters.category">
         <option value="">Select category</option>
-        <option value="Baking Items">Baking Items</option>
-        <option value="Beverages">Beverages</option>
-        <option value="Carob and Chocolates">Carob and Chocolates</option>
-        <option value="Chocolate and Carob">Chocolate and Carob</option>
-        <option value="Commercial Food Products">
-          Commercial Food Products
+        <option *ngFor="let category of categories" [value]="category">
+          {{ category }}
         </option>
-        <option value="Condiments">Condiments</option>
-        <option value="Dairy">Dairy</option>
-        <option value="Fast Food Items">Fast Food Items</option>
-        <option value="Fats and Oils">Fats and Oils</option>
-        <option value="Flours">Flours</option>
-        <option value="Fruits">Fruits</option>
-        <option value="Grains and Grain Products">
-          Grains and Grain Products
-        </option>
-        <option value="Whole Grain, GFCF,">Whole Grain, GFCF,</option>
-        <option value="Canyon Bakehouse">Canyon Bakehouse</option>
-        <option value="Herbs and Spices">Herbs and Spices</option>
-
-        <option value="Legumes">Legumes</option>
-        <option value="Meats, Poultry, and Seafood">
-          Meats, Poultry, and Seafood
-        </option>
-        <option value="Non-Dairy Subs">Non-Dairy Subs</option>
-        <option value="Nuts and Seeds">Nuts and Seeds</option>
-        <option value="Spice Drops and Essential Oils">
-          Spice Drops and Essential Oils
-        </option>
-        <option value="Supplements">Supplements</option>
-        <option value="Powder, Sprouted and">Powder, Sprouted and</option>
-        <option value="Fermented Whole Grain">Fermented Whole Grain</option>
-        <option value="Brown Rice Protein">Brown Rice Protein</option>
-        <option value="Vegetables">Vegetables</option>
-        <option value="Sweets and Sweeteners">Sweets and Sweeteners</option>
       </select>
     </div>
     <div class="filter-section">
@@ -50,25 +18,18 @@
         [(ngModel)]="filters.calc_level"
       >
         <option value="">Select calc level</option>
-        <option value="H">H</option>
-        <option value="M">M</option>
-        <option value="L">L</option>
-        <option value="VH">VH</option>
-        <option value="EH">EH</option>
-        <option value="VL">VL</option>
+        <option *ngFor="let calcLevel of calcLevels" [value]="calcLevel">
+          {{ calcLevel }}
+        </option>
       </select>
     </div>
     <div class="filter-section">
       <label for="level">Level:</label>
       <select id="level" name="level" [(ngModel)]="filters.level">
         <option value="">Select level</option>
-        <option value="1">1</option>
-        <option value="2">2</option>
-        <option value="3">3</option>
-        <option value="4">4</option>
-        <option value="5">5</option>
-        <option value="6">6</option>
-        <option value="7">7</option>
+        <option *ngFor="let level of levels" [value]="level">
+          {{ level }}
+        </option>
       </select>
     </div>
     <div class="button-container">

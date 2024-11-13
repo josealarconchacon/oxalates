@@ -1,5 +1,6 @@
 import { Component, EventEmitter, Output } from '@angular/core';
 import { Filter } from './model/filter';
+import { categories, calcLevels, levels } from './model/filter-data';
 
 @Component({
   selector: 'app-filter',
@@ -11,26 +12,32 @@ export class FilterComponent {
 
   @Output() filterChanged = new EventEmitter<Filter>();
 
+  categories = categories;
+  calcLevels = calcLevels;
+  levels = levels;
+
   applyFilters(): void {
-    console.log('Applying filters:', this.filters); // Log filters being applied
+    console.log('Applying filters:', this.filters);
     this.filterChanged.emit(this.filters);
   }
 
   clearFilters(): void {
-    this.filters = {}; // Reset filters
-    console.log('Clearing filters'); // Log when filters are cleared
-    this.filterChanged.emit(this.filters); // Emit empty filters
+    this.filters = {};
+    console.log('Clearing filters');
+    this.filterChanged.emit(this.filters);
   }
+
   isFilterMenuActive = false;
+  activeSection: string | null = null;
 
   toggleFilterMenu() {
     this.isFilterMenuActive = !this.isFilterMenuActive;
   }
-  activeSection: string | null = null;
+
   isSectionActive(section: string): boolean {
-    // Replace this with your own logic for determining if the section is active
     return this.activeSection === section;
   }
+
   toggleSection(section: string): void {
     this.activeSection = this.activeSection === section ? null : section;
   }
