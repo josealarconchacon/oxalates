@@ -1,4 +1,3 @@
-// import { environment } from './../environments/environment';
 import { APP_INITIALIZER, NgModule, OnInit } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { MatSidenavModule } from '@angular/material/sidenav';
@@ -93,7 +92,6 @@ export function initializeApp(configService: ConfigService) {
     FormsModule,
     ReactiveFormsModule,
     ScrollingModule,
-    MatIconModule,
     MatExpansionModule,
     AngularFireModule.initializeApp(environment.firebaseConfig),
     AngularFireAnalyticsModule,
