@@ -1,3 +1,4 @@
+// import { environment } from './../environments/environment';
 import { APP_INITIALIZER, NgModule, OnInit } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { MatSidenavModule } from '@angular/material/sidenav';
@@ -75,8 +76,6 @@ export function initializeApp(configService: ConfigService) {
     ChangePasswordComponent,
     SaveItemsComponent,
   ],
-  schemas: [CUSTOM_ELEMENTS_SCHEMA],
-  bootstrap: [AppComponent],
   imports: [
     CommonModule,
     FormsModule,
@@ -111,6 +110,8 @@ export function initializeApp(configService: ConfigService) {
     },
     provideHttpClient(withInterceptorsFromDi()),
   ],
+  schemas: [CUSTOM_ELEMENTS_SCHEMA],
+  bootstrap: [AppComponent],
 })
 export class AppModule implements OnInit {
   constructor(private configService: ConfigService) {}
