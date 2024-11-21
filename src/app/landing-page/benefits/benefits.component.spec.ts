@@ -4,7 +4,7 @@ import { BenefitsComponent } from './benefits.component';
 import { BenefitsService } from './service/benefits.service';
 import { provideHttpClientTesting } from '@angular/common/http/testing';
 
-fdescribe('BenefitsComponent', () => {
+describe('BenefitsComponent', () => {
   let component: BenefitsComponent;
   let fixture: ComponentFixture<BenefitsComponent>;
 
