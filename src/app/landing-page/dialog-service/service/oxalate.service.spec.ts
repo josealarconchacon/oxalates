@@ -9,7 +9,7 @@ import { AuthService } from 'src/app/user-auth/service/auth-service.service';
 import { of } from 'rxjs';
 import { Oxalate } from '../../model/oxalate';
 
-fdescribe('OxalateService', () => {
+describe('OxalateService', () => {
   let service: OxalateService;
   let httpMock: HttpTestingController;
 

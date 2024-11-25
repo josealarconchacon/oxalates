@@ -25,7 +25,7 @@ const angularFirestoreMock = {
   }),
 };
 
-fdescribe('SaveItemsComponent', () => {
+describe('SaveItemsComponent', () => {
   let component: SaveItemsComponent;
   let fixture: ComponentFixture<SaveItemsComponent>;
 

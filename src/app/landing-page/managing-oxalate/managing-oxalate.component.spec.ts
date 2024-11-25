@@ -4,7 +4,7 @@ import { ManagingOxalateComponent } from './managing-oxalate.component';
 import { OxalateService } from './service/oxalate.service';
 import { of } from 'rxjs';
 
-fdescribe('ManagingOxalateComponent', () => {
+describe('ManagingOxalateComponent', () => {
   let component: ManagingOxalateComponent;
   let oxalateService: OxalateService;
   let fixture: ComponentFixture<ManagingOxalateComponent>;
