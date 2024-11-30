@@ -8,7 +8,10 @@ import { categories, calcLevels, levels } from './model/filter-data';
   styleUrls: ['./filter.component.css'],
 })
 export class FilterComponent {
-  filters: Filter = {};
+  filters: Filter = {
+    category: categories[0],
+    calc_level: calcLevels[0],
+  };
 
   @Output() filterChanged = new EventEmitter<Filter>();
 

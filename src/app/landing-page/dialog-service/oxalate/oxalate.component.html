@@ -1,25 +1,25 @@
 <app-alert *ngIf="showAlert" [message]="alertMessage"></app-alert>
 
 <div class="main-container">
-  <div class="sidebar">
-    <div class="search-box">
-      <input
-        type="text"
-        placeholder="Search here..."
-        [(ngModel)]="searchQuery"
-        (input)="search()"
-        class="search-input"
-      />
-      <button class="search-btn" (click)="search()">Search</button>
-    </div>
-    <app-filter
-      (filterChanged)="applyFilters($event)"
-      class="filter-component"
-    ></app-filter>
+  <h1 class="section-title">Oxalate Items</h1>
+  <div class="search-box">
+    <input
+      type="text"
+      placeholder="Search here..."
+      [(ngModel)]="searchQuery"
+      (input)="search()"
+      class="search-input"
+    />
+    <button class="search-btn" (click)="search()">Search</button>
   </div>
 
-  <div class="content">
-    <h1 class="section-title">Oxalate Items</h1>
+  <app-filter
+    *ngIf="searchQuery"
+    (filterChanged)="applyFilters($event)"
+    class="filter-component"
+  ></app-filter>
+
+  <div *ngIf="searchQuery" class="content">
     <div class="card-container">
       <div
         *ngFor="let oxalate of displayedOxalates"

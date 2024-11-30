@@ -1,42 +1,35 @@
-<div class="filter-menu">
-  <h2>Filter Menu</h2>
-  <form (ngSubmit)="applyFilters()">
-    <div class="filter-section">
-      <label for="category">Category:</label>
-      <select id="category" name="category" [(ngModel)]="filters.category">
-        <option value="">Select category</option>
+<div class="filter-container">
+  <div class="filter-row">
+    <div class="filter-group">
+      <select
+        id="category"
+        name="category"
+        [(ngModel)]="filters.category"
+        (ngModelChange)="applyFilters()"
+      >
+        <option value="" disabled selected>Select a category</option>
         <option *ngFor="let category of categories" [value]="category">
           {{ category }}
         </option>
       </select>
     </div>
-    <div class="filter-section">
-      <label for="calc_level">Calc Level:</label>
+    <div class="filter-group">
       <select
         id="calc_level"
         name="calc_level"
         [(ngModel)]="filters.calc_level"
+        (ngModelChange)="applyFilters()"
       >
-        <option value="">Select calc level</option>
-        <option *ngFor="let calcLevel of calcLevels" [value]="calcLevel">
-          {{ calcLevel }}
-        </option>
-      </select>
-    </div>
-    <div class="filter-section">
-      <label for="level">Level:</label>
-      <select id="level" name="level" [(ngModel)]="filters.level">
-        <option value="">Select level</option>
-        <option *ngFor="let level of levels" [value]="level">
+        <option value="" disabled selected>Select a level</option>
+        <option *ngFor="let level of calcLevels" [value]="level">
           {{ level }}
         </option>
       </select>
     </div>
-    <div class="button-container">
-      <button type="submit" class="filter-button">Apply Filters</button>
-      <button type="button" (click)="clearFilters()" class="filter-button">
+    <div class="filter-actions">
+      <button type="button" class="btn" (click)="clearFilters()">
         Clear Filters
       </button>
     </div>
-  </form>
+  </div>
 </div>
