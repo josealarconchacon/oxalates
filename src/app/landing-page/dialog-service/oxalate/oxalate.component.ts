@@ -18,9 +18,6 @@ export class OxalateComponent implements OnInit {
   isFilterApplied: boolean = false;
   selectedOxalate: Oxalate | undefined;
 
-  // new
-  isSearchPerformed = false;
-
   showAlert: boolean = false;
   alertMessage: string = '';
   itemsPerPage: number = 12;
