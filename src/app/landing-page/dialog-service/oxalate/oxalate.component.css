@@ -9,7 +9,7 @@
 
 body {
   background-color: #121212;
-  color: #ffffff;
+  color: #474747;
   min-height: 100vh;
   display: flex;
   align-items: center;
@@ -47,7 +47,7 @@ body {
 
 .search-btn {
   padding: 10px 20px;
-  background-color: #ff6b6b;
+  background-color: #474747;
   color: white;
   border: none;
   border-radius: 0 8px 8px 0;
@@ -57,7 +57,7 @@ body {
 }
 
 .search-btn:hover {
-  background-color: #ff4c4c;
+  background-color: #474747;
 }
 
 .search-btn:active {
@@ -82,7 +82,7 @@ body {
   font-size: 48px;
   margin-top: 0;
   margin-bottom: 20px;
-  color: #ff6b6b;
+  color: #474747;
   text-align: center;
 }
 
@@ -178,7 +178,6 @@ body {
   left: 0;
   width: 100%;
   height: 100%;
-  background: rgba(0, 0, 0, 0.5);
   display: flex;
   align-items: center;
   justify-content: center;

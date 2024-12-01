@@ -1,8 +1,10 @@
 .footer {
   padding: 40px 0;
-  background-color: #121212;
-  color: #e0e0e0;
+  color: #474747;
   text-align: center;
+}
+.footer-divider {
+  width: 50%;
 }
 
 .footer-content {
@@ -26,7 +28,7 @@
 }
 
 .footer-links a {
-  color: #e0e0e0;
+  color: #474747;
   text-decoration: none;
   font-weight: 500;
   transition: color 0.3s;
@@ -43,5 +45,5 @@
 .footer-copyright {
   margin-top: 20px;
   font-size: 14px;
-  color: #aaa;
+  color: #474747;
 }

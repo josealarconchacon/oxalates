@@ -1,6 +1,6 @@
 .header {
-  background-color: #121212;
-  color: #969696;
+  background-color: #ffffff;
+  color: #474747;
   padding: 24px 0;
   position: sticky;
   top: 0;
@@ -32,7 +32,7 @@
 }
 
 .nav-link {
-  color: #969696;
+  color: #474747;
   font-size: 18px;
   text-decoration: none;
   font-weight: 700;
@@ -48,8 +48,10 @@
 }
 
 .nav-logo {
-  width: 220px;
-  height: 250px;
+  margin: 20px;
+  width: 150px;
+  height: 210px;
+  object-fit: contain;
 }
 
 .hamburger {
@@ -87,13 +89,13 @@
 
 .mat-icon {
   font-size: 24px;
-  color: #969696;
+  color: #474747;
   cursor: pointer;
   transition: color 0.3s ease, transform 0.3s ease;
 }
 
 .mat-icon:hover {
-  color: #faf8ff;
+  color: #888b90;
   transform: scale(1.1);
 }
 

@@ -6,7 +6,6 @@ body {
 
 .container {
   padding: 40px 5%;
-  /* background-color: white; */
   box-sizing: border-box;
 }
 
@@ -15,28 +14,25 @@ body {
   flex-wrap: wrap;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 40px;
   gap: 20px;
+  margin-bottom: 40px;
+  text-align: center;
 }
 
-.header-text {
-  flex: 1 1 45%;
-}
-
+.header-text,
 .header-image {
   flex: 1 1 45%;
-  text-align: right;
 }
 
 h1 {
-  font-size: 2.8em;
+  font-size: 2.8rem;
+  color: #474747;
   margin-bottom: 10px;
-  color: #969696;
 }
 
 p {
-  font-size: 1.1em;
-  color: #969696;
+  font-size: 1.1rem;
+  color: #474747;
   line-height: 1.6;
   margin-bottom: 20px;
 }
@@ -52,13 +48,11 @@ p {
 .step {
   flex: 1 1 calc(33.33% - 30px);
   padding: 20px;
+  border: 0.5px solid #969696;
   border-radius: 10px;
-  border-color: #969696;
-  border-style: solid;
-  border-width: 0.5px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
-  text-align: left;
   transition: transform 0.3s ease, box-shadow 0.3s ease;
+  text-align: left;
 }
 
 .step:hover {
@@ -75,20 +69,20 @@ p {
   display: flex;
   justify-content: center;
   align-items: center;
+  font-size: 1.2rem;
   font-weight: bold;
   margin-bottom: 20px;
-  font-size: 1.2em;
 }
 
 .step h3 {
-  font-size: 1.5em;
+  font-size: 1.5rem;
+  color: #474747;
   margin-bottom: 10px;
-  color: #969696;
 }
 
 .step p {
-  font-size: 1.05em;
-  color: #969696;
+  font-size: 1.05rem;
+  color: #474747;
   line-height: 1.6;
 }
 
@@ -101,28 +95,19 @@ img {
 @media (max-width: 992px) {
   .header {
     flex-direction: column;
-    text-align: center;
-  }
-
-  .header-text {
-    padding-right: 0;
-  }
-
-  .header-image {
-    text-align: center;
+    gap: 20px;
   }
 
   .step {
     flex: 1 1 calc(50% - 30px);
   }
 
-  .get-started {
-    padding: 12px 24px;
-    font-size: 1em;
+  h1 {
+    font-size: 2.2rem;
   }
 
-  h1 {
-    font-size: 2.2em;
+  p {
+    font-size: 1rem;
   }
 }
 
@@ -131,48 +116,32 @@ img {
     padding: 20px 5%;
   }
 
-  .header {
-    flex-direction: column;
-    text-align: center;
-    gap: 20px;
-  }
-
-  h1 {
-    font-size: 1.8em;
-  }
-
-  p {
-    font-size: 1em;
-  }
-
-  .get-started {
-    padding: 10px 20px;
-    font-size: 1em;
-  }
-
   .steps {
     gap: 20px;
   }
 
   .step {
     flex: 1 1 100%;
-    margin: 0;
     text-align: center;
   }
 
   .step-number {
-    margin: 0 auto 15px auto;
+    margin: 0 auto 15px;
   }
 
   .step h3 {
-    font-size: 1.3em;
+    font-size: 1.3rem;
   }
 
   .step p {
-    font-size: 1em;
+    font-size: 1rem;
   }
 
   .header-image img {
     max-width: 80%;
+  }
+
+  h1 {
+    font-size: 1.8rem;
   }
 }

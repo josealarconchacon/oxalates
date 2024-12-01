@@ -5,7 +5,7 @@
 }
 
 .resource-title {
-  color: #333;
+  color: #474747;
   font-size: 2rem;
   font-weight: 600;
   margin-bottom: 40px;
@@ -15,7 +15,6 @@
 
 .resource-title::after {
   content: "";
-  display: block;
   width: 80px;
   height: 4px;
   position: absolute;
@@ -23,13 +22,13 @@
   left: 50%;
   transform: translateX(-50%);
   border-radius: 2px;
-  background: #333;
+  background: #474747;
+  display: block;
 }
 
 .resource-content {
   display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  grid-template-rows: repeat(2, auto);
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
   gap: 20px;
   padding: 0 20px;
   max-width: 1200px;
@@ -42,7 +41,7 @@
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   padding: 20px;
   text-align: center;
-  transition: transform 0.3s, box-shadow 0.3s;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
 .resource-info:hover {
@@ -63,19 +62,19 @@
   height: 60px;
   border-radius: 50%;
   object-fit: scale-down;
-  border: 0.01px solid #adadad;
+  border: 1px solid #adadad;
 }
 
 .resource-info h4 {
   font-size: 1.25rem;
-  color: #333;
+  color: #474747;
   margin: 0;
   font-weight: 500;
 }
 
 .resource-text {
   font-size: 1.05rem;
-  color: #666;
+  color: #474747;
   line-height: 1.6;
   margin-top: 10px;
 }
@@ -83,7 +82,6 @@
 @media screen and (max-width: 768px) {
   .resource-content {
     grid-template-columns: 1fr;
-    grid-template-rows: auto;
     padding: 0 10px;
   }
 }
