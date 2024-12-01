@@ -4,6 +4,8 @@ import { OxalateService } from '../service/oxalate.service';
 import { FilterService } from './service/filter.service';
 import { Filter } from './filter/model/filter';
 import { Router } from '@angular/router';
+import { debounceTime, distinctUntilChanged, switchMap } from 'rxjs/operators';
+import { Subject } from 'rxjs';
 
 @Component({
   selector: 'app-oxalate',
@@ -25,6 +27,9 @@ export class OxalateComponent implements OnInit {
   totalPages: number = 1;
   pagesToShow: number = 5;
 
+  // Subject for debounced search
+  private searchSubject: Subject<string> = new Subject<string>();
+
   constructor(
     private oxalateService: OxalateService,
     private filterService: FilterService,
@@ -44,27 +49,30 @@ export class OxalateComponent implements OnInit {
         this.applyFilters(filter);
       }
     });
+
+    // Subscribe to the debounced search query
+    this.searchSubject
+      .pipe(
+        debounceTime(300), // Wait for 300ms after typing stops
+        distinctUntilChanged(), // Only trigger if the query has changed
+        switchMap((query) => this.oxalateService.searchOxalateData(query))
+      )
+      .subscribe((data) => {
+        if (data.length === 0) {
+          this.showAlert = true;
+          this.alertMessage = 'No results found for your search.';
+          this.resetData();
+        } else {
+          this.oxalates = data;
+          this.updateDisplayedOxalates();
+          this.showAlert = false;
+        }
+      });
   }
 
-  search(): void {
-    if (this.searchQuery.trim() !== '') {
-      this.oxalateService
-        .searchOxalateData(this.searchQuery.trim())
-        .subscribe((data) => {
-          if (data.length === 0) {
-            this.showAlert = true;
-            this.alertMessage = 'No results found for your search.';
-            this.resetData();
-          } else {
-            this.oxalates = data;
-            this.updateDisplayedOxalates();
-            this.showAlert = false; // Hide the alert when data is found
-          }
-        });
-    } else {
-      this.resetData();
-      this.showAlert = false; // Hide the alert when resetting data
-    }
+  onSearchQueryChange(query: string): void {
+    this.searchQuery = query;
+    this.searchSubject.next(query);
   }
 
   applyFilters(filter: Filter): void {
@@ -92,7 +100,7 @@ export class OxalateComponent implements OnInit {
   }
 
   resetData(): void {
-    this.oxalates = [...this.originalOxalates]; // Reset to original data
+    this.oxalates = [...this.originalOxalates];
     this.updateDisplayedOxalates();
   }
 

@@ -9,7 +9,7 @@
 
 body {
   background-color: #121212;
-  color: #474747;
+  color: #f0f0f5;
   min-height: 100vh;
   display: flex;
   align-items: center;
@@ -22,6 +22,7 @@ body {
   flex-direction: column;
   align-items: center;
   max-width: 2000px;
+  width: 100%;
 }
 
 .search-box {
@@ -30,38 +31,31 @@ body {
   align-items: center;
   width: 100%;
   margin-bottom: 20px;
-  gap: 10px;
-  flex-wrap: wrap;
+  padding: 10px;
 }
 
 .search-input {
-  width: 400px;
-  padding: 10px;
+  width: 100%;
+  max-width: 600px;
+  padding: 16px;
   font-size: 16px;
-  border: none;
-  border-radius: 8px 0 0 8px;
+  font-family: "Roboto", sans-serif;
+  border: 0.5px solid #dcdcdc;
+  border-radius: 24px;
   outline: none;
-  color: white;
-  background-color: #333;
+  color: #333;
+  background-color: #fff;
+  box-shadow: 0 1px 6px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease;
 }
 
-.search-btn {
-  padding: 10px 20px;
-  background-color: #474747;
-  color: white;
-  border: none;
-  border-radius: 0 8px 8px 0;
-  cursor: pointer;
-  font-size: 16px;
-  transition: background-color 0.3s ease;
+.search-input::placeholder {
+  color: #888;
 }
 
-.search-btn:hover {
-  background-color: #474747;
-}
-
-.search-btn:active {
-  transform: scale(0.95);
+.search-input:focus {
+  border-color: #c6c6c6;
+  box-shadow: 0 0 8px rgba(152, 152, 152, 0.4);
 }
 
 .filter-component {
@@ -97,9 +91,9 @@ body {
 .card {
   background-color: #2b2b2b;
   padding: 20px;
-  border-radius: 12px;
+  border-radius: 20px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  transition: transform 0.2s, box-shadow 0.2s;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
   position: relative;
   overflow: hidden;
 }
@@ -134,18 +128,19 @@ body {
   background-color: #333;
   border: none;
   color: white;
-  padding: 10px 15px;
+  padding: 12px 18px;
   text-align: center;
   text-decoration: none;
   font-size: 14px;
   margin: 5px;
   cursor: pointer;
-  border-radius: 4px;
-  transition: background-color 0.3s ease;
+  border-radius: 12px;
+  transition: background-color 0.3s ease, transform 0.2s ease;
 }
 
 .pagination button:hover:not(.active) {
   background-color: #555;
+  transform: scale(1.05);
 }
 
 .pagination button:disabled {
@@ -155,6 +150,39 @@ body {
 
 .pagination button.active {
   background-color: #ff6b6b;
+}
+
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  backdrop-filter: blur(10px);
+}
+
+.modal-content {
+  background-color: #1e1e1e;
+  border-radius: 24px;
+  padding: 24px;
+  width: 90%;
+  max-width: 600px;
+  position: relative;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+}
+
+.close-btn {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background: none;
+  border: none;
+  color: #ff6b6b;
+  font-size: 32px;
+  cursor: pointer;
 }
 
 @media screen and (max-width: 768px) {
@@ -172,33 +200,8 @@ body {
   }
 }
 
-.modal-overlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.modal-content {
-  background-color: #1e1e1e;
-  border-radius: 12px;
-  padding: 20px;
-  width: 90%;
-  max-width: 600px;
-  position: relative;
-}
-
-.close-btn {
-  position: absolute;
-  top: 10px;
-  right: 10px;
-  background: none;
-  border: none;
-  color: #ff6b6b;
-  font-size: 24px;
-  cursor: pointer;
+@media screen and (max-width: 480px) {
+  .search-input {
+    max-width: 95%;
+  }
 }

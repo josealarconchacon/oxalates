@@ -2,15 +2,15 @@
 
 <div class="main-container">
   <h1 class="section-title">Oxalate</h1>
+
   <div class="search-box">
     <input
       type="text"
       placeholder="Search here..."
       [(ngModel)]="searchQuery"
-      (input)="search()"
+      (ngModelChange)="onSearchQueryChange($event)"
       class="search-input"
     />
-    <button class="search-btn" (click)="search()">Search</button>
   </div>
 
   <app-filter
