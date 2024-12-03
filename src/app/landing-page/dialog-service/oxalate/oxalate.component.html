@@ -2,16 +2,14 @@
 
 <div class="main-container">
   <h1 class="section-title">Oxalate</h1>
-
-  <div class="search-box">
-    <input
-      type="text"
-      placeholder="Search here..."
-      [(ngModel)]="searchQuery"
-      (ngModelChange)="onSearchQueryChange($event)"
-      class="search-input"
-    />
-  </div>
+  <input
+    [(ngModel)]="searchQuery"
+    (ngModelChange)="onSearchQueryChange($event)"
+    placeholder="Search here..."
+    type="text"
+    class="input"
+    required=""
+  />
 
   <app-filter
     *ngIf="searchQuery"

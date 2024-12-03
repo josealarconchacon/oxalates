@@ -25,28 +25,34 @@ body {
   width: 100%;
 }
 
-.search-box {
-  display: flex;
-  justify-content: center;
-  align-items: center;
+.input {
+  line-height: 28px;
   width: 100%;
-  margin-bottom: 20px;
-  padding: 10px;
+  max-width: 400px;
+  border: 2px solid transparent;
+  border-bottom-color: #777;
+  padding: 0.5rem 0;
+  outline: none;
+  background-color: transparent;
+  color: #0d0c22;
+  transition: 0.3s cubic-bezier(0.645, 0.045, 0.355, 1);
 }
 
-.search-input {
-  width: 100%;
-  max-width: 600px;
-  padding: 16px;
-  font-size: 16px;
-  font-family: "Roboto", sans-serif;
-  border: 0.5px solid #dcdcdc;
-  border-radius: 24px;
+.input:focus,
+input:hover {
   outline: none;
-  color: #333;
-  background-color: #fff;
-  box-shadow: 0 1px 6px rgba(0, 0, 0, 0.1);
-  transition: all 0.3s ease;
+  padding: 0.2rem 1rem;
+  border-radius: 1rem;
+  border-color: #7a9cc6;
+}
+
+.input::placeholder {
+  color: #777;
+}
+
+.input:focus::placeholder {
+  opacity: 0;
+  transition: opacity 0.3s;
 }
 
 .search-input::placeholder {
@@ -187,24 +193,33 @@ body {
   font-size: 32px;
   cursor: pointer;
 }
-
 @media screen and (max-width: 768px) {
-  .search-box {
-    flex-direction: column;
-    gap: 15px;
+  .card-container {
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
   }
 
-  .content {
-    padding: 20px;
+  .input {
+    max-width: 90%;
+    font-size: 14px;
   }
 
-  .filter-component {
-    margin-top: 20px;
+  .section-title {
+    font-size: 36px;
   }
 }
 
 @media screen and (max-width: 480px) {
-  .search-input {
-    max-width: 95%;
+  .input {
+    max-width: 100%;
+    font-size: 14px;
+    padding: 8px;
+  }
+
+  .card-container {
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  }
+
+  .section-title {
+    font-size: 28px;
   }
 }
