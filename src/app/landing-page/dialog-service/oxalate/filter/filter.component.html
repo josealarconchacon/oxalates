@@ -1,35 +1,35 @@
-<div class="filter-container">
-  <div class="filter-row">
-    <div class="filter-group">
-      <select
-        id="category"
-        name="category"
-        [(ngModel)]="filters.category"
-        (ngModelChange)="applyFilters()"
-      >
-        <option value="" disabled selected>Select a category</option>
-        <option *ngFor="let category of categories" [value]="category">
-          {{ category }}
-        </option>
-      </select>
-    </div>
-    <div class="filter-group">
-      <select
-        id="calc_level"
-        name="calc_level"
-        [(ngModel)]="filters.calc_level"
-        (ngModelChange)="applyFilters()"
-      >
-        <option value="" disabled selected>Select a level</option>
-        <option *ngFor="let level of calcLevels" [value]="level">
-          {{ level }}
-        </option>
-      </select>
-    </div>
-    <div class="filter-actions">
-      <button type="button" class="btn" (click)="clearFilters()">
-        Clear Filters
-      </button>
-    </div>
+<div class="dropdown-container">
+  <div class="dropdown filter-group">
+    <select
+      id="time"
+      name="time"
+      [(ngModel)]="filters.category"
+      (ngModelChange)="applyFilters()"
+    >
+      <option value="" disabled selected>Any Category</option>
+      <option *ngFor="let category of categories" [value]="category">
+        {{ category }}
+      </option>
+    </select>
+  </div>
+
+  <div class="dropdown filter-group">
+    <select
+      id="results"
+      name="results"
+      [(ngModel)]="filters.calc_level"
+      (ngModelChange)="applyFilters()"
+    >
+      <option value="" disabled selected>All Level</option>
+      <option *ngFor="let level of calcLevels" [value]="level">
+        {{ level }}
+      </option>
+    </select>
+  </div>
+
+  <div class="filter-actions">
+    <button type="button" class="btn" (click)="clearFilters()">
+      Clear Filters
+    </button>
   </div>
 </div>

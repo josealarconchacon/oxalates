@@ -9,9 +9,11 @@ import { categories, calcLevels, levels } from './model/filter-data';
 })
 export class FilterComponent {
   filters: Filter = {
-    category: categories[0],
-    calc_level: calcLevels[0],
+    category: '',
+    calc_level: '',
   };
+
+  searchQuery: string = '';
 
   @Output() filterChanged = new EventEmitter<Filter>();
 
@@ -25,8 +27,12 @@ export class FilterComponent {
   }
 
   clearFilters(): void {
-    this.filters = {};
-    console.log('Clearing filters');
+    this.filters = {
+      category: '',
+      calc_level: '',
+    };
+    this.searchQuery = '';
+    console.log('Clearing filters and search query');
     this.filterChanged.emit(this.filters);
   }
 
