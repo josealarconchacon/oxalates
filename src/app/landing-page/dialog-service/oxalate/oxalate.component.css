@@ -89,7 +89,7 @@ body {
 }
 
 .card {
-  background-color: #2b2b2b;
+  background-color: #d3d8e4;
   padding: 20px;
   border-radius: 20px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
@@ -106,13 +106,13 @@ body {
 .card-title {
   font-size: 20px;
   font-weight: 500;
-  color: #ff6b6b;
+  color: #474747;
   margin-bottom: 10px;
 }
 
 .card-details {
   font-size: 14px;
-  color: #bbbbbb;
+  color: #474747;
   margin-bottom: 8px;
 }
 
@@ -125,7 +125,7 @@ body {
 }
 
 .pagination button {
-  background-color: #333;
+  background-color: #474747;
   border: none;
   color: white;
   padding: 12px 18px;
@@ -141,15 +141,18 @@ body {
 .pagination button:hover:not(.active) {
   background-color: #555;
   transform: scale(1.05);
+  border: none;
 }
 
 .pagination button:disabled {
   background-color: #555;
   cursor: not-allowed;
+  border: none;
 }
 
 .pagination button.active {
-  background-color: #ff6b6b;
+  background-color: #1e1e1e;
+  border: none;
 }
 
 .modal-overlay {
