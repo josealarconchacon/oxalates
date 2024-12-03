@@ -1,18 +1,22 @@
-<div class="oxalate-detail" *ngIf="oxalateData">
-  <div class="oxalate-header">
-    <h2 class="oxalate-title">{{ oxalateData.item }}</h2>
-    <button class="save-button" [disabled]="isSaving" (click)="onSave()">
-      {{ isSaving ? "Saving..." : "Favorite" }}
-    </button>
-  </div>
-  <div class="oxalate-info">
-    <div class="info-grid">
-      <div *ngFor="let field of OXALATE_INFO_FIELDS" class="info-item">
-        <span class="oxalate-label">{{ field.label }}:</span>
+<div class="oxalate-card" *ngIf="oxalateData">
+  <h3 class="version animate-fade-in">{{ oxalateData.item }}</h3>
+  <div class="features-grid">
+    <div
+      class="feature-item"
+      *ngFor="let field of OXALATE_INFO_FIELDS; let i = index"
+      [style.animationDelay]="i * 0.15 + 's'"
+    >
+      <span class="checkmark">✔</span>
+      <div class="feature-text">
+        <span class="feature-label">{{ field.label || "Feature" }}:</span>
         <span class="oxalate-value">
           {{ oxalateData[field.field] || "N/A" }}
         </span>
       </div>
     </div>
   </div>
+  <button class="save-button" [disabled]="isSaving" (click)="onSave()">
+    <span class="spinner" *ngIf="isSaving"></span>
+    {{ isSaving ? "Saving..." : "Add to Favorite" }}
+  </button>
 </div>
