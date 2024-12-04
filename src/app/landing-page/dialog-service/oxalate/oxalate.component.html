@@ -1,33 +1,43 @@
-<app-alert *ngIf="showAlert" [message]="alertMessage"></app-alert>
+<div class="search-container">
+  <div>
+    <h1>Oxalate</h1>
+  </div>
 
-<div class="main-container">
-  <h1 class="section-title">Oxalate</h1>
-  <input
-    [(ngModel)]="searchQuery"
-    (ngModelChange)="onSearchQueryChange($event)"
-    placeholder="Search here..."
-    type="text"
-    class="input"
-    required=""
-  />
+  <div class="search-wrapper">
+    <div class="search-input-container">
+      <input
+        [(ngModel)]="searchQuery"
+        (ngModelChange)="onSearchQueryChange($event)"
+        placeholder="Search oxalates..."
+        type="text"
+        class="search-input"
+        required=""
+      />
+      <div class="search-icons">
+        <span class="search-icon">🔍</span>
+      </div>
+    </div>
 
-  <app-filter
-    *ngIf="searchQuery"
-    (filterChanged)="applyFilters($event)"
-    class="filter-component"
-  ></app-filter>
+    <app-alert *ngIf="showAlert" [message]="alertMessage"></app-alert>
 
-  <div *ngIf="searchQuery" class="content">
+    <app-filter
+      *ngIf="searchQuery"
+      (filterChanged)="applyFilters($event)"
+      class="filter-component"
+    ></app-filter>
+  </div>
+
+  <div *ngIf="searchQuery" class="search-results">
+    <div class="results-stats">{{ oxalates.length }} results found</div>
+
     <div class="card-container">
       <div
         *ngFor="let oxalate of displayedOxalates"
-        class="card"
+        class="search-result-card"
         (click)="viewMore(oxalate)"
       >
-        <div class="card-content">
-          <h2 class="card-title">{{ oxalate.item }}</h2>
-          <p class="card-details">Category: {{ oxalate.category }}</p>
-        </div>
+        <h3 class="result-title">{{ oxalate.item }}</h3>
+        <p class="result-snippet">Category: {{ oxalate.category }}</p>
       </div>
     </div>
 
