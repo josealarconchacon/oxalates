@@ -1,6 +1,5 @@
 <section class="profile-section">
   <div class="profile-container">
-    <!-- Sidebar -->
     <aside class="profile-sidebar" [class.collapsed]="isSidebarCollapsed">
       <div class="profile-card">
         <div class="profile-image-container">
@@ -9,9 +8,6 @@
             alt="Profile Image of {{ userProfile?.displayName }}"
             class="profile-image"
           />
-          <label for="file-upload" class="upload-button">
-            <i class="fas fa-camera"></i>
-          </label>
           <input
             id="file-upload"
             type="file"
@@ -19,10 +15,16 @@
             accept="image/*"
             hidden
           />
+          <label for="file-upload" class="upload-icon">
+            <i class="fas fa-camera"></i>
+          </label>
         </div>
         <h4 class="profile-name">
           {{ userProfile?.displayName || "Username" }}
         </h4>
+        <p class="profile-email">
+          {{ userProfile?.email || "username@gmail.com" }}
+        </p>
       </div>
       <nav class="profile-nav">
         <a
@@ -30,43 +32,40 @@
           [class.active]="activeSection === 'profile'"
           (click)="showSection('profile')"
         >
-          <i class="fas fa-user"></i> Profile Info
+          Profile Info
         </a>
         <a
           class="nav-item"
           [class.active]="activeSection === 'saveItem'"
           (click)="showSection('saveItem')"
         >
-          <i class="fas fa-save"></i> Saved Items
+          Saved Items
         </a>
         <a
           class="nav-item"
           [class.active]="activeSection === 'address'"
           (click)="showSection('address')"
         >
-          <i class="fas fa-map-marker-alt"></i> Address Book
+          Address Book
         </a>
-        <a class="nav-item logout" (click)="onLogout()">
-          <i class="fas fa-sign-out-alt"></i> Logout
-        </a>
+        <a class="nav-item logout" (click)="onLogout()">Logout</a>
       </nav>
-      <button class="toggle-sidebar" (click)="toggleSidebar()">☰</button>
     </aside>
 
-    <!-- Main Content -->
     <main class="profile-content">
       <div *ngIf="activeSection === 'profile'" class="profile-details">
         <h2 class="section-title">Profile Information</h2>
         <div class="profile-fields">
-          <p>
-            <strong>Name:</strong> {{ userProfile?.displayName || "Username" }}
-          </p>
-          <p>
-            <strong>Email:</strong>
-            {{ userProfile?.email || "username@gmail.com" }}
-          </p>
+          <div class="field">
+            <label>Name</label>
+            <p>{{ userProfile?.displayName || "Username" }}</p>
+          </div>
+          <div class="field">
+            <label>Email</label>
+            <p>{{ userProfile?.email || "username@gmail.com" }}</p>
+          </div>
         </div>
-        <button (click)="toggleChangePassword()" class="change-pass">
+        <button (click)="toggleChangePassword()" class="primary-btn">
           Change Password
         </button>
       </div>
