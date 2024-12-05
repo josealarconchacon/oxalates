@@ -1,91 +1,80 @@
 <section class="profile-section">
   <div class="profile-container">
-    <div class="profile-main">
-      <div class="profile-row">
-        <aside class="profile-sidebar">
-          <div class="profile-card">
-            <div class="profile-card-body">
-              <div class="profile-info">
-                <div class="profile-image-container">
-                  <img
-                    [src]="
-                      userProfile?.photoURL ||
-                      'https://banner2.cleanpng.com/20180619/tyr/aa66mfh81.webp'
-                    "
-                    alt="Profile Image of {{ userProfile?.displayName }}"
-                    class="profile-image"
-                  />
-                  <label for="file-upload" class="upload-button">
-                    <i class="fas fa-camera"></i>
-                  </label>
-                  <input
-                    id="file-upload"
-                    type="file"
-                    (change)="onFileSelected($event)"
-                    accept="image/*"
-                    style="display: none"
-                  />
-                </div>
-                <div class="profile-details">
-                  <h4 class="profile-name">
-                    {{ userProfile?.displayName || "Username" }}
-                  </h4>
-                </div>
-                <nav class="profile-nav">
-                  <a
-                    class="nav-item"
-                    [class.active]="activeSection === 'profile'"
-                    (click)="showSection('profile')"
-                  >
-                    Profile Information
-                  </a>
-                  <a
-                    class="nav-item"
-                    [class.active]="activeSection === 'saveItem'"
-                    (click)="showSection('saveItem')"
-                  >
-                    Save Items
-                  </a>
-                  <a
-                    class="nav-item"
-                    [class.active]="activeSection === 'address'"
-                    (click)="showSection('address')"
-                  >
-                    Address Book
-                  </a>
-                  <a class="nav-item" (click)="onLogout()">Logout</a>
-                </nav>
-              </div>
-            </div>
-          </div>
-        </aside>
-        <div class="profile-content">
-          <div *ngIf="activeSection === 'profile'" class="profile-details-card">
-            <div class="card-body">
-              <h5 class="card-title">Profile Information</h5>
-              <p>
-                <strong>Name:</strong>
-                {{ userProfile?.displayName || "Username" }}
-              </p>
-              <p>
-                <strong>Email Address:</strong>
-                {{ userProfile?.email || "username@gmail.com" }}
-              </p>
-              <p>
-                <strong>Password:</strong>
-                <button (click)="toggleChangePassword()" class="change-pass">
-                  Change Password
-                </button>
-              </p>
-            </div>
-          </div>
-          <app-change-password
-            *ngIf="isChangePasswordVisible"
-            (close)="toggleChangePassword()"
-          ></app-change-password>
-          <app-save-items *ngIf="activeSection === 'saveItem'"></app-save-items>
+    <!-- Sidebar -->
+    <aside class="profile-sidebar" [class.collapsed]="isSidebarCollapsed">
+      <div class="profile-card">
+        <div class="profile-image-container">
+          <img
+            [src]="userProfile?.photoURL || 'https://via.placeholder.com/150'"
+            alt="Profile Image of {{ userProfile?.displayName }}"
+            class="profile-image"
+          />
+          <label for="file-upload" class="upload-button">
+            <i class="fas fa-camera"></i>
+          </label>
+          <input
+            id="file-upload"
+            type="file"
+            (change)="onFileSelected($event)"
+            accept="image/*"
+            hidden
+          />
         </div>
+        <h4 class="profile-name">
+          {{ userProfile?.displayName || "Username" }}
+        </h4>
       </div>
-    </div>
+      <nav class="profile-nav">
+        <a
+          class="nav-item"
+          [class.active]="activeSection === 'profile'"
+          (click)="showSection('profile')"
+        >
+          <i class="fas fa-user"></i> Profile Info
+        </a>
+        <a
+          class="nav-item"
+          [class.active]="activeSection === 'saveItem'"
+          (click)="showSection('saveItem')"
+        >
+          <i class="fas fa-save"></i> Saved Items
+        </a>
+        <a
+          class="nav-item"
+          [class.active]="activeSection === 'address'"
+          (click)="showSection('address')"
+        >
+          <i class="fas fa-map-marker-alt"></i> Address Book
+        </a>
+        <a class="nav-item logout" (click)="onLogout()">
+          <i class="fas fa-sign-out-alt"></i> Logout
+        </a>
+      </nav>
+      <button class="toggle-sidebar" (click)="toggleSidebar()">☰</button>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="profile-content">
+      <div *ngIf="activeSection === 'profile'" class="profile-details">
+        <h2 class="section-title">Profile Information</h2>
+        <div class="profile-fields">
+          <p>
+            <strong>Name:</strong> {{ userProfile?.displayName || "Username" }}
+          </p>
+          <p>
+            <strong>Email:</strong>
+            {{ userProfile?.email || "username@gmail.com" }}
+          </p>
+        </div>
+        <button (click)="toggleChangePassword()" class="change-pass">
+          Change Password
+        </button>
+      </div>
+      <app-change-password
+        *ngIf="isChangePasswordVisible"
+        (close)="toggleChangePassword()"
+      ></app-change-password>
+      <app-save-items *ngIf="activeSection === 'saveItem'"></app-save-items>
+    </main>
   </div>
 </section>

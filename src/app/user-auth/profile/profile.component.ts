@@ -13,6 +13,7 @@ export class ProfileComponent implements OnInit {
   activeSection: string = 'profile';
   userProfile: any;
   isChangePasswordVisible: boolean = false;
+  isSidebarCollapsed: boolean = false;
   selectedFile: File | null = null;
 
   constructor(
@@ -69,6 +70,10 @@ export class ProfileComponent implements OnInit {
         )
         .subscribe();
     }
+  }
+
+  toggleSidebar(): void {
+    this.isSidebarCollapsed = !this.isSidebarCollapsed;
   }
 
   onLogout(): void {
