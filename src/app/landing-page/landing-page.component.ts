@@ -7,6 +7,7 @@ import { ActivatedRoute } from '@angular/router';
   styleUrls: ['./landing-page.component.css'],
 })
 export class LandingPageComponent implements OnInit {
+  [x: string]: any;
   showOxalateComponent = false;
 
   constructor(private route: ActivatedRoute) {
