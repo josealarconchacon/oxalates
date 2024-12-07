@@ -13,8 +13,8 @@ const routes: Routes = [
   { path: 'oxalate', component: OxalateComponent },
   { path: 'view-more', component: ViewMoreComponent },
   { path: 'profile', component: ProfileComponent, canActivate: [AuthGuard] },
-  { path: '', redirectTo: '/auth', pathMatch: 'full' }, // Default route
-  { path: '**', redirectTo: '/auth' }, // Fallback route
+  { path: '', redirectTo: '/auth', pathMatch: 'full' },
+  { path: '**', redirectTo: '/auth' },
 ];
 
 @NgModule({

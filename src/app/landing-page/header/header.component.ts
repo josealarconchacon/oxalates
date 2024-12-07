@@ -1,5 +1,5 @@
-import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+import { Component, OnInit } from '@angular/core';
 import { AuthService } from 'src/app/user-auth/service/auth-service.service';
 
 @Component({
@@ -22,13 +22,8 @@ export class HeaderComponent implements OnInit {
   toggleNav() {
     this.isNavOpen = !this.isNavOpen;
   }
-
-  search() {
-    this.router.navigate(['/oxalate']);
-  }
-
   goToLandingPage() {
-    this.router.navigate(['/']);
+    this.router.navigate(['/'], { queryParams: { scrollTo: 'top' } });
   }
 
   goToProfile() {
@@ -37,5 +32,9 @@ export class HeaderComponent implements OnInit {
     } else {
       this.router.navigate(['/auth']);
     }
+  }
+
+  search() {
+    this.router.navigate(['/oxalate']);
   }
 }
