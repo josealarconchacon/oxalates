@@ -11,6 +11,7 @@ import { AlertService } from 'src/app/shared/alert-service/alert.service';
   providedIn: 'root',
 })
 export class AuthService {
+  [x: string]: any;
   private userProfileSubject = new BehaviorSubject<any>(null);
   userProfile$: Observable<any> = this.userProfileSubject.asObservable();
 

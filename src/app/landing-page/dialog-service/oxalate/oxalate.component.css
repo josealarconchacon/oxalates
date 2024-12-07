@@ -15,7 +15,7 @@ h1 {
 }
 .filter-component {
   display: inline-flex;
-  margin-top: 1px;
+  margin-top: 15px;
 }
 
 .search-wrapper {
