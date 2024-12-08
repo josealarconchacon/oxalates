@@ -6,6 +6,7 @@ import { Filter } from './filter/model/filter';
 import { Router } from '@angular/router';
 import { debounceTime, distinctUntilChanged, switchMap } from 'rxjs/operators';
 import { Subject } from 'rxjs';
+import { PaginationService } from './service/pagination.service';
 
 @Component({
   selector: 'app-oxalate',
@@ -22,10 +23,6 @@ export class OxalateComponent implements OnInit {
 
   showAlert: boolean = false;
   alertMessage: string = '';
-  itemsPerPage: number = 12;
-  currentPage: number = 1;
-  totalPages: number = 1;
-  pagesToShow: number = 5;
 
   // Subject for debounced search
   private searchSubject: Subject<string> = new Subject<string>();
@@ -34,7 +31,8 @@ export class OxalateComponent implements OnInit {
     private oxalateService: OxalateService,
     private filterService: FilterService,
     private router: Router,
-    private cdr: ChangeDetectorRef
+    private cdr: ChangeDetectorRef,
+    private paginationService: PaginationService
   ) {}
 
   ngOnInit(): void {
@@ -53,8 +51,8 @@ export class OxalateComponent implements OnInit {
     // Subscribe to the debounced search query
     this.searchSubject
       .pipe(
-        debounceTime(300), // Wait for 300ms after typing stops
-        distinctUntilChanged(), // Only trigger if the query has changed
+        debounceTime(300),
+        distinctUntilChanged(),
         switchMap((query) => this.oxalateService.searchOxalateData(query))
       )
       .subscribe((data) => {
@@ -105,51 +103,18 @@ export class OxalateComponent implements OnInit {
   }
 
   updateDisplayedOxalates(): void {
-    this.totalPages = Math.ceil(this.oxalates.length / this.itemsPerPage);
-    const startIndex = (this.currentPage - 1) * this.itemsPerPage;
-    const endIndex = startIndex + this.itemsPerPage;
-    this.displayedOxalates = this.oxalates.slice(startIndex, endIndex);
+    this.displayedOxalates = this.paginationService.updateDisplayedItems(
+      this.oxalates
+    );
   }
 
   getPages(): (number | string)[] {
-    const pages = [];
-    const half = Math.floor(this.pagesToShow / 2);
-    let start = Math.max(1, this.currentPage - half);
-    let end = Math.min(this.totalPages, this.currentPage + half);
-
-    if (this.currentPage - half < 1) {
-      end = Math.min(this.totalPages, end + (half - this.currentPage + 1));
-    }
-    if (this.currentPage + half > this.totalPages) {
-      start = Math.max(1, start - (this.currentPage + half - this.totalPages));
-    }
-
-    if (start > 1) {
-      pages.push(1);
-      if (start > 2) {
-        pages.push('...');
-      }
-    }
-
-    for (let i = start; i <= end; i++) {
-      pages.push(i);
-    }
-
-    if (end < this.totalPages) {
-      if (end < this.totalPages - 1) {
-        pages.push('...');
-      }
-      pages.push(this.totalPages);
-    }
-
-    return pages;
+    return this.paginationService.getPages(this.oxalates.length);
   }
 
-  changePage(page: number | string) {
-    if (typeof page === 'number' && page >= 1 && page <= this.totalPages) {
-      this.currentPage = page;
-      this.updateDisplayedOxalates();
-    }
+  changePage(page: number | string): void {
+    this.paginationService.changePage(page, this.oxalates.length);
+    this.updateDisplayedOxalates();
   }
 
   viewMore(oxalate: Oxalate): void {
@@ -166,5 +131,13 @@ export class OxalateComponent implements OnInit {
 
   toggleSidebar() {
     this.isSidebarOpen = !this.isSidebarOpen;
+  }
+
+  get currentPage(): number {
+    return this.paginationService.currentPage;
+  }
+
+  get totalPages(): number {
+    return this.paginationService.totalPages;
   }
 }
