@@ -1,9 +1,9 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { RouterTestingModule } from '@angular/router/testing'; // For router testing
+import { RouterTestingModule } from '@angular/router/testing';
 import { HeaderComponent } from './header.component';
 import { AuthService } from 'src/app/user-auth/service/auth-service.service';
-import { of } from 'rxjs'; // To mock observables
-import { MatIconModule } from '@angular/material/icon'; // Import MatIconModule
+import { of } from 'rxjs';
+import { MatIconModule } from '@angular/material/icon';
 import { Router } from '@angular/router';
 
 class MockAuthService {
@@ -53,10 +53,12 @@ describe('HeaderComponent', () => {
   });
 
   describe('goToLandingPage', () => {
-    it('should call router navigate when goToLandingPage is called', () => {
+    it('should call router navigate with query params when goToLandingPage is called', () => {
       const navigateSpy = spyOn(router, 'navigate').and.callThrough();
       component.goToLandingPage();
-      expect(navigateSpy).toHaveBeenCalledWith(['/']);
+      expect(navigateSpy).toHaveBeenCalledWith(['/'], {
+        queryParams: { scrollTo: 'top' },
+      });
     });
   });
 
