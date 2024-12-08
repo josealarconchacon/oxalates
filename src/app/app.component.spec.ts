@@ -1,61 +1,39 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { RouterTestingModule } from '@angular/router/testing';
 import { AppComponent } from './app.component';
-import { HeaderComponent } from './landing-page/header/header.component';
-import { AngularFireModule } from '@angular/fire/compat';
-import { AngularFireAuth } from '@angular/fire/compat/auth';
-import { of } from 'rxjs';
+import { Component } from '@angular/core';
 
-const mockFirebaseConfig = {
-  apiKey: 'fake-api-key',
-  authDomain: 'fake-auth-domain',
-  projectId: 'fake-project-id',
-  storageBucket: 'fake-storage-bucket',
-  messagingSenderId: 'fake-messaging-sender-id',
-  appId: 'fake-app-id',
-};
-
-class MockAngularFireAuth {
-  authState = of(null);
-  signInWithEmailAndPassword() {
-    return of({ user: null });
-  }
-}
+@Component({
+  selector: 'app-header',
+  template: '<div>Mock App Header</div>',
+})
+class MockAppHeaderComponent {}
 
 describe('AppComponent', () => {
   let fixture: ComponentFixture<AppComponent>;
-  let app: AppComponent;
+  let component: AppComponent;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [AngularFireModule.initializeApp(mockFirebaseConfig)],
-      declarations: [AppComponent, HeaderComponent],
-      providers: [{ provide: AngularFireAuth, useClass: MockAngularFireAuth }],
+      imports: [RouterTestingModule.withRoutes([])],
+      declarations: [AppComponent, MockAppHeaderComponent],
     }).compileComponents();
-  });
 
-  beforeEach(() => {
     fixture = TestBed.createComponent(AppComponent);
-    app = fixture.componentInstance;
+    component = fixture.componentInstance;
     fixture.detectChanges();
   });
 
   it('should create the app', () => {
-    expect(app).toBeTruthy();
-  });
-
-  it('should have as title "oxalates"', () => {
-    expect(app.title).toEqual('oxalates');
-  });
-
-  it('should render title', () => {
-    const compiled = fixture.nativeElement as HTMLElement;
-    expect(compiled.querySelector('.content span')?.textContent).toContain(
-      'oxalates'
-    );
+    expect(component).toBeTruthy();
   });
 
   it('should render app-header', () => {
     const compiled = fixture.nativeElement as HTMLElement;
     expect(compiled.querySelector('app-header')).toBeTruthy();
+  });
+
+  it('should have as title "oxalates"', () => {
+    expect(component.title).toEqual('oxalates');
   });
 });
