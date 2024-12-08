@@ -22,6 +22,7 @@ export class HeaderComponent implements OnInit {
   toggleNav() {
     this.isNavOpen = !this.isNavOpen;
   }
+
   goToLandingPage() {
     this.router.navigate(['/'], { queryParams: { scrollTo: 'top' } });
   }
