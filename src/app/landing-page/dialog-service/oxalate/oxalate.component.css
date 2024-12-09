@@ -72,7 +72,7 @@ h1 {
 }
 
 .search-result-card {
-  border-bottom: 1px solid #dfe1e5;
+  border-bottom: 0.01px solid #f4f4f4;
   padding: 12px 0;
   cursor: pointer;
 }
@@ -82,13 +82,13 @@ h1 {
 }
 
 .result-title {
-  color: #1a0dab;
+  color: #4e4e4e;
   font-size: 20px;
   margin-bottom: 4px;
 }
 
 .result-snippet {
-  color: #4d5156;
+  color: #448ecc;
   font-size: 14px;
 }
 
@@ -115,46 +115,6 @@ h1 {
   color: #1a0dab;
   font-weight: bold;
 }
-/*
-.pagination {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  margin-top: 20px;
-  flex-wrap: wrap;
-}
-
-.pagination button {
-  background-color: #474747;
-  border: none;
-  color: white;
-  padding: 12px 18px;
-  text-align: center;
-  text-decoration: none;
-  font-size: 14px;
-  margin: 5px;
-  cursor: pointer;
-  border-radius: 12px;
-  transition: background-color 0.3s ease, transform 0.2s ease;
-}
-
-.pagination button:hover:not(.active) {
-  background-color: #555;
-  transform: scale(1.05);
-  border: none;
-}
-
-.pagination button:disabled {
-  background-color: #555;
-  cursor: not-allowed;
-  border: none;
-}
-
-.pagination button.active {
-  background-color: #1e1e1e;
-  border: none;
-}
-*/
 
 .modal-overlay {
   position: fixed;
