@@ -121,7 +121,6 @@
     flex-direction: column;
     width: 100%;
     background-color: #ffffff;
-    /* padding: 10px; */
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     transition: max-height 0.3s ease-out, opacity 0.3s ease-out;
     position: absolute;
@@ -142,4 +141,15 @@
     font-size: 14px;
     padding: 10px 16px;
   }
+}
+
+.profile-btn .user-image {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.profile-btn .user-icon {
+  font-size: 32px;
 }

@@ -22,7 +22,14 @@
         <mat-icon>search</mat-icon>
       </button>
       <button class="profile-btn" (click)="goToProfile()">
-        <mat-icon class="user-icon">account_circle</mat-icon>
+        <img
+          [src]="
+            userProfile?.photoURL ||
+            '../../../assets/images/default-profile.jpg'
+          "
+          alt="User Image"
+          class="user-image"
+        />
       </button>
     </nav>
   </div>

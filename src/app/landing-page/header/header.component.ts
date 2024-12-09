@@ -10,12 +10,15 @@ import { AuthService } from 'src/app/user-auth/service/auth-service.service';
 export class HeaderComponent implements OnInit {
   isNavOpen = false;
   isLoggedIn = false;
+  userProfile: any;
 
   constructor(private router: Router, private authService: AuthService) {}
 
   ngOnInit(): void {
     this.authService.userProfile$.subscribe((user) => {
+      console.log('User Profile:', user);
       this.isLoggedIn = !!user;
+      this.userProfile = user;
     });
   }
 
