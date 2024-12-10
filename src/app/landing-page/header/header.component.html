@@ -23,9 +23,9 @@
       </button>
       <button class="profile-btn" (click)="goToProfile()">
         <img
+          *ngIf="userProfile"
           [src]="
-            userProfile?.photoURL ||
-            '../../../assets/images/default-profile.jpg'
+            userProfile.photoURL || '../../../assets/images/default-profile.jpg'
           "
           alt="User Image"
           class="user-image"
