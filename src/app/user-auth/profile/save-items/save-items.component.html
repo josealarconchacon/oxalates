@@ -1,30 +1,31 @@
 <div class="saved-items">
+  <h2 class="section-title">Saved Items</h2>
   <ng-container *ngIf="savedOxalates$ | async as savedOxalates">
-    <h2 *ngIf="savedOxalates.length > 0">Saved Items</h2>
-    <div *ngIf="savedOxalates.length > 0; else noItems">
-      <div
-        *ngFor="let oxalate of savedOxalates"
-        class="card"
-        [ngClass]="{
-          expanded: expandedCardId === oxalate.id,
-          collapsed: expandedCardId !== oxalate.id
-        }"
-      >
-        <div class="header">
+    <div *ngIf="savedOxalates.length > 0; else noItems" class="items-grid">
+      <div *ngFor="let oxalate of savedOxalates" class="item-card">
+        <div class="item-header">
           <h3>{{ oxalate.item }}</h3>
-          <div class="button-container">
-            <button (click)="handleCardClick(oxalate.id)">
-              {{ expandedCardId === oxalate.id ? "Collapse" : "Expand" }}
+          <div class="item-actions">
+            <button (click)="handleCardClick(oxalate.id)" class="action-button">
+              <i
+                class="fas"
+                [class.fa-chevron-down]="expandedCardId !== oxalate.id"
+                [class.fa-chevron-up]="expandedCardId === oxalate.id"
+              ></i>
             </button>
-            <button (click)="deleteOxalate(oxalate.id)" class="delete-button">
-              Delete
+            <button
+              (click)="deleteOxalate(oxalate.id)"
+              class="action-button delete-button"
+            >
+              <i class="fas fa-trash-alt"></i>
             </button>
           </div>
         </div>
-        <div *ngIf="expandedCardId === oxalate.id" class="details">
+        <div class="item-details" [class.show]="expandedCardId === oxalate.id">
           <div *ngFor="let detail of oxalate | keyvalue">
-            <p *ngIf="detail.key !== 'id'">
-              {{ formatKey(detail.key) }}: {{ detail.value }}
+            <p *ngIf="detail.key !== 'id'" class="detail-item">
+              <span class="detail-key">{{ formatKey(detail.key) }}:</span>
+              <span class="detail-value">{{ detail.value }}</span>
             </p>
           </div>
         </div>
@@ -33,6 +34,10 @@
   </ng-container>
 
   <ng-template #noItems>
-    <h2>No saved items found.</h2>
+    <div class="no-items">
+      <i class="fas fa-bookmark fa-3x"></i>
+      <h3>No saved items yet</h3>
+      <p>Items you save will appear here</p>
+    </div>
   </ng-template>
 </div>
