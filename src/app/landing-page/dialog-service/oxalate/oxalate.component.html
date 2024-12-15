@@ -37,7 +37,12 @@
         (click)="viewMore(oxalate)"
       >
         <h3 class="result-title">{{ oxalate.item }}</h3>
-        <p class="result-snippet">Category: {{ oxalate.category }}</p>
+        <div class="result-snippets">
+          <p class="result-snippet">Category: {{ oxalate.category }}</p>
+          <p class="result-snippet">
+            Oxalate Per Serving: {{ oxalate.calc_oxalate_per_serving }}
+          </p>
+        </div>
       </div>
     </div>
 

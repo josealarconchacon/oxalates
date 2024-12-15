@@ -94,6 +94,17 @@ h1 {
   font-size: 20px;
   margin-bottom: 4px;
 }
+.result-snippets {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 10px;
+}
+.result-snippet {
+  margin: 0;
+  font-size: 0.9em;
+  color: #555;
+}
 
 .result-snippet {
   color: #448ecc;
@@ -178,9 +189,13 @@ h1 {
     font-size: 24px;
   }
   .search-container {
-    padding: 50px;
+    padding: 25px;
   }
-
+  .result-snippets {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 5px;
+  }
   .search-input-container {
     max-width: 400px;
   }
@@ -195,7 +210,7 @@ h1 {
     max-width: 90%;
   }
   .search-container {
-    padding: 50px;
+    padding: 25px;
   }
 
   .card-container {
