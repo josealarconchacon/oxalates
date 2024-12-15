@@ -3,12 +3,12 @@
 .search-container {
   max-width: 800px;
   margin: 0 auto;
-  padding: 20px;
+  padding: 120px 20px;
   font-family: "Roboto", Arial, sans-serif;
 }
 
 h1 {
-  color: #4285f4;
+  color: #6e6f70;
   text-align: center;
   font-size: 32px;
   margin-bottom: 20px;
@@ -177,6 +177,9 @@ h1 {
   h1 {
     font-size: 24px;
   }
+  .search-container {
+    padding: 50px;
+  }
 
   .search-input-container {
     max-width: 400px;
@@ -190,6 +193,9 @@ h1 {
 @media screen and (max-width: 600px) {
   .search-input-container {
     max-width: 90%;
+  }
+  .search-container {
+    padding: 50px;
   }
 
   .card-container {

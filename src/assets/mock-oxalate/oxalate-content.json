@@ -1,20 +1,7 @@
 {
   "title": "Managing Oxalate Intake",
-  "description": "Oxalate, better known as oxalic acid, is an organic compound found in many fruits and vegetables. Although it may provide health benefits when consumed in large quantities, it's important to note that high levels of oxalate can guide liver failure. This suggests that some meals, such as spinach, walnuts, and almonds, retain more oxalate than others. So, even though these foods can be healthy, consuming them in moderation is the key to maintaining good health",
-  "foodChoices": [
-    {
-      "meal": "Breakfast",
-      "item": "Oatmeal with sliced bananas"
-    },
-    {
-      "meal": "Lunch",
-      "item": "Grilled chicken salad with lettuce and cucumber"
-    },
-    {
-      "meal": "Dinner",
-      "item": "Baked fish with rice and steamed carrots"
-    }
-  ],
+  "description": "Oxalate, or oxalic acid, is an organic compound found in many fruits and vegetables. Although foods high in oxalates can provide health benefits, consuming oxalates in large quantities can cause issues for certain populations. Certain foods, such as spinach, and almonds, and chocolate, contain more oxalate than others. So, even though these foods can be healthy, consuming them in moderation is advised for some individuals.",
+
   "tips": [
     {
       "title": "Stay Hydrated",
@@ -34,7 +21,7 @@
     },
     {
       "title": "Consultation",
-      "description": "Consider consulting a dietitian to receive tailored dietary recommendations that suit your individual needs"
+      "description": "Consider consulting a dietitian that is well-versed in low-oxalate diets to receive tailored dietary recommendations that suit your individual needs."
     }
   ],
   "alternativeIngredients": "Consider these substitutions: Use almond milk instead of spinach in smoothies.",
