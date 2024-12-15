@@ -61,7 +61,7 @@ export class OxalateComponent implements OnInit {
           this.alertMessage = 'No results found for your search.';
           this.resetData();
         } else {
-          this.oxalates = data;
+          this.oxalates = this.sortBySearchTerm(data, this.searchQuery);
           this.updateDisplayedOxalates();
           this.showAlert = false;
         }
@@ -139,5 +139,22 @@ export class OxalateComponent implements OnInit {
 
   get totalPages(): number {
     return this.paginationService.totalPages;
+  }
+
+  sortBySearchTerm(data: Oxalate[], searchTerm: string): Oxalate[] {
+    const lowerCaseSearchTerm = searchTerm.toLowerCase();
+
+    return data.sort((a, b) => {
+      const aStartsWith = a.item.toLowerCase().startsWith(lowerCaseSearchTerm);
+      const bStartsWith = b.item.toLowerCase().startsWith(lowerCaseSearchTerm);
+
+      if (aStartsWith && !bStartsWith) {
+        return -1;
+      } else if (!aStartsWith && bStartsWith) {
+        return 1;
+      } else {
+        return a.item.localeCompare(b.item, undefined, { sensitivity: 'base' });
+      }
+    });
   }
 }

@@ -5,7 +5,7 @@ body {
 }
 
 .container {
-  padding: 40px 5%;
+  padding: 40px 1.75%;
   box-sizing: border-box;
 }
 
@@ -25,13 +25,15 @@ body {
 }
 
 h1 {
+  text-align: left;
   font-size: 2.8rem;
   color: #474747;
   margin-bottom: 10px;
 }
 
 p {
-  font-size: 1.1rem;
+  text-align: left;
+  font-size: 1.125rem;
   color: #474747;
   line-height: 1.6;
   margin-bottom: 20px;
@@ -103,11 +105,13 @@ img {
   }
 
   h1 {
+    text-align: center;
     font-size: 2.2rem;
   }
 
   p {
-    font-size: 1rem;
+    text-align: center;
+    font-size: 1.125rem;
   }
 }
 
@@ -130,11 +134,11 @@ img {
   }
 
   .step h3 {
-    font-size: 1.3rem;
+    font-size: 1.375rem;
   }
 
   .step p {
-    font-size: 1rem;
+    font-size: 1.125rem;
   }
 
   .header-image img {
