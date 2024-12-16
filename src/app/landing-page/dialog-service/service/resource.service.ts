@@ -1,4 +1,3 @@
-// src/app/food-resource.service.ts
 import { Injectable } from '@angular/core';
 import { Resource } from '../../model/resource';
 
@@ -34,7 +33,7 @@ export class ResourceService {
       {
         name: 'Potatoes',
         description:
-          'Baked potatoes with skin are listed among the top ten highest oxalate foods as studied by Harvard',
+          'Baked potatoes with skin are listed among the top ten highest oxalate foods as studied by Harvard.',
         image: '../../../assets/resources/icons8-sweet-potato-30.png',
         link: 'https://www.hsph.harvard.edu/nutritionsource/kidney-stone-diet/',
       },
