@@ -8,7 +8,7 @@
       <input
         [(ngModel)]="searchQuery"
         (ngModelChange)="onSearchQueryChange($event)"
-        placeholder="Search for a foods to see oxalate levels..."
+        placeholder="Search for a food or a category to see oxalate levels..."
         type="text"
         class="search-input"
         required=""
@@ -36,9 +36,17 @@
         class="search-result-card"
         (click)="viewMore(oxalate)"
       >
-        <h3 class="result-title">{{ oxalate.item }}</h3>
         <div class="result-snippets">
-          <p class="result-snippet">Category: {{ oxalate.category }}</p>
+          <h3 class="result-title">{{ oxalate.item }}</h3>
+          <p class="result-snippet" *ngIf="oxalate.serving_size">
+            Serving Size: {{ oxalate.serving_size }}
+          </p>
+        </div>
+
+        <div class="result-snippets">
+          <p class="result-snippet category">
+            Category: {{ oxalate.category }}
+          </p>
           <p class="result-snippet">
             Oxalate Per Serving: {{ oxalate.calc_oxalate_per_serving }}
           </p>

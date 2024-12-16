@@ -2,48 +2,49 @@ body {
   font-family: "Nunito", sans-serif;
   font-size: 16px;
   line-height: 1.6;
+  margin: 0;
+  padding: 0;
 }
 
 .hero {
-  margin: 0;
-  padding: 20px;
   display: flex;
-  align-items: center;
   justify-content: center;
-}
+  padding: 50px 20px;
 
-.wrapper {
-  max-width: 1200px;
-  padding: 100px 20px;
-  margin: 0 auto;
+  height: 75vh;
 }
 
 .hero-content {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 40px;
-  flex-wrap: wrap;
+  gap: 20px;
+  max-width: 1200px;
+  width: 100%;
 }
 
-.hero-details,
-.hero-img {
+.hero-text {
   flex: 1;
   max-width: 50%;
 }
 
-.hero-title {
-  font-size: 2.5rem;
-  margin: 0;
-  font-weight: 700;
-  line-height: 1.2;
+.hero-text h2 {
+  font-size: 2rem;
+  margin-bottom: 20px;
+  font-weight: 600;
   color: #474747;
 }
 
-.hero-description {
+.hero-text p {
   font-size: 1.125rem;
   color: #474747;
-  margin-top: 20px;
+  line-height: 1.6;
+}
+
+.hero-img {
+  flex: 1;
+  max-width: 50%;
+  text-align: center;
 }
 
 .hero-image {
@@ -57,103 +58,34 @@ body {
   transform: scale(1.05);
 }
 
-.we {
-  padding: 50px 20px;
-  text-align: center;
-}
-
-.we-content {
-  max-width: 800px;
-  margin: 0 auto;
-  padding-top: 0;
-}
-
-.we h2 {
-  font-size: 2rem;
-  margin-bottom: 20px;
-  font-weight: 600;
-  color: #474747;
-}
-
-.we p {
-  font-size: 1.125rem;
-  color: #474747;
-  line-height: 1.6;
-  max-width: 700px;
-  margin: 0 auto;
-}
-
-@media (max-width: 1200px) {
-  .hero-title {
-    font-size: 2.25rem;
-  }
-
-  .wrapper {
-    padding: 80px 20px;
-  }
-}
-
 @media (max-width: 992px) {
+  .hero {
+    height: 65vh;
+  }
   .hero-content {
     flex-direction: column;
     text-align: center;
-    gap: 20px;
   }
 
-  .hero-details,
+  .hero-text,
   .hero-img {
     max-width: 100%;
   }
 
-  .hero-title {
-    font-size: 2rem;
-  }
-
-  .hero-description {
-    font-size: 1rem;
-  }
-
-  .we h2 {
+  .hero-text h2 {
     font-size: 1.75rem;
   }
 }
 
-@media (max-width: 768px) {
-  .hero-title {
-    font-size: 1.8rem;
-  }
-
-  .wrapper {
-    padding: 60px 10px;
-  }
-
-  .we-content {
-    padding-top: 20px;
-  }
-
-  .we h2 {
-    font-size: 1.6rem;
-  }
-
-  .we p {
-    font-size: 1rem;
-  }
-}
-
 @media (max-width: 576px) {
-  .hero-title {
-    font-size: 1.6rem;
+  .hero {
+    height: 65vh;
+  }
+  .hero-text h2 {
+    font-size: 1.5rem;
   }
 
-  .hero-description {
-    font-size: 0.9rem;
-  }
-
-  .we h2 {
-    font-size: 1.4rem;
-  }
-
-  .we p {
+  .hero-text p {
     font-size: 1rem;
   }
 }

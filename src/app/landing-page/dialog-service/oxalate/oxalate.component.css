@@ -1,14 +1,14 @@
 @import url("https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500&display=swap");
 
 .search-container {
-  max-width: 800px;
+  max-width: 850px;
   margin: 0 auto;
   padding: 120px 20px;
   font-family: "Roboto", Arial, sans-serif;
 }
 
 h1 {
-  color: #6e6f70;
+  color: #2d2d2d;
   text-align: center;
   font-size: 32px;
   margin-bottom: 20px;
@@ -79,7 +79,7 @@ h1 {
 
 .search-result-card {
   border-bottom: 0.01px solid #f4f4f4;
-  padding: 12px 0;
+  padding: 12px;
   cursor: pointer;
   background-color: #fff;
   border-radius: 8px;
@@ -90,7 +90,7 @@ h1 {
 }
 
 .result-title {
-  color: #4e4e4e;
+  color: #2d2d2d;
   font-size: 20px;
   margin-bottom: 4px;
 }
@@ -103,14 +103,16 @@ h1 {
 .result-snippet {
   margin: 0;
   font-size: 0.9em;
-  color: #555;
+  color: #2d2d2d;
 }
 
 .result-snippet {
-  color: #448ecc;
+  color: #2d2d2d;
   font-size: 14px;
 }
-
+.category {
+  color: #448ecc;
+}
 .pagination {
   display: flex;
   justify-content: center;
@@ -123,7 +125,7 @@ h1 {
   padding: 6px 10px;
   border: none;
   background: none;
-  color: #4285f4;
+  color: #448ecc;
   cursor: pointer;
   font-size: 16px;
 }
@@ -133,7 +135,7 @@ h1 {
 }
 
 .pagination button.active {
-  color: #1a0dab;
+  color: #242b64;
   font-weight: bold;
 }
 
@@ -150,7 +152,7 @@ h1 {
 }
 
 .modal-content {
-  background-color: #1e1e1e;
+  background-color: #ffffff;
   border-radius: 24px;
   padding: 24px;
   width: 90%;
@@ -165,7 +167,7 @@ h1 {
   right: 10px;
   background: none;
   border: none;
-  color: #ff6b6b;
+  color: #a41c2e;
   font-size: 32px;
   cursor: pointer;
 }

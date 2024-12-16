@@ -13,7 +13,7 @@ export class ResourceService {
       {
         name: 'Spinach',
         description:
-          'Contains a high amount of oxalates, with a half-cup of cooked spinach containing 755 milligrams',
+          'Contains a high amount of oxalates, with a half-cup of cooked spinach containing 755 milligrams.',
         image: '../../../assets/resources/icons8-spinach-30.png',
         link: 'https://www.webmd.com/diet/foods-high-in-oxalates',
       },
@@ -27,7 +27,7 @@ export class ResourceService {
       {
         name: 'Almonds',
         description:
-          'Considered high in oxalates and are part of the top ten highest oxalate foods as studied by Harvard',
+          'Considered high in oxalates and are part of the top ten highest oxalate foods as studied by Harvard.',
         image: '../../../assets/resources/icons8-almond-30.png',
         link: 'https://kidneystonediet.com/oxalate-list/',
       },
@@ -41,14 +41,14 @@ export class ResourceService {
       {
         name: 'Rice Bran',
         description:
-          'Considered one of the highest oxalate foods as studied by Harvard ',
+          'Considered one of the highest oxalate foods as studied by Harvard.',
         image: '../../../assets/resources/icons8-rice-bowl-30.png',
         link: 'https://www.hsph.harvard.edu/nutritionsource/kidney-stone-diet/',
       },
       {
         name: 'Beets',
         description:
-          'Beets, especially their greens and roots, are high in oxalates and can impact kidney health',
+          'Beets, especially their greens and roots, are high in oxalates and can impact kidney health.',
         image: '../../../assets/resources/food.png',
         link: 'https://www.hsph.harvard.edu/nutritionsource/kidney-stone-diet/',
       },

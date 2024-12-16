@@ -10,8 +10,9 @@
 
 .version {
   font-size: 1.5rem;
-  color: #bebcbc;
+  color: #121111;
   font-weight: 600;
+  text-align: left;
   margin: 8px 0;
 }
 
@@ -35,7 +36,7 @@
 }
 
 .checkmark {
-  color: #34c759;
+  color: #5aac84;
   font-size: 1.5rem;
   font-weight: bold;
   flex-shrink: 0;
@@ -45,16 +46,17 @@
   display: flex;
   flex-direction: column;
   text-align: left;
+  color: #121111;
 }
 
 .feature-label {
   font-weight: 600;
-  color: #ffffff;
+  color: #121111;
 }
 
 .oxalate-value {
   font-size: 0.9rem;
-  color: #d1d1d1;
+  color: #121111;
 }
 
 .save-button {
@@ -63,7 +65,7 @@
   font-weight: 600;
   color: #ffffff;
   text-align: right;
-  background-color: #34c759;
+  background-color: #3d9e74;
   border: none;
   border-radius: 8px;
   cursor: pointer;
@@ -72,7 +74,7 @@
 }
 
 .save-button:hover {
-  background-color: #28a745;
+  background-color: #5aac84;
   transform: translateY(-2px);
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
 }
