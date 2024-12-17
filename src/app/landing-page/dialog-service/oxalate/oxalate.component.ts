@@ -67,6 +67,10 @@ export class OxalateComponent implements OnInit {
         }
       });
   }
+  updateData() {
+    // Update the data
+    this.cdr.detectChanges();
+  }
 
   onSearchQueryChange(query: string): void {
     this.searchQuery = query;
