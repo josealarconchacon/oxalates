@@ -61,11 +61,11 @@
   border-radius: 4px;
 }
 .hamburger {
-  display: none;
+  display: block !important;
   background: none;
   border: none;
   cursor: pointer;
-  z-index: 2000;
+  z-index: 9999;
   position: relative;
   width: 30px;
   height: 30px;
@@ -145,7 +145,7 @@
 
 @media screen and (max-width: 1024px) {
   .hamburger {
-    display: block;
+    display: block !important;
   }
 
   .nav {
