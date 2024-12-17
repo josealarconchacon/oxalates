@@ -11,10 +11,19 @@
     </button>
 
     <nav class="nav" id="nav-bar" [class.open]="isNavOpen">
-      <a href="#resources" class="nav-link" (click)="closeNav()">Resources</a>
+      <!-- Conditionally show Resources link -->
+      <a
+        *ngIf="currentRoute !== '/' && currentRoute === '/oxalate'"
+        href="#resources"
+        class="nav-link"
+        (click)="closeNav()"
+        >Resources</a
+      >
+
       <button class="search-btn" (click)="search()" (click)="closeNav()">
         <mat-icon>search</mat-icon>
       </button>
+
       <button class="profile-btn" (click)="goToProfile()" (click)="closeNav()">
         <img
           *ngIf="userProfile"

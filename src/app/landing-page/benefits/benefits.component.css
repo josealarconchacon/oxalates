@@ -24,9 +24,9 @@ body {
   flex: 1 1 45%;
 }
 
-h1 {
+.header-text h2 {
   text-align: left;
-  font-size: 2.8rem;
+  font-size: 1.8rem;
   color: #474747;
   margin-bottom: 10px;
 }

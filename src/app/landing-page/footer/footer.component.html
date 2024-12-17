@@ -4,11 +4,11 @@
       <hr class="footer-divider" />
       <div class="footer-links-container">
         <ul class="footer-links">
-          <li><a href="#resources">Back to Home</a></li>
+          <li *ngIf="showBackToHome"><a href="#resources">Back to Home</a></li>
           <li>
-            <a class="search-icon" aria-label="Search"
-              ><mat-icon (click)="search()">search</mat-icon></a
-            >
+            <a class="search-icon" aria-label="Search">
+              <mat-icon (click)="search()">search</mat-icon>
+            </a>
           </li>
         </ul>
       </div>
