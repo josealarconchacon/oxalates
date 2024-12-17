@@ -46,5 +46,17 @@ Thumbs.db
 src/environments/environment.development.ts
 src/environments/environment.ts
 
+# Ignore Firebase-related files and directories
+.firebase/
+.firebaserc
+
+# Ignore GitHub-related files
+.github/
+
+# Ignore Firebase configuration file
+firebase.json
+
+# Ignore build-related or temporary folders (e.g., 'y' if it's not needed)
+y/
 
 
