@@ -118,6 +118,7 @@ export class OxalateComponent implements OnInit {
   }
 
   viewMore(oxalate: Oxalate): void {
+    console.log('Selected Oxalate:', oxalate);
     this.selectedOxalate = oxalate;
     document.body.style.overflow = 'hidden';
   }

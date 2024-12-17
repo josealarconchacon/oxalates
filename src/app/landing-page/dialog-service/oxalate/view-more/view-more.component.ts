@@ -25,6 +25,7 @@ export class ViewMoreComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
+    console.log('Oxalate Data on Init:', this.oxalateData);
     this.loadOxalateDataFromNavigation();
     this.loadSavedOxalatesForCurrentUser();
   }
