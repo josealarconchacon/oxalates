@@ -82,9 +82,29 @@ export class OxalateComponent implements OnInit {
       console.warn('No oxalates data to filter.');
       return;
     }
+    let filteredOxalates = this.originalOxalates.filter((oxalate) => {
+      const matchesSearchQuery =
+        !this.searchQuery ||
+        (oxalate.item &&
+          oxalate.item
+            .toLowerCase()
+            .includes(this.searchQuery.toLowerCase())) ||
+        (oxalate.category &&
+          oxalate.category
+            .toLowerCase()
+            .includes(this.searchQuery.toLowerCase())) ||
+        (oxalate.level &&
+          oxalate.level.toString().includes(this.searchQuery)) ||
+        (oxalate.calc_level &&
+          oxalate.calc_level
+            .toLowerCase()
+            .includes(this.searchQuery.toLowerCase()));
 
-    // Filter based on the filter criteria
-    this.oxalates = this.originalOxalates.filter((oxalate) => {
+      return matchesSearchQuery;
+    });
+
+    // Apply the dropdown filters after the search query
+    filteredOxalates = filteredOxalates.filter((oxalate) => {
       return (
         (!filter.category || oxalate.category === filter.category) &&
         (!filter.calc_level || oxalate.calc_level === filter.calc_level) &&
@@ -92,6 +112,8 @@ export class OxalateComponent implements OnInit {
       );
     });
 
+    // Update the filtered results
+    this.oxalates = filteredOxalates;
     this.isFilterApplied = true;
     this.updateDisplayedOxalates();
   }

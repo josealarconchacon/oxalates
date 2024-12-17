@@ -28,7 +28,9 @@
   </div>
 
   <div *ngIf="searchQuery" class="search-results">
-    <div class="results-stats">{{ oxalates.length }} results found</div>
+    <div class="results-stats">
+      {{ displayedOxalates.length }} results found
+    </div>
 
     <div class="card-container">
       <div
