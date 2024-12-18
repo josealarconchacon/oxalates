@@ -91,10 +91,18 @@
   .abstract-card {
     flex: 1 1 calc(50% - 20px);
   }
+  .modern-container {
+    width: 100%;
+    padding: 10px;
+  }
 }
 
 @media (max-width: 768px) {
   .abstract-card {
     flex: 1 1 calc(100% - 20px);
+  }
+  .modern-container {
+    width: 100%;
+    padding: 10px;
   }
 }
