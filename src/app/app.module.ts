@@ -43,6 +43,7 @@ import { SaveItemsComponent } from './user-auth/profile/save-items/save-items.co
 import { AlertService } from './shared/alert-service/alert.service';
 import { RouterModule } from '@angular/router';
 import { FoodByCategoryComponent } from './landing-page/dialog-service/food-by-category/food-by-category.component';
+import { SearchInputComponent } from './landing-page/dialog-service/oxalate/search-input/search-input.component';
 
 export function initializeApp(configService: ConfigService) {
   return (): Promise<void> => {
@@ -100,6 +101,7 @@ export function initializeApp(configService: ConfigService) {
     AngularFireAnalyticsModule,
     AngularFireAuthModule,
     FoodByCategoryComponent,
+    SearchInputComponent,
   ],
   providers: [
     ConfigService,
