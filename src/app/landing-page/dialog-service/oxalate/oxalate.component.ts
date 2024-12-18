@@ -49,6 +49,16 @@ export class OxalateComponent implements OnInit {
         this.applyFilters(filter);
       }
     });
+    this.filterService.clearSearch$.subscribe(() => {
+      this.searchQuery = '';
+      this.resetData();
+    });
+    this.categoryService.currentCategory.subscribe((category) => {
+      if (!category) {
+        // Reset category-specific state if needed
+        this.resetData();
+      }
+    });
 
     // Subscribe to the debounced search query
     this.searchSubject
@@ -121,7 +131,6 @@ export class OxalateComponent implements OnInit {
       );
     });
 
-    // Update the filtered results
     this.oxalates = filteredOxalates;
     this.isFilterApplied = true;
     this.updateDisplayedOxalates();

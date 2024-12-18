@@ -1,7 +1,14 @@
-import { Component, EventEmitter, OnInit, Output } from '@angular/core';
+import {
+  AfterViewInit,
+  Component,
+  EventEmitter,
+  OnInit,
+  Output,
+} from '@angular/core';
 import { Filter } from './model/filter';
 import { categories, calcLevels, levels } from './model/filter-data';
 import { CategoryService } from '../service/category.service';
+import { FilterService } from '../service/filter.service';
 
 @Component({
   selector: 'app-filter',
@@ -13,26 +20,30 @@ export class FilterComponent implements OnInit {
     category: '',
     calc_level: '',
   };
-
+  categories = categories;
+  calcLevels = calcLevels;
+  levels = levels;
   searchQuery: string = '';
 
   @Output() filterChanged = new EventEmitter<Filter>();
 
-  categories = categories;
-  calcLevels = calcLevels;
-  levels = levels;
-
-  constructor(private categoryService: CategoryService) {}
+  constructor(
+    private categoryService: CategoryService,
+    private filterService: FilterService
+  ) {}
 
   ngOnInit(): void {
     this.categoryService.currentCategory.subscribe((category) => {
       this.filters.category = category;
-      this.applyFilters();
+      if (category) {
+        this.applyFilters();
+      }
     });
   }
 
   applyFilters(): void {
     console.log('Applying filters:', this.filters);
+    this.filterService.updateFilter(this.filters);
     this.filterChanged.emit(this.filters);
   }
 
@@ -41,8 +52,18 @@ export class FilterComponent implements OnInit {
       category: '',
       calc_level: '',
     };
-    this.searchQuery = '';
-    console.log('Clearing filters and search query');
+    // Reset dropdowns to default values
+    const categorySelect = document.querySelector(
+      'select[name="time"]'
+    ) as HTMLSelectElement;
+    const calcLevelSelect = document.querySelector(
+      'select[name="results"]'
+    ) as HTMLSelectElement;
+
+    if (categorySelect) categorySelect.selectedIndex = 0;
+    if (calcLevelSelect) calcLevelSelect.selectedIndex = 0;
+
+    this.filterService.clearAll();
     this.filterChanged.emit(this.filters);
   }
 
@@ -56,7 +77,6 @@ export class FilterComponent implements OnInit {
   isSectionActive(section: string): boolean {
     return this.activeSection === section;
   }
-
   toggleSection(section: string): void {
     this.activeSection = this.activeSection === section ? null : section;
   }

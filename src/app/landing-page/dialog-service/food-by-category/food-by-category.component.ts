@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { CategoryService } from '../oxalate/service/category.service';
+import { FilterService } from '../oxalate/service/filter.service';
 
 @Component({
   selector: 'app-food-by-category',
@@ -12,11 +13,16 @@ import { CategoryService } from '../oxalate/service/category.service';
 export class FoodByCategoryComponent {
   constructor(
     private router: Router,
-    private categoryService: CategoryService
+    private categoryService: CategoryService,
+    private filterService: FilterService
   ) {}
 
   onCardClick(category: string): void {
     this.categoryService.changeCategory(category);
+    this.filterService.updateFilter({
+      category: category,
+      calc_level: '',
+    });
     this.router.navigate(['/oxalate'], { queryParams: { category: category } });
   }
 }
