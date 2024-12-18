@@ -42,6 +42,7 @@ import { ChangePasswordComponent } from './user-auth/change-password/change-pass
 import { SaveItemsComponent } from './user-auth/profile/save-items/save-items.component';
 import { AlertService } from './shared/alert-service/alert.service';
 import { RouterModule } from '@angular/router';
+import { FoodByCategoryComponent } from './landing-page/dialog-service/food-by-category/food-by-category.component';
 
 export function initializeApp(configService: ConfigService) {
   return (): Promise<void> => {
@@ -98,6 +99,7 @@ export function initializeApp(configService: ConfigService) {
     AngularFireModule.initializeApp(environment.firebaseConfig),
     AngularFireAnalyticsModule,
     AngularFireAuthModule,
+    FoodByCategoryComponent,
   ],
   providers: [
     ConfigService,

@@ -6,8 +6,8 @@
       [(ngModel)]="filters.category"
       (ngModelChange)="applyFilters()"
     >
-      <option value="" disabled selected>Any Category</option>
-      <option *ngFor="let category of categories" [value]="category">
+      <option [ngValue]="''">Any Category</option>
+      <option *ngFor="let category of categories" [ngValue]="category">
         {{ category }}
       </option>
     </select>

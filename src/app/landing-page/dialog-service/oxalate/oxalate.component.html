@@ -4,24 +4,24 @@
   </div>
 
   <div class="search-wrapper">
-    <div class="search-input-container">
+    <app-search-input class="search-input-container">
       <input
         [(ngModel)]="searchQuery"
         (ngModelChange)="onSearchQueryChange($event)"
         placeholder="Search for a food or a category to see oxalate levels..."
-        type="text"
         class="search-input"
-        required=""
+        type="text"
       />
       <div class="search-icons">
         <span class="search-icon">🔍</span>
       </div>
-    </div>
+    </app-search-input>
 
     <app-alert *ngIf="showAlert" [message]="alertMessage"></app-alert>
 
     <app-filter
       *ngIf="searchQuery"
+      [selectedCategory]="searchQuery"
       (filterChanged)="applyFilters($event)"
       class="filter-component"
     ></app-filter>

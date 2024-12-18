@@ -6,8 +6,11 @@ import { Filter } from '../filter/model/filter';
   providedIn: 'root',
 })
 export class FilterService {
-  private filterSubject = new BehaviorSubject<Filter>({});
-  currentFilter$: Observable<Filter> = this.filterSubject.asObservable();
+  private filterSubject = new BehaviorSubject<Filter>({
+    category: '',
+    calc_level: '',
+  });
+  currentFilter$ = this.filterSubject.asObservable();
 
   updateFilter(filter: Filter): void {
     this.filterSubject.next(filter);
