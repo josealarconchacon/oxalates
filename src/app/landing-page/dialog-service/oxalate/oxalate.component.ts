@@ -7,6 +7,7 @@ import { Router } from '@angular/router';
 import { debounceTime, distinctUntilChanged, switchMap } from 'rxjs/operators';
 import { Subject } from 'rxjs';
 import { PaginationService } from './service/pagination.service';
+import { CategoryService } from './service/category.service';
 
 @Component({
   selector: 'app-oxalate',
@@ -32,7 +33,8 @@ export class OxalateComponent implements OnInit {
     private filterService: FilterService,
     private router: Router,
     private cdr: ChangeDetectorRef,
-    private paginationService: PaginationService
+    private paginationService: PaginationService,
+    private categoryService: CategoryService
   ) {}
 
   ngOnInit(): void {
@@ -66,7 +68,14 @@ export class OxalateComponent implements OnInit {
           this.showAlert = false;
         }
       });
+
+    // Subscribe to the search query from CategoryService
+    this.categoryService.currentSearchQuery.subscribe((query) => {
+      this.searchQuery = query;
+      this.onSearchQueryChange(query);
+    });
   }
+
   updateData() {
     // Update the data
     this.cdr.detectChanges();

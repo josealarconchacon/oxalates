@@ -1,10 +1,13 @@
 <div class="search-input-container">
   <input
     [(ngModel)]="searchQuery"
-    (ngModelChange)="onSearchQueryChange()"
+    (input)="onSearchQueryChange()"
     placeholder="Search for a food or a category to see oxalate levels..."
     type="text"
     class="search-input"
     required=""
   />
+  <div class="search-icons">
+    <span class="search-icon">🔍</span>
+  </div>
 </div>
