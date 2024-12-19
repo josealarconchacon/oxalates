@@ -8,10 +8,13 @@
   padding: 10px 15px;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
   transition: box-shadow 0.3s ease;
+  position: relative;
 }
+
 .search-input-container:hover {
   box-shadow: 0 3px 8px rgba(0, 0, 0, 0.2);
 }
+
 .search-input {
   flex-grow: 1;
   border: none;
@@ -19,8 +22,34 @@
   font-size: 16px;
   color: #202124;
   background: transparent;
+  transition: padding 0.3s ease;
 }
+
+.search-input:focus {
+  padding-left: 30px;
+}
+
+.search-icons {
+  position: absolute;
+  right: 15px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
 .search-icon {
   color: #9aa0a6;
   margin-left: 10px;
+  transition: transform 0.3s ease, color 0.3s ease;
+  cursor: pointer;
+}
+
+.search-icon.typing {
+  color: #4285f4;
+  transform: translateY(-1px) rotate(-5deg);
+  font-size: 12px;
+}
+
+.search-icon:active {
+  transform: scale(0.3);
 }

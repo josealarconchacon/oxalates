@@ -39,4 +39,7 @@ export class SearchInputComponent implements OnInit, OnDestroy {
   onInputChange(value: string): void {
     this.searchQueryChange.emit(value);
   }
+  clearSearch() {
+    this.searchQuery = '';
+  }
 }
