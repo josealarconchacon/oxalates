@@ -12,13 +12,12 @@ main {
   display: block;
 }
 
-/* Hero Section */
 .hero {
   display: flex;
   justify-content: center;
   align-items: center;
   padding: 50px 20px;
-  height: 75vh;
+  height: 65vh;
 }
 
 .hero-content {
@@ -65,7 +64,22 @@ main {
   transform: scale(1.05);
 }
 
-/* Responsive Design */
+/* new :start  */
+/* .quick-search {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
+}
+
+.search-input-container {
+  justify-content: center;
+  align-items: center;
+  width: 90%;
+  max-width: 800px;
+} */
+
+/* new :end  */
 
 /* Tablets and Smaller Desktops */
 @media (max-width: 992px) {
