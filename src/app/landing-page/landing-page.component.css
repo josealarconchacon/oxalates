@@ -64,24 +64,6 @@ main {
   transform: scale(1.05);
 }
 
-/* new :start  */
-/* .quick-search {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  padding: 20px;
-}
-
-.search-input-container {
-  justify-content: center;
-  align-items: center;
-  width: 90%;
-  max-width: 800px;
-} */
-
-/* new :end  */
-
-/* Tablets and Smaller Desktops */
 @media (max-width: 992px) {
   .hero {
     height: auto;
@@ -109,7 +91,16 @@ main {
   }
 }
 
-/* Mobile Devices */
+@media (max-width: 768px) {
+  .simple-quick-search {
+    margin: 10px;
+  }
+
+  .simple-search-input-container {
+    width: 90%;
+  }
+}
+
 @media (max-width: 576px) {
   .hero {
     padding: 20px 10px;
@@ -131,7 +122,6 @@ main {
   }
 }
 
-/* Extra Small Devices (<= 375px) */
 @media (max-width: 375px) {
   .hero-text h2 {
     font-size: 1.3rem;
