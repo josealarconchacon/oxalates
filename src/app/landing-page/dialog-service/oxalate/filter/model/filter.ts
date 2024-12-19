@@ -1,4 +1,3 @@
-// filter.model.ts
 export interface Filter {
   category?: string;
   calc_level?: string;
