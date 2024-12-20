@@ -2,6 +2,7 @@
   <div>
     <h1>Search for a food</h1>
   </div>
+
   <div class="search-wrapper">
     <app-search-input
       [searchQuery]="searchQuery"
@@ -18,12 +19,43 @@
     ></app-filter>
   </div>
 
-  <div *ngIf="searchQuery" class="search-results">
-    <div class="results-stats">
-      {{ displayedOxalates.length }} results found
+  <div *ngIf="isLoading" class="loading-container">
+    <div class="loading-spinner"></div>
+    <p>Loading results...</p>
+  </div>
+
+  <div *ngIf="searchQuery && !isLoading" class="search-results">
+    <div class="results-header">
+      <div class="results-stats">
+        {{ displayedOxalates.length }} results found
+      </div>
+      <div class="view-toggle">
+        <button
+          (click)="toggleViewMode()"
+          [class.active]="viewMode === 'list'"
+          title="List View"
+        >
+          <i class="fas fa-list"></i>
+        </button>
+        <button
+          (click)="toggleViewMode()"
+          [class.active]="viewMode === 'grid'"
+          title="Grid View"
+        >
+          <i class="fas fa-th-large"></i>
+        </button>
+      </div>
+    </div>
+    <div
+      *ngIf="displayedOxalates.length === 0 && !isLoading"
+      class="no-results"
+    >
+      <i class="fas fa-search"></i>
+      <h3>No results found</h3>
+      <p>Try different category or food level</p>
     </div>
 
-    <div class="card-container">
+    <div [class]="'card-container ' + getViewModeClass()">
       <div
         *ngFor="let oxalate of displayedOxalates"
         class="search-result-card"
@@ -81,6 +113,7 @@
     </div>
   </div>
 
+  <!-- Modal -->
   <div *ngIf="selectedOxalate" class="modal-overlay" (click)="closeDetail()">
     <div class="modal-content" (click)="$event.stopPropagation()">
       <button class="close-btn" (click)="closeDetail()">×</button>

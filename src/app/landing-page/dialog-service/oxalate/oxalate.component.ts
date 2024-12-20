@@ -4,7 +4,12 @@ import { OxalateService } from '../service/oxalate.service';
 import { FilterService } from './service/filter.service';
 import { Filter } from './filter/model/filter';
 import { Router } from '@angular/router';
-import { debounceTime, distinctUntilChanged, switchMap } from 'rxjs/operators';
+import {
+  debounceTime,
+  distinctUntilChanged,
+  finalize,
+  switchMap,
+} from 'rxjs/operators';
 import { Subject } from 'rxjs';
 import { PaginationService } from './service/pagination.service';
 import { CategoryService } from './service/category.service';
@@ -23,7 +28,9 @@ export class OxalateComponent implements OnInit {
   selectedOxalate: Oxalate | undefined;
 
   showAlert: boolean = false;
+  isLoading: boolean = false;
   alertMessage: string = '';
+  viewMode: 'list' | 'grid' = 'list';
 
   // Subject for debounced search
   private searchSubject: Subject<string> = new Subject<string>();
@@ -38,39 +45,62 @@ export class OxalateComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
+    this.initializeSubscriptions();
+    this.initializeViewMode();
+  }
+
+  private initializeSubscriptions(): void {
     this.oxalateService.getOxalateData().subscribe((data) => {
       this.oxalates = data;
-      this.originalOxalates = [...data]; // Preserve the original data
+      this.originalOxalates = [...data];
       this.updateDisplayedOxalates();
     });
 
     this.filterService.currentFilter$.subscribe((filter: Filter) => {
-      if (filter) {
-        this.applyFilters(filter);
-      }
+      if (filter) this.applyFilters(filter);
     });
+
     this.filterService.clearSearch$.subscribe(() => {
       this.searchQuery = '';
       this.resetData();
     });
+
     this.categoryService.currentCategory.subscribe((category) => {
-      if (!category) {
-        // Reset category-specific state if needed
-        this.resetData();
-      }
+      if (!category) this.resetData();
     });
 
-    // Subscribe to the debounced search query
+    this.setupSearchSubscription();
+
+    this.categoryService.currentSearchQuery.subscribe((query) => {
+      this.searchQuery = query;
+      this.onSearchQueryChange(query);
+    });
+  }
+
+  private initializeViewMode(): void {
+    const savedViewMode = localStorage.getItem('viewMode');
+    this.viewMode = (savedViewMode as 'list' | 'grid') || 'list';
+  }
+
+  private setupSearchSubscription(): void {
     this.searchSubject
       .pipe(
         debounceTime(300),
         distinctUntilChanged(),
-        switchMap((query) => this.oxalateService.searchOxalateData(query))
+        switchMap((query) => {
+          this.isLoading = true;
+          return this.oxalateService.searchOxalateData(query).pipe(
+            finalize(() => {
+              this.isLoading = false;
+            })
+          );
+        })
       )
       .subscribe((data) => {
         if (data.length === 0) {
           this.showAlert = true;
-          this.alertMessage = 'No results found for your search.';
+          this.alertMessage =
+            'No results found. Try different keywords or check your spelling.';
           this.resetData();
         } else {
           this.oxalates = this.sortBySearchTerm(data, this.searchQuery);
@@ -78,14 +108,16 @@ export class OxalateComponent implements OnInit {
           this.showAlert = false;
         }
       });
-
-    // Subscribe to the search query from CategoryService
-    this.categoryService.currentSearchQuery.subscribe((query) => {
-      this.searchQuery = query;
-      this.onSearchQueryChange(query);
-    });
   }
 
+  toggleViewMode(): void {
+    this.viewMode = this.viewMode === 'list' ? 'grid' : 'list';
+    localStorage.setItem('viewMode', this.viewMode);
+  }
+
+  getViewModeClass(): string {
+    return `${this.viewMode}-view`;
+  }
   updateData() {
     // Update the data
     this.cdr.detectChanges();
@@ -190,15 +222,18 @@ export class OxalateComponent implements OnInit {
     const lowerCaseSearchTerm = searchTerm.toLowerCase();
 
     return data.sort((a, b) => {
-      const aStartsWith = a.item.toLowerCase().startsWith(lowerCaseSearchTerm);
-      const bStartsWith = b.item.toLowerCase().startsWith(lowerCaseSearchTerm);
+      const aItem = a.item ? a.item.toLowerCase() : '';
+      const bItem = b.item ? b.item.toLowerCase() : '';
+
+      const aStartsWith = aItem.startsWith(lowerCaseSearchTerm);
+      const bStartsWith = bItem.startsWith(lowerCaseSearchTerm);
 
       if (aStartsWith && !bStartsWith) {
         return -1;
       } else if (!aStartsWith && bStartsWith) {
         return 1;
       } else {
-        return a.item.localeCompare(b.item, undefined, { sensitivity: 'base' });
+        return aItem.localeCompare(bItem, undefined, { sensitivity: 'base' });
       }
     });
   }

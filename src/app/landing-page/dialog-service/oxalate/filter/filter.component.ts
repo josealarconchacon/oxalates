@@ -42,7 +42,7 @@ export class FilterComponent implements OnInit {
   }
 
   applyFilters(): void {
-    console.log('Applying filters:', this.filters);
+    console.log('Applying filters:', this.filters); // Log the filters
     this.filterService.updateFilter(this.filters);
     this.filterChanged.emit(this.filters);
   }
@@ -77,6 +77,7 @@ export class FilterComponent implements OnInit {
   isSectionActive(section: string): boolean {
     return this.activeSection === section;
   }
+
   toggleSection(section: string): void {
     this.activeSection = this.activeSection === section ? null : section;
   }
