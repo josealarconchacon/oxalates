@@ -2,20 +2,21 @@
   color: #474747;
   font-size: 1.8rem;
   font-weight: 600;
-  padding: 60px 60px;
   text-align: center;
   position: relative;
-  display: inline-block;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  padding: 20px 0;
+  margin-top: 10px;
 }
 
 .by-category::after {
   content: "";
   width: 80px;
   height: 4px;
-  position: absolute;
-  bottom: 50px;
-  left: 50%;
-  transform: translateX(-50%);
+  margin-top: 10px;
   border-radius: 2px;
   background: #474747;
   display: block;
@@ -25,6 +26,9 @@
   max-width: 1200px;
   margin: 0 auto;
   padding: 40px 20px;
+}
+
+.cards-wrapper {
   display: flex;
   flex-wrap: wrap;
   gap: 20px;

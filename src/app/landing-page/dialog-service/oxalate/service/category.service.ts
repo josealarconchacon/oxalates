@@ -13,7 +13,7 @@ export class CategoryService {
 
   changeCategory(category: string) {
     this.categorySubject.next(category);
-    this.changeSearchQuery(category);
+    this.changeSearchQuery(category); // Set search query to the category
   }
 
   changeSearchQuery(searchQuery: string) {

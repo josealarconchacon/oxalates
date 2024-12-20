@@ -26,9 +26,7 @@
 
   <div *ngIf="searchQuery && !isLoading" class="search-results">
     <div class="results-header">
-      <div class="results-stats">
-        {{ displayedOxalates.length }} results found
-      </div>
+      <div class="results-stats">{{ oxalates.length }} results found</div>
       <div class="view-toggle">
         <button
           (click)="toggleViewMode()"
@@ -113,7 +111,6 @@
     </div>
   </div>
 
-  <!-- Modal -->
   <div *ngIf="selectedOxalate" class="modal-overlay" (click)="closeDetail()">
     <div class="modal-content" (click)="$event.stopPropagation()">
       <button class="close-btn" (click)="closeDetail()">×</button>
