@@ -16,8 +16,6 @@ export class FilterService {
   private clearSearchSubject = new Subject<void>();
   clearSearch$ = this.clearSearchSubject.asObservable();
 
-  constructor(private categoryService: CategoryService) {}
-
   updateFilter(filter: Filter): void {
     this.filterSubject.next(filter);
   }
@@ -27,6 +25,5 @@ export class FilterService {
       calc_level: '',
     });
     this.clearSearchSubject.next();
-    this.categoryService.clearCategory();
   }
 }

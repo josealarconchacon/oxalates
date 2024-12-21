@@ -9,7 +9,6 @@ import {
 import { FormsModule } from '@angular/forms';
 import { Subscription } from 'rxjs';
 import { FilterService } from '../service/filter.service';
-import { CategoryService } from '../service/category.service';
 
 @Component({
   selector: 'app-search-input',
@@ -24,10 +23,7 @@ export class SearchInputComponent implements OnInit, OnDestroy {
 
   private subscription: Subscription = new Subscription();
 
-  constructor(
-    private filterService: FilterService,
-    private categoryService: CategoryService
-  ) {}
+  constructor(private filterService: FilterService) {}
 
   ngOnInit() {
     this.subscription = this.filterService.clearSearch$.subscribe(() => {

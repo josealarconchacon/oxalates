@@ -7,7 +7,6 @@ import { Router } from '@angular/router';
 import {
   debounceTime,
   distinctUntilChanged,
-  filter,
   finalize,
   switchMap,
 } from 'rxjs/operators';
@@ -67,18 +66,7 @@ export class OxalateComponent implements OnInit {
     });
 
     this.categoryService.currentCategory.subscribe((category) => {
-      // if (!category) this.resetData();
-      if (category) {
-        // apply filter
-        const filter: Filter = {
-          category: category,
-          calc_level: '',
-        };
-        this.filterService.updateFilter(filter);
-        this.applyFilters(filter);
-      } else {
-        this.resetData();
-      }
+      if (!category) this.resetData();
     });
 
     this.setupSearchSubscription();
