@@ -1,21 +1,22 @@
 import {
-  AfterViewInit,
   Component,
   EventEmitter,
   OnInit,
   Output,
+  OnDestroy,
 } from '@angular/core';
 import { Filter } from './model/filter';
 import { categories, calcLevels, levels } from './model/filter-data';
 import { CategoryService } from '../service/category.service';
 import { FilterService } from '../service/filter.service';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-filter',
   templateUrl: './filter.component.html',
   styleUrls: ['./filter.component.css'],
 })
-export class FilterComponent implements OnInit {
+export class FilterComponent implements OnInit, OnDestroy {
   filters: Filter = {
     category: '',
     calc_level: '',
@@ -26,6 +27,7 @@ export class FilterComponent implements OnInit {
   searchQuery: string = '';
 
   @Output() filterChanged = new EventEmitter<Filter>();
+  private subscriptions: Subscription[] = [];
 
   constructor(
     private categoryService: CategoryService,
@@ -33,16 +35,36 @@ export class FilterComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.categoryService.currentCategory.subscribe((category) => {
-      this.filters.category = category;
-      if (category) {
-        this.applyFilters();
-      }
-    });
+    this.onCategoryChange();
+    this.onFilterChange();
+  }
+
+  // Subscribe to category changes
+  onCategoryChange() {
+    this.subscriptions.push(
+      this.categoryService.currentCategory$.subscribe((category) => {
+        if (this.filters.category !== category) {
+          this.filters.category = category ?? '';
+          this.applyFilters();
+        }
+      })
+    );
+  }
+  // Subscribe to filter changes
+  onFilterChange() {
+    this.subscriptions.push(
+      this.filterService.currentFilter$.subscribe((filter) => {
+        this.filters = { ...filter };
+      })
+    );
+  }
+
+  ngOnDestroy(): void {
+    this.subscriptions.forEach((sub) => sub.unsubscribe());
   }
 
   applyFilters(): void {
-    console.log('Applying filters:', this.filters); // Log the filters
+    console.log('Applying filters:', this.filters);
     this.filterService.updateFilter(this.filters);
     this.filterChanged.emit(this.filters);
   }
@@ -52,33 +74,9 @@ export class FilterComponent implements OnInit {
       category: '',
       calc_level: '',
     };
-    // Reset dropdowns to default values
-    const categorySelect = document.querySelector(
-      'select[name="time"]'
-    ) as HTMLSelectElement;
-    const calcLevelSelect = document.querySelector(
-      'select[name="results"]'
-    ) as HTMLSelectElement;
-
-    if (categorySelect) categorySelect.selectedIndex = 0;
-    if (calcLevelSelect) calcLevelSelect.selectedIndex = 0;
 
     this.filterService.clearAll();
+    this.categoryService.clearAll();
     this.filterChanged.emit(this.filters);
-  }
-
-  isFilterMenuActive = false;
-  activeSection: string | null = null;
-
-  toggleFilterMenu() {
-    this.isFilterMenuActive = !this.isFilterMenuActive;
-  }
-
-  isSectionActive(section: string): boolean {
-    return this.activeSection === section;
-  }
-
-  toggleSection(section: string): void {
-    this.activeSection = this.activeSection === section ? null : section;
   }
 }

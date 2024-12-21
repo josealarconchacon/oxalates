@@ -1,29 +1,40 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, Observable, Subject } from 'rxjs';
-import { Filter } from '../filter/model/filter';
-import { CategoryService } from './category.service';
+import { BehaviorSubject, Observable } from 'rxjs';
+
+export interface Filter {
+  category: string;
+  calc_level: string;
+}
 
 @Injectable({
   providedIn: 'root',
 })
 export class FilterService {
-  private filterSubject = new BehaviorSubject<Filter>({
+  private currentFilterSubject = new BehaviorSubject<Filter>({
     category: '',
     calc_level: '',
   });
-  currentFilter$ = this.filterSubject.asObservable();
+  public currentFilter$: Observable<Filter> =
+    this.currentFilterSubject.asObservable();
+  clearSearch$: any;
 
-  private clearSearchSubject = new Subject<void>();
-  clearSearch$ = this.clearSearchSubject.asObservable();
-
-  updateFilter(filter: Filter): void {
-    this.filterSubject.next(filter);
+  updateFilter(filter: Partial<Filter>): void {
+    const currentFilter = this.currentFilterSubject.value;
+    this.currentFilterSubject.next({ ...currentFilter, ...filter });
   }
-  clearAll(): void {
-    this.filterSubject.next({
-      category: '',
-      calc_level: '',
+
+  getCurrentFilter(): Filter {
+    return this.currentFilterSubject.value;
+  }
+
+  setCategory(category: string): void {
+    this.currentFilterSubject.next({
+      ...this.currentFilterSubject.value,
+      category,
     });
-    this.clearSearchSubject.next();
+  }
+
+  clearAll(): void {
+    this.currentFilterSubject.next({ category: '', calc_level: '' });
   }
 }

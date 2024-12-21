@@ -18,11 +18,12 @@ export class FoodByCategoryComponent {
   ) {}
 
   onCardClick(category: string): void {
+    console.log('Card clicked with category:', category);
     this.categoryService.changeCategory(category);
     this.filterService.updateFilter({
       category: category,
       calc_level: '',
     });
-    this.router.navigate(['/oxalate'], { queryParams: { category: category } });
+    this.router.navigate(['/oxalate']);
   }
 }

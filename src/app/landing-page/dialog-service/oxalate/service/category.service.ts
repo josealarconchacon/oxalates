@@ -1,26 +1,19 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject } from 'rxjs';
+import { BehaviorSubject, Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
 })
 export class CategoryService {
-  private categorySubject = new BehaviorSubject<string>('');
-  private searchQuerySubject = new BehaviorSubject<string>('');
+  private currentCategorySubject = new BehaviorSubject<string | null>(null);
+  public currentCategory$: Observable<string | null> =
+    this.currentCategorySubject.asObservable();
 
-  currentCategory = this.categorySubject.asObservable();
-  currentSearchQuery = this.searchQuerySubject.asObservable();
-
-  changeCategory(category: string) {
-    this.categorySubject.next(category);
-    this.changeSearchQuery(category); // Set search query to the category
+  changeCategory(category: string): void {
+    this.currentCategorySubject.next(category);
   }
 
-  changeSearchQuery(searchQuery: string) {
-    this.searchQuerySubject.next(searchQuery);
-  }
-  clearCategory() {
-    this.categorySubject.next('');
-    this.searchQuerySubject.next('');
+  clearAll(): void {
+    this.currentCategorySubject.next(null);
   }
 }

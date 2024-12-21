@@ -1,4 +1,3 @@
-import firebase from 'firebase/compat/app';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable, Subject, from, of } from 'rxjs';
@@ -93,6 +92,7 @@ export class OxalateService {
     }
     return user;
   }
+
   async itemExists(oxalateData: Oxalate, userId: string): Promise<boolean> {
     const existingItems = await this.firestore
       .collection(this.collectionName)

@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit, OnDestroy } from '@angular/core';
 import { Oxalate } from 'src/app/landing-page/model/oxalate';
 import { OxalateService } from '../service/oxalate.service';
 import { FilterService } from './service/filter.service';
@@ -9,8 +9,9 @@ import {
   distinctUntilChanged,
   finalize,
   switchMap,
+  take,
 } from 'rxjs/operators';
-import { Subject } from 'rxjs';
+import { combineLatest, Subject, Subscription } from 'rxjs';
 import { PaginationService } from './service/pagination.service';
 import { CategoryService } from './service/category.service';
 
@@ -19,62 +20,116 @@ import { CategoryService } from './service/category.service';
   templateUrl: './oxalate.component.html',
   styleUrls: ['./oxalate.component.css'],
 })
-export class OxalateComponent implements OnInit {
+export class OxalateComponent implements OnInit, OnDestroy {
+  private subscriptions: Subscription[] = [];
+  private searchSubject: Subject<string> = new Subject<string>();
+
   oxalates: Oxalate[] = [];
   originalOxalates: Oxalate[] = [];
   displayedOxalates: Oxalate[] = [];
-  searchQuery: string = '';
-  isFilterApplied: boolean = false;
-  selectedOxalate: Oxalate | undefined;
 
+  searchQuery: string = '';
+  alertMessage: string = '';
   showAlert: boolean = false;
   isLoading: boolean = false;
-  alertMessage: string = '';
+  isFilterApplied: boolean = false;
+  selectedOxalate: Oxalate | undefined;
   viewMode: 'list' | 'grid' = 'list';
 
-  // Subject for debounced search
-  private searchSubject: Subject<string> = new Subject<string>();
-
   constructor(
-    private oxalateService: OxalateService,
-    private filterService: FilterService,
     private router: Router,
     private cdr: ChangeDetectorRef,
-    private paginationService: PaginationService,
-    private categoryService: CategoryService
+    public filterService: FilterService,
+    private oxalateService: OxalateService,
+    private categoryService: CategoryService,
+    private paginationService: PaginationService
   ) {}
 
   ngOnInit(): void {
-    this.initializeSubscriptions();
     this.initializeViewMode();
+    this.setupSearchSubscription();
+    this.initializeWithRouteParams();
   }
 
-  private initializeSubscriptions(): void {
-    this.oxalateService.getOxalateData().subscribe((data) => {
-      this.oxalates = data;
-      this.originalOxalates = [...data];
-      this.updateDisplayedOxalates();
-    });
+  private initializeWithRouteParams(): void {
+    // Get initial data and combine with route parameters
+    this.subscriptions.push(
+      combineLatest([
+        this.oxalateService.getOxalateData(),
+        this.categoryService.currentCategory$.pipe(take(1)),
+      ]).subscribe({
+        next: ([data, category]) => {
+          console.log('Initial data fetched:', data);
+          console.log('Initial category:', category);
 
-    this.filterService.currentFilter$.subscribe((filter: Filter) => {
-      if (filter) this.applyFilters(filter);
-    });
+          this.oxalates = data;
+          this.originalOxalates = [...data];
 
-    this.filterService.clearSearch$.subscribe(() => {
-      this.searchQuery = '';
-      this.resetData();
-    });
+          // If there's a category from the route, apply it
+          if (category) {
+            console.log('Applying initial category filter:', category);
+            this.filterService.setCategory(category);
+            this.isFilterApplied = true;
+            this.applyFilters({
+              category: category,
+              calc_level: '',
+            });
+          } else {
+            this.updateDisplayedOxalates();
+          }
+        },
+        error: (error) => {
+          console.error('Error initializing component:', error);
+        },
+      })
+    );
+    this.categoryOnChange();
+    this.filterOnChange();
+  }
 
-    this.categoryService.currentCategory.subscribe((category) => {
-      if (!category) this.resetData();
-    });
+  // Handle subsequent category changes
+  categoryOnChange() {
+    this.subscriptions.push(
+      this.categoryService.currentCategory$.subscribe({
+        next: (category) => {
+          console.log('Category changed:', category);
+          if (category) {
+            this.filterService.setCategory(category);
+            this.isFilterApplied = true;
+            this.applyFilters({
+              category: category,
+              calc_level: '',
+            });
+            // Reset pagination when category changes
+            this.paginationService.changePage(1, this.oxalates.length);
+          }
+        },
+        error: (error) => {
+          console.error('Error handling category change:', error);
+        },
+      })
+    );
+  }
 
-    this.setupSearchSubscription();
+  // Handle filter changes
+  filterOnChange() {
+    this.subscriptions.push(
+      this.filterService.currentFilter$.subscribe({
+        next: (filter: Filter) => {
+          console.log('Filter changed:', filter);
+          if (filter && (filter.category || filter.calc_level)) {
+            this.applyFilters(filter);
+          }
+        },
+        error: (error) => {
+          console.error('Error handling filter change:', error);
+        },
+      })
+    );
+  }
 
-    this.categoryService.currentSearchQuery.subscribe((query) => {
-      this.searchQuery = query;
-      this.onSearchQueryChange(query);
-    });
+  ngOnDestroy(): void {
+    this.subscriptions.forEach((sub) => sub.unsubscribe());
   }
 
   private initializeViewMode(): void {
@@ -96,18 +151,24 @@ export class OxalateComponent implements OnInit {
           );
         })
       )
-      .subscribe((data) => {
-        if (data.length === 0) {
-          this.showAlert = true;
-          this.alertMessage =
-            'No results found. Try different keywords or check your spelling.';
-          this.resetData();
-        } else {
-          this.oxalates = this.sortBySearchTerm(data, this.searchQuery);
-          this.updateDisplayedOxalates();
-          this.showAlert = false;
+      .subscribe(
+        (data) => {
+          console.log('Search results:', data);
+          if (data.length === 0) {
+            this.showAlert = true;
+            this.alertMessage =
+              'No results found. Try different keywords or check your spelling.';
+            this.resetData();
+          } else {
+            this.oxalates = this.sortBySearchTerm(data, this.searchQuery);
+            this.updateDisplayedOxalates();
+            this.showAlert = false;
+          }
+        },
+        (error) => {
+          console.error('Error handling search change:', error);
         }
-      });
+      );
   }
 
   toggleViewMode(): void {
@@ -118,8 +179,8 @@ export class OxalateComponent implements OnInit {
   getViewModeClass(): string {
     return `${this.viewMode}-view`;
   }
+
   updateData() {
-    // Update the data
     this.cdr.detectChanges();
   }
 
@@ -129,48 +190,62 @@ export class OxalateComponent implements OnInit {
   }
 
   applyFilters(filter: Filter): void {
+    console.log('Applying filters:', filter);
     if (this.originalOxalates.length === 0) {
       console.warn('No oxalates data to filter.');
       return;
     }
-    let filteredOxalates = this.originalOxalates.filter((oxalate) => {
-      const matchesSearchQuery =
-        !this.searchQuery ||
-        (oxalate.item &&
-          oxalate.item
-            .toLowerCase()
-            .includes(this.searchQuery.toLowerCase())) ||
-        (oxalate.category &&
-          oxalate.category
-            .toLowerCase()
-            .includes(this.searchQuery.toLowerCase())) ||
-        (oxalate.level &&
-          oxalate.level.toString().includes(this.searchQuery)) ||
-        (oxalate.calc_level &&
-          oxalate.calc_level
-            .toLowerCase()
-            .includes(this.searchQuery.toLowerCase()));
 
-      return matchesSearchQuery;
-    });
+    let filteredOxalates = [...this.originalOxalates];
 
-    // Apply the dropdown filters after the search query
-    filteredOxalates = filteredOxalates.filter((oxalate) => {
-      return (
-        (!filter.category || oxalate.category === filter.category) &&
-        (!filter.calc_level || oxalate.calc_level === filter.calc_level) &&
-        (!filter.level || Number(oxalate.level) === Number(filter.level))
+    if (filter.category) {
+      console.log('Filtering by category:', filter.category);
+      filteredOxalates = filteredOxalates.filter(
+        (oxalate) => oxalate.category === filter.category
       );
-    });
+      console.log('Results after category filter:', filteredOxalates.length);
+    }
+
+    if (filter.calc_level) {
+      filteredOxalates = filteredOxalates.filter(
+        (oxalate) => oxalate.calc_level === filter.calc_level
+      );
+      console.log('Results after calc_level filter:', filteredOxalates.length);
+    }
+
+    if (this.searchQuery) {
+      filteredOxalates = this.applySearch(filteredOxalates, this.searchQuery);
+      console.log('Results after search:', filteredOxalates.length);
+    }
 
     this.oxalates = filteredOxalates;
     this.isFilterApplied = true;
     this.updateDisplayedOxalates();
+    this.cdr.detectChanges();
+  }
+
+  private applySearch(items: Oxalate[], query: string): Oxalate[] {
+    const searchLower = query.toLowerCase();
+    return items.filter((oxalate) => {
+      return (
+        (oxalate.item && oxalate.item.toLowerCase().includes(searchLower)) ||
+        (oxalate.category &&
+          oxalate.category.toLowerCase().includes(searchLower)) ||
+        (oxalate.level && oxalate.level.toString().includes(searchLower)) ||
+        (oxalate.calc_level &&
+          oxalate.calc_level.toLowerCase().includes(searchLower))
+      );
+    });
   }
 
   clearFilters(): void {
-    this.resetData();
+    this.categoryService.clearAll();
+    this.filterService.clearAll();
+    this.searchQuery = '';
     this.isFilterApplied = false;
+    this.oxalates = [...this.originalOxalates];
+
+    this.updateDisplayedOxalates();
   }
 
   resetData(): void {
@@ -179,9 +254,11 @@ export class OxalateComponent implements OnInit {
   }
 
   updateDisplayedOxalates(): void {
+    console.log('Updating displayed oxalates, total:', this.oxalates.length);
     this.displayedOxalates = this.paginationService.updateDisplayedItems(
       this.oxalates
     );
+    console.log('New displayed oxalates:', this.displayedOxalates.length);
   }
 
   getPages(): (number | string)[] {

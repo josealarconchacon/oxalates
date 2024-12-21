@@ -12,8 +12,6 @@
     <app-alert *ngIf="showAlert" [message]="alertMessage"></app-alert>
 
     <app-filter
-      *ngIf="searchQuery"
-      [selectedCategory]="searchQuery"
       (filterChanged)="applyFilters($event)"
       class="filter-component"
     ></app-filter>
@@ -24,9 +22,14 @@
     <p>Loading results...</p>
   </div>
 
-  <div *ngIf="searchQuery && !isLoading" class="search-results">
+  <div *ngIf="!isLoading" class="search-results">
     <div class="results-header">
-      <div class="results-stats">{{ oxalates.length }} results found</div>
+      <div class="results-stats">
+        {{ oxalates.length }} results found
+        <span *ngIf="filterService.getCurrentFilter().category">
+          in {{ filterService.getCurrentFilter().category }}
+        </span>
+      </div>
       <div class="view-toggle">
         <button
           (click)="toggleViewMode()"
@@ -44,13 +47,16 @@
         </button>
       </div>
     </div>
-    <div
-      *ngIf="displayedOxalates.length === 0 && !isLoading"
-      class="no-results"
-    >
+
+    <div *ngIf="displayedOxalates.length === 0" class="no-results">
       <i class="fas fa-search"></i>
       <h3>No results found</h3>
-      <p>Try different category or food level</p>
+      <p *ngIf="filterService.getCurrentFilter().category">
+        No items found in {{ filterService.getCurrentFilter().category }}
+      </p>
+      <p *ngIf="!filterService.getCurrentFilter().category">
+        Try different category or food level
+      </p>
     </div>
 
     <div [class]="'card-container ' + getViewModeClass()">
@@ -77,7 +83,7 @@
       </div>
     </div>
 
-    <div class="pagination">
+    <div class="pagination" *ngIf="displayedOxalates.length > 0">
       <button (click)="changePage(1)" [disabled]="currentPage === 1">
         First
       </button>

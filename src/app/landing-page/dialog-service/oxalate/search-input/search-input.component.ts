@@ -1,14 +1,5 @@
-import {
-  Component,
-  EventEmitter,
-  Input,
-  OnDestroy,
-  OnInit,
-  Output,
-} from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { Subscription } from 'rxjs';
-import { FilterService } from '../service/filter.service';
 
 @Component({
   selector: 'app-search-input',
@@ -17,29 +8,16 @@ import { FilterService } from '../service/filter.service';
   templateUrl: './search-input.component.html',
   styleUrls: ['./search-input.component.css'],
 })
-export class SearchInputComponent implements OnInit, OnDestroy {
+export class SearchInputComponent {
   @Input() searchQuery: string = '';
   @Output() searchQueryChange = new EventEmitter<string>();
 
-  private subscription: Subscription = new Subscription();
-
-  constructor(private filterService: FilterService) {}
-
-  ngOnInit() {
-    this.subscription = this.filterService.clearSearch$.subscribe(() => {
-      this.searchQuery = '';
-      this.searchQueryChange.emit('');
-    });
+  onSearchQueryChange(): void {
+    this.searchQueryChange.emit(this.searchQuery);
   }
 
-  ngOnDestroy() {
-    this.subscription.unsubscribe();
-  }
-
-  onInputChange(value: string): void {
-    this.searchQueryChange.emit(value);
-  }
-  clearSearch() {
+  onClearSearch(): void {
     this.searchQuery = '';
+    this.searchQueryChange.emit(this.searchQuery);
   }
 }
