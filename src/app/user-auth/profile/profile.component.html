@@ -2,7 +2,10 @@
   <main class="app-main">
     <aside class="sidebar">
       <div class="profile-card">
-        <div class="profile-header">
+        <div
+          class="profile-header"
+          [style.backgroundColor]="currentHeaderColor"
+        >
           <img
             [src]="userProfile?.photoURL || 'assets/default-avatar.png'"
             alt="Profile Picture"
@@ -18,7 +21,83 @@
           <label for="file-upload" class="edit-avatar">
             <i class="fas fa-camera"></i>
           </label>
+          <button
+            class="color-picker-toggle"
+            (click)="toggleColorPicker()"
+            aria-label="Open color picker"
+          >
+            <span class="picker-icon">🎨</span>
+          </button>
+
+          <!-- Modern Color Picker -->
+          <div
+            *ngIf="isColorPickerVisible"
+            class="color-picker-backdrop"
+            (click)="onBackdropClick($event)"
+            [@fadeInOut]
+          >
+            <div
+              class="color-picker-content"
+              role="dialog"
+              aria-modal="true"
+              aria-label="Color picker"
+            >
+              <div class="color-picker-header">
+                <h3 class="color-picker-title">Choose Color</h3>
+                <button
+                  class="close-button"
+                  (click)="cancelColor()"
+                  aria-label="Close color picker"
+                >
+                  ✕
+                </button>
+              </div>
+
+              <div
+                class="color-preview"
+                [style.backgroundColor]="selectedColor"
+                role="img"
+                [attr.aria-label]="'Selected color: ' + selectedColor"
+              ></div>
+
+              <div class="color-grid" role="listbox" aria-label="Preset colors">
+                <button
+                  *ngFor="let color of presetColors"
+                  class="color-preset"
+                  [class.selected]="selectedColor === color"
+                  [style.backgroundColor]="color"
+                  (click)="onColorSelect(color)"
+                  role="option"
+                  [attr.aria-selected]="selectedColor === color"
+                  [attr.aria-label]="'Color: ' + color"
+                >
+                  <span class="sr-only">{{ color }}</span>
+                </button>
+              </div>
+
+              <div class="color-input-group">
+                <color-sketch
+                  [(color)]="selectedColor"
+                  (colorChange)="onColorSelect($event)"
+                  aria-label="Color picker"
+                ></color-sketch>
+                <div class="color-value" role="status" aria-live="polite">
+                  {{ selectedColor }}
+                </div>
+              </div>
+
+              <div class="color-actions">
+                <button class="btn btn-primary" (click)="saveColor()">
+                  Save
+                </button>
+                <button class="btn btn-secondary" (click)="cancelColor()">
+                  Cancel
+                </button>
+              </div>
+            </div>
+          </div>
         </div>
+
         <div class="profile-info">
           <h2 class="profile-name">
             {{ userProfile?.displayName || "Username" }}
@@ -28,6 +107,8 @@
           </p>
         </div>
       </div>
+
+      <!-- Rest of your template remains the same -->
       <nav class="sidebar-nav">
         <a
           [class.active]="activeSection === 'profile'"
@@ -41,14 +122,6 @@
         >
           <i class="fas fa-bookmark"></i> Saved Items
         </a>
-        <!-- future implementation  -->
-        <!-- <a
-          [class.active]="activeSection === 'address'"
-          (click)="showSection('address')"
-        >
-          <i class="fas fa-address-book"></i> Address Book
-        </a> -->
-
         <a (click)="onLogout()" class="logout">
           <i class="fas fa-sign-out-alt"></i> Logout
         </a>

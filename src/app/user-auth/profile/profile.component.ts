@@ -3,18 +3,34 @@ import { AuthService } from '../service/auth-service.service';
 import { AngularFireStorage } from '@angular/fire/compat/storage';
 import { finalize } from 'rxjs/operators';
 import { Router } from '@angular/router';
+import { trigger, transition, style, animate } from '@angular/animations';
+import { presetColors, colorToHex } from '../../shared/utils/color-utils';
+import { HSLA, HSVA, RGBA } from 'ngx-color';
 
 @Component({
   selector: 'app-profile',
   templateUrl: './profile.component.html',
   styleUrls: ['./profile.component.css'],
+  animations: [
+    trigger('fadeInOut', [
+      transition(':enter', [
+        style({ opacity: 0 }),
+        animate('200ms ease-in', style({ opacity: 1 })),
+      ]),
+      transition(':leave', [animate('200ms ease-out', style({ opacity: 0 }))]),
+    ]),
+  ],
 })
 export class ProfileComponent implements OnInit {
   activeSection: string = 'profile';
   userProfile: any;
   isChangePasswordVisible: boolean = false;
-  isSidebarCollapsed: boolean = false;
   selectedFile: File | null = null;
+  isColorPickerVisible: boolean = false;
+  currentHeaderColor: string = '#1da1f2';
+  selectedColor: string = this.currentHeaderColor;
+
+  presetColors: string[] = presetColors;
 
   constructor(
     private authService: AuthService,
@@ -28,11 +44,16 @@ export class ProfileComponent implements OnInit {
     } else {
       this.getUserInfo();
     }
+    const savedColor = localStorage.getItem('headerColor');
+    if (savedColor) {
+      this.currentHeaderColor = savedColor;
+      this.selectedColor = savedColor;
+    }
   }
+
   getUserInfo() {
     this.authService.getUserProfile().subscribe((response) => {
       this.userProfile = response;
-      console.log('User Profile: ', this.userProfile); // Check if photoURL is present
     });
   }
 
@@ -72,8 +93,38 @@ export class ProfileComponent implements OnInit {
     }
   }
 
-  toggleSidebar(): void {
-    this.isSidebarCollapsed = !this.isSidebarCollapsed;
+  toggleColorPicker(): void {
+    this.isColorPickerVisible = !this.isColorPickerVisible;
+    if (this.isColorPickerVisible) {
+      this.selectedColor = this.currentHeaderColor;
+    }
+  }
+
+  onColorSelect(color: string | HSLA | HSVA | RGBA): void {
+    if (typeof color === 'string') {
+      this.selectedColor = color;
+    } else {
+      this.selectedColor = colorToHex(color) || '#000000';
+    }
+  }
+
+  saveColor(): void {
+    this.currentHeaderColor = this.selectedColor;
+    localStorage.setItem('headerColor', this.currentHeaderColor);
+    this.isColorPickerVisible = false;
+  }
+
+  cancelColor(): void {
+    this.selectedColor = this.currentHeaderColor;
+    this.isColorPickerVisible = false;
+  }
+
+  onBackdropClick(event: MouseEvent): void {
+    if (
+      (event.target as HTMLElement).classList.contains('color-picker-backdrop')
+    ) {
+      this.cancelColor();
+    }
   }
 
   onLogout(): void {
