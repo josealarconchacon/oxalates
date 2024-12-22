@@ -11,6 +11,7 @@ import { FormsModule } from '@angular/forms';
 export class SearchInputComponent {
   @Input() searchQuery: string = '';
   @Output() searchQueryChange = new EventEmitter<string>();
+  @Output() clearSearch = new EventEmitter<void>();
 
   onSearchQueryChange(): void {
     this.searchQueryChange.emit(this.searchQuery);
@@ -19,5 +20,6 @@ export class SearchInputComponent {
   onClearSearch(): void {
     this.searchQuery = '';
     this.searchQueryChange.emit(this.searchQuery);
+    this.clearSearch.emit();
   }
 }

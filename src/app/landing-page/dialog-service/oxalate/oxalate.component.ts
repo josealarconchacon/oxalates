@@ -184,9 +184,35 @@ export class OxalateComponent implements OnInit, OnDestroy {
     this.cdr.detectChanges();
   }
 
+  handleClearSearch(): void {
+    console.log('Clearing search and resetting data');
+    this.searchQuery = '';
+    this.showAlert = false;
+    this.isFilterApplied = false;
+
+    // Reset filters
+    this.filterService.clearAll();
+    this.categoryService.clearAll();
+    this.oxalates = [...this.originalOxalates];
+    this.updateDisplayedOxalates();
+    this.cdr.detectChanges();
+  }
+
+  // Update existing search-related methods
   onSearchQueryChange(query: string): void {
     this.searchQuery = query;
-    this.searchSubject.next(query);
+    if (!query) {
+      // If query is empty but not from clear button, just reset search results
+      this.oxalates = [...this.originalOxalates];
+      if (this.isFilterApplied) {
+        // If filters are applied, reapply them
+        this.applyFilters(this.filterService.getCurrentFilter());
+      } else {
+        this.updateDisplayedOxalates();
+      }
+    } else {
+      this.searchSubject.next(query);
+    }
   }
 
   applyFilters(filter: Filter): void {

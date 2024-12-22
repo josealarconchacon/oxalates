@@ -2,11 +2,11 @@
   <div>
     <h1>Search for a food</h1>
   </div>
-
   <div class="search-wrapper">
     <app-search-input
       [searchQuery]="searchQuery"
       (searchQueryChange)="onSearchQueryChange($event)"
+      (clearSearch)="handleClearSearch()"
     ></app-search-input>
 
     <app-alert *ngIf="showAlert" [message]="alertMessage"></app-alert>
