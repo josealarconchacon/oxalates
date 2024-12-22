@@ -44,6 +44,7 @@ import { AlertService } from './shared/alert-service/alert.service';
 import { RouterModule } from '@angular/router';
 import { FoodByCategoryComponent } from './landing-page/dialog-service/food-by-category/food-by-category.component';
 import { SearchInputComponent } from './landing-page/dialog-service/oxalate/search-input/search-input.component';
+import { ColorSketchModule } from 'ngx-color/sketch';
 
 export function initializeApp(configService: ConfigService) {
   return (): Promise<void> => {
@@ -102,6 +103,7 @@ export function initializeApp(configService: ConfigService) {
     AngularFireAuthModule,
     FoodByCategoryComponent,
     SearchInputComponent,
+    ColorSketchModule,
   ],
   providers: [
     ConfigService,
