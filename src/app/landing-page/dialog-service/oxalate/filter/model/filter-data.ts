@@ -27,6 +27,13 @@ export const categories: string[] = [
   'Sweets and Sweeteners',
 ];
 
-export const calcLevels: string[] = ['H', 'M', 'L', 'VH', 'EH', 'VL'];
+export const calcLevels: string[] = [
+  'High',
+  'Medium',
+  'Low',
+  'Very High',
+  'Extremely High',
+  'Very Low',
+];
 
 export const levels: string[] = ['1', '2', '3', '4', '5', '6', '7'];

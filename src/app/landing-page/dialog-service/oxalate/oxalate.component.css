@@ -134,6 +134,17 @@ h1 {
   font-size: 20px;
   margin-bottom: 4px;
 }
+/* .result-title {
+  display: flex;
+  align-items: center;
+  gap: 8px; 
+}
+
+.result-icon {
+  width: 24px; 
+  height: 24px;
+  object-fit: cover;
+} */
 .result-snippets {
   display: flex;
   justify-content: space-between;

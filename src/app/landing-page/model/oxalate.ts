@@ -13,4 +13,6 @@ export interface Oxalate {
   soluble_oxalate: string;
   reference: string;
   notes: string;
+  // new
+  iconUrl: string;
 }
