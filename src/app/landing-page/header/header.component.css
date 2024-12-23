@@ -384,12 +384,12 @@
   .hamburger {
     width: 25px;
     height: 25px;
-    background-color: #333;
+    background-color: #2d2d2d;
+    border-radius: 5px;
   }
 
   .bar {
     height: 3px;
-    background-color: #faf8ff;
   }
 
   .nav-link {
