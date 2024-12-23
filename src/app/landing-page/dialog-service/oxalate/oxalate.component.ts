@@ -11,7 +11,7 @@ import {
   switchMap,
   take,
 } from 'rxjs/operators';
-import { combineLatest, Subject, Subscription } from 'rxjs';
+import { combineLatest, Observable, of, Subject, Subscription } from 'rxjs';
 import { PaginationService } from './service/pagination.service';
 import { CategoryService } from './service/category.service';
 
@@ -217,37 +217,60 @@ export class OxalateComponent implements OnInit, OnDestroy {
 
   applyFilters(filter: Filter): void {
     console.log('Applying filters:', filter);
-    if (this.originalOxalates.length === 0) {
+
+    if (!this.originalOxalates || this.originalOxalates.length === 0) {
       console.warn('No oxalates data to filter.');
       return;
     }
 
-    let filteredOxalates = [...this.originalOxalates];
+    // Combine search and filters
+    let filteredOxalates$: Observable<Oxalate[]> = of(this.originalOxalates);
 
-    if (filter.category) {
-      console.log('Filtering by category:', filter.category);
-      filteredOxalates = filteredOxalates.filter(
-        (oxalate) => oxalate.category === filter.category
+    // If there's a search query, perform the advanced search
+    if (this.searchQuery?.trim()) {
+      filteredOxalates$ = this.oxalateService.searchOxalateData(
+        this.searchQuery
       );
-      console.log('Results after category filter:', filteredOxalates.length);
     }
 
-    if (filter.calc_level) {
-      filteredOxalates = filteredOxalates.filter(
-        (oxalate) => oxalate.calc_level === filter.calc_level
-      );
-      console.log('Results after calc_level filter:', filteredOxalates.length);
-    }
+    filteredOxalates$.subscribe((searchResults) => {
+      let filteredOxalates = searchResults;
 
-    if (this.searchQuery) {
-      filteredOxalates = this.applySearch(filteredOxalates, this.searchQuery);
-      console.log('Results after search:', filteredOxalates.length);
-    }
+      // Apply category filter
+      if (filter.category) {
+        console.log('Filtering by category:', filter.category);
+        filteredOxalates = filteredOxalates.filter(
+          (oxalate) =>
+            oxalate.category?.toLowerCase() ===
+            (filter.category ?? '').toLowerCase()
+        );
+        console.log('Results after category filter:', filteredOxalates.length);
+      }
 
-    this.oxalates = filteredOxalates;
-    this.isFilterApplied = true;
-    this.updateDisplayedOxalates();
-    this.cdr.detectChanges();
+      // Apply calc_level filter
+      if (filter.calc_level) {
+        console.log('Filtering by calc_level:', filter.calc_level);
+        filteredOxalates = filteredOxalates.filter(
+          (oxalate) => oxalate.calc_level === filter.calc_level
+        );
+        console.log(
+          'Results after calc_level filter:',
+          filteredOxalates.length
+        );
+      }
+
+      // Update results only if there's a change
+      if (JSON.stringify(this.oxalates) !== JSON.stringify(filteredOxalates)) {
+        this.oxalates = filteredOxalates;
+        this.isFilterApplied = true;
+        console.log('Filters applied successfully.');
+      } else {
+        console.log('No changes detected after applying filters.');
+      }
+
+      this.updateDisplayedOxalates();
+      this.cdr.detectChanges(); // Trigger UI updates
+    });
   }
 
   private applySearch(items: Oxalate[], query: string): Oxalate[] {

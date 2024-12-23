@@ -1,6 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable, Subject, from, of } from 'rxjs';
+import Fuse from 'fuse.js';
 import {
   map,
   debounceTime,
@@ -38,25 +39,41 @@ export class OxalateService {
   searchOxalateData(query: string): Observable<Oxalate[]> {
     return this.getOxalateData().pipe(
       map((data) => {
-        if (query && typeof query === 'string' && query.trim() !== '') {
-          const searchResults: Oxalate[] = [];
-          for (const item of data) {
-            // case-insensitive search for the query within each property of the item
-            for (const key of Object.keys(item)) {
-              const propertyValue = item[key as keyof Oxalate];
-              if (
-                typeof propertyValue === 'string' &&
-                propertyValue.toLowerCase().includes(query.trim().toLowerCase())
-              ) {
-                searchResults.push(item);
-                break;
-              }
-            }
-          }
-          return searchResults;
-        } else {
-          return data; // Return the original data if the search query is empty
+        if (query && query.trim() !== '') {
+          // Preprocess the query to handle edge cases
+          const preprocessQuery = (q: string): string =>
+            q
+              .toLowerCase()
+              .replace(/[^\w\s]/g, '') // Remove punctuation
+              .trim();
+
+          const processedQuery = preprocessQuery(query);
+
+          // Fuse.js configuration for advanced search
+          const fuse = new Fuse(data, {
+            keys: [
+              { name: 'item', weight: 0.7 }, // Assign higher weight to 'item'
+              { name: 'category', weight: 0.3 },
+              'notes', // Additional searchable fields
+            ],
+            threshold: 0.3, // Lower threshold for broader matches
+            ignoreLocation: true, // Allow matches anywhere in the field
+            includeScore: true,
+            findAllMatches: true, // Ensure all matches are considered
+            useExtendedSearch: true, // Enable advanced search syntax
+          });
+
+          // Perform the search
+          const searchResults = fuse.search(processedQuery);
+
+          // Map results to original data items
+          return searchResults
+            .sort((a, b) => (a.score ?? 0) - (b.score ?? 0)) // Sort by relevance
+            .map((result) => result.item);
         }
+
+        // Return full data if query is empty or invalid
+        return data;
       })
     );
   }
