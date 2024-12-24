@@ -10,6 +10,7 @@
       <div class="category-card-content">
         <div
           class="category-icon"
+          [class.svg-debug]="true"
           [innerHTML]="getSanitizedIcon(card.iconSvg)"
         ></div>
         <h3 class="category-title">{{ card.title }}</h3>

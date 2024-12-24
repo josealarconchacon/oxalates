@@ -125,14 +125,39 @@
   display: flex;
   justify-content: center;
   align-items: center;
+  position: relative;
+
+  /* Ensure container is visible for debugging */
+  &:empty::after {
+    content: "No SVG";
+    color: #666;
+    font-size: 0.8rem;
+  }
 
   svg {
     width: 100%;
     height: 100%;
     max-width: 3.75rem;
     max-height: 3.75rem;
-    object-fit: contain;
+    display: block;
+
+    /* Force display block on mobile */
+    @media (max-width: 768px) {
+      display: block !important;
+      visibility: visible !important;
+    }
+
+    /* Ensure paths have a color */
+    path,
+    rect,
+    circle {
+      fill: currentColor;
+    }
   }
+}
+.svg-debug {
+  /* border: 1px solid red; */
+  position: relative;
 }
 
 .category-overlay {
