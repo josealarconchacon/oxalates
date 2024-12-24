@@ -1,4 +1,3 @@
-// svg.service.ts
 import { Injectable } from '@angular/core';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 
@@ -13,10 +12,8 @@ export class SvgService {
       return this.getDefaultSvg();
     }
 
-    // Normalize SVG string
     let normalizedSvg = svg.trim();
 
-    // Add missing SVG attributes
     if (!normalizedSvg.includes('xmlns')) {
       normalizedSvg = normalizedSvg.replace(
         '<svg',
@@ -24,12 +21,10 @@ export class SvgService {
       );
     }
 
-    // Add responsive attributes
     if (!normalizedSvg.includes('viewBox')) {
       normalizedSvg = normalizedSvg.replace('<svg', '<svg viewBox="0 0 24 24"');
     }
 
-    // Add width and height if missing
     if (!normalizedSvg.includes('width') && !normalizedSvg.includes('height')) {
       normalizedSvg = normalizedSvg.replace(
         '<svg',
@@ -37,7 +32,6 @@ export class SvgService {
       );
     }
 
-    // Add preserveAspectRatio if missing
     if (!normalizedSvg.includes('preserveAspectRatio')) {
       normalizedSvg = normalizedSvg.replace(
         '<svg',
