@@ -7,39 +7,67 @@ import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 export class SvgService {
   constructor(private sanitizer: DomSanitizer) {}
 
+  // sanitizeAndPrepareSvg(svg: string): SafeHtml {
+  //   if (!svg) {
+  //     return this.getDefaultSvg();
+  //   }
+
+  //   let normalizedSvg = svg.trim();
+
+  //   if (!normalizedSvg.includes('xmlns')) {
+  //     normalizedSvg = normalizedSvg.replace(
+  //       '<svg',
+  //       '<svg xmlns="http://www.w3.org/2000/svg"'
+  //     );
+  //   }
+
+  //   if (!normalizedSvg.includes('viewBox')) {
+  //     normalizedSvg = normalizedSvg.replace('<svg', '<svg viewBox="0 0 24 24"');
+  //   }
+
+  //   if (!normalizedSvg.includes('width') && !normalizedSvg.includes('height')) {
+  //     normalizedSvg = normalizedSvg.replace(
+  //       '<svg',
+  //       '<svg width="100%" height="100%"'
+  //     );
+  //   }
+
+  //   if (!normalizedSvg.includes('preserveAspectRatio')) {
+  //     normalizedSvg = normalizedSvg.replace(
+  //       '<svg',
+  //       '<svg preserveAspectRatio="xMidYMid meet"'
+  //     );
+  //   }
+
+  //   return this.sanitizer.bypassSecurityTrustHtml(normalizedSvg);
+  // }
   sanitizeAndPrepareSvg(svg: string): SafeHtml {
     if (!svg) {
+      console.warn('Missing SVG, using default.');
       return this.getDefaultSvg();
     }
 
-    let normalizedSvg = svg.trim();
+    try {
+      let normalizedSvg = svg.trim();
+      if (!normalizedSvg.includes('xmlns')) {
+        normalizedSvg = normalizedSvg.replace(
+          '<svg',
+          '<svg xmlns="http://www.w3.org/2000/svg"'
+        );
+      }
+      if (!normalizedSvg.includes('viewBox')) {
+        normalizedSvg = normalizedSvg.replace(
+          '<svg',
+          '<svg viewBox="0 0 24 24"'
+        );
+      }
+      // Add other checks and modifications here...
 
-    if (!normalizedSvg.includes('xmlns')) {
-      normalizedSvg = normalizedSvg.replace(
-        '<svg',
-        '<svg xmlns="http://www.w3.org/2000/svg"'
-      );
+      return this.sanitizer.bypassSecurityTrustHtml(normalizedSvg);
+    } catch (error) {
+      console.error('Error sanitizing SVG:', svg, error);
+      return this.getDefaultSvg();
     }
-
-    if (!normalizedSvg.includes('viewBox')) {
-      normalizedSvg = normalizedSvg.replace('<svg', '<svg viewBox="0 0 24 24"');
-    }
-
-    if (!normalizedSvg.includes('width') && !normalizedSvg.includes('height')) {
-      normalizedSvg = normalizedSvg.replace(
-        '<svg',
-        '<svg width="100%" height="100%"'
-      );
-    }
-
-    if (!normalizedSvg.includes('preserveAspectRatio')) {
-      normalizedSvg = normalizedSvg.replace(
-        '<svg',
-        '<svg preserveAspectRatio="xMidYMid meet"'
-      );
-    }
-
-    return this.sanitizer.bypassSecurityTrustHtml(normalizedSvg);
   }
 
   private getDefaultSvg(): SafeHtml {

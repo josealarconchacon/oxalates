@@ -127,7 +127,6 @@
   align-items: center;
   position: relative;
 
-  /* Ensure container is visible for debugging */
   &:empty::after {
     content: "No SVG";
     color: #666;
@@ -141,13 +140,10 @@
     max-height: 3.75rem;
     display: block;
 
-    /* Force display block on mobile */
     @media (max-width: 768px) {
       display: block !important;
       visibility: visible !important;
     }
-
-    /* Ensure paths have a color */
     path,
     rect,
     circle {
@@ -156,7 +152,6 @@
   }
 }
 .svg-debug {
-  /* border: 1px solid red; */
   position: relative;
 }
 
