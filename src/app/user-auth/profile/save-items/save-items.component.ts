@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Observable, of, from } from 'rxjs';
-import { catchError, switchMap, tap } from 'rxjs/operators';
+import { catchError, map, switchMap, tap } from 'rxjs/operators';
 import { Oxalate } from 'src/app/landing-page/model/oxalate';
 import { OxalateService } from 'src/app/landing-page/dialog-service/service/oxalate.service';
 import { AuthService } from '../../service/auth-service.service';
@@ -11,7 +11,7 @@ import { AuthService } from '../../service/auth-service.service';
   styleUrls: ['./save-items.component.css'],
 })
 export class SaveItemsComponent implements OnInit {
-  savedOxalates$: Observable<Oxalate[]> = of([]);
+  savedOxalates$: Observable<Omit<Oxalate, 'notes' | 'reference'>[]> = of([]);
   expandedCardId: string | null = null;
 
   constructor(
@@ -29,7 +29,29 @@ export class SaveItemsComponent implements OnInit {
         if (user) {
           const userId = user.uid;
           return from(this.oxalateService.getSavedOxalates(userId)).pipe(
-            tap((data) => console.log('Retrieved data:', data))
+            map((savedOxalates) =>
+              savedOxalates.map((oxalate) => {
+                // Remove 'notes', 'reference', 'n/a', 'uncalculated' fields and empty values
+                const filteredOxalate = { ...oxalate };
+                (
+                  Object.keys(
+                    filteredOxalate
+                  ) as (keyof typeof filteredOxalate)[]
+                ).forEach((key) => {
+                  if (
+                    key === 'notes' ||
+                    key === 'reference' ||
+                    filteredOxalate[key] === 'n/a' ||
+                    filteredOxalate[key] === 'uncalculated' ||
+                    !filteredOxalate[key]
+                  ) {
+                    delete filteredOxalate[key];
+                  }
+                });
+                return filteredOxalate as Omit<Oxalate, 'notes' | 'reference'>;
+              })
+            ),
+            tap((data) => console.log('Retrieved filtered data:', data))
           );
         } else {
           return of([]);

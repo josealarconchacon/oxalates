@@ -23,7 +23,7 @@
         </div>
         <div class="item-details" [class.show]="expandedCardId === oxalate.id">
           <div *ngFor="let detail of oxalate | keyvalue">
-            <p *ngIf="detail.key !== 'id'" class="detail-item">
+            <p *ngIf="detail.key !== 'id' && detail.value" class="detail-item">
               <span class="detail-key">{{ formatKey(detail.key) }}:</span>
               <span class="detail-value">{{ detail.value }}</span>
             </p>

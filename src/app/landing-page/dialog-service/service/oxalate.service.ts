@@ -40,39 +40,34 @@ export class OxalateService {
     return this.getOxalateData().pipe(
       map((data) => {
         if (query && query.trim() !== '') {
-          // Preprocess the query to handle edge cases
           const preprocessQuery = (q: string): string =>
             q
               .toLowerCase()
-              .replace(/[^\w\s]/g, '') // Remove punctuation
+              .replace(/[^\w\s]/g, '')
               .trim();
 
           const processedQuery = preprocessQuery(query);
 
-          // Fuse.js configuration for advanced search
           const fuse = new Fuse(data, {
             keys: [
-              { name: 'item', weight: 0.7 }, // Assign higher weight to 'item'
+              { name: 'item', weight: 0.7 },
               { name: 'category', weight: 0.3 },
-              'notes', // Additional searchable fields
+              'notes',
             ],
-            threshold: 0.3, // Lower threshold for broader matches
-            ignoreLocation: true, // Allow matches anywhere in the field
+            threshold: 0.3,
+            ignoreLocation: true,
             includeScore: true,
-            findAllMatches: true, // Ensure all matches are considered
-            useExtendedSearch: true, // Enable advanced search syntax
+            findAllMatches: true,
+            useExtendedSearch: true,
           });
 
-          // Perform the search
           const searchResults = fuse.search(processedQuery);
 
-          // Map results to original data items
           return searchResults
-            .sort((a, b) => (a.score ?? 0) - (b.score ?? 0)) // Sort by relevance
+            .sort((a, b) => (a.score ?? 0) - (b.score ?? 0))
             .map((result) => result.item);
         }
 
-        // Return full data if query is empty or invalid
         return data;
       })
     );
@@ -85,10 +80,7 @@ export class OxalateService {
         distinctUntilChanged(),
         switchMap((query: string) => this.searchOxalateData(query))
       )
-      .subscribe((data) => {
-        // Update the displayed items based on search results
-        // For example: this.displayedOxalates = data;
-      });
+      .subscribe((data) => {});
   }
 
   updateSearchQuery(query: string): void {
@@ -101,7 +93,6 @@ export class OxalateService {
     );
   }
 
-  // Retrieves all saved oxalates from Firestore.
   private async getCurrentUser(): Promise<any> {
     const user = await this.authService.getCurrentUser();
     if (!user) {
@@ -131,7 +122,6 @@ export class OxalateService {
       .collection(this.collectionName)
       .doc(userId);
 
-    // Save the document and get the document reference (which contains the generated ID)
     const docRef = await userDocRef
       .collection('oxalates')
       .add({ ...oxalateData });
@@ -191,13 +181,12 @@ export class OxalateService {
 
     return from(oxalatesRef).pipe(
       map((oxalatesSnapshot) => {
-        // Check if oxalatesSnapshot is undefined or empty
         if (!oxalatesSnapshot || oxalatesSnapshot.empty) {
           console.warn('No oxalates found or the snapshot is undefined');
           return [];
         }
         return oxalatesSnapshot.docs.map((doc) => {
-          const data = doc.data() as Oxalate; // Type assertion to Oxalate
+          const data = doc.data() as Oxalate;
           return {
             ...data,
             id: doc.id,

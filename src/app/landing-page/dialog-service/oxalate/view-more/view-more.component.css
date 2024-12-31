@@ -1,19 +1,20 @@
 .oxalate-card {
-  max-width: 650px;
+  max-width: 100%;
+  margin: 0 auto;
   border-radius: 16px;
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial,
     sans-serif;
-  color: #ffffff;
+  color: #1a1a1a;
+  padding: 16px;
   text-align: center;
   transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
 .version {
   font-size: 1.5rem;
-  color: #121111;
   font-weight: 600;
   text-align: left;
-  margin: 8px 0;
+  margin-bottom: 16px;
 }
 
 .features-grid {
@@ -21,50 +22,56 @@
   grid-template-columns: 1fr 1fr;
   gap: 16px;
   margin: 16px 0;
-  padding: 0;
 }
 
 .feature-item {
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 12px;
   font-size: 0.95rem;
-  margin: 0;
 
   transform: translateY(20px);
   animation: fadeIn 0.6s ease-out forwards;
 }
 
-.checkmark {
-  color: #5aac84;
-  font-size: 1.5rem;
-  font-weight: bold;
-  flex-shrink: 0;
+.icon-container {
+  width: 24px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  background-color: #f3f3f3;
+}
+
+.feature-icon {
+  width: 12px;
+  height: 12px;
+  background-color: #5aac84;
+  border-radius: 50%;
 }
 
 .feature-text {
   display: flex;
   flex-direction: column;
   text-align: left;
-  color: #121111;
 }
 
 .feature-label {
   font-weight: 600;
-  color: #121111;
+  color: #1a1a1a;
 }
 
 .oxalate-value {
   font-size: 0.9rem;
-  color: #121111;
+  color: #333;
 }
 
 .save-button {
-  padding: 8px 16px;
-  font-size: 0.9rem;
+  padding: 12px 20px;
+  font-size: 1rem;
   font-weight: 600;
   color: #ffffff;
-  text-align: right;
   background-color: #3d9e74;
   border: none;
   border-radius: 8px;
@@ -78,9 +85,22 @@
   transform: translateY(-2px);
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
 }
+
 .save-button[disabled] {
   background-color: #cccccc;
   cursor: not-allowed;
   transform: none;
   box-shadow: none;
+}
+
+@media screen and (max-width: 768px) {
+  .features-grid {
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+
+  .version {
+    text-align: center;
+    margin-bottom: 12px;
+  }
 }
