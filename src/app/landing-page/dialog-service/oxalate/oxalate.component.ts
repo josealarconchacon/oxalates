@@ -347,20 +347,39 @@ export class OxalateComponent implements OnInit, OnDestroy {
   sortBySearchTerm(data: Oxalate[], searchTerm: string): Oxalate[] {
     const lowerCaseSearchTerm = searchTerm.toLowerCase();
 
-    return data.sort((a, b) => {
-      const aItem = a.item ? a.item.toLowerCase() : '';
-      const bItem = b.item ? b.item.toLowerCase() : '';
-
-      const aStartsWith = aItem.startsWith(lowerCaseSearchTerm);
-      const bStartsWith = bItem.startsWith(lowerCaseSearchTerm);
-
-      if (aStartsWith && !bStartsWith) {
-        return -1;
-      } else if (!aStartsWith && bStartsWith) {
+    const calculateRelevanceScore = (item: string, term: string) => {
+      const lowerCaseItem = item.toLowerCase();
+      if (lowerCaseItem === term) {
+        return 3;
+      } else if (lowerCaseItem.startsWith(term)) {
+        return 2;
+      } else if (lowerCaseItem.includes(term)) {
         return 1;
-      } else {
-        return aItem.localeCompare(bItem, undefined, { sensitivity: 'base' });
       }
+      return 0;
+    };
+
+    const scoredItems = data
+      .filter(
+        (oxalate) =>
+          oxalate.item &&
+          oxalate.item.toLowerCase().includes(lowerCaseSearchTerm)
+      )
+      .map((oxalate) => ({
+        ...oxalate,
+        relevanceScore: calculateRelevanceScore(
+          oxalate.item,
+          lowerCaseSearchTerm
+        ),
+      }));
+
+    scoredItems.sort((a, b) => {
+      if (b.relevanceScore !== a.relevanceScore) {
+        return b.relevanceScore - a.relevanceScore;
+      }
+      return a.item.toLowerCase().localeCompare(b.item.toLowerCase());
     });
+
+    return scoredItems;
   }
 }
