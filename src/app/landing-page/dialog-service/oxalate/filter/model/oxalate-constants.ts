@@ -21,13 +21,13 @@ export const OXALATE_INFO_FIELDS: {
   { label: 'Serving Size', field: 'serving_size' },
   { label: 'Serving Grams', field: 'serving_g' },
   {
-    label: 'Calculated Oxalate Per Serving',
+    label: 'Oxalate Per Serving',
     field: 'calc_oxalate_per_serving',
-    unit: '(mg/100g)',
+    unit: '(mg)',
   },
   {
     label: 'Soluble Oxalate Per Serving',
     field: 'calc_soluble_mg_oxalate_per_serving',
-    unit: '(mg/100g)',
+    unit: '(mg)',
   },
 ];
