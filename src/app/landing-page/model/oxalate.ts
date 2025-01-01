@@ -15,4 +15,5 @@ export interface Oxalate {
   notes: string;
   // new
   iconUrl: string;
+  savedAt: string;
 }

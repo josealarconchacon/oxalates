@@ -45,6 +45,7 @@ import { RouterModule } from '@angular/router';
 import { FoodByCategoryComponent } from './landing-page/dialog-service/food-by-category/food-by-category.component';
 import { SearchInputComponent } from './landing-page/dialog-service/oxalate/search-input/search-input.component';
 import { ColorSketchModule } from 'ngx-color/sketch';
+import { CalculateOxalateComponent } from './user-auth/profile/calculate-oxalate/calculate-oxalate.component';
 
 export function initializeApp(configService: ConfigService) {
   return (): Promise<void> => {
@@ -104,6 +105,7 @@ export function initializeApp(configService: ConfigService) {
     FoodByCategoryComponent,
     SearchInputComponent,
     ColorSketchModule,
+    CalculateOxalateComponent,
   ],
   providers: [
     ConfigService,
