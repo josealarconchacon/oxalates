@@ -11,6 +11,8 @@
     </button>
 
     <nav class="nav" id="nav-bar" [class.open]="isNavOpen">
+      <button class="nav-close" (click)="closeNav()"></button>
+
       <a
         *ngIf="currentRoute !== '/' && currentRoute === '/oxalate'"
         href="#resources"
@@ -23,15 +25,28 @@
         <mat-icon>search</mat-icon>
       </button>
 
-      <button class="profile-btn" (click)="goToProfile()" (click)="closeNav()">
+      <button
+        *ngIf="userProfile"
+        class="profile-btn"
+        (click)="goToProfile()"
+        (click)="closeNav()"
+      >
         <img
-          *ngIf="userProfile"
           [src]="
             userProfile.photoURL || '../../../assets/images/default-profile.jpg'
           "
           alt="User Image"
           class="user-image"
         />
+      </button>
+
+      <button
+        *ngIf="!userProfile"
+        class="user-icon-btn"
+        (click)="goToLoginPage()"
+        (click)="closeNav()"
+      >
+        <mat-icon>person_outline</mat-icon>
       </button>
     </nav>
   </div>

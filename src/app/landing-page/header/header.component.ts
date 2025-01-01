@@ -1,5 +1,5 @@
 import { Router, ActivatedRoute } from '@angular/router';
-import { Component, OnInit } from '@angular/core';
+import { Component, HostListener, OnInit } from '@angular/core';
 import { AuthService } from 'src/app/user-auth/service/auth-service.service';
 
 @Component({
@@ -43,6 +43,9 @@ export class HeaderComponent implements OnInit {
   goToLandingPage() {
     this.router.navigate(['/'], { queryParams: { scrollTo: 'top' } });
   }
+  goToLoginPage() {
+    this.router.navigate(['/login']);
+  }
 
   goToProfile() {
     if (this.isLoggedIn) {
@@ -54,5 +57,17 @@ export class HeaderComponent implements OnInit {
 
   search() {
     this.router.navigate(['/oxalate']);
+  }
+
+  @HostListener('window:scroll')
+  onWindowScroll() {
+    const header = document.querySelector('.header');
+    if (header) {
+      if (window.scrollY > 0) {
+        header.classList.add('scrolled');
+      } else {
+        header.classList.remove('scrolled');
+      }
+    }
   }
 }
