@@ -13,6 +13,7 @@
         <span class="feature-label">{{ field.label || "Feature" }}:</span>
         <span class="oxalate-value">
           {{ oxalateData[field.field] || "N/A" }}
+          <span *ngIf="field.unit" class="oxalate-unit"> {{ field.unit }}</span>
         </span>
       </div>
     </div>

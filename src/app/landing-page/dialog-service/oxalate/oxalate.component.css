@@ -134,17 +134,6 @@ h1 {
   font-size: 20px;
   margin-bottom: 4px;
 }
-/* .result-title {
-  display: flex;
-  align-items: center;
-  gap: 8px; 
-}
-
-.result-icon {
-  width: 24px; 
-  height: 24px;
-  object-fit: cover;
-} */
 .result-snippets {
   display: flex;
   justify-content: space-between;
@@ -218,7 +207,7 @@ h1 {
   right: 10px;
   background: none;
   border: none;
-  color: #a41c2e;
+  color: #414141;
   font-size: 32px;
   cursor: pointer;
 }

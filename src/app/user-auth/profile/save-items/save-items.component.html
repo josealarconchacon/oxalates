@@ -25,7 +25,10 @@
           <div *ngFor="let detail of oxalate | keyvalue">
             <p *ngIf="detail.key !== 'id' && detail.value" class="detail-item">
               <span class="detail-key">{{ formatKey(detail.key) }}:</span>
-              <span class="detail-value">{{ detail.value }}</span>
+              <span class="detail-value">
+                {{ detail.value }}
+                <span *ngIf="isMeasurementKey(detail.key)"> (mg/100g)</span>
+              </span>
             </p>
           </div>
         </div>

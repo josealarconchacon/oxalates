@@ -32,7 +32,11 @@ export class ViewMoreComponent implements OnInit {
     this.loadSavedOxalatesForCurrentUser();
   }
 
-  getFilteredFields(): { label: string; field: keyof Oxalate }[] {
+  getFilteredFields(): {
+    label: string;
+    field: keyof Oxalate;
+    unit?: string;
+  }[] {
     if (!this.oxalateData) {
       return [];
     }
@@ -86,47 +90,6 @@ export class ViewMoreComponent implements OnInit {
       });
   }
 
-  // async onSave(): Promise<void> {
-  //   try {
-  //     const user = await this.authService.getCurrentUser();
-
-  //     if (!user) {
-  //       this.authService.redirectToSignIn();
-  //       return;
-  //     }
-
-  //     if (this.oxalateData) {
-  //       const itemAlreadySaved = await this.oxalateService.itemExists(
-  //         this.oxalateData,
-  //         user.uid
-  //       );
-
-  //       if (itemAlreadySaved) {
-  //         this.notificationService.show('Item already was saved!', 'Close', [
-  //           'error-snackbar',
-  //         ]);
-  //         return;
-  //       }
-
-  //       this.isSaving = true;
-  //       await this.oxalateService.saveOxalate(this.oxalateData);
-  //       this.notificationService.show('Item saved successfully!', 'Close', [
-  //         'success-snackbar',
-  //       ]);
-  //     } else {
-  //       console.warn('No oxalate data available to save.');
-  //     }
-  //   } catch (error) {
-  //     console.error('Error saving oxalate:', error);
-  //     this.notificationService.show(
-  //       'An error occurred while saving the item.',
-  //       'Close',
-  //       ['error-snackbar']
-  //     );
-  //   } finally {
-  //     this.isSaving = false;
-  //   }
-  // }
   async onSave(): Promise<void> {
     try {
       const user = await this.authService.getCurrentUser();
@@ -154,11 +117,7 @@ export class ViewMoreComponent implements OnInit {
         this.notificationService.show('Item saved successfully!', 'Close', [
           'success-snackbar',
         ]);
-
-        // Update savedItems immediately after saving
         this.savedItems.push(this.oxalateData);
-
-        // Optionally: Trigger the save-items component to reload the list
         this.loadSavedOxalatesForCurrentUser();
       } else {
         console.warn('No oxalate data available to save.');
@@ -173,5 +132,15 @@ export class ViewMoreComponent implements OnInit {
     } finally {
       this.isSaving = false;
     }
+  }
+
+  extractValueWithoutUnit(value: string): string {
+    const match = value?.match(/^([\d.]+)\s*(\w+\/\w+)?$/);
+    return match ? match[1] : value;
+  }
+
+  extractUnit(value: string): string {
+    const match = value?.match(/^([\d.]+)\s*(\w+\/\w+)?$/);
+    return match && match[2] ? match[2] : '';
   }
 }

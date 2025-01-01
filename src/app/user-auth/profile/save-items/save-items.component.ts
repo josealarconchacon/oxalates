@@ -89,4 +89,14 @@ export class SaveItemsComponent implements OnInit {
       }
     });
   }
+
+  isMeasurementKey(key: string): boolean {
+    const measurementKeys = [
+      'total_oxalate_mg_per_100g',
+      'total_soluble_oxalate_mg_per_100g',
+      'calc_oxalate_per_serving',
+      'calc_soluble_mg_oxalate_per_serving',
+    ];
+    return measurementKeys.includes(key);
+  }
 }

@@ -101,6 +101,16 @@
   min-width: 0;
 }
 
+.oxalate-value {
+  font-weight: bold;
+}
+
+.oxalate-unit {
+  margin-left: 0;
+  font-size: 0.9em;
+  color: #555;
+}
+
 .save-button {
   width: 100%;
   background-color: #5aac84;
