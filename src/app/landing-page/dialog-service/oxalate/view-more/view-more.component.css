@@ -6,7 +6,6 @@
 
 .oxalate-card {
   max-width: 100%;
-  width: min(100% - 2px, 1200px);
   margin: var(--spacing-base) auto;
   border-radius: var(--border-radius);
   position: relative;
