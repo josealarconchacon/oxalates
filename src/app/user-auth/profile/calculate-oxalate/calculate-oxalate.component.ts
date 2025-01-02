@@ -3,19 +3,27 @@ import { Component, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
 import { BehaviorSubject, debounceTime, distinctUntilChanged } from 'rxjs';
+import {
+  animate,
+  state,
+  style,
+  transition,
+  trigger,
+} from '@angular/animations';
 
 interface OxalateData {
   item: string | null;
   total_oxalate_mg_per_100g: number | null;
   total_soluble_oxalate_mg_per_100g: number | null;
-  category?: string;
-  food_group?: string;
+  serving_g: number | null;
 }
+
 interface SimilarFood {
   name: string;
   totalOxalate: number;
   solubleOxalate: number;
   similarity: number;
+  servingGrams: number;
 }
 
 @Component({
@@ -24,37 +32,84 @@ interface SimilarFood {
   imports: [CommonModule, FormsModule],
   templateUrl: './calculate-oxalate.component.html',
   styleUrls: ['./calculate-oxalate.component.css'],
+  animations: [
+    trigger('menuAnimation', [
+      state(
+        'hide',
+        style({
+          opacity: 0,
+          transform: 'scale(0.95)',
+          pointerEvents: 'none',
+        })
+      ),
+      state(
+        'show',
+        style({
+          opacity: 1,
+          transform: 'scale(1)',
+          pointerEvents: 'auto',
+        })
+      ),
+      transition('hide => show', [
+        animate('200ms cubic-bezier(0.4, 0, 0.2, 1)'),
+      ]),
+      transition('show => hide', [
+        animate('150ms cubic-bezier(0.4, 0, 0.2, 1)'),
+      ]),
+    ]),
+    trigger('slideIn', [
+      state(
+        'false',
+        style({
+          opacity: 0,
+          transform: 'translateX(1rem)',
+        })
+      ),
+      state(
+        'true',
+        style({
+          opacity: 1,
+          transform: 'translateX(0)',
+        })
+      ),
+      transition('false => true', [
+        animate(
+          '200ms ease',
+          style({ opacity: 0, transform: 'translateX(1rem)' })
+        ),
+        animate('{{delay}}ms', style({ opacity: 0 })),
+        animate(
+          '200ms ease',
+          style({ opacity: 1, transform: 'translateX(0)' })
+        ),
+      ]),
+      transition('true => false', [
+        animate(
+          '150ms ease',
+          style({ opacity: 0, transform: 'translateX(1rem)' })
+        ),
+      ]),
+    ]),
+  ],
 })
 export class CalculateOxalateComponent implements OnInit {
   foodName: string = '';
   servingSize: string = '';
-  servingUnit: string = 'tsp';
   servingGrams: number = 0;
+  customServing: number | null = null;
   oxalatePerServing: number = 0;
   solubleOxalatePerServing: number = 0;
   foodNotFound: boolean = false;
   isCalculating: boolean = false;
   errorMessage: string = '';
-  // new
   similarFoods: SimilarFood[] = [];
-
   showSuggestions: boolean = false;
 
   private foodInputSubject = new BehaviorSubject<string>('');
   private oxalateData: OxalateData[] = [];
 
-  readonly units = {
-    tsp: { grams: 4.93, name: 'teaspoon' },
-    cup: { grams: 240, name: 'cup' },
-    bottle: { grams: 500, name: 'bottle' },
-  };
-
   readonly oxalateRanges = {
-    veryLow: { min: 0, max: 5 },
     low: { min: 5, max: 15 },
-    medium: { min: 15, max: 50 },
-    high: { min: 50, max: 100 },
-    veryHigh: { min: 100, max: 900 },
   };
 
   constructor(private http: HttpClient) {}
@@ -67,16 +122,16 @@ export class CalculateOxalateComponent implements OnInit {
       .subscribe((foodName) => {
         if (foodName && foodName.trim()) {
           this.suggestSimilarFoods(foodName.trim());
+        } else {
+          this.clearSuggestions();
         }
       });
   }
-
   private loadOxalateData(): void {
     this.http
       .get<OxalateData[]>('assets/mock-oxalate/oxolateListData.json')
       .subscribe({
         next: (data) => {
-          // Filter out items with null names during data load
           this.oxalateData = data.filter(
             (item) => item.item !== null && item.item !== undefined
           );
@@ -93,76 +148,30 @@ export class CalculateOxalateComponent implements OnInit {
   }
 
   calculateOxalate(): void {
-    if (!this.foodName.trim()) {
-      this.errorMessage = 'Please enter a food name';
+    this.isCalculating = true;
+    console.log('Calculating for Food:', this.foodName);
+
+    const foodData = this.findFoodData();
+    if (!foodData) {
+      console.error('Food not found');
+      this.isCalculating = false;
       return;
     }
 
-    this.isCalculating = true;
-    this.errorMessage = '';
-    this.foodNotFound = false;
+    const totalOxalate = this.getValidOxalateValue(
+      foodData.total_oxalate_mg_per_100g
+    );
+    const solubleOxalate = this.getValidOxalateValue(
+      foodData.total_soluble_oxalate_mg_per_100g
+    );
 
-    try {
-      const totalGrams = this.calculateTotalGrams();
-      if (totalGrams <= 0) {
-        throw new Error('Invalid serving size');
-      }
+    const calculatedServingGrams = this.customServing || this.servingGrams;
 
-      const foodData = this.findFoodData();
-      if (!foodData) {
-        this.handleFoodNotFound(totalGrams);
-        return;
-      }
+    this.oxalatePerServing = (totalOxalate * calculatedServingGrams) / 100;
+    this.solubleOxalatePerServing =
+      (solubleOxalate * calculatedServingGrams) / 100;
 
-      this.calculateOxalateValues(foodData, totalGrams);
-    } catch (error: any) {
-      this.handleError(error);
-    } finally {
-      this.isCalculating = false;
-    }
-  }
-
-  private calculateTotalGrams(): number {
-    if (this.servingGrams > 0) {
-      return this.servingGrams;
-    }
-
-    const servingSizeDecimal = this.parseServingSize(this.servingSize);
-    if (servingSizeDecimal <= 0) {
-      throw new Error('Invalid serving size format');
-    }
-
-    const unit = this.units[this.servingUnit as keyof typeof this.units];
-    if (!unit) {
-      throw new Error('Invalid serving unit');
-    }
-
-    return servingSizeDecimal * unit.grams;
-  }
-
-  private parseServingSize(servingSize: string): number {
-    if (!servingSize || !servingSize.trim()) {
-      return 0;
-    }
-
-    servingSize = servingSize.trim();
-
-    if (servingSize.includes('.')) {
-      const decimal = parseFloat(servingSize);
-      return !isNaN(decimal) ? decimal : 0;
-    }
-
-    if (servingSize.includes('/')) {
-      const [numerator, denominator] = servingSize
-        .split('/')
-        .map((s) => parseFloat(s.trim()));
-      if (!isNaN(numerator) && !isNaN(denominator) && denominator !== 0) {
-        return numerator / denominator;
-      }
-    }
-
-    const whole = parseInt(servingSize);
-    return !isNaN(whole) ? whole : 0;
+    this.isCalculating = false;
   }
 
   private findFoodData(): OxalateData | null {
@@ -174,67 +183,8 @@ export class CalculateOxalateComponent implements OnInit {
     );
   }
 
-  private calculateOxalateValues(
-    foodData: OxalateData,
-    totalGrams: number
-  ): void {
-    const totalOxalate = this.getValidOxalateValue(
-      foodData.total_oxalate_mg_per_100g
-    );
-    const solubleOxalate = this.getValidOxalateValue(
-      foodData.total_soluble_oxalate_mg_per_100g
-    );
-
-    this.oxalatePerServing = (totalOxalate * totalGrams) / 100;
-    this.solubleOxalatePerServing = (solubleOxalate * totalGrams) / 100;
-  }
-
-  private handleFoodNotFound(totalGrams: number): void {
-    this.foodNotFound = true;
-    const estimatedValues = this.estimateOxalateContent(
-      this.foodName,
-      totalGrams
-    );
-    this.oxalatePerServing = estimatedValues.total;
-    this.solubleOxalatePerServing = estimatedValues.soluble;
-  }
-
   private getValidOxalateValue(value: number | null): number {
-    if (value === null || value === undefined || isNaN(value) || value <= 0) {
-      return this.estimateBaselineOxalateContent();
-    }
-    return value;
-  }
-
-  private estimateOxalateContent(
-    foodName: string,
-    totalGrams: number
-  ): { total: number; soluble: number } {
-    const similarFoods = this.findSimilarFoods(foodName);
-
-    if (similarFoods.length > 0) {
-      const totalOxalate = this.calculateWeightedAverage(
-        similarFoods.map((f) =>
-          this.getValidOxalateValue(f.data.total_oxalate_mg_per_100g)
-        )
-      );
-      const solubleOxalate = this.calculateWeightedAverage(
-        similarFoods.map((f) =>
-          this.getValidOxalateValue(f.data.total_soluble_oxalate_mg_per_100g)
-        )
-      );
-
-      return {
-        total: (totalOxalate * totalGrams) / 100,
-        soluble: (solubleOxalate * totalGrams) / 100,
-      };
-    }
-
-    const baselineOxalate = this.estimateBaselineOxalateContent();
-    return {
-      total: (baselineOxalate * totalGrams) / 100,
-      soluble: (baselineOxalate * 0.4 * totalGrams) / 100,
-    };
+    return value && value > 0 ? value : this.estimateBaselineOxalateContent();
   }
 
   private findSimilarFoods(
@@ -301,48 +251,153 @@ export class CalculateOxalateComponent implements OnInit {
 
   suggestSimilarFoods(input: string): void {
     if (!input || input.length < 2) {
-      this.similarFoods = [];
-      this.showSuggestions = false;
+      this.clearSuggestions();
       return;
     }
 
     const similarFoodsData = this.findSimilarFoods(input);
 
-    this.similarFoods = similarFoodsData.map((item) => {
-      const totalOxalate = this.getValidOxalateValue(
+    this.similarFoods = similarFoodsData.map((item) => ({
+      name: item.data.item || '',
+      totalOxalate: this.getValidOxalateValue(
         item.data.total_oxalate_mg_per_100g
-      );
-      const solubleOxalate = this.getValidOxalateValue(
+      ),
+      solubleOxalate: this.getValidOxalateValue(
         item.data.total_soluble_oxalate_mg_per_100g
-      );
-
-      return {
-        name: item.data.item || '',
-        totalOxalate: totalOxalate,
-        solubleOxalate: solubleOxalate,
-        similarity: item.similarity,
-      };
-    });
+      ),
+      similarity: item.similarity,
+      servingGrams: item.data.serving_g !== null ? item.data.serving_g : 0,
+    }));
 
     this.showSuggestions = this.similarFoods.length > 0;
   }
 
   selectSuggestedFood(food: SimilarFood): void {
+    console.log('Selected Food:', food);
     this.foodName = food.name;
+    this.servingSize = `${food.totalOxalate} mg/100g`;
+
+    this.servingGrams = food.servingGrams !== undefined ? food.servingGrams : 0;
+    this.customServing = this.servingGrams;
     this.showSuggestions = false;
-    this.calculateOxalate();
+    this.clearSuggestions();
   }
 
-  // Optional: Close suggestions when clicking outside
-  onClickOutside(): void {
+  clearSuggestions(): void {
+    this.similarFoods = [];
     this.showSuggestions = false;
   }
 
-  // Helper method to get confidence level based on similarity
   getConfidenceLevel(similarity: number): string {
     if (similarity > 0.8) return 'Very High';
     if (similarity > 0.6) return 'High';
     if (similarity > 0.4) return 'Medium';
     return 'Low';
+  }
+
+  clearResults(): void {
+    this.foodName = '';
+    this.servingSize = '';
+    this.servingGrams = 0;
+    this.customServing = null;
+    this.oxalatePerServing = 0;
+    this.solubleOxalatePerServing = 0;
+    this.showSuggestions = false;
+  }
+
+  showShareOptions = false;
+  showToast = false;
+  toastMessage = '';
+  copySuccess = false;
+
+  shareOptions = [
+    {
+      label: 'Share on X',
+      icon: 'twitter',
+      color: '#1DA1F2',
+      getShareUrl: (text: string) =>
+        `https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}`,
+    },
+    {
+      label: 'Share on Meta',
+      icon: 'facebook',
+      color: '#1877F2',
+      getShareUrl: (text: string) =>
+        `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(
+          window.location.href
+        )}&quote=${encodeURIComponent(text)}`,
+    },
+    {
+      label: 'Share on Reddit',
+      icon: 'reddit',
+      color: '#0A66C2',
+      getShareUrl: (text: string) =>
+        `https://www.reddit.com/submit?url=${encodeURIComponent(
+          window.location.href
+        )}&summary=${encodeURIComponent(text)}`,
+    },
+  ];
+
+  getShareableText(): string {
+    return `📊 Oxalate Results for ${this.foodName}:\n Total Oxalate: ${this.oxalatePerServing}mg \n Soluble Oxalate Per Serving ${this.solubleOxalatePerServing}${window.location.origin}`;
+  }
+
+  async copyToClipboard(): Promise<void> {
+    try {
+      await navigator.clipboard.writeText(this.getShareableText());
+      this.copySuccess = true;
+      this.showToastMessage('Results copied to clipboard!');
+      setTimeout(() => (this.copySuccess = false), 2000);
+    } catch (err) {
+      this.showToastMessage('Failed to copy results');
+    }
+  }
+
+  showToastMessage(message: string): void {
+    this.toastMessage = message;
+    this.showToast = true;
+    setTimeout(() => {
+      this.showToast = false;
+    }, 3000);
+  }
+
+  closeShareMenu(event: MouseEvent): void {
+    if (event.target === event.currentTarget) {
+      this.showShareOptions = false;
+    }
+  }
+  toggleShareOptions(): void {
+    this.showShareOptions = !this.showShareOptions;
+  }
+
+  private get shareableLink(): string {
+    const baseUrl = 'https://yourdomain.com/oxalate-results';
+    return `${baseUrl}?food=${encodeURIComponent(this.foodName)}&oxalate=${
+      (this.oxalatePerServing, this.solubleOxalatePerServing)
+    }`;
+  }
+
+  private getFacebookShareUrl(): string {
+    return `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(
+      this.shareableLink
+    )}`;
+  }
+
+  private getTwitterShareUrl(): string {
+    return `https://twitter.com/intent/tweet?text=Check%20out%20my%20oxalate%20results:%20${encodeURIComponent(
+      this.shareableLink
+    )}`;
+  }
+
+  private getRedditShareUrl(): string {
+    return `https://www.reddit.com/submit?url=${encodeURIComponent(
+      this.shareableLink
+    )}&title=Check%20out%20my%20oxalate%20results`;
+  }
+
+  sendTextMessage(): void {
+    const message = `Check out my oxalate results: ${this.shareableLink}`;
+    // Implement your text message sharing logic here
+    console.log('Sharing via text message:', message);
   }
 }
