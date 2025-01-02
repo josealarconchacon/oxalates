@@ -1,6 +1,98 @@
-<p>calculate-oxalate works!</p>
-<div>
-  <p>oxalate: 0.0</p>
-  <p>oxalate: 0.0</p>
-  <p>oxalate: 0.0</p>
+<div class="container">
+  <h2>Oxalate Calculator</h2>
+  <div class="form-group relative">
+    <label for="foodName">Food Name:</label>
+    <input
+      id="foodName"
+      type="text"
+      [(ngModel)]="foodName"
+      (ngModelChange)="onFoodNameChange($event)"
+      placeholder="Enter food name"
+      class="input-field"
+    />
+
+    <div
+      *ngIf="showSuggestions && similarFoods.length > 0"
+      class="suggestions-container"
+    >
+      <div
+        *ngFor="let food of similarFoods"
+        (click)="selectSuggestedFood(food)"
+        class="suggestion-item"
+      >
+        <div class="suggestion-header">
+          <span class="food-name">{{ food.name }}</span>
+          <span
+            class="confidence-badge"
+            [class]="getConfidenceLevel(food.similarity).toLowerCase()"
+          >
+            {{ getConfidenceLevel(food.similarity) }} Match
+          </span>
+        </div>
+        <div class="oxalate-values">
+          <div>
+            Total Oxalate: {{ food.totalOxalate | number : "1.2-2" }} mg/100g
+          </div>
+          <div>
+            Soluble Oxalate:
+            {{ food.solubleOxalate | number : "1.2-2" }} mg/100g
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label for="servingSize">Serving Size:</label>
+      <input
+        id="servingSize"
+        type="text"
+        [(ngModel)]="servingSize"
+        placeholder="Enter serving size (e.g., 1.5 or 1/2)"
+        class="input-field"
+      />
+      <select [(ngModel)]="servingUnit" class="input-field">
+        <option value="tsp">TSP</option>
+        <option value="cup">CUP</option>
+        <option value="bottle">BOTTLE</option>
+      </select>
+    </div>
+
+    <div class="form-group">
+      <label for="servingGrams">Serving Size (grams):</label>
+      <input
+        id="servingGrams"
+        type="number"
+        step="0.01"
+        [(ngModel)]="servingGrams"
+        placeholder="Enter serving size in grams"
+        class="input-field"
+      />
+    </div>
+
+    <button
+      (click)="calculateOxalate()"
+      [disabled]="isCalculating"
+      class="btn btn-primary"
+    >
+      {{ isCalculating ? "Calculating..." : "Calculate Oxalate" }}
+    </button>
+
+    <div *ngIf="errorMessage" class="error-message">
+      {{ errorMessage }}
+    </div>
+
+    <div *ngIf="oxalatePerServing > 0" class="results">
+      <p><strong>Food Name:</strong> {{ foodName }}</p>
+      <p>
+        <strong>Oxalate Per Serving:</strong>
+        {{ oxalatePerServing | number : "1.2-2" }} mg
+        <span *ngIf="foodNotFound" class="estimate-note">(Estimated)</span>
+      </p>
+      <p>
+        <strong>Soluble Oxalate Per Serving:</strong>
+        {{ solubleOxalatePerServing | number : "1.2-2" }} mg
+        <span *ngIf="foodNotFound" class="estimate-note">(Estimated)</span>
+      </p>
+    </div>
+  </div>
 </div>
