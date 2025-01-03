@@ -39,7 +39,6 @@ export class FilterComponent implements OnInit, OnDestroy {
     this.onFilterChange();
   }
 
-  // Subscribe to category changes
   onCategoryChange() {
     this.subscriptions.push(
       this.categoryService.currentCategory$.subscribe((category) => {
@@ -50,7 +49,6 @@ export class FilterComponent implements OnInit, OnDestroy {
       })
     );
   }
-  // Subscribe to filter changes
   onFilterChange() {
     this.subscriptions.push(
       this.filterService.currentFilter$.subscribe((filter) => {

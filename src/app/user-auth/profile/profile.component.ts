@@ -56,11 +56,10 @@ export class ProfileComponent implements OnInit {
       this.userProfile = response;
     });
   }
-
   showSection(section: string): void {
     this.activeSection = section;
+    console.log('Active Section:', this.activeSection);
   }
-
   toggleChangePassword(): void {
     this.isChangePasswordVisible = !this.isChangePasswordVisible;
   }

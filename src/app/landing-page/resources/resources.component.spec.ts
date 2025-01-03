@@ -3,7 +3,6 @@ import { Component } from '@angular/core';
 import { ResourcesComponent } from './resources.component';
 import { ResourceService } from '../dialog-service/service/resource.service';
 
-// Mock BenefitsComponent
 @Component({
   selector: 'app-benefits',
   template: '',

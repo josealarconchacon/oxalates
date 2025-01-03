@@ -1,0 +1,21 @@
+<div class="results-section">
+  <div class="result-card">
+    <h3 class="result-title">Oxalate Breakdown for {{ foodName }}</h3>
+    <div class="result-container">
+      <div class="metric-card">
+        <div class="metric-value">
+          {{ oxalatePerServing | number : "1.2-2" }}
+          <span class="metric-unit">mg</span>
+        </div>
+        <div class="metric-label">Total Oxalate Per Serving</div>
+      </div>
+      <div class="metric-card">
+        <div class="metric-value">
+          {{ solubleOxalatePerServing | number : "1.2-2" }}
+          <span class="metric-unit">mg</span>
+        </div>
+        <div class="metric-label">Soluble Oxalate</div>
+      </div>
+    </div>
+  </div>
+</div>

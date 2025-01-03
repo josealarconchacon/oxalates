@@ -1,6 +1,5 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
-
 import { CalculateOxalateComponent } from './calculate-oxalate.component';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 describe('CalculateOxalateComponent', () => {
   let component: CalculateOxalateComponent;
@@ -8,9 +7,8 @@ describe('CalculateOxalateComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [CalculateOxalateComponent]
-    })
-    .compileComponents();
+      imports: [CalculateOxalateComponent],
+    }).compileComponents();
 
     fixture = TestBed.createComponent(CalculateOxalateComponent);
     component = fixture.componentInstance;

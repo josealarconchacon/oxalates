@@ -1,0 +1,32 @@
+<div class="serving-panel">
+  <div class="serving-input">
+    <label>
+      <i class="material-icons">balance</i>
+      Total Oxalate
+    </label>
+    <input type="text" [ngModel]="servingSize" readonly class="input-field" />
+  </div>
+
+  <div class="serving-input">
+    <label>
+      <i class="material-icons">balance</i>
+      Serving (Grams)
+    </label>
+    <input type="text" [ngModel]="servingGrams" readonly class="input-field" />
+  </div>
+
+  <div class="serving-input">
+    <label>
+      <i class="material-icons">edit</i>
+      Customize your Serving
+    </label>
+    <input
+      type="number"
+      [ngModel]="customServing"
+      (ngModelChange)="onCustomServingChange($event)"
+      placeholder="Enter grams"
+      class="input-field"
+      step="0.1"
+    />
+  </div>
+</div>

@@ -52,7 +52,7 @@ export class OxalateComponent implements OnInit, OnDestroy {
   }
 
   private initializeWithRouteParams(): void {
-    // Get initial data and combine with route parameters
+    // Get initial data combine with route parameters
     this.subscriptions.push(
       combineLatest([
         this.oxalateService.getOxalateData(),
@@ -100,7 +100,6 @@ export class OxalateComponent implements OnInit, OnDestroy {
               category: category,
               calc_level: '',
             });
-            // Reset pagination when category changes
             this.paginationService.changePage(1, this.oxalates.length);
           }
         },
@@ -111,7 +110,6 @@ export class OxalateComponent implements OnInit, OnDestroy {
     );
   }
 
-  // Handle filter changes
   filterOnChange() {
     this.subscriptions.push(
       this.filterService.currentFilter$.subscribe({
@@ -198,6 +196,11 @@ export class OxalateComponent implements OnInit, OnDestroy {
     this.cdr.detectChanges();
   }
 
+  onInputChange(event: Event): void {
+    const target = event.target as HTMLInputElement;
+    this.onSearchQueryChange(target.value);
+  }
+
   // Update existing search-related methods
   onSearchQueryChange(query: string): void {
     this.searchQuery = query;
@@ -269,7 +272,7 @@ export class OxalateComponent implements OnInit, OnDestroy {
       }
 
       this.updateDisplayedOxalates();
-      this.cdr.detectChanges(); // Trigger UI updates
+      this.cdr.detectChanges();
     });
   }
 

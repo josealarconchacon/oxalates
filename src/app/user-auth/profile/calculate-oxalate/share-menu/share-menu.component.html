@@ -1,0 +1,69 @@
+<div class="share-menu-overlay" (click)="closeShareMenu($event)">
+  <div
+    class="share-menu-content"
+    [@menuAnimation]="'show'"
+    (click)="$event.stopPropagation()"
+  >
+    <div class="share-preview">
+      <h3 class="preview-title">Share Your Results</h3>
+      <div class="result-card">
+        <div class="result-header">
+          <i class="material-icons">analytics</i>
+          <span>Your Oxalate Results</span>
+        </div>
+        <div class="result-content">
+          <div *ngFor="let meal of dailyMeals" class="result-item">
+            <i class="material-icons">restaurant_menu</i>
+            <div>
+              <strong>{{ meal.foodName }}</strong>
+            </div>
+          </div>
+          <div class="result-item highlight">
+            <i class="material-icons">timeline</i>
+            <div>
+              <span>Total Oxalate</span>
+              <strong
+                >{{ dailyTotal?.totalOxalate | number : "1.2-2" }}mg</strong
+              >
+            </div>
+            <div>
+              <span>Soluble Oxalate</span>
+              <strong
+                >{{
+                  dailyTotal?.totalSolubleOxalate | number : "1.2-2"
+                }}mg</strong
+              >
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="share-options">
+      <a
+        *ngFor="let option of shareOptions; let i = index"
+        class="share-button"
+        [href]="option.getShareUrl(getShareableText())"
+        target="_blank"
+        [@slideIn]="{ value: true, params: { delay: i * 50 } }"
+      >
+        <i class="material-icons" [style.color]="option.color">{{
+          option.icon
+        }}</i>
+        <span>{{ option.label }}</span>
+      </a>
+
+      <button
+        class="share-button copy-button"
+        (click)="copyToClipboard()"
+        [@slideIn]="{
+          value: true,
+          params: { delay: shareOptions.length * 50 }
+        }"
+      >
+        <i class="material-icons">content_copy</i>
+        <span>{{ copySuccess ? "Copied!" : "Copy to clipboard" }}</span>
+      </button>
+    </div>
+  </div>
+</div>

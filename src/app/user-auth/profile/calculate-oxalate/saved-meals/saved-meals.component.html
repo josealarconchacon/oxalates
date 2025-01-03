@@ -1,0 +1,45 @@
+<div *ngIf="groupedMeals | keyvalue as groupedData; else noMeals">
+  <div *ngFor="let day of groupedData" class="day-section">
+    <div class="day-header">
+      <h4>{{ formatDate(day.key) }}</h4>
+      <div class="daily-total">
+        <span>
+          Daily Total:
+          {{ getDailyTotal(day.value).totalOxalate | number : "1.0-1" }}mg
+        </span>
+      </div>
+    </div>
+
+    <div class="meals-list">
+      <div *ngFor="let meal of day.value" class="meal-card">
+        <div class="meal-name">{{ meal.foodName }}</div>
+        <div class="meal-details">
+          <span>Total: {{ meal.oxalatePerServing | number : "1.0-1" }}mg</span>
+          <span>
+            Soluble:
+            {{ meal.solubleOxalatePerServing | number : "1.0-1" }}mg
+          </span>
+        </div>
+      </div>
+    </div>
+
+    <button class="share-button" (click)="toggleShareMenu(day.key)">
+      <i class="material-icons">share</i>
+      Share Day's Results
+    </button>
+    <app-share-menu
+      *ngIf="activeShareMenuDate === day.key"
+      [dailyMeals]="getDailyTotal(day.value).meals"
+      [date]="day.key"
+      [dailyTotal]="getDailyTotal(day.value)"
+      (close)="activeShareMenuDate = null"
+    >
+    </app-share-menu>
+  </div>
+</div>
+
+<ng-template #noMeals>
+  <div class="no-meals-message">
+    <p>No meals saved yet. Start adding meals to see them here!</p>
+  </div>
+</ng-template>

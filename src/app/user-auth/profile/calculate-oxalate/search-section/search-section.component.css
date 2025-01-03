@@ -1,0 +1,110 @@
+.search-section {
+  margin-bottom: 2rem;
+  position: relative;
+}
+
+.search-wrapper {
+  position: relative;
+  margin-bottom: 1rem;
+}
+
+.search-wrapper i {
+  position: absolute;
+  left: 1rem;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #64748b;
+}
+
+.search-input {
+  width: 100%;
+  padding: 1rem 1rem 1rem 3rem;
+  border: 2px solid #e2e8f0;
+  border-radius: 1rem;
+  font-size: 1rem;
+  background: white;
+  transition: all 0.3s ease;
+}
+
+.search-input:focus {
+  outline: none;
+  border-color: #6366f1;
+  box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.1);
+}
+
+.suggestions-panel {
+  position: absolute;
+  width: 100%;
+  background: white;
+  border-radius: 1rem;
+  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1);
+  z-index: 10;
+  overflow: hidden;
+}
+
+.food-card {
+  padding: 1rem;
+  border-bottom: 1px solid #e2e8f0;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.food-card:hover {
+  background-color: #f1f5f9;
+}
+
+.food-header {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.food-info {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.food-name {
+  font-weight: 600;
+  color: #0f172a;
+}
+
+.confidence-badge {
+  font-size: 0.8em;
+  padding: 2px 6px;
+  border-radius: 12px;
+}
+
+.confidence-badge.very-high {
+  background-color: #4caf50;
+  color: white;
+}
+
+.confidence-badge.high {
+  background-color: #8bc34a;
+  color: white;
+}
+
+.confidence-badge.medium {
+  background-color: #ffc107;
+  color: black;
+}
+
+.confidence-badge.low {
+  background-color: #ff9800;
+  color: white;
+}
+
+.oxalate-info {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.info-item {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.875rem;
+  color: #64748b;
+}

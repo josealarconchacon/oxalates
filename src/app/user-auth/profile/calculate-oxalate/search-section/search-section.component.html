@@ -1,0 +1,49 @@
+<div class="search-section">
+  <div class="search-wrapper">
+    <i class="material-icons">search</i>
+    <input
+      type="text"
+      [ngModel]="foodName"
+      (ngModelChange)="onFoodNameChange($event)"
+      placeholder="Search foods..."
+      class="search-input"
+    />
+  </div>
+
+  <div
+    *ngIf="showSuggestions && similarFoods.length > 0"
+    class="suggestions-panel"
+  >
+    <div
+      *ngFor="let food of similarFoods"
+      class="food-card"
+      (click)="onSelectFood(food)"
+    >
+      <div class="food-header">
+        <div class="food-info">
+          <span class="food-name">{{ food.name }}</span>
+          <span
+            class="confidence-badge"
+            [ngClass]="food.confidenceLevel.toLowerCase()"
+          >
+            {{ food.confidenceLevel }} Match
+          </span>
+        </div>
+        <div class="oxalate-info">
+          <div class="info-item">
+            <span class="label">Total Oxalate:</span>
+            <span class="value"
+              >{{ food.totalOxalate | number : "1.2-2" }} mg/100g</span
+            >
+          </div>
+          <div class="info-item">
+            <span class="label">Soluble Oxalate:</span>
+            <span class="value"
+              >{{ food.solubleOxalate | number : "1.2-2" }} mg/100g</span
+            >
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

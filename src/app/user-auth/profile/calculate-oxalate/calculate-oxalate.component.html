@@ -1,238 +1,78 @@
 <div class="app-container">
   <div class="content-wrapper">
     <header class="app-header">
-      <h1>Welcome to our platform</h1>
+      <h1>Oxalate</h1>
       <p class="subtitle">Log your daily intake</p>
     </header>
 
-    <div class="search-section">
-      <div class="search-wrapper">
-        <i class="material-icons">search</i>
-        <input
-          type="text"
-          [(ngModel)]="foodName"
-          (ngModelChange)="onFoodNameChange($event)"
-          placeholder="Search foods..."
-          class="search-input"
-        />
+    <div class="main-content">
+      <div
+        class="left-column"
+        [class.moved]="isMoved"
+        [@moveCalculateOxalate]="isMoved ? 'moved' : 'initial'"
+      >
+        <app-search-section
+          [foodName]="foodName"
+          (foodNameChange)="onFoodNameChange($event)"
+          [similarFoods]="similarFoods"
+          [showSuggestions]="showSuggestions"
+          (selectFood)="selectSuggestedFood($event)"
+        >
+        </app-search-section>
+
+        <app-serving-panel
+          [servingSize]="servingSize"
+          [servingGrams]="servingGrams"
+          [(customServing)]="customServing"
+        >
+        </app-serving-panel>
+
+        <div class="button-container">
+          <button
+            class="action-button calculate"
+            [disabled]="isCalculating || !foodName || !customServing"
+            (click)="calculateOxalate()"
+          >
+            <i class="material-icons">calculate</i>
+            {{ isCalculating ? "Calculating..." : "Calculate" }}
+          </button>
+
+          <button
+            *ngIf="oxalatePerServing > 0"
+            class="action-button clear"
+            (click)="clearResults()"
+          >
+            <i class="material-icons">refresh</i>
+            New Calculation
+          </button>
+
+          <button
+            *ngIf="oxalatePerServing > 0"
+            class="action-button save"
+            (click)="saveMeal()"
+          >
+            <i class="material-icons">save</i>
+            Save for Later
+          </button>
+        </div>
+
+        <app-results-section
+          *ngIf="oxalatePerServing > 0"
+          [foodName]="foodName"
+          [oxalatePerServing]="oxalatePerServing"
+          [solubleOxalatePerServing]="solubleOxalatePerServing"
+        >
+        </app-results-section>
       </div>
 
       <div
-        *ngIf="showSuggestions && similarFoods.length > 0"
-        class="suggestions-panel"
+        class="right-column"
+        [class.visible]="isMoved"
+        [@fadeInSavedMeals]="isMoved ? 'visible' : 'hidden'"
       >
-        <div
-          *ngFor="let food of similarFoods"
-          class="food-card"
-          (click)="selectSuggestedFood(food)"
-        >
-          <div class="food-header">
-            <div class="food-info">
-              <span class="food-name">{{ food.name }}</span>
-              <span
-                class="confidence-badge"
-                [class]="getConfidenceLevel(food.similarity).toLowerCase()"
-              >
-                {{ getConfidenceLevel(food.similarity) }} Match
-              </span>
-            </div>
-            <div class="oxalate-info">
-              <div class="info-item">
-                <span class="label">Total Oxalate:</span>
-                <span class="value"
-                  >{{ food.totalOxalate | number : "1.2-2" }} mg/100g</span
-                >
-              </div>
-              <div class="info-item">
-                <span class="label">Soluble Oxalate:</span>
-                <span class="value"
-                  >{{ food.solubleOxalate | number : "1.2-2" }} mg/100g</span
-                >
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <div class="serving-panel">
-      <div class="serving-input">
-        <label>
-          <i class="material-icons">balance</i>
-          Total Oxalate
-        </label>
-        <input
-          type="text"
-          [(ngModel)]="servingSize"
-          readonly
-          class="input-field"
-        />
-      </div>
-
-      <div class="serving-input">
-        <label>
-          <i class="material-icons">balance</i>
-          Serving (Grams)
-        </label>
-        <input
-          type="text"
-          [(ngModel)]="servingGrams"
-          readonly
-          class="input-field"
-        />
-      </div>
-
-      <div class="serving-input">
-        <label>
-          <i class="material-icons">edit</i>
-          Customize your Serving
-        </label>
-        <input
-          type="number"
-          [(ngModel)]="customServing"
-          placeholder="Enter grams"
-          class="input-field"
-          step="0.1"
-        />
-      </div>
-    </div>
-
-    <div class="button-container">
-      <button
-        class="action-button calculate"
-        [disabled]="isCalculating || !foodName || !customServing"
-        (click)="calculateOxalate()"
-      >
-        <i class="material-icons">calculate</i>
-        {{ isCalculating ? "Calculating..." : "Calculate" }}
-      </button>
-
-      <button
-        *ngIf="oxalatePerServing > 0"
-        class="action-button clear"
-        (click)="clearResults()"
-      >
-        <i class="material-icons">refresh</i>
-        New Calculation
-      </button>
-
-      <div class="share-button-container" *ngIf="oxalatePerServing > 0">
-        <button
-          class="action-button share-trigger"
-          (click)="toggleShareOptions()"
-          [class.active]="showShareOptions"
-        >
-          <i class="material-icons">share</i>
-          Share Results
-        </button>
-
-        <div
-          class="share-menu-overlay"
-          *ngIf="showShareOptions"
-          (click)="closeShareMenu($event)"
-        >
-          <div
-            class="share-menu-content"
-            [@menuAnimation]="showShareOptions ? 'show' : 'hide'"
-            (click)="$event.stopPropagation()"
-          >
-            <div class="share-preview">
-              <h3 class="preview-title">Share Your Results</h3>
-              <div class="result-card">
-                <div class="result-header">
-                  <i class="material-icons">analytics</i>
-                  <span>Oxalate Calculator Results</span>
-                </div>
-                <div class="result-content">
-                  <div class="result-item">
-                    <i class="material-icons">restaurant_menu</i>
-                    <div>
-                      <strong>{{ foodName }}</strong>
-                      <span *ngIf="customServing" class="serving-size">{{
-                        customServing
-                      }}</span>
-                    </div>
-                  </div>
-                  <div class="result-item highlight">
-                    <i class="material-icons">timeline</i>
-                    <div>
-                      <span>Total Oxalate</span>
-                      <strong>{{ oxalatePerServing }}mg</strong>
-                    </div>
-                    <div>
-                      <span>Total Oxalate</span>
-                      <strong>{{ solubleOxalatePerServing }}mg</strong>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <div class="share-options">
-              <a
-                *ngFor="let option of shareOptions; let i = index"
-                class="share-button"
-                [href]="option.getShareUrl(getShareableText())"
-                target="_blank"
-                [@slideIn]="{
-                  value: showShareOptions,
-                  params: { delay: i * 50 }
-                }"
-              >
-                <i class="material-icons" [style.color]="option.color">{{
-                  option.icon
-                }}</i>
-                <span>{{ option.label }}</span>
-              </a>
-
-              <button
-                class="share-button copy-button"
-                (click)="copyToClipboard()"
-                [@slideIn]="{
-                  value: showShareOptions,
-                  params: { delay: shareOptions.length * 50 }
-                }"
-              >
-                <i class="material-icons">content_copy</i>
-                <span>{{ copySuccess ? "Copied!" : "Copy to clipboard" }}</span>
-              </button>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <div *ngIf="oxalatePerServing > 0" class="results-section">
-      <div class="result-card">
-        <h3 class="result-title">Oxalate Breakdown for {{ foodName }}</h3>
-        <div class="result-container">
-          <div class="metric-card">
-            <div class="metric-value">
-              {{ oxalatePerServing | number : "1.2-2" }}
-              <span class="metric-unit">mg</span>
-            </div>
-            <div class="metric-label">Total Oxalate Per Serving</div>
-          </div>
-          <div class="metric-card">
-            <div class="metric-value">
-              {{ solubleOxalatePerServing | number : "1.2-2" }}
-              <span class="metric-unit">mg</span>
-            </div>
-            <div class="metric-label">Soluble Oxalate</div>
-          </div>
-        </div>
+        <app-saved-meals [savedMeals]="savedMeals" (close)="resetView()">
+        </app-saved-meals>
       </div>
     </div>
   </div>
 </div>
-
-<!-- <div class="button-container">
-      <button
-        class="action-button calculate"
-        [disabled]="isCalculating || !foodName || !customServing"
-        (click)="calculateOxalate()"
-      >
-        <i class="material-icons">calculate</i>
-        {{ isCalculating ? "Calculating..." : "Calculate" }}
-      </button>
-    </div> -->
