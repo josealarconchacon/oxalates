@@ -152,4 +152,24 @@ export class CalculateOxalateComponent implements OnInit, OnDestroy {
     this.isSavedMealsVisible = false;
     document.body.style.overflow = 'auto';
   }
+
+  // new
+  onDeleteMeal(event: { date: string; index: number }) {
+    const { date, index } = event;
+    const mealsOnDate = this.savedMeals.filter((meal) => meal.date === date);
+
+    if (index >= 0 && index < mealsOnDate.length) {
+      const mealToDelete = mealsOnDate[index];
+      const mealIndexInSavedMeals = this.savedMeals.indexOf(mealToDelete);
+
+      if (mealIndexInSavedMeals !== -1) {
+        this.savedMeals.splice(mealIndexInSavedMeals, 1);
+      }
+    }
+  }
+
+  onEditMeal(event: { meal: SavedMeal; date: string; index: number }) {
+    // Implement your logic to handle meal editing
+    console.log('Edit meal:', event);
+  }
 }

@@ -154,8 +154,7 @@ export class ShareMenuComponent {
   }
 
   closeShareMenu(event: MouseEvent): void {
-    if (event.target === event.currentTarget) {
-      this.close.emit();
-    }
+    event.stopPropagation();
+    this.close.emit();
   }
 }

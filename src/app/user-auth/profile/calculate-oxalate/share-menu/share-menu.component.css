@@ -15,15 +15,33 @@
   box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1),
     0 10px 10px -5px rgba(0, 0, 0, 0.04);
   width: 90%;
-  max-width: 400px;
+  max-width: 550px;
   max-height: 90vh;
   overflow-y: auto;
   padding: 1.5rem;
+  box-sizing: border-box;
+  position: relative; /* Add position relative for absolute positioning of close button */
+}
+
+.close-button {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  font-size: 1.5rem;
+  color: #64748b;
+  transition: color 0.2s ease;
+}
+
+.close-button:hover {
+  color: #334155;
 }
 
 .preview-title {
   margin: 0 0 1rem;
-  font-size: 1.25rem;
+  font-size: 1.5rem;
   color: #111827;
   font-weight: 600;
 }
@@ -37,7 +55,7 @@
 
 .result-header {
   background: #f1f5f9;
-  padding: 0.75rem 1rem;
+  padding: 1rem;
   display: flex;
   align-items: center;
   gap: 0.5rem;
@@ -94,13 +112,13 @@
   display: flex;
   align-items: center;
   gap: 0.75rem;
-  padding: 0.75rem 1rem;
+  padding: 1rem;
   background: #f8fafc;
   border: 1px solid #e2e8f0;
   border-radius: 0.5rem;
   color: inherit;
   text-decoration: none;
-  font-size: 0.875rem;
+  font-size: 1rem;
   font-weight: 500;
   cursor: pointer;
   transition: all 0.2s ease;
@@ -119,4 +137,26 @@
 
 .copy-button:hover {
   background: #dbeafe;
+}
+
+/* Media Queries for Responsiveness */
+@media (max-width: 600px) {
+  .preview-title {
+    font-size: 1.25rem;
+  }
+
+  .share-button {
+    padding: 0.75rem;
+    font-size: 0.9rem;
+  }
+
+  .close-button {
+    font-size: 1.25rem;
+  }
+}
+
+@media (min-width: 1200px) {
+  .share-menu-content {
+    width: 80%;
+  }
 }

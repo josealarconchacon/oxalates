@@ -19,20 +19,6 @@
   color: #eab308;
 }
 
-.header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 1.5rem;
-}
-
-.close-button {
-  background: none;
-  border: none;
-  cursor: pointer;
-  padding: 0.5rem;
-}
-
 .day-section {
   background: #f8fafc;
   border-radius: 0.75rem;
@@ -73,9 +59,40 @@
 
 .meal-details {
   display: flex;
+  align-items: center;
   gap: 1rem;
   font-size: 0.875rem;
   color: #64748b;
+}
+
+.meal-actions {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.edit-button,
+.delete-button {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0.5rem;
+  font-size: 1.25rem;
+}
+
+.edit-button {
+  color: #3490dc;
+}
+
+.edit-button:hover {
+  color: #2779bd;
+}
+
+.delete-button {
+  color: #e53e3e;
+}
+
+.delete-button:hover {
+  color: #c53030;
 }
 
 .share-button {
@@ -95,4 +112,10 @@
 
 .share-button:hover {
   background-color: #1d4ed8;
+}
+
+.no-meals-message {
+  text-align: center;
+  margin-top: 2rem;
+  color: #64748b;
 }
