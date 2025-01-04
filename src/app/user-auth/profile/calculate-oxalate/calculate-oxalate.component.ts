@@ -1,17 +1,14 @@
-import { BrowserModule } from '@angular/platform-browser';
 import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
-import { BehaviorSubject, debounceTime, distinctUntilChanged } from 'rxjs';
 import { CalculateOxalateService } from 'src/app/landing-page/dialog-service/service/calculate-oxalate.service';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ResultsSectionComponent } from './results-section/results-section.component';
-import { ShareMenuComponent } from './share-menu/share-menu.component';
 import { SearchSectionComponent } from './search-section/search-section.component';
 import { ServingPanelComponent } from './serving-panel/serving-panel.component';
 import { SavedMealsComponent } from './saved-meals/saved-meals.component';
 import { SimilarFood } from '../model/similar-food';
 import { SavedMeal } from '../model/saved-meal';
+import { BehaviorSubject, debounceTime, distinctUntilChanged } from 'rxjs';
 import {
   trigger,
   state,
@@ -35,14 +32,75 @@ import {
   styleUrls: ['./calculate-oxalate.component.css'],
   animations: [
     trigger('moveCalculateOxalate', [
-      state('initial', style({ maxWidth: '100%' })),
-      state('moved', style({ maxWidth: 'calc(50% - 0.5rem)' })),
+      state(
+        'initial',
+        style({
+          maxWidth: '100%',
+          transform: 'scale(1)',
+          opacity: '1',
+        })
+      ),
+      state(
+        'moved',
+        style({
+          maxWidth: '100%',
+          transform: 'scale(0.98)',
+          opacity: '0.8',
+        })
+      ),
       transition('initial <=> moved', animate('300ms ease')),
     ]),
-    trigger('fadeInSavedMeals', [
-      state('hidden', style({ right: '-100%' })),
-      state('visible', style({ right: '0' })),
-      transition('hidden <=> visible', animate('300ms ease')),
+    trigger('slideUpSavedMeals', [
+      state(
+        'hidden',
+        style({
+          transform: 'translateY(100%)',
+          opacity: 0,
+          visibility: 'hidden',
+        })
+      ),
+      state(
+        'visible',
+        style({
+          transform: 'translateY(0)',
+          opacity: 1,
+          visibility: 'visible',
+        })
+      ),
+      transition('hidden => visible', [
+        style({ visibility: 'visible' }),
+        animate('300ms cubic-bezier(0.4, 0, 0.2, 1)'),
+      ]),
+      transition('visible => hidden', [
+        animate('300ms cubic-bezier(0.4, 0, 0.2, 1)'),
+        style({ visibility: 'hidden' }),
+      ]),
+    ]),
+    trigger('desktopSavedMeals', [
+      state(
+        'hidden',
+        style({
+          right: '-100%',
+          opacity: 0,
+          visibility: 'hidden',
+        })
+      ),
+      state(
+        'visible',
+        style({
+          right: '0',
+          opacity: 1,
+          visibility: 'visible',
+        })
+      ),
+      transition('hidden => visible', [
+        style({ visibility: 'visible' }),
+        animate('300ms cubic-bezier(0.4, 0, 0.2, 1)'),
+      ]),
+      transition('visible => hidden', [
+        animate('300ms cubic-bezier(0.4, 0, 0.2, 1)'),
+        style({ visibility: 'hidden' }),
+      ]),
     ]),
   ],
 })
@@ -54,19 +112,22 @@ export class CalculateOxalateComponent implements OnInit {
   oxalatePerServing: number = 0;
   solubleOxalatePerServing: number = 0;
   isCalculating: boolean = false;
-  showShareOptions: boolean = false;
   similarFoods: SimilarFood[] = [];
   showSuggestions: boolean = false;
   savedMeals: SavedMeal[] = [];
   isMoved: boolean = false;
+  isSavedMealsVisible: boolean = false;
+  isMobileView: boolean = false;
 
   private foodInputSubject = new BehaviorSubject<string>('');
 
   constructor(
     private oxalateService: CalculateOxalateService,
-    private calculateOxalateService: CalculateOxalateService,
     private cdr: ChangeDetectorRef
-  ) {}
+  ) {
+    this.checkMobileView();
+    window.addEventListener('resize', () => this.checkMobileView());
+  }
 
   ngOnInit() {
     this.foodInputSubject
@@ -78,6 +139,14 @@ export class CalculateOxalateComponent implements OnInit {
           this.clearSuggestions();
         }
       });
+  }
+
+  ngOnDestroy() {
+    window.removeEventListener('resize', () => this.checkMobileView());
+  }
+
+  checkMobileView() {
+    this.isMobileView = window.innerWidth <= 768;
   }
 
   onFoodNameChange(foodName: string): void {
@@ -106,7 +175,7 @@ export class CalculateOxalateComponent implements OnInit {
   }
 
   suggestSimilarFoods(input: string): void {
-    this.similarFoods = this.calculateOxalateService
+    this.similarFoods = this.oxalateService
       .findSimilarFoods(input)
       .map((food) => ({
         ...food,
@@ -132,9 +201,6 @@ export class CalculateOxalateComponent implements OnInit {
     return this.oxalateService.getConfidenceLevel(similarity);
   }
 
-  toggleShareOptions(): void {
-    this.showShareOptions = !this.showShareOptions;
-  }
   saveMeal(): void {
     const currentDate = new Date().toISOString().split('T')[0];
     const savedMeal: SavedMeal = {
@@ -144,13 +210,24 @@ export class CalculateOxalateComponent implements OnInit {
       date: currentDate,
     };
     this.savedMeals = [...this.savedMeals, savedMeal];
-    console.log('Saved meals:', this.savedMeals);
+    console.log('Meal saved successfully!');
     this.cdr.detectChanges();
     this.clearResults();
-    this.isMoved = true;
+  }
+
+  toggleSavedMeals(): void {
+    this.isSavedMealsVisible = !this.isSavedMealsVisible;
+    this.isMoved = this.isSavedMealsVisible;
+    if (this.isSavedMealsVisible) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = 'auto';
+    }
   }
 
   resetView(): void {
     this.isMoved = false;
+    this.isSavedMealsVisible = false;
+    document.body.style.overflow = 'auto';
   }
 }

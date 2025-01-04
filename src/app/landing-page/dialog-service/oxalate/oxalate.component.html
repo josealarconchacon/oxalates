@@ -3,12 +3,13 @@
     <h1>Search for a food</h1>
   </div>
   <div class="search-wrapper">
-    <!-- <app-search-input
+    <app-search-input
+      type="text"
       [searchQuery]="searchQuery"
-      (searchQueryChange)="onSearchQueryChange($event)"
       (clearSearch)="handleClearSearch()"
-    ></app-search-input> -->
-    <input type="text" [value]="searchQuery" (input)="onInputChange($event)" />
+      (input)="onInputChange($event)"
+      [value]="searchQuery"
+    ></app-search-input>
 
     <app-alert *ngIf="showAlert" [message]="alertMessage"></app-alert>
 

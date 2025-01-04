@@ -4,6 +4,21 @@
   overflow-y: auto;
 }
 
+.close-button {
+  position: absolute;
+  top: 0.5rem;
+  right: 0.5rem;
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 1.25rem;
+  color: #64748b;
+}
+
+.close-button:hover {
+  color: #eab308;
+}
+
 .header {
   display: flex;
   justify-content: space-between;

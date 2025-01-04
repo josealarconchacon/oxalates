@@ -2,7 +2,7 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  padding: 0.22rem;
+  padding: 2rem;
   margin-top: 2rem;
   background-color: #f4f4f9;
   border-radius: 1rem;
@@ -14,13 +14,18 @@
   padding: 2rem;
   max-width: 700px;
   width: 100%;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  transition: box-shadow 0.3s ease;
+}
+
+.result-card:hover {
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
 }
 
 .result-title {
-  font-size: 1.5rem;
+  font-size: 1.75rem;
   font-weight: 600;
-  color: #2c3e50;
+  color: #34495e;
   text-align: center;
   margin-bottom: 1.5rem;
 }
@@ -37,10 +42,10 @@
   min-width: 150px;
   background-color: #f9fafa;
   border-radius: 0.75rem;
-  padding: 1rem 1.5rem;
+  padding: 1.5rem;
   text-align: center;
   transition: background-color 0.3s ease, transform 0.2s ease;
-  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.05);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
 }
 
 .metric-card:hover {
@@ -49,19 +54,75 @@
 }
 
 .metric-value {
-  font-size: 2rem;
+  font-size: 2.25rem;
   font-weight: 700;
-  color: #34495e;
+  color: #2c3e50;
   margin-bottom: 0.5rem;
 }
 
 .metric-unit {
-  font-size: 0.875rem;
+  font-size: 1rem;
   color: #95a5a6;
+  font-weight: 500;
 }
 
 .metric-label {
-  font-size: 1rem;
+  font-size: 1.125rem;
   font-weight: 500;
   color: #7f8c8d;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .result-card {
+    padding: 1.5rem;
+  }
+
+  .result-title {
+    font-size: 1.5rem;
+    margin-bottom: 1rem;
+  }
+
+  .metric-card {
+    min-width: 100%;
+    margin-bottom: 1rem;
+  }
+
+  .metric-value {
+    font-size: 2rem;
+  }
+
+  .metric-unit {
+    font-size: 0.9rem;
+  }
+
+  .metric-label {
+    font-size: 1rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .result-card {
+    padding: 1rem;
+  }
+
+  .result-title {
+    font-size: 1.25rem;
+  }
+
+  .metric-card {
+    padding: 1rem;
+  }
+
+  .metric-value {
+    font-size: 1.75rem;
+  }
+
+  .metric-unit {
+    font-size: 0.875rem;
+  }
+
+  .metric-label {
+    font-size: 0.9rem;
+  }
 }

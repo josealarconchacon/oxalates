@@ -198,7 +198,8 @@ export class OxalateComponent implements OnInit, OnDestroy {
 
   onInputChange(event: Event): void {
     const target = event.target as HTMLInputElement;
-    this.onSearchQueryChange(target.value);
+    const query = target.value;
+    this.onSearchQueryChange(query);
   }
 
   // Update existing search-related methods

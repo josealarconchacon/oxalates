@@ -1,8 +1,23 @@
-<div class="app-container">
+<div
+  class="app-container"
+  [class.overlay-active]="isSavedMealsVisible && isMobileView"
+>
   <div class="content-wrapper">
     <header class="app-header">
-      <h1>Oxalate</h1>
-      <p class="subtitle">Log your daily intake</p>
+      <div class="header-content">
+        <div class="header-title">
+          <h1>Oxalate</h1>
+          <p class="subtitle">Log your daily intake</p>
+        </div>
+        <div
+          class="notification"
+          *ngIf="savedMeals.length > 0 && !isSavedMealsVisible"
+          (click)="toggleSavedMeals()"
+        >
+          <i class="material-icons">notifications</i>
+          See saved items ({{ savedMeals.length }})
+        </div>
+      </div>
     </header>
 
     <div class="main-content">
@@ -17,15 +32,13 @@
           [similarFoods]="similarFoods"
           [showSuggestions]="showSuggestions"
           (selectFood)="selectSuggestedFood($event)"
-        >
-        </app-search-section>
+        ></app-search-section>
 
         <app-serving-panel
           [servingSize]="servingSize"
           [servingGrams]="servingGrams"
           [(customServing)]="customServing"
-        >
-        </app-serving-panel>
+        ></app-serving-panel>
 
         <div class="button-container">
           <button
@@ -61,17 +74,34 @@
           [foodName]="foodName"
           [oxalatePerServing]="oxalatePerServing"
           [solubleOxalatePerServing]="solubleOxalatePerServing"
-        >
-        </app-results-section>
+        ></app-results-section>
       </div>
 
+      <!-- Desktop version -->
       <div
-        class="right-column"
-        [class.visible]="isMoved"
-        [@fadeInSavedMeals]="isMoved ? 'visible' : 'hidden'"
+        *ngIf="!isMobileView"
+        class="right-column desktop-saved-meals"
+        [class.visible]="isSavedMealsVisible"
+        [@desktopSavedMeals]="isSavedMealsVisible ? 'visible' : 'hidden'"
       >
-        <app-saved-meals [savedMeals]="savedMeals" (close)="resetView()">
-        </app-saved-meals>
+        <app-saved-meals
+          [savedMeals]="savedMeals"
+          (close)="resetView()"
+        ></app-saved-meals>
+      </div>
+
+      <!-- Mobile version -->
+      <div
+        *ngIf="isMobileView"
+        class="right-column mobile-saved-meals"
+        [class.visible]="isSavedMealsVisible"
+        [@slideUpSavedMeals]="isSavedMealsVisible ? 'visible' : 'hidden'"
+      >
+        <div class="drag-indicator"></div>
+        <app-saved-meals
+          [savedMeals]="savedMeals"
+          (close)="resetView()"
+        ></app-saved-meals>
       </div>
     </div>
   </div>
