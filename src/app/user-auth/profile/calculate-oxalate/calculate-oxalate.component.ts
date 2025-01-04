@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit, OnDestroy } from '@angular/core';
 import { CalculateOxalateService } from 'src/app/landing-page/dialog-service/service/calculate-oxalate.service';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
@@ -9,13 +9,6 @@ import { SavedMealsComponent } from './saved-meals/saved-meals.component';
 import { SimilarFood } from '../model/similar-food';
 import { SavedMeal } from '../model/saved-meal';
 import { BehaviorSubject, debounceTime, distinctUntilChanged } from 'rxjs';
-import {
-  trigger,
-  state,
-  style,
-  transition,
-  animate,
-} from '@angular/animations';
 
 @Component({
   selector: 'app-calculate-oxalate',
@@ -30,81 +23,8 @@ import {
   ],
   templateUrl: './calculate-oxalate.component.html',
   styleUrls: ['./calculate-oxalate.component.css'],
-  animations: [
-    trigger('moveCalculateOxalate', [
-      state(
-        'initial',
-        style({
-          maxWidth: '100%',
-          transform: 'scale(1)',
-          opacity: '1',
-        })
-      ),
-      state(
-        'moved',
-        style({
-          maxWidth: '100%',
-          transform: 'scale(0.98)',
-          opacity: '0.8',
-        })
-      ),
-      transition('initial <=> moved', animate('300ms ease')),
-    ]),
-    trigger('slideUpSavedMeals', [
-      state(
-        'hidden',
-        style({
-          transform: 'translateY(100%)',
-          opacity: 0,
-          visibility: 'hidden',
-        })
-      ),
-      state(
-        'visible',
-        style({
-          transform: 'translateY(0)',
-          opacity: 1,
-          visibility: 'visible',
-        })
-      ),
-      transition('hidden => visible', [
-        style({ visibility: 'visible' }),
-        animate('300ms cubic-bezier(0.4, 0, 0.2, 1)'),
-      ]),
-      transition('visible => hidden', [
-        animate('300ms cubic-bezier(0.4, 0, 0.2, 1)'),
-        style({ visibility: 'hidden' }),
-      ]),
-    ]),
-    trigger('desktopSavedMeals', [
-      state(
-        'hidden',
-        style({
-          right: '-100%',
-          opacity: 0,
-          visibility: 'hidden',
-        })
-      ),
-      state(
-        'visible',
-        style({
-          right: '0',
-          opacity: 1,
-          visibility: 'visible',
-        })
-      ),
-      transition('hidden => visible', [
-        style({ visibility: 'visible' }),
-        animate('300ms cubic-bezier(0.4, 0, 0.2, 1)'),
-      ]),
-      transition('visible => hidden', [
-        animate('300ms cubic-bezier(0.4, 0, 0.2, 1)'),
-        style({ visibility: 'hidden' }),
-      ]),
-    ]),
-  ],
 })
-export class CalculateOxalateComponent implements OnInit {
+export class CalculateOxalateComponent implements OnInit, OnDestroy {
   foodName: string = '';
   servingSize: string = '';
   servingGrams: number = 0;
@@ -216,7 +136,9 @@ export class CalculateOxalateComponent implements OnInit {
   }
 
   toggleSavedMeals(): void {
+    console.log('Toggle Saved Meals:', this.isSavedMealsVisible);
     this.isSavedMealsVisible = !this.isSavedMealsVisible;
+    console.log('New State:', this.isSavedMealsVisible);
     this.isMoved = this.isSavedMealsVisible;
     if (this.isSavedMealsVisible) {
       document.body.style.overflow = 'hidden';

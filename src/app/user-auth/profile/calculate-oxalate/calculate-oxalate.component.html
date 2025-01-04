@@ -21,11 +21,7 @@
     </header>
 
     <div class="main-content">
-      <div
-        class="left-column"
-        [class.moved]="isMoved"
-        [@moveCalculateOxalate]="isMoved ? 'moved' : 'initial'"
-      >
+      <div class="left-column" [class.moved]="isMoved">
         <app-search-section
           [foodName]="foodName"
           (foodNameChange)="onFoodNameChange($event)"
@@ -82,7 +78,6 @@
         *ngIf="!isMobileView"
         class="right-column desktop-saved-meals"
         [class.visible]="isSavedMealsVisible"
-        [@desktopSavedMeals]="isSavedMealsVisible ? 'visible' : 'hidden'"
       >
         <app-saved-meals
           [savedMeals]="savedMeals"
@@ -95,7 +90,6 @@
         *ngIf="isMobileView"
         class="right-column mobile-saved-meals"
         [class.visible]="isSavedMealsVisible"
-        [@slideUpSavedMeals]="isSavedMealsVisible ? 'visible' : 'hidden'"
       >
         <div class="drag-indicator"></div>
         <app-saved-meals
