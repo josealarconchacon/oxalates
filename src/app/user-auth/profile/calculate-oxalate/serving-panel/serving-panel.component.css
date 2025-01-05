@@ -1,7 +1,7 @@
 .serving-panel {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  grid-template-rows: auto auto;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
   gap: 1rem;
   margin-bottom: 2rem;
   max-width: 1200px;
@@ -10,11 +10,14 @@
 }
 
 .serving-input {
+  flex: 1 1 calc(25% - 1rem);
+  display: flex;
+  flex-direction: column;
   background: white;
   padding: 1rem;
   border-radius: 1rem;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-  width: 100%;
+  min-width: 200px;
 }
 
 .serving-input label {
@@ -24,6 +27,8 @@
   color: #64748b;
   margin-bottom: 0.5rem;
   font-size: 0.875rem;
+  height: 2rem;
+  line-height: 1rem;
 }
 
 .input-field {
@@ -34,8 +39,14 @@
   font-size: 1rem;
 }
 
+@media (max-width: 1024px) {
+  .serving-input {
+    flex: 1 1 calc(50% - 1rem);
+  }
+}
+
 @media (max-width: 768px) {
-  .serving-panel {
-    grid-template-columns: 1fr;
+  .serving-input {
+    flex: 1 1 100%;
   }
 }
