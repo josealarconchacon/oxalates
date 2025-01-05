@@ -11,12 +11,12 @@ import { FormsModule } from '@angular/forms';
 })
 export class ServingPanelComponent {
   @Input() servingSize: string = '';
-  @Input() servingGrams: number = 0;
-  @Input() customServing: number | null = null;
-  @Output() customServingChange = new EventEmitter<number | null>();
+  @Input() totalOxalatePerServing: number = 0;
+  @Input() totalSolubleOxalatePerServing: number = 0;
+  @Input() numberOfServings: string = '1';
+  @Output() numberOfServingsChange = new EventEmitter<string>();
 
-  onCustomServingChange(value: string): void {
-    const numValue = value ? Number(value) : null;
-    this.customServingChange.emit(numValue);
+  onNumberOfServingsChange(value: string): void {
+    this.numberOfServingsChange.emit(value);
   }
 }

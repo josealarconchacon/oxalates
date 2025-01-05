@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
+
 interface SimilarFood {
   name: string;
   totalOxalate: number;
@@ -9,12 +10,14 @@ interface SimilarFood {
   similarity: number;
   servingGrams: number;
 }
+
 interface OxalateData {
   item: string | null;
-  total_oxalate_mg_per_100g: number | null;
-  total_soluble_oxalate_mg_per_100g: number | null;
-  serving_g: number | null;
+  serving_size: number | null; // Updated
+  calc_oxalate_per_serving: number | null; // Updated
+  calc_soluble_mg_oxalate_per_serving: number | null; // Updated
 }
+
 @Injectable({
   providedIn: 'root',
 })
@@ -49,16 +52,16 @@ export class CalculateOxalateService {
       throw new Error('Food not found');
     }
 
-    const totalOxalate = this.getValidOxalateValue(
-      foodData.total_oxalate_mg_per_100g
+    const totalOxalatePerServing = this.getValidOxalateValue(
+      foodData.calc_oxalate_per_serving
     );
-    const solubleOxalate = this.getValidOxalateValue(
-      foodData.total_soluble_oxalate_mg_per_100g
+    const solubleOxalatePerServing = this.getValidOxalateValue(
+      foodData.calc_soluble_mg_oxalate_per_serving
     );
 
     return {
-      totalOxalate: (totalOxalate * servingGrams) / 100,
-      solubleOxalate: (solubleOxalate * servingGrams) / 100,
+      totalOxalate: totalOxalatePerServing,
+      solubleOxalate: solubleOxalatePerServing,
     };
   }
 
@@ -73,12 +76,12 @@ export class CalculateOxalateService {
       .filter((food) => food.item !== null && food.item !== undefined)
       .map((food) => ({
         name: food.item || '',
-        totalOxalate: this.getValidOxalateValue(food.total_oxalate_mg_per_100g),
+        totalOxalate: this.getValidOxalateValue(food.calc_oxalate_per_serving),
         solubleOxalate: this.getValidOxalateValue(
-          food.total_soluble_oxalate_mg_per_100g
+          food.calc_soluble_mg_oxalate_per_serving
         ),
         similarity: this.calculateSimilarity(food.item || '', words),
-        servingGrams: food.serving_g !== null ? food.serving_g : 0,
+        servingGrams: food.serving_size !== null ? food.serving_size : 0,
         confidenceLevel: this.getConfidenceLevel(
           this.calculateSimilarity(food.item || '', words)
         ),
@@ -106,7 +109,7 @@ export class CalculateOxalateService {
   }
 
   private estimateBaselineOxalateContent(): number {
-    return 15; 
+    return 15;
   }
 
   private calculateSimilarity(foodItem: string, searchWords: string[]): number {

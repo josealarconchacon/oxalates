@@ -32,22 +32,30 @@
 
         <app-serving-panel
           [servingSize]="servingSize"
-          [servingGrams]="servingGrams"
-          [(customServing)]="customServing"
+          [totalOxalatePerServing]="totalOxalatePerServing"
+          [totalSolubleOxalatePerServing]="totalSolubleOxalatePerServing"
+          [numberOfServings]="(numberOfServings || 0).toString()"
+          (numberOfServingsChange)="onNumberOfServingsChange($event)"
         ></app-serving-panel>
 
         <div class="button-container">
           <button
             class="action-button calculate"
-            [disabled]="isCalculating || !foodName || !customServing"
-            (click)="calculateOxalate()"
+            [disabled]="isCalculating || !foodName || !servingSize"
+            (click)="mealType ? logMeal() : calculateOxalate()"
           >
-            <i class="material-icons">calculate</i>
-            {{ isCalculating ? "Calculating..." : "Calculate" }}
+            <i class="material-icons">{{ mealType ? "add" : "calculate" }}</i>
+            {{
+              isCalculating
+                ? "Calculating..."
+                : mealType
+                ? "Log Meal"
+                : "Calculate"
+            }}
           </button>
 
           <button
-            *ngIf="oxalatePerServing > 0"
+            *ngIf="showResults"
             class="action-button clear"
             (click)="clearResults()"
           >
@@ -56,7 +64,7 @@
           </button>
 
           <button
-            *ngIf="oxalatePerServing > 0"
+            *ngIf="showResults"
             class="action-button save"
             (click)="saveMeal()"
           >
@@ -66,14 +74,14 @@
         </div>
 
         <app-results-section
-          *ngIf="oxalatePerServing > 0"
+          *ngIf="showResults"
           [foodName]="foodName"
-          [oxalatePerServing]="oxalatePerServing"
-          [solubleOxalatePerServing]="solubleOxalatePerServing"
+          [calculatedTotalOxalate]="calculatedTotalOxalate"
+          [calculatedTotalSolubleOxalate]="calculatedTotalSolubleOxalate"
+          [numberOfServings]="numberOfServings || 0"
         ></app-results-section>
       </div>
 
-      <!-- Desktop version -->
       <div
         *ngIf="!isMobileView"
         class="right-column desktop-saved-meals"
@@ -85,17 +93,19 @@
         ></app-saved-meals>
       </div>
 
-      <!-- Mobile version -->
       <div
         *ngIf="isMobileView"
         class="right-column mobile-saved-meals"
         [class.visible]="isSavedMealsVisible"
       >
         <div class="drag-indicator"></div>
-        <app-saved-meals
-          [savedMeals]="savedMeals"
-          (close)="resetView()"
-        ></app-saved-meals>
+        <app-serving-panel
+          [servingSize]="servingSize"
+          [totalOxalatePerServing]="totalOxalatePerServing"
+          [totalSolubleOxalatePerServing]="totalSolubleOxalatePerServing"
+          [numberOfServings]="(numberOfServings || 0).toString()"
+          (numberOfServingsChange)="onNumberOfServingsChange($event)"
+        ></app-serving-panel>
       </div>
     </div>
   </div>

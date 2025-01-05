@@ -1,8 +1,8 @@
 export interface SimilarFood {
-  confidenceLevel: any;
+  confidenceLevel: string;
   name: string;
   totalOxalate: number;
   solubleOxalate: number;
   similarity: number;
-  servingGrams: number;
+  servingSize: string;
 }

@@ -1,0 +1,237 @@
+.daily-food-log {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 2rem;
+}
+
+.meals-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 1.5rem;
+  margin-bottom: 2rem;
+}
+
+.meal-card {
+  background: white;
+  border-radius: 1rem;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  transition: box-shadow 0.3s ease;
+  overflow: hidden;
+
+  &:hover {
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  }
+}
+
+.meal-content {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  min-height: 300px;
+  padding: 1.5rem;
+}
+
+.meal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5rem;
+}
+
+.meal-title {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: #2d3748;
+}
+
+.oxalate-totals {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+}
+
+.total-oxalate,
+.total-soluble-oxalate {
+  font-size: 0.875rem;
+  color: #718096;
+}
+
+.food-list {
+  flex: 1;
+  margin-bottom: 1rem;
+}
+
+.food-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.75rem 0;
+  border-bottom: 1px solid #e2e8f0;
+
+  &:last-child {
+    border-bottom: none;
+  }
+}
+
+.food-details {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.food-name {
+  font-weight: 500;
+  color: #4a5568;
+}
+
+.food-info {
+  font-size: 0.875rem;
+  color: #718096;
+}
+
+.delete-btn {
+  background: transparent;
+  border: none;
+  color: #e53e3e;
+  padding: 0.25rem;
+  cursor: pointer;
+  transition: color 0.2s ease;
+
+  &:hover {
+    color: #c53030;
+  }
+
+  i {
+    font-size: 1.25rem;
+  }
+}
+
+.empty-state {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #a0aec0;
+  font-style: italic;
+  padding: 2rem 0;
+}
+
+.add-food-btn {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 1rem;
+  background: #ebf8ff;
+  border: none;
+  border-radius: 0.5rem;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+
+  &:hover {
+    background: #bee3f8;
+  }
+
+  i {
+    font-size: 1.5rem;
+    color: #4299e1;
+  }
+
+  .btn-text {
+    font-weight: 500;
+    color: #4299e1;
+  }
+
+  .oxalate-total {
+    font-size: 0.875rem;
+    color: #63b3ed;
+  }
+}
+
+.calculate-container {
+  display: flex;
+  justify-content: left;
+  margin-top: 2rem;
+}
+
+.calculate-btn {
+  background: #4299e1;
+  color: white;
+  font-weight: 500;
+  padding: 1rem 2rem;
+  border: none;
+  border-radius: 0.5rem;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+
+  &:hover {
+    background: #3182ce;
+  }
+}
+
+.calculator-dialog {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.dialog-overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.5);
+}
+
+.dialog-content {
+  position: relative;
+  background: white;
+  border-radius: 1rem;
+  padding: 2rem;
+  width: 90%;
+  max-width: 600px;
+  z-index: 1;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+@media (max-width: 768px) {
+  .daily-food-log {
+    padding: 1rem;
+  }
+
+  .meals-grid {
+    gap: 1rem;
+  }
+
+  .meal-content {
+    padding: 1rem;
+  }
+
+  .meal-title {
+    font-size: 1.125rem;
+  }
+
+  .calculate-btn {
+    width: 100%;
+    max-width: 300px;
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.calculator-dialog {
+  animation: fadeIn 0.2s ease-out;
+}

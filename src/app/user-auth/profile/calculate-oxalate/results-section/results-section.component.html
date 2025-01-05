@@ -4,14 +4,14 @@
     <div class="result-container">
       <div class="metric-card">
         <div class="metric-value">
-          {{ oxalatePerServing | number : "1.2-2" }}
+          {{ calculatedTotalOxalate | number : "1.2-2" }}
           <span class="metric-unit">mg</span>
         </div>
-        <div class="metric-label">Total Oxalate Per Serving</div>
+        <div class="metric-label">Total Oxalate</div>
       </div>
       <div class="metric-card">
         <div class="metric-value">
-          {{ solubleOxalatePerServing | number : "1.2-2" }}
+          {{ calculatedTotalSolubleOxalate | number : "1.2-2" }}
           <span class="metric-unit">mg</span>
         </div>
         <div class="metric-label">Soluble Oxalate</div>

@@ -6,10 +6,11 @@ import { Component, Input } from '@angular/core';
   standalone: true,
   imports: [CommonModule],
   templateUrl: './results-section.component.html',
-  styleUrl: './results-section.component.css',
+  styleUrls: ['./results-section.component.css'],
 })
 export class ResultsSectionComponent {
-  @Input() foodName: string = '';
-  @Input() oxalatePerServing: number = 0;
-  @Input() solubleOxalatePerServing: number = 0;
+  @Input() foodName: string | undefined;
+  @Input() calculatedTotalOxalate: number = 0;
+  @Input() calculatedTotalSolubleOxalate: number = 0;
+  @Input() numberOfServings: number = 1;
 }

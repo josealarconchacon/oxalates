@@ -2,31 +2,54 @@
   <div class="serving-input">
     <label>
       <i class="material-icons">balance</i>
-      Total Oxalate
+      Serving Size
     </label>
-    <input type="text" [ngModel]="servingSize" readonly class="input-field" />
+    <input
+      type="text"
+      [ngModel]="servingSize"
+      readonly
+      placeholder="Enter serving size"
+      class="input-field"
+    />
   </div>
 
   <div class="serving-input">
     <label>
       <i class="material-icons">balance</i>
-      Serving (Grams)
+      Total Oxalate Per Serving
     </label>
-    <input type="text" [ngModel]="servingGrams" readonly class="input-field" />
+    <input
+      type="text"
+      [ngModel]="totalOxalatePerServing"
+      readonly
+      class="input-field"
+    />
   </div>
 
   <div class="serving-input">
     <label>
-      <i class="material-icons">edit</i>
-      Customize your Serving
+      <i class="material-icons">balance</i>
+      Total Soluble Oxalate Per Serving
     </label>
     <input
-      type="number"
-      [ngModel]="customServing"
-      (ngModelChange)="onCustomServingChange($event)"
-      placeholder="Enter grams"
+      type="text"
+      [ngModel]="totalSolubleOxalatePerServing"
+      readonly
       class="input-field"
-      step="0.1"
+    />
+  </div>
+
+  <div class="serving-input">
+    <label>
+      <i class="material-icons">balance</i>
+      Number of Servings
+    </label>
+    <input
+      type="text"
+      [ngModel]="numberOfServings"
+      (ngModelChange)="onNumberOfServingsChange($event)"
+      placeholder="Enter number of servings"
+      class="input-field"
     />
   </div>
 </div>

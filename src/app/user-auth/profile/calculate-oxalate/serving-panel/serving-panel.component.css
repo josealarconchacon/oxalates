@@ -1,8 +1,12 @@
 .serving-panel {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: auto auto;
   gap: 1rem;
   margin-bottom: 2rem;
+  max-width: 1200px;
+  margin-left: auto;
+  margin-right: auto;
 }
 
 .serving-input {
@@ -10,6 +14,7 @@
   padding: 1rem;
   border-radius: 1rem;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  width: 100%;
 }
 
 .serving-input label {
@@ -27,4 +32,10 @@
   border: 2px solid #e2e8f0;
   border-radius: 0.5rem;
   font-size: 1rem;
+}
+
+@media (max-width: 768px) {
+  .serving-panel {
+    grid-template-columns: 1fr;
+  }
 }
