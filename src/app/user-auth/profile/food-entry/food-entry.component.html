@@ -1,4 +1,12 @@
 <div class="daily-food-log" [ngClass]="{ shrink: showCalculationResult }">
+  <div>
+    <app-results-section
+      [breakfastItems]="breakfastItems"
+      [lunchItems]="lunchItems"
+      [dinnerItems]="dinnerItems"
+      [snackItems]="snackItems"
+    ></app-results-section>
+  </div>
   <div class="meals-grid">
     <div class="meal-card">
       <div class="meal-content">
@@ -21,10 +29,20 @@
           >
             <div class="food-details">
               <span class="food-name">{{ food.foodName }}</span>
-              <span class="food-info"
-                >{{ food.servingSize }} serving size,
-                {{ food.numberOfServings }} servings</span
-              >
+              <span class="food-info">
+                <span class="serving-info"
+                  >{{ food.numberOfServings }} {{ food.servingSize }}
+                  {{
+                    food.numberOfServings <= 1 ? "serving" : "servings"
+                  }}</span
+                >
+                <span class="oxalate-info"
+                  >Total Oxalate: {{ food.oxalatePerServing }}</span
+                >
+                <span class="soluble-info"
+                  >Soluble Oxalate: {{ food.solubleOxalatePerServing }}</span
+                >
+              </span>
             </div>
             <button
               class="delete-btn"
@@ -63,10 +81,20 @@
           <div *ngFor="let food of lunchItems; let i = index" class="food-item">
             <div class="food-details">
               <span class="food-name">{{ food.foodName }}</span>
-              <span class="food-info"
-                >{{ food.servingSize }} serving size,
-                {{ food.numberOfServings }} servings</span
-              >
+              <span class="food-info">
+                <span class="serving-info"
+                  >{{ food.numberOfServings }} {{ food.servingSize }}
+                  {{
+                    food.numberOfServings <= 1 ? "serving" : "servings"
+                  }}</span
+                >
+                <span class="oxalate-info"
+                  >Total Oxalate: {{ food.oxalatePerServing }}</span
+                >
+                <span class="soluble-info"
+                  >Soluble Oxalate: {{ food.solubleOxalatePerServing }}</span
+                >
+              </span>
             </div>
             <button
               class="delete-btn"
@@ -108,10 +136,20 @@
           >
             <div class="food-details">
               <span class="food-name">{{ food.foodName }}</span>
-              <span class="food-info"
-                >{{ food.servingSize }} serving size,
-                {{ food.numberOfServings }} servings</span
-              >
+              <span class="food-info">
+                <span class="serving-info"
+                  >{{ food.numberOfServings }} {{ food.servingSize }}
+                  {{
+                    food.numberOfServings <= 1 ? "serving" : "servings"
+                  }}</span
+                >
+                <span class="oxalate-info"
+                  >Total Oxalate: {{ food.oxalatePerServing }}</span
+                >
+                <span class="soluble-info"
+                  >Soluble Oxalate: {{ food.solubleOxalatePerServing }}</span
+                >
+              </span>
             </div>
             <button
               class="delete-btn"
@@ -150,10 +188,20 @@
           <div *ngFor="let food of snackItems; let i = index" class="food-item">
             <div class="food-details">
               <span class="food-name">{{ food.foodName }}</span>
-              <span class="food-info"
-                >{{ food.servingSize }} serving size,
-                {{ food.numberOfServings }} servings</span
-              >
+              <span class="food-info">
+                <span class="serving-info"
+                  >{{ food.numberOfServings }} {{ food.servingSize }}
+                  {{
+                    food.numberOfServings <= 1 ? "serving" : "servings"
+                  }}</span
+                >
+                <span class="oxalate-info"
+                  >Total Oxalate: {{ food.oxalatePerServing }}</span
+                >
+                <span class="soluble-info"
+                  >Soluble Oxalate: {{ food.solubleOxalatePerServing }}</span
+                >
+              </span>
             </div>
             <button
               class="delete-btn"
@@ -176,17 +224,6 @@
       </div>
     </div>
   </div>
-
-  <div class="calculate-container">
-    <button class="calculate-btn" (click)="toggleResults()">
-      <i class="material-icons">analytics</i>
-      <span class="btn-text">
-        {{
-          showCalculationResult ? "Close Daily Oxalate" : "Review Daily Oxalate"
-        }}
-      </span>
-    </button>
-  </div>
 </div>
 
 <div class="calculator-dialog" *ngIf="showCalculator" [@dialogAnimation]>
@@ -197,12 +234,4 @@
       (mealLogged)="onMealLogged($event)"
     ></app-calculate-oxalate>
   </div>
-</div>
-<div class="results-section" *ngIf="showCalculationResult" [@slideInAnimation]>
-  <app-results-section
-    [breakfastItems]="breakfastItems"
-    [lunchItems]="lunchItems"
-    [dinnerItems]="dinnerItems"
-    [snackItems]="snackItems"
-  ></app-results-section>
 </div>
