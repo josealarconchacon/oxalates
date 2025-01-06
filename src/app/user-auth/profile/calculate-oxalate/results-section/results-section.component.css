@@ -1,128 +1,131 @@
-.results-section {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  padding: 2rem;
-  margin-top: 2rem;
-  background-color: #f4f4f9;
-  border-radius: 1rem;
-}
-
-.result-card {
-  background-color: #ffffff;
-  border-radius: 1rem;
-  padding: 2rem;
-  max-width: 700px;
-  width: 100%;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  transition: box-shadow 0.3s ease;
-}
-
-.result-card:hover {
-  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
-}
-
-.result-title {
-  font-size: 1.75rem;
-  font-weight: 600;
+.total-oxalates {
+  margin-bottom: 2rem;
+  font-size: 1.1rem;
   color: #34495e;
-  text-align: center;
-  margin-bottom: 1.5rem;
-}
-
-.result-container {
+  font-weight: 600;
   display: flex;
-  justify-content: space-between;
-  gap: 1rem;
-  flex-wrap: wrap;
+  flex-direction: column;
+  gap: 0.5rem;
 }
 
-.metric-card {
-  flex: 1;
-  min-width: 150px;
-  background-color: #f9fafa;
-  border-radius: 0.75rem;
-  padding: 1.5rem;
-  text-align: center;
-  transition: background-color 0.3s ease, transform 0.2s ease;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
-}
-
-.metric-card:hover {
-  background-color: #eaeef3;
-  transform: translateY(-3px);
-}
-
-.metric-value {
-  font-size: 2.25rem;
-  font-weight: 700;
-  color: #2c3e50;
-  margin-bottom: 0.5rem;
-}
-
-.metric-unit {
+.total-oxalates span {
   font-size: 1rem;
-  color: #95a5a6;
-  font-weight: 500;
-}
-
-.metric-label {
-  font-size: 1.125rem;
-  font-weight: 500;
   color: #7f8c8d;
 }
 
-/* Responsive Design */
-@media (max-width: 768px) {
-  .result-card {
-    padding: 1.5rem;
-  }
-
-  .result-title {
-    font-size: 1.5rem;
-    margin-bottom: 1rem;
-  }
-
-  .metric-card {
-    min-width: 100%;
-    margin-bottom: 1rem;
-  }
-
-  .metric-value {
-    font-size: 2rem;
-  }
-
-  .metric-unit {
-    font-size: 0.9rem;
-  }
-
-  .metric-label {
-    font-size: 1rem;
-  }
+.title-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
 
-@media (max-width: 480px) {
-  .result-card {
-    padding: 1rem;
-  }
+.share-icon {
+  background: none;
+  border: none;
+  font-size: 1.5rem;
+  cursor: pointer;
+  color: #34495e;
+  transition: color 0.3s ease;
+}
 
-  .result-title {
-    font-size: 1.25rem;
-  }
+.share-icon:hover {
+  color: #3498db;
+}
 
-  .metric-card {
-    padding: 1rem;
-  }
+.share-icon i {
+  font-size: 1.5rem;
+}
 
-  .metric-value {
-    font-size: 1.75rem;
-  }
+.results-container {
+  padding: 1.5rem;
+  background-color: #ffffff;
+  border-radius: 1rem;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  width: 100%;
+  margin: 0 auto;
+  font-family: Arial, sans-serif;
+}
 
-  .metric-unit {
-    font-size: 0.875rem;
-  }
+.title {
+  font-size: 1.75rem;
+  font-weight: bold;
+  color: #2c3e50;
+  text-align: left;
+  margin-bottom: 2rem;
+}
 
-  .metric-label {
-    font-size: 0.9rem;
+.meals-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  grid-template-rows: repeat(2, auto);
+  gap: 1.5rem;
+}
+
+.meal-card {
+  background-color: #f7f7f7;
+  border-radius: 0.75rem;
+  padding: 1rem;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.meal-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
+}
+
+.meal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.meal-title {
+  font-size: 1.5rem;
+  color: #34495e;
+  font-weight: 600;
+}
+
+.meal-icon {
+  font-size: 1.5rem;
+}
+
+.meal-list {
+  list-style: none;
+  padding: 0;
+}
+
+.meal-item {
+  padding: 0.5rem 0;
+  display: flex;
+  justify-content: space-between;
+  border-bottom: 1px solid #ececec;
+}
+
+.meal-item:last-child {
+  border-bottom: none;
+}
+
+.food-name {
+  font-weight: 600;
+  color: #2c3e50;
+}
+
+.food-details {
+  font-size: 0.9rem;
+  color: #7f8c8d;
+}
+
+.no-items {
+  font-style: italic;
+  color: #bdc3c7;
+  text-align: center;
+}
+
+@media (max-width: 600px) {
+  .meals-grid {
+    grid-template-columns: 1fr;
+    grid-template-rows: repeat(4, auto);
   }
 }

@@ -1,4 +1,4 @@
-<div class="daily-food-log">
+<div class="daily-food-log" [ngClass]="{ shrink: showCalculationResult }">
   <div class="meals-grid">
     <div class="meal-card">
       <div class="meal-content">
@@ -22,7 +22,7 @@
             <div class="food-details">
               <span class="food-name">{{ food.foodName }}</span>
               <span class="food-info"
-                >{{ food.servingSize }}g serving size,
+                >{{ food.servingSize }} serving size,
                 {{ food.numberOfServings }} servings</span
               >
             </div>
@@ -64,7 +64,7 @@
             <div class="food-details">
               <span class="food-name">{{ food.foodName }}</span>
               <span class="food-info"
-                >{{ food.servingSize }}g serving size,
+                >{{ food.servingSize }} serving size,
                 {{ food.numberOfServings }} servings</span
               >
             </div>
@@ -109,7 +109,7 @@
             <div class="food-details">
               <span class="food-name">{{ food.foodName }}</span>
               <span class="food-info"
-                >{{ food.servingSize }}g serving size,
+                >{{ food.servingSize }} serving size,
                 {{ food.numberOfServings }} servings</span
               >
             </div>
@@ -151,7 +151,7 @@
             <div class="food-details">
               <span class="food-name">{{ food.foodName }}</span>
               <span class="food-info"
-                >{{ food.servingSize }}g serving size,
+                >{{ food.servingSize }} serving size,
                 {{ food.numberOfServings }} servings</span
               >
             </div>
@@ -178,8 +178,13 @@
   </div>
 
   <div class="calculate-container">
-    <button class="calculate-btn" (click)="calculateDailyOxalate()">
-      Calculate Daily Oxalate
+    <button class="calculate-btn" (click)="toggleResults()">
+      <i class="material-icons">analytics</i>
+      <span class="btn-text">
+        {{
+          showCalculationResult ? "Close Daily Oxalate" : "Review Daily Oxalate"
+        }}
+      </span>
     </button>
   </div>
 </div>
@@ -192,4 +197,12 @@
       (mealLogged)="onMealLogged($event)"
     ></app-calculate-oxalate>
   </div>
+</div>
+<div class="results-section" *ngIf="showCalculationResult" [@slideInAnimation]>
+  <app-results-section
+    [breakfastItems]="breakfastItems"
+    [lunchItems]="lunchItems"
+    [dinnerItems]="dinnerItems"
+    [snackItems]="snackItems"
+  ></app-results-section>
 </div>

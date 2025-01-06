@@ -10,7 +10,6 @@ import {
 import { CalculateOxalateService } from 'src/app/landing-page/dialog-service/service/calculate-oxalate.service';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { ResultsSectionComponent } from './results-section/results-section.component';
 import { SearchSectionComponent } from './search-section/search-section.component';
 import { ServingPanelComponent } from './serving-panel/serving-panel.component';
 import { SavedMealsComponent } from './saved-meals/saved-meals.component';
@@ -24,7 +23,6 @@ import { BehaviorSubject, debounceTime, distinctUntilChanged } from 'rxjs';
   imports: [
     CommonModule,
     FormsModule,
-    ResultsSectionComponent,
     SearchSectionComponent,
     ServingPanelComponent,
     SavedMealsComponent,
@@ -234,7 +232,7 @@ export class CalculateOxalateComponent implements OnInit, OnDestroy {
   }
 
   onEditMeal(event: { meal: SavedMeal; date: string; index: number }): void {
-    // Implement your logic to handle meal editing
+    // logic to handle meal editing
     console.log('Edit meal:', event);
   }
 
@@ -245,7 +243,7 @@ export class CalculateOxalateComponent implements OnInit, OnDestroy {
         foodName: this.foodName,
         oxalatePerServing: this.totalOxalatePerServing,
         solubleOxalatePerServing: this.totalSolubleOxalatePerServing,
-        servingSize: parseFloat(this.servingSize) || 0,
+        servingSize: this.servingSize,
         numberOfServings: this.numberOfServings,
       };
       this.mealLogged.emit(meal);

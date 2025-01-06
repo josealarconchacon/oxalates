@@ -3,28 +3,42 @@ import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { CalculateOxalateComponent } from '../calculate-oxalate/calculate-oxalate.component';
 import { animate, style, transition, trigger } from '@angular/animations';
+import { ResultsSectionComponent } from '../calculate-oxalate/results-section/results-section.component';
 
 interface FoodItem {
   foodName: string;
   oxalatePerServing: number;
   solubleOxalatePerServing: number;
-  servingSize: number;
+  servingSize: string;
   numberOfServings: number;
 }
 
 @Component({
   selector: 'app-food-entry',
   standalone: true,
-  imports: [FormsModule, CommonModule, CalculateOxalateComponent],
+  imports: [
+    FormsModule,
+    CommonModule,
+    CalculateOxalateComponent,
+    ResultsSectionComponent,
+  ],
   templateUrl: './food-entry.component.html',
   styleUrls: ['./food-entry.component.css'],
   animations: [
-    trigger('dialogAnimation', [
+    trigger('slideInAnimation', [
       transition(':enter', [
-        style({ opacity: 0 }),
-        animate('200ms ease-out', style({ opacity: 1 })),
+        style({ transform: 'translateX(100%)', opacity: 0 }),
+        animate(
+          '500ms ease-out',
+          style({ transform: 'translateX(0)', opacity: 1 })
+        ),
       ]),
-      transition(':leave', [animate('200ms ease-in', style({ opacity: 0 }))]),
+      transition(':leave', [
+        animate(
+          '500ms ease-in',
+          style({ transform: 'translateX(100%)', opacity: 0 })
+        ),
+      ]),
     ]),
   ],
 })
@@ -90,6 +104,7 @@ export class FoodEntryComponent {
   }
 
   onMealLogged(foodItem: FoodItem) {
+    console.log('Logged Food Item:', foodItem);
     switch (this.selectedMealType) {
       case 'breakfast':
         this.breakfastItems.push(foodItem);
@@ -149,5 +164,10 @@ export class FoodEntryComponent {
 
   closeCalculationResult() {
     this.showCalculationResult = false;
+  }
+
+  // new
+  toggleResults() {
+    this.showCalculationResult = !this.showCalculationResult;
   }
 }

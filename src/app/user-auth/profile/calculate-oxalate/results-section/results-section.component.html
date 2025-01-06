@@ -1,21 +1,68 @@
-<div class="results-section">
-  <div class="result-card">
-    <h3 class="result-title">Oxalate Breakdown for {{ foodName }}</h3>
-    <div class="result-container">
-      <div class="metric-card">
-        <div class="metric-value">
-          {{ calculatedTotalOxalate | number : "1.2-2" }}
-          <span class="metric-unit">mg</span>
+<!-- <div class="results-container">
+  <h2 class="title">Daily Oxalate Breakdown</h2>
+  <div class="total-oxalates">
+    <span>Total Oxalate: {{ totalOxalate | number : "1.1-1" }} mg</span>
+    <span
+      >Total Soluble Oxalate:
+      {{ totalSolubleOxalate | number : "1.1-1" }} mg</span
+    >
+  </div>
+  <div class="meals-grid">
+    <ng-container *ngFor="let meal of mealItems">
+      <div class="meal-card" *ngIf="meal.items.length > 0">
+        <div class="meal-header">
+          <h3 class="meal-title">{{ meal.title }}</h3>
+          <span class="meal-icon">🍽️</span>
         </div>
-        <div class="metric-label">Total Oxalate</div>
-      </div>
-      <div class="metric-card">
-        <div class="metric-value">
-          {{ calculatedTotalSolubleOxalate | number : "1.2-2" }}
-          <span class="metric-unit">mg</span>
+        <div>
+          <ul class="meal-list">
+            <li class="meal-item" *ngFor="let food of meal.items">
+              <span class="food-name">{{ food.foodName }}</span>
+              <span class="food-details">
+                {{ food.numberOfServings }} servings,
+                {{ food.oxalatePerServing | number : "1.1-1" }} mg oxalate
+              </span>
+            </li>
+          </ul>
         </div>
-        <div class="metric-label">Soluble Oxalate</div>
       </div>
-    </div>
+    </ng-container>
+  </div>
+</div> -->
+<div class="results-container">
+  <div class="title-container">
+    <h2 class="title">Daily Oxalate Breakdown</h2>
+    <button class="share-icon">
+      <i class="fas fa-share-alt"></i>
+      <!-- Share Icon from FontAwesome -->
+    </button>
+  </div>
+  <div class="total-oxalates">
+    <span>Total Oxalate: {{ totalOxalate | number : "1.1-1" }} mg</span>
+    <span>
+      Total Soluble Oxalate:
+      {{ totalSolubleOxalate | number : "1.1-1" }} mg</span
+    >
+  </div>
+  <div class="meals-grid">
+    <ng-container *ngFor="let meal of mealItems">
+      <div class="meal-card" *ngIf="meal.items.length > 0">
+        <div class="meal-header">
+          <h3 class="meal-title">{{ meal.title }}</h3>
+          <span class="meal-icon">🍽️</span>
+        </div>
+        <div>
+          <ul class="meal-list">
+            <li class="meal-item" *ngFor="let food of meal.items">
+              <span class="food-name">{{ food.foodName }}</span>
+              <span class="food-details">
+                {{ food.numberOfServings }} servings,
+                {{ food.oxalatePerServing | number : "1.1-1" }} mg oxalate
+              </span>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </ng-container>
   </div>
 </div>
