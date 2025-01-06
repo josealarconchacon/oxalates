@@ -120,8 +120,12 @@ export class ShareMenuComponent {
             `  🥄 *${meal.title}:*\n` +
             meal.items
               .map(
-                (food: { foodName: any; oxalatePerServing: any }) =>
-                  `    - 🌿 *${food.foodName}*: ${food.oxalatePerServing}mg oxalate`
+                (food: {
+                  foodName: any;
+                  oxalatePerServing: any;
+                  solubleOxalatePerServing: any; // Correctly referenced
+                }) =>
+                  `    - 🌿 *${food.foodName}*: ${food.oxalatePerServing}mg oxalate, ${food.solubleOxalatePerServing}mg soluble oxalate`
               )
               .join('\n')
         )

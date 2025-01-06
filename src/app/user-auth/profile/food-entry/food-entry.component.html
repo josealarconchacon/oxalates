@@ -7,222 +7,212 @@
       [snackItems]="snackItems"
     ></app-results-section>
   </div>
-  <div class="meals-grid">
-    <div class="meal-card">
-      <div class="meal-content">
-        <div class="meal-header">
-          <h2 class="meal-title">Breakfast</h2>
-          <div class="oxalate-totals">
-            <span class="total-oxalate"
-              >Total Oxalate: {{ breakfastTotal }}</span
-            >
-            <span class="total-soluble-oxalate"
-              >Total Soluble Oxalate: {{ breakfastSolubleTotal }}</span
-            >
-          </div>
-        </div>
 
-        <div class="food-list" *ngIf="breakfastItems.length > 0">
-          <div
-            *ngFor="let food of breakfastItems; let i = index"
-            class="food-item"
+  <div class="meals-container">
+    <section class="meal-section">
+      <h2 class="meal-title">Breakfast</h2>
+
+      <div class="food-list" *ngIf="breakfastItems.length > 0">
+        <div
+          *ngFor="let food of breakfastItems; let i = index"
+          class="food-item"
+        >
+          <div class="food-details">
+            <span class="food-name">{{ food.foodName }}</span>
+            <div class="food-info">
+              <span class="serving-info"
+                >{{ food.numberOfServings }} {{ food.servingSize }}
+                {{ food.numberOfServings <= 1 ? "serving" : "servings" }}</span
+              >
+              <span class="oxalate-info"
+                >Total Oxalate: {{ food.oxalatePerServing }}</span
+              >
+              <span class="soluble-info"
+                >Soluble Oxalate: {{ food.solubleOxalatePerServing }}</span
+              >
+            </div>
+          </div>
+          <button
+            class="delete-btn"
+            (click)="deleteFood('breakfast', i)"
+            [attr.aria-label]="'Delete ' + food.foodName"
           >
-            <div class="food-details">
-              <span class="food-name">{{ food.foodName }}</span>
-              <span class="food-info">
-                <span class="serving-info"
-                  >{{ food.numberOfServings }} {{ food.servingSize }}
-                  {{
-                    food.numberOfServings <= 1 ? "serving" : "servings"
-                  }}</span
-                >
-                <span class="oxalate-info"
-                  >Total Oxalate: {{ food.oxalatePerServing }}</span
-                >
-                <span class="soluble-info"
-                  >Soluble Oxalate: {{ food.solubleOxalatePerServing }}</span
-                >
-              </span>
-            </div>
-            <button
-              class="delete-btn"
-              (click)="deleteFood('breakfast', i)"
-              [attr.aria-label]="'Delete ' + food.foodName"
-            >
-              <i class="material-icons">close</i>
-            </button>
-          </div>
+            <i class="material-icons">close</i>
+          </button>
         </div>
-
-        <div class="empty-state" *ngIf="breakfastItems.length === 0">
-          <span>No foods added yet</span>
-        </div>
-
-        <button class="add-food-btn" (click)="openCalculator('breakfast')">
-          <i class="material-icons">add</i>
-          <span class="btn-text">Add Food</span>
-        </button>
       </div>
-    </div>
 
-    <div class="meal-card">
-      <div class="meal-content">
-        <div class="meal-header">
-          <h2 class="meal-title">Lunch</h2>
-          <div class="oxalate-totals">
-            <span class="total-oxalate">Total Oxalate: {{ lunchTotal }}</span>
-            <span class="total-soluble-oxalate"
-              >Total Soluble Oxalate: {{ lunchSolubleTotal }}</span
-            >
-          </div>
-        </div>
-
-        <div class="food-list" *ngIf="lunchItems.length > 0">
-          <div *ngFor="let food of lunchItems; let i = index" class="food-item">
-            <div class="food-details">
-              <span class="food-name">{{ food.foodName }}</span>
-              <span class="food-info">
-                <span class="serving-info"
-                  >{{ food.numberOfServings }} {{ food.servingSize }}
-                  {{
-                    food.numberOfServings <= 1 ? "serving" : "servings"
-                  }}</span
-                >
-                <span class="oxalate-info"
-                  >Total Oxalate: {{ food.oxalatePerServing }}</span
-                >
-                <span class="soluble-info"
-                  >Soluble Oxalate: {{ food.solubleOxalatePerServing }}</span
-                >
-              </span>
-            </div>
-            <button
-              class="delete-btn"
-              (click)="deleteFood('lunch', i)"
-              [attr.aria-label]="'Delete ' + food.foodName"
-            >
-              <i class="material-icons">close</i>
-            </button>
-          </div>
-        </div>
-
-        <div class="empty-state" *ngIf="lunchItems.length === 0">
-          <span>No foods added yet</span>
-        </div>
-
-        <button class="add-food-btn" (click)="openCalculator('lunch')">
-          <i class="material-icons">add</i>
-          <span class="btn-text">Add Food</span>
-        </button>
+      <div class="empty-state" *ngIf="breakfastItems.length === 0">
+        <span>No foods added yet</span>
       </div>
-    </div>
+      <button class="button" (click)="openCalculator('breakfast')">
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="20"
+          height="20"
+          viewBox="0 0 20 20"
+          fill="none"
+          class="svg-icon"
+        >
+          <g stroke-width="1.5" stroke-linecap="round" stroke="#2b6cb0">
+            <path d="M10 2v16M2 10h16" />
+          </g>
+        </svg>
+        <span class="lable">Add Food</span>
+      </button>
+    </section>
 
-    <div class="meal-card">
-      <div class="meal-content">
-        <div class="meal-header">
-          <h2 class="meal-title">Dinner</h2>
-          <div class="oxalate-totals">
-            <span class="total-oxalate">Total Oxalate: {{ dinnerTotal }}</span>
-            <span class="total-soluble-oxalate"
-              >Total Soluble Oxalate: {{ dinnerSolubleTotal }}</span
-            >
+    <section class="meal-section">
+      <h2 class="meal-title">Lunch</h2>
+
+      <div class="food-list" *ngIf="lunchItems.length > 0">
+        <div *ngFor="let food of lunchItems; let i = index" class="food-item">
+          <div class="food-details">
+            <span class="food-name">{{ food.foodName }}</span>
+            <div class="food-info">
+              <span class="serving-info"
+                >{{ food.numberOfServings }} {{ food.servingSize }}
+                {{ food.numberOfServings <= 1 ? "serving" : "servings" }}</span
+              >
+              <span class="oxalate-info"
+                >Total Oxalate: {{ food.oxalatePerServing }}</span
+              >
+              <span class="soluble-info"
+                >Soluble Oxalate: {{ food.solubleOxalatePerServing }}</span
+              >
+            </div>
           </div>
-        </div>
-
-        <div class="food-list" *ngIf="dinnerItems.length > 0">
-          <div
-            *ngFor="let food of dinnerItems; let i = index"
-            class="food-item"
+          <button
+            class="delete-btn"
+            (click)="deleteFood('lunch', i)"
+            [attr.aria-label]="'Delete ' + food.foodName"
           >
-            <div class="food-details">
-              <span class="food-name">{{ food.foodName }}</span>
-              <span class="food-info">
-                <span class="serving-info"
-                  >{{ food.numberOfServings }} {{ food.servingSize }}
-                  {{
-                    food.numberOfServings <= 1 ? "serving" : "servings"
-                  }}</span
-                >
-                <span class="oxalate-info"
-                  >Total Oxalate: {{ food.oxalatePerServing }}</span
-                >
-                <span class="soluble-info"
-                  >Soluble Oxalate: {{ food.solubleOxalatePerServing }}</span
-                >
-              </span>
-            </div>
-            <button
-              class="delete-btn"
-              (click)="deleteFood('dinner', i)"
-              [attr.aria-label]="'Delete ' + food.foodName"
-            >
-              <i class="material-icons">close</i>
-            </button>
-          </div>
+            <i class="material-icons">close</i>
+          </button>
         </div>
-
-        <div class="empty-state" *ngIf="dinnerItems.length === 0">
-          <span>No foods added yet</span>
-        </div>
-
-        <button class="add-food-btn" (click)="openCalculator('dinner')">
-          <i class="material-icons">add</i>
-          <span class="btn-text">Add Food</span>
-        </button>
       </div>
-    </div>
 
-    <div class="meal-card">
-      <div class="meal-content">
-        <div class="meal-header">
-          <h2 class="meal-title">Snacks</h2>
-          <div class="oxalate-totals">
-            <span class="total-oxalate">Total Oxalate: {{ snacksTotal }}</span>
-            <span class="total-soluble-oxalate"
-              >Total Soluble Oxalate: {{ snacksSolubleTotal }}</span
-            >
-          </div>
-        </div>
-
-        <div class="food-list" *ngIf="snackItems.length > 0">
-          <div *ngFor="let food of snackItems; let i = index" class="food-item">
-            <div class="food-details">
-              <span class="food-name">{{ food.foodName }}</span>
-              <span class="food-info">
-                <span class="serving-info"
-                  >{{ food.numberOfServings }} {{ food.servingSize }}
-                  {{
-                    food.numberOfServings <= 1 ? "serving" : "servings"
-                  }}</span
-                >
-                <span class="oxalate-info"
-                  >Total Oxalate: {{ food.oxalatePerServing }}</span
-                >
-                <span class="soluble-info"
-                  >Soluble Oxalate: {{ food.solubleOxalatePerServing }}</span
-                >
-              </span>
-            </div>
-            <button
-              class="delete-btn"
-              (click)="deleteFood('snacks', i)"
-              [attr.aria-label]="'Delete ' + food.foodName"
-            >
-              <i class="material-icons">close</i>
-            </button>
-          </div>
-        </div>
-
-        <div class="empty-state" *ngIf="snackItems.length === 0">
-          <span>No foods added yet</span>
-        </div>
-
-        <button class="add-food-btn" (click)="openCalculator('snacks')">
-          <i class="material-icons">add</i>
-          <span class="btn-text">Add Food</span>
-        </button>
+      <div class="empty-state" *ngIf="lunchItems.length === 0">
+        <span>No foods added yet</span>
       </div>
-    </div>
+
+      <button class="button" (click)="openCalculator('lunch')">
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="20"
+          height="20"
+          viewBox="0 0 20 20"
+          fill="none"
+          class="svg-icon"
+        >
+          <g stroke-width="1.5" stroke-linecap="round" stroke="#2b6cb0">
+            <path d="M10 2v16M2 10h16" />
+          </g>
+        </svg>
+        <span class="lable">Add Food</span>
+      </button>
+    </section>
+
+    <section class="meal-section">
+      <h2 class="meal-title">Dinner</h2>
+
+      <div class="food-list" *ngIf="dinnerItems.length > 0">
+        <div *ngFor="let food of dinnerItems; let i = index" class="food-item">
+          <div class="food-details">
+            <span class="food-name">{{ food.foodName }}</span>
+            <div class="food-info">
+              <span class="serving-info"
+                >{{ food.numberOfServings }} {{ food.servingSize }}
+                {{ food.numberOfServings <= 1 ? "serving" : "servings" }}</span
+              >
+              <span class="oxalate-info"
+                >Total Oxalate: {{ food.oxalatePerServing }}</span
+              >
+              <span class="soluble-info"
+                >Soluble Oxalate: {{ food.solubleOxalatePerServing }}</span
+              >
+            </div>
+          </div>
+          <button
+            class="delete-btn"
+            (click)="deleteFood('dinner', i)"
+            [attr.aria-label]="'Delete ' + food.foodName"
+          >
+            <i class="material-icons">close</i>
+          </button>
+        </div>
+      </div>
+
+      <div class="empty-state" *ngIf="dinnerItems.length === 0">
+        <span>No foods added yet</span>
+      </div>
+
+      <button class="button" (click)="openCalculator('dinner')">
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="20"
+          height="20"
+          viewBox="0 0 20 20"
+          fill="none"
+          class="svg-icon"
+        >
+          <g stroke-width="1.5" stroke-linecap="round" stroke="#2b6cb0">
+            <path d="M10 2v16M2 10h16" />
+          </g>
+        </svg>
+        <span class="lable">Add Food</span>
+      </button>
+    </section>
+
+    <section class="meal-section">
+      <h2 class="meal-title">Snacks</h2>
+
+      <div class="food-list" *ngIf="snackItems.length > 0">
+        <div *ngFor="let food of snackItems; let i = index" class="food-item">
+          <div class="food-details">
+            <span class="food-name">{{ food.foodName }}</span>
+            <div class="food-info">
+              <span class="serving-info"
+                >{{ food.numberOfServings }} {{ food.servingSize }}
+                {{ food.numberOfServings <= 1 ? "serving" : "servings" }}</span
+              >
+              <span class="oxalate-info"
+                >Total Oxalate: {{ food.oxalatePerServing }}</span
+              >
+              <span class="soluble-info"
+                >Soluble Oxalate: {{ food.solubleOxalatePerServing }}</span
+              >
+            </div>
+          </div>
+          <button
+            class="delete-btn"
+            (click)="deleteFood('snacks', i)"
+            [attr.aria-label]="'Delete ' + food.foodName"
+          >
+            <i class="material-icons">close</i>
+          </button>
+        </div>
+      </div>
+
+      <div class="empty-state" *ngIf="snackItems.length === 0">
+        <span>No foods added yet</span>
+      </div>
+      <button class="button" (click)="openCalculator('snacks')">
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="20"
+          height="20"
+          viewBox="0 0 20 20"
+          fill="none"
+          class="svg-icon"
+        >
+          <g stroke-width="1.5" stroke-linecap="round" stroke="#2b6cb0">
+            <path d="M10 2v16M2 10h16" />
+          </g>
+        </svg>
+        <span class="lable">Add Food</span>
+      </button>
+    </section>
   </div>
 </div>
 

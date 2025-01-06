@@ -29,6 +29,8 @@ export class ProfileComponent implements OnInit {
   isColorPickerVisible: boolean = false;
   currentHeaderColor: string = '#1da1f2';
   selectedColor: string = this.currentHeaderColor;
+  firstName: string = '';
+  lastName: string = '';
 
   presetColors: string[] = presetColors;
 
@@ -54,12 +56,26 @@ export class ProfileComponent implements OnInit {
   getUserInfo() {
     this.authService.getUserProfile().subscribe((response) => {
       this.userProfile = response;
+      this.splitDisplayName();
     });
   }
+
+  splitDisplayName() {
+    if (this.userProfile?.displayName) {
+      const nameParts = this.userProfile.displayName.split(' ');
+      this.firstName = nameParts[0];
+      this.lastName = nameParts.slice(1).join(' ');
+    } else {
+      this.firstName = 'First Name';
+      this.lastName = 'Last Name';
+    }
+  }
+
   showSection(section: string): void {
     this.activeSection = section;
     console.log('Active Section:', this.activeSection);
   }
+
   toggleChangePassword(): void {
     this.isChangePasswordVisible = !this.isChangePasswordVisible;
   }

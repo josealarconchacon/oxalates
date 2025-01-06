@@ -16,6 +16,8 @@ export class ServingPanelComponent {
   @Input() numberOfServings: string = '1';
   @Output() numberOfServingsChange = new EventEmitter<string>();
 
+  isFoodSelected: boolean = false;
+
   onNumberOfServingsChange(value: string): void {
     this.numberOfServingsChange.emit(value);
   }

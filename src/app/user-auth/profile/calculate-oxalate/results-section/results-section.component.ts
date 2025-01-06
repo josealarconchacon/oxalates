@@ -69,4 +69,13 @@ export class ResultsSectionComponent {
   closeShareMenu(): void {
     this.shareMenuVisible = false;
   }
+
+  hasFoodItems(): boolean {
+    return (
+      this.breakfastItems.length > 0 ||
+      this.lunchItems.length > 0 ||
+      this.dinnerItems.length > 0 ||
+      this.snackItems.length > 0
+    );
+  }
 }
