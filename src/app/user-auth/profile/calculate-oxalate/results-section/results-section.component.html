@@ -1,14 +1,14 @@
 <div class="results-container">
   <div class="title-container">
     <h2 class="title">Daily Oxalate Breakdown</h2>
-    <button class="share-icon">
+    <button class="share-icon" (click)="openShareMenu()">
       <i class="fas fa-share-alt"></i>
     </button>
   </div>
   <div class="total-oxalates">
     <span>Total Oxalate: {{ totalOxalate | number : "1.1-1" }} mg</span>
-    <span>
-      Total Soluble Oxalate:
+    <span
+      >Total Soluble Oxalate:
       {{ totalSolubleOxalate | number : "1.1-1" }} mg</span
     >
   </div>
@@ -34,3 +34,13 @@
     </ng-container>
   </div>
 </div>
+
+<app-share-menu
+  *ngIf="shareMenuVisible"
+  [dailyMeals]="mealItems"
+  [dailyTotal]="{
+    totalOxalate: totalOxalate,
+    totalSolubleOxalate: totalSolubleOxalate
+  }"
+  (close)="closeShareMenu()"
+></app-share-menu>

@@ -94,9 +94,7 @@ export class FoodEntryComponent {
     return this.calculateMealSolubleTotal(this.snackItems);
   }
 
-  ngOnInit() {
-    // Initialize any necessary data
-  }
+  ngOnInit() {}
 
   openCalculator(mealType: string) {
     this.selectedMealType = mealType;
@@ -166,7 +164,6 @@ export class FoodEntryComponent {
     this.showCalculationResult = false;
   }
 
-  // new
   toggleResults() {
     this.showCalculationResult = !this.showCalculationResult;
   }

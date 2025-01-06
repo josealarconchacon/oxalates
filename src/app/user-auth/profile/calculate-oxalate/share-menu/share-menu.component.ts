@@ -7,15 +7,13 @@ import {
 } from '@angular/animations';
 import { CommonModule, DecimalPipe } from '@angular/common';
 import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { SavedMeal } from '../../model/saved-meal';
-import { DailyTotal } from '../../model/daily-total';
 
 @Component({
   selector: 'app-share-menu',
   standalone: true,
   imports: [DecimalPipe, CommonModule],
   templateUrl: './share-menu.component.html',
-  styleUrl: './share-menu.component.css',
+  styleUrls: ['./share-menu.component.css'],
   animations: [
     trigger('menuAnimation', [
       state(
@@ -77,28 +75,22 @@ import { DailyTotal } from '../../model/daily-total';
   ],
 })
 export class ShareMenuComponent {
-  @Input() foodName: string = '';
-  @Input() oxalatePerServing: number = 0;
-  @Input() solubleOxalatePerServing: number = 0;
+  @Input() dailyMeals: any[] = [];
+  @Input() dailyTotal: { totalOxalate: number; totalSolubleOxalate: number } = {
+    totalOxalate: 0,
+    totalSolubleOxalate: 0,
+  };
   @Output() close = new EventEmitter<void>();
+  copySuccess: boolean = false;
 
-  // new
-  @Input() dailyMeals: SavedMeal[] = [];
-  @Input() date: string = '';
-  @Input() dailyTotal: DailyTotal | null = null;
-
-  copySuccess = false;
-
-  shareOptions = [
+  shareOptions: {
+    label: string;
+    icon: string;
+    color: string;
+    getShareUrl: (text: string) => string;
+  }[] = [
     {
-      label: 'Share on X',
-      icon: 'twitter',
-      color: '#1DA1F2',
-      getShareUrl: (text: string) =>
-        `https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}`,
-    },
-    {
-      label: 'Share on Meta',
+      label: 'Share on Facebook',
       icon: 'facebook',
       color: '#1877F2',
       getShareUrl: (text: string) =>
@@ -109,7 +101,7 @@ export class ShareMenuComponent {
     {
       label: 'Share on Reddit',
       icon: 'reddit',
-      color: '#0A66C2',
+      color: '#FF4500',
       getShareUrl: (text: string) =>
         `https://www.reddit.com/submit?url=${encodeURIComponent(
           window.location.href
@@ -118,28 +110,24 @@ export class ShareMenuComponent {
   ];
 
   getShareableText(): string {
-    const formattedDate = new Date(this.date).toLocaleDateString();
-
     return (
-      `📅 *Daily Oxalate Summary* for ${formattedDate}\n\n` +
-      `🔹 *Total Oxalate for the Day*: ${this.dailyTotal?.totalOxalate.toFixed(
-        1
-      )}mg\n\n` +
+      `📅 *Daily Oxalate Summary*\n\n` +
+      `🔹 *Total Oxalate for the Day*: ${this.dailyTotal.totalOxalate}mg\n\n` +
       `🍽️ *Meals Breakdown:*\n` +
       this.dailyMeals
         .map(
           (meal) =>
-            `  🥄 *${meal.foodName}:*\n` +
-            `    - 🌿 *Total Oxalate*: ${meal.oxalatePerServing.toFixed(
-              1
-            )}mg\n` +
-            `    - 💧 *Soluble Oxalate*: ${meal.solubleOxalatePerServing.toFixed(
-              1
-            )}mg\n`
+            `  🥄 *${meal.title}:*\n` +
+            meal.items
+              .map(
+                (food: { foodName: any; oxalatePerServing: any }) =>
+                  `    - 🌿 *${food.foodName}*: ${food.oxalatePerServing}mg oxalate`
+              )
+              .join('\n')
         )
         .join('\n') +
-      `\n` +
-      `🔖 *Note*: Keep track of your daily oxalate intake to maintain a healthy balance.`
+      `\n🔖 *Note*: Keep track of your daily oxalate intake to maintain a healthy balance.\n\n` +
+      `📲 Stay healthy, and track your meals!`
     );
   }
 

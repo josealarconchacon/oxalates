@@ -4,9 +4,6 @@
     [@menuAnimation]="'show'"
     (click)="$event.stopPropagation()"
   >
-    <button class="close-button" (click)="closeShareMenu($event)">
-      <i class="material-icons">close</i>
-    </button>
     <div class="share-preview">
       <h3 class="preview-title">Share Your Results</h3>
       <div class="result-card">
@@ -17,23 +14,32 @@
         <div class="result-content">
           <div *ngFor="let meal of dailyMeals" class="result-item">
             <i class="material-icons">restaurant_menu</i>
-            <div>
-              <strong>{{ meal.foodName }}</strong>
+            <div class="meal-info">
+              <strong>{{ meal.title }}</strong>
+              <div class="meal-items">
+                <div *ngFor="let food of meal.items" class="food-item">
+                  <i class="material-icons">local_dining</i>
+                  <span
+                    >{{ food.foodName }} - {{ food.oxalatePerServing }}mg
+                    oxalate</span
+                  >
+                </div>
+              </div>
             </div>
           </div>
           <div class="result-item highlight">
             <i class="material-icons">timeline</i>
             <div>
-              <span>Total Oxalate</span>
-              <strong
-                >{{ dailyTotal?.totalOxalate | number : "1.2-2" }}mg</strong
+              <span>Total Oxalate: </span>
+              <strong>
+                {{ dailyTotal.totalOxalate | number : "1.2-2" }}mg</strong
               >
             </div>
             <div>
-              <span>Soluble Oxalate</span>
+              <span>Soluble Oxalate: </span>
               <strong
                 >{{
-                  dailyTotal?.totalSolubleOxalate | number : "1.2-2"
+                  dailyTotal.totalSolubleOxalate | number : "1.2-2"
                 }}mg</strong
               >
             </div>
@@ -55,7 +61,6 @@
         }}</i>
         <span>{{ option.label }}</span>
       </a>
-
       <button
         class="share-button copy-button"
         (click)="copyToClipboard()"
