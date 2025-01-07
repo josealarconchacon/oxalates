@@ -113,7 +113,7 @@ export class CalculateOxalateComponent implements OnInit, OnDestroy {
     );
     console.log('Calculation result:', result);
 
-    // Assuming the service returns oxalate and soluble oxalate per serving
+    // service returns oxalate and soluble oxalate per serving
     this.totalOxalatePerServing = result.totalOxalate;
     this.totalSolubleOxalatePerServing = result.solubleOxalate;
 
@@ -122,7 +122,7 @@ export class CalculateOxalateComponent implements OnInit, OnDestroy {
     this.calculatedTotalSolubleOxalate =
       this.totalSolubleOxalatePerServing * numberOfServingsValue;
 
-    this.showResults = true; // Show results after calculation
+    this.showResults = true;
     this.isCalculating = false;
   }
 
@@ -152,7 +152,7 @@ export class CalculateOxalateComponent implements OnInit, OnDestroy {
     this.totalSolubleOxalatePerServing = 0;
     this.calculatedTotalOxalate = 0;
     this.calculatedTotalSolubleOxalate = 0;
-    this.showResults = false; // Hide results
+    this.showResults = false;
     this.showSuggestions = false;
   }
 

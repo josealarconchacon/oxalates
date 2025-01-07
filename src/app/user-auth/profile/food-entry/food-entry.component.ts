@@ -1,17 +1,12 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import { FoodItem } from '../model/food-item';
+import { slideInAnimation } from 'src/app/shared/animations/animations';
 import { CalculateOxalateComponent } from '../calculate-oxalate/calculate-oxalate.component';
-import { animate, style, transition, trigger } from '@angular/animations';
 import { ResultsSectionComponent } from '../calculate-oxalate/results-section/results-section.component';
-
-interface FoodItem {
-  foodName: string;
-  oxalatePerServing: number;
-  solubleOxalatePerServing: number;
-  servingSize: string;
-  numberOfServings: number;
-}
+import { DateSwitcherComponent } from './date-switcher/date-switcher.component';
+import { FoodEntryService } from './service/food-entry.service';
 
 @Component({
   selector: 'app-food-entry',
@@ -21,89 +16,76 @@ interface FoodItem {
     CommonModule,
     CalculateOxalateComponent,
     ResultsSectionComponent,
+    DateSwitcherComponent,
   ],
   templateUrl: './food-entry.component.html',
   styleUrls: ['./food-entry.component.css'],
-  animations: [
-    trigger('slideInAnimation', [
-      transition(':enter', [
-        style({ transform: 'translateX(100%)', opacity: 0 }),
-        animate(
-          '500ms ease-out',
-          style({ transform: 'translateX(0)', opacity: 1 })
-        ),
-      ]),
-      transition(':leave', [
-        animate(
-          '500ms ease-in',
-          style({ transform: 'translateX(100%)', opacity: 0 })
-        ),
-      ]),
-    ]),
-  ],
+  animations: [slideInAnimation],
 })
-export class FoodEntryComponent {
+export class FoodEntryComponent implements OnInit {
   currentDate: Date = new Date();
   breakfastItems: FoodItem[] = [];
   lunchItems: FoodItem[] = [];
   dinnerItems: FoodItem[] = [];
   snackItems: FoodItem[] = [];
-
-  selectedMealType: string = '';
+  selectedMealType: 'breakfast' | 'lunch' | 'dinner' | 'snacks' = 'breakfast';
   showCalculator: boolean = false;
   showCalculationResult: boolean = false;
 
-  get breakfastTotal(): number {
-    return this.calculateMealTotal(this.breakfastItems);
+  constructor(private foodEntryService: FoodEntryService) {}
+
+  ngOnInit() {
+    this.fetchFoodEntries();
   }
 
-  get lunchTotal(): number {
-    return this.calculateMealTotal(this.lunchItems);
+  fetchFoodEntries() {
+    this.foodEntryService.getDailyEntry(this.currentDate).subscribe((entry) => {
+      if (entry) {
+        this.breakfastItems = entry.breakfast || [];
+        this.lunchItems = entry.lunch || [];
+        this.dinnerItems = entry.dinner || [];
+        this.snackItems = entry.snacks || [];
+      } else {
+        this.resetMealItems();
+      }
+    });
   }
 
-  get dinnerTotal(): number {
-    return this.calculateMealTotal(this.dinnerItems);
+  private resetMealItems() {
+    this.breakfastItems = [];
+    this.lunchItems = [];
+    this.dinnerItems = [];
+    this.snackItems = [];
   }
-
-  get snacksTotal(): number {
-    return this.calculateMealTotal(this.snackItems);
-  }
-
-  get dailyTotal(): number {
-    return (
-      this.breakfastTotal +
-      this.lunchTotal +
-      this.dinnerTotal +
-      this.snacksTotal
-    );
-  }
-
-  get breakfastSolubleTotal(): number {
-    return this.calculateMealSolubleTotal(this.breakfastItems);
-  }
-
-  get lunchSolubleTotal(): number {
-    return this.calculateMealSolubleTotal(this.lunchItems);
-  }
-
-  get dinnerSolubleTotal(): number {
-    return this.calculateMealSolubleTotal(this.dinnerItems);
-  }
-
-  get snacksSolubleTotal(): number {
-    return this.calculateMealSolubleTotal(this.snackItems);
-  }
-
-  ngOnInit() {}
 
   openCalculator(mealType: string) {
-    this.selectedMealType = mealType;
+    this.selectedMealType = mealType as
+      | 'breakfast'
+      | 'lunch'
+      | 'dinner'
+      | 'snacks';
     this.showCalculator = true;
   }
 
-  onMealLogged(foodItem: FoodItem) {
-    console.log('Logged Food Item:', foodItem);
-    switch (this.selectedMealType) {
+  async onMealLogged(foodItem: FoodItem) {
+    const mealType = this.selectedMealType;
+    if (mealType) {
+      this.addFoodItem(mealType, foodItem);
+      await this.foodEntryService.updateMealItems(
+        this.currentDate,
+        mealType as 'breakfast' | 'lunch' | 'dinner' | 'snacks',
+        this.getMealItems(mealType)
+      );
+    }
+  }
+
+  onDateChange(newDate: Date) {
+    this.currentDate = newDate;
+    this.fetchFoodEntries();
+  }
+
+  addFoodItem(mealType: string, foodItem: FoodItem) {
+    switch (mealType) {
       case 'breakfast':
         this.breakfastItems.push(foodItem);
         break;
@@ -117,51 +99,34 @@ export class FoodEntryComponent {
         this.snackItems.push(foodItem);
         break;
     }
-    this.showCalculator = false;
   }
 
-  deleteFood(mealType: string, index: number) {
+  getMealItems(mealType: string): FoodItem[] {
     switch (mealType) {
       case 'breakfast':
-        this.breakfastItems.splice(index, 1);
-        break;
+        return this.breakfastItems;
       case 'lunch':
-        this.lunchItems.splice(index, 1);
-        break;
+        return this.lunchItems;
       case 'dinner':
-        this.dinnerItems.splice(index, 1);
-        break;
+        return this.dinnerItems;
       case 'snacks':
-        this.snackItems.splice(index, 1);
-        break;
+        return this.snackItems;
+      default:
+        return [];
     }
   }
 
-  private calculateMealTotal(items: FoodItem[]): number {
-    return items.reduce(
-      (total, item) => total + item.oxalatePerServing * item.numberOfServings,
-      0
+  async deleteFood(mealType: string, index: number) {
+    this.getMealItems(mealType).splice(index, 1);
+    await this.foodEntryService.updateMealItems(
+      this.currentDate,
+      mealType as 'breakfast' | 'lunch' | 'dinner' | 'snacks',
+      this.getMealItems(mealType)
     );
-  }
-
-  private calculateMealSolubleTotal(items: FoodItem[]): number {
-    return items.reduce(
-      (total, item) =>
-        total + item.solubleOxalatePerServing * item.numberOfServings,
-      0
-    );
-  }
-
-  calculateDailyOxalate() {
-    this.showCalculationResult = true;
   }
 
   closeCalculator() {
     this.showCalculator = false;
-  }
-
-  closeCalculationResult() {
-    this.showCalculationResult = false;
   }
 
   toggleResults() {

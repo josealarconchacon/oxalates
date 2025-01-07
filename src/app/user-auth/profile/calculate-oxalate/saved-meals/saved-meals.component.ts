@@ -92,7 +92,6 @@ export class SavedMealsComponent implements OnInit {
     this.activeShareMenuDate = this.activeShareMenuDate === date ? null : date;
   }
   closeBtn() {
-    // new
     this.close.emit();
   }
 }

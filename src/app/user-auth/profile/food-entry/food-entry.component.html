@@ -1,4 +1,8 @@
 <div class="daily-food-log" [ngClass]="{ shrink: showCalculationResult }">
+  <app-date-switcher
+    [selectedDate]="currentDate"
+    (dateChange)="onDateChange($event)"
+  ></app-date-switcher>
   <div>
     <app-results-section
       [breakfastItems]="breakfastItems"

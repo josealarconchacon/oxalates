@@ -1,18 +1,12 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+import { CategoryCard } from '../../model/category-card';
 import { CategoryService } from '../oxalate/service/category.service';
 import { FilterService } from '../oxalate/service/filter.service';
 import { CommonModule } from '@angular/common';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import { HttpClient } from '@angular/common/http';
 import { SvgService } from './service/svg.service';
-
-interface CategoryCard {
-  title: string;
-  iconSvg: string;
-  badge?: string;
-  overlayText: string;
-}
 
 @Component({
   selector: 'app-food-by-category',

@@ -3,7 +3,7 @@ import { AuthService } from '../service/auth-service.service';
 import { AngularFireStorage } from '@angular/fire/compat/storage';
 import { finalize } from 'rxjs/operators';
 import { Router } from '@angular/router';
-import { trigger, transition, style, animate } from '@angular/animations';
+import { fadeInOut } from 'src/app/shared/animations/fadeInOut';
 import { presetColors, colorToHex } from '../../shared/utils/color-utils';
 import { HSLA, HSVA, RGBA } from 'ngx-color';
 
@@ -11,15 +11,7 @@ import { HSLA, HSVA, RGBA } from 'ngx-color';
   selector: 'app-profile',
   templateUrl: './profile.component.html',
   styleUrls: ['./profile.component.css'],
-  animations: [
-    trigger('fadeInOut', [
-      transition(':enter', [
-        style({ opacity: 0 }),
-        animate('200ms ease-in', style({ opacity: 1 })),
-      ]),
-      transition(':leave', [animate('200ms ease-out', style({ opacity: 0 }))]),
-    ]),
-  ],
+  animations: [fadeInOut],
 })
 export class ProfileComponent implements OnInit {
   activeSection: string = 'profile';
@@ -141,7 +133,6 @@ export class ProfileComponent implements OnInit {
       this.cancelColor();
     }
   }
-
   onLogout(): void {
     this.authService.signOut();
   }

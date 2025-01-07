@@ -109,7 +109,7 @@ export class CalculateOxalateService {
   }
 
   private estimateBaselineOxalateContent(): number {
-    return 15;
+    return 0;
   }
 
   private calculateSimilarity(foodItem: string, searchWords: string[]): number {

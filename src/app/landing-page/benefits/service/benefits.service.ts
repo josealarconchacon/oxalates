@@ -1,12 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
-
-export interface Benefit {
-  icon: string;
-  title: string;
-  description: string;
-}
+import { Benefit } from '../../model/benefit';
 
 export interface BenefitsData {
   benefits: Benefit[];
@@ -24,3 +19,4 @@ export class BenefitsService {
     return this.http.get<BenefitsData>(this.jsonUrl);
   }
 }
+export { Benefit };
