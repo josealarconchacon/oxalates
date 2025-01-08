@@ -125,7 +125,8 @@ export class OxalateService {
     const docRef = await userDocRef
       .collection('oxalates')
       .add({ ...oxalateData });
-    console.log('Oxalate saved with ID:', docRef.id);
+    // console.log('Oxalate saved with ID:', docRef.id);
+    console.log('Oxalate saved with ID:', '...');
   }
 
   async saveOxalate(oxalateData: Oxalate): Promise<void> {
@@ -153,8 +154,8 @@ export class OxalateService {
       .doc(userId)
       .collection('oxalates')
       .doc(id);
-
-    console.log('Attempting to delete document with ID:', id);
+    console.log('Attempting to delete document with ID: ...');
+    // console.log('Attempting to delete document with ID:', id);
 
     try {
       const snapshot = await docRef.get().toPromise();
@@ -165,7 +166,8 @@ export class OxalateService {
       }
 
       await docRef.delete();
-      console.log(`Oxalate with ID ${id} deleted successfully`);
+      // console.log(`Oxalate with ID ${id} deleted successfully`);
+      console.log(`Oxalate with ID ${'...'} deleted successfully`);
     } catch (error) {
       console.error('Error deleting oxalate:', error);
       throw error;

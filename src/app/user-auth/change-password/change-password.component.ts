@@ -1,6 +1,7 @@
 import { Component, EventEmitter, Output, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { AuthService } from '../service/auth-service.service';
+import { AlertService } from 'src/app/shared/alert-service/alert.service';
 
 @Component({
   selector: 'app-change-password',
@@ -9,11 +10,17 @@ import { AuthService } from '../service/auth-service.service';
 })
 export class ChangePasswordComponent implements OnInit {
   passwordForm!: FormGroup;
-  isSubmitting = false; // Add the isSubmitting property
+  isSubmitting = false;
+  showAlert: boolean = false;
+  alertMessage: string = '';
 
   @Output() close = new EventEmitter<void>();
 
-  constructor(private fb: FormBuilder, private authService: AuthService) {}
+  constructor(
+    private fb: FormBuilder,
+    private authService: AuthService,
+    private alertService: AlertService
+  ) {}
 
   ngOnInit(): void {
     this.passwordForm = this.fb.group(
@@ -24,6 +31,10 @@ export class ChangePasswordComponent implements OnInit {
       },
       { validators: this.passwordMatchValidator }
     );
+    this.alertService.getAlertObservable().subscribe((alert) => {
+      this.alertMessage = alert.message;
+      this.showAlert = alert.show;
+    });
   }
 
   passwordMatchValidator(formGroup: FormGroup) {
@@ -45,13 +56,15 @@ export class ChangePasswordComponent implements OnInit {
     this.authService
       .changePassword(currentPassword, newPassword)
       .then(() => {
-        alert('Password changed successfully!');
+        this.alertService.showAlert('Password changed successfully!');
         this.passwordForm.reset();
         this.close.emit();
       })
       .catch((error) => {
         console.error('Error changing password:', error);
-        alert('Failed to change password. Please try again.');
+        this.alertService.showAlert(
+          'Failed to change password. Please try again.'
+        );
       })
       .finally(() => {
         this.isSubmitting = false; // Reset isSubmitting to false after request completes

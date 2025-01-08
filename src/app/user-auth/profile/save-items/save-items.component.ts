@@ -31,7 +31,6 @@ export class SaveItemsComponent implements OnInit {
           return from(this.oxalateService.getSavedOxalates(userId)).pipe(
             map((savedOxalates) =>
               savedOxalates.map((oxalate) => {
-                // Remove 'notes', 'reference', 'n/a', 'uncalculated' fields and empty values
                 const filteredOxalate = { ...oxalate };
                 (
                   Object.keys(
@@ -51,7 +50,9 @@ export class SaveItemsComponent implements OnInit {
                 return filteredOxalate as Omit<Oxalate, 'notes' | 'reference'>;
               })
             ),
-            tap((data) => console.log('Retrieved filtered data:', data))
+            tap((data) => {
+              console.log('Fetched saved oxalates: .......');
+            })
           );
         } else {
           return of([]);
@@ -75,7 +76,7 @@ export class SaveItemsComponent implements OnInit {
   }
 
   deleteOxalate(id: string): void {
-    console.log('Attempting to delete oxalate with ID:', id);
+    console.log('Attempting to delete oxalate with ID:', '...');
     from(this.authService.getCurrentUser()).subscribe((user) => {
       if (user) {
         this.oxalateService
@@ -98,5 +99,12 @@ export class SaveItemsComponent implements OnInit {
       'calc_soluble_mg_oxalate_per_serving',
     ];
     return measurementKeys.includes(key);
+  }
+
+  getSubtitle(oxalate: Omit<Oxalate, 'notes' | 'reference'>): string {
+    const totalOxalate = oxalate['total_oxalate_mg_per_100g'];
+    return totalOxalate
+      ? `Total Oxalate: ${totalOxalate} mg/100g`
+      : 'No oxalate data';
   }
 }

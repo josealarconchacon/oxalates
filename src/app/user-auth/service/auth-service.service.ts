@@ -6,6 +6,7 @@ import firebase from 'firebase/compat/app';
 import { BehaviorSubject, Observable, take } from 'rxjs';
 import { UserProfile } from '../profile/model/user-profile';
 import { AlertService } from 'src/app/shared/alert-service/alert.service';
+import { isStrongPassword } from 'src/app/shared/utils/password-validator';
 
 @Injectable({
   providedIn: 'root',

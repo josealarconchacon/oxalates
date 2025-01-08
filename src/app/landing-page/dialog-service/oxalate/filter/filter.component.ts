@@ -62,7 +62,7 @@ export class FilterComponent implements OnInit, OnDestroy {
   }
 
   applyFilters(): void {
-    console.log('Applying filters:', this.filters);
+    // console.log('Applying filters:', this.filters);
     this.filterService.updateFilter(this.filters);
     this.filterChanged.emit(this.filters);
   }

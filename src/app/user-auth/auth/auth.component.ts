@@ -87,7 +87,7 @@ export class AuthComponent implements OnInit, OnDestroy {
     this.alertSubscription = this.alertService
       .getAlertObservable()
       .subscribe((message) => {
-        this.alertMessage = message;
+        this.alertMessage = message.message;
         this.showAlert = !!message;
       });
   }

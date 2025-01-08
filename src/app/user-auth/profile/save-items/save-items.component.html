@@ -1,46 +1,105 @@
-<div class="saved-items">
-  <h2 class="section-title">Saved Items</h2>
-  <ng-container *ngIf="savedOxalates$ | async as savedOxalates">
-    <div *ngIf="savedOxalates.length > 0; else noItems" class="items-grid">
-      <div *ngFor="let oxalate of savedOxalates" class="item-card">
-        <div class="item-header">
-          <h3>{{ oxalate.item }}</h3>
-          <div class="item-actions">
-            <button (click)="handleCardClick(oxalate.id)" class="action-button">
+<div class="master-detail-container">
+  <div class="sidebar">
+    <div class="sidebar-header">
+      <h2 class="section-title">Saved Items</h2>
+    </div>
+    <div class="sidebar-content">
+      <ng-container *ngIf="savedOxalates$ | async as savedOxalates">
+        <ng-container *ngIf="savedOxalates.length > 0; else noItems">
+          <div *ngFor="let oxalate of savedOxalates" class="item-wrapper">
+            <button
+              class="list-item"
+              [class.selected]="expandedCardId === oxalate.id"
+              (click)="handleCardClick(oxalate.id)"
+            >
+              <div class="item-content">
+                <div class="item-title">{{ oxalate.item }}</div>
+                <div class="item-subtitle">{{ getSubtitle(oxalate) }}</div>
+              </div>
               <i
                 class="fas"
-                [class.fa-chevron-down]="expandedCardId !== oxalate.id"
-                [class.fa-chevron-up]="expandedCardId === oxalate.id"
+                [class.fa-chevron-right]="expandedCardId !== oxalate.id"
+                [class.fa-chevron-down]="expandedCardId === oxalate.id"
               ></i>
             </button>
-            <button
-              (click)="deleteOxalate(oxalate.id)"
-              class="action-button delete-button"
-            >
-              <i class="fas fa-trash-alt"></i>
-            </button>
-          </div>
-        </div>
-        <div class="item-details" [class.show]="expandedCardId === oxalate.id">
-          <div *ngFor="let detail of oxalate | keyvalue">
-            <p *ngIf="detail.key !== 'id' && detail.value" class="detail-item">
-              <span class="detail-key">{{ formatKey(detail.key) }}:</span>
-              <span class="detail-value">
-                {{ detail.value }}
-                <span *ngIf="isMeasurementKey(detail.key)"> (mg)</span>
-              </span>
-            </p>
-          </div>
-        </div>
-      </div>
-    </div>
-  </ng-container>
 
-  <ng-template #noItems>
-    <div class="no-items">
-      <i class="fas fa-bookmark fa-3x"></i>
-      <h3>No saved items yet</h3>
-      <p>Items you save will appear here</p>
+            <div
+              *ngIf="expandedCardId === oxalate.id"
+              class="mobile-detail-dropdown"
+            >
+              <div class="item-details">
+                <div class="item-header">
+                  <h3>{{ oxalate.item }}</h3>
+                  <div class="item-actions">
+                    <button
+                      (click)="deleteOxalate(oxalate.id)"
+                      class="action-button delete-button"
+                    >
+                      <i class="fas fa-trash-alt"></i>
+                    </button>
+                  </div>
+                </div>
+                <div *ngFor="let detail of oxalate | keyvalue">
+                  <p
+                    *ngIf="detail.key !== 'id' && detail.value"
+                    class="detail-item"
+                  >
+                    <span class="detail-key">{{ formatKey(detail.key) }}:</span>
+                    <span class="detail-value">
+                      {{ detail.value }}
+                      <span *ngIf="isMeasurementKey(detail.key)"> (mg)</span>
+                    </span>
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </ng-container>
+      </ng-container>
     </div>
-  </ng-template>
+  </div>
+
+  <div class="detail-view">
+    <ng-container *ngIf="savedOxalates$ | async as savedOxalates">
+      <ng-container *ngIf="savedOxalates.length > 0">
+        <ng-container *ngIf="expandedCardId">
+          <div *ngFor="let oxalate of savedOxalates">
+            <div *ngIf="oxalate.id === expandedCardId" class="item-details">
+              <div class="item-header">
+                <h3>{{ oxalate.item }}</h3>
+                <div class="item-actions">
+                  <button
+                    (click)="deleteOxalate(oxalate.id)"
+                    class="action-button delete-button"
+                  >
+                    <i class="fas fa-trash-alt"></i>
+                  </button>
+                </div>
+              </div>
+              <div *ngFor="let detail of oxalate | keyvalue">
+                <p
+                  *ngIf="detail.key !== 'id' && detail.value"
+                  class="detail-item"
+                >
+                  <span class="detail-key">{{ formatKey(detail.key) }}:</span>
+                  <span class="detail-value">
+                    {{ detail.value }}
+                    <span *ngIf="isMeasurementKey(detail.key)"> (mg)</span>
+                  </span>
+                </p>
+              </div>
+            </div>
+          </div>
+        </ng-container>
+      </ng-container>
+    </ng-container>
+  </div>
 </div>
+
+<ng-template #noItems>
+  <div class="no-items">
+    <i class="fas fa-bookmark fa-3x"></i>
+    <h3>No saved items yet</h3>
+    <p>Items you save will appear here</p>
+  </div>
+</ng-template>

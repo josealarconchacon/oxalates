@@ -38,7 +38,7 @@ export class FoodByCategoryComponent implements OnInit {
       .subscribe({
         next: (data) => {
           this.cards = data;
-          console.log('Cards loaded successfully:', this.cards);
+          // console.log('Cards loaded successfully:', this.cards);
           // Validate SVGs
           this.validateSvgs();
         },
@@ -70,7 +70,7 @@ export class FoodByCategoryComponent implements OnInit {
 
   getSanitizedIcon(iconSvg: string): SafeHtml {
     const processed = this.svgService.sanitizeAndPrepareSvg(iconSvg);
-    console.log('Processed SVG for debugging:', processed);
+    // console.log('Processed SVG for debugging:', processed);
     return processed;
   }
 }

@@ -59,15 +59,15 @@ export class OxalateComponent implements OnInit, OnDestroy {
         this.categoryService.currentCategory$.pipe(take(1)),
       ]).subscribe({
         next: ([data, category]) => {
-          console.log('Initial data fetched:', data);
-          console.log('Initial category:', category);
+          // console.log('Initial data fetched:', data);
+          // console.log('Initial category:', category);
 
           this.oxalates = data;
           this.originalOxalates = [...data];
 
           // If there's a category from the route, apply it
           if (category) {
-            console.log('Applying initial category filter:', category);
+            // console.log('Applying initial category filter:', category);
             this.filterService.setCategory(category);
             this.isFilterApplied = true;
             this.applyFilters({
@@ -92,7 +92,7 @@ export class OxalateComponent implements OnInit, OnDestroy {
     this.subscriptions.push(
       this.categoryService.currentCategory$.subscribe({
         next: (category) => {
-          console.log('Category changed:', category);
+          // console.log('Category changed:', category);
           if (category) {
             this.filterService.setCategory(category);
             this.isFilterApplied = true;
@@ -114,7 +114,7 @@ export class OxalateComponent implements OnInit, OnDestroy {
     this.subscriptions.push(
       this.filterService.currentFilter$.subscribe({
         next: (filter: Filter) => {
-          console.log('Filter changed:', filter);
+          // console.log('Filter changed:', filter);
           if (filter && (filter.category || filter.calc_level)) {
             this.applyFilters(filter);
           }
@@ -220,10 +220,10 @@ export class OxalateComponent implements OnInit, OnDestroy {
   }
 
   applyFilters(filter: Filter): void {
-    console.log('Applying filters:', filter);
+    // console.log('Applying filters:', filter);
 
     if (!this.originalOxalates || this.originalOxalates.length === 0) {
-      console.warn('No oxalates data to filter.');
+      // console.warn('No oxalates data to filter.');
       return;
     }
 
@@ -242,7 +242,7 @@ export class OxalateComponent implements OnInit, OnDestroy {
 
       // Apply category filter
       if (filter.category) {
-        console.log('Filtering by category:', filter.category);
+        // console.log('Filtering by category:', filter.category);
         filteredOxalates = filteredOxalates.filter(
           (oxalate) =>
             oxalate.category?.toLowerCase() ===
@@ -253,7 +253,7 @@ export class OxalateComponent implements OnInit, OnDestroy {
 
       // Apply calc_level filter
       if (filter.calc_level) {
-        console.log('Filtering by calc_level:', filter.calc_level);
+        // console.log('Filtering by calc_level:', filter.calc_level);
         filteredOxalates = filteredOxalates.filter(
           (oxalate) => oxalate.calc_level === filter.calc_level
         );
@@ -324,7 +324,7 @@ export class OxalateComponent implements OnInit, OnDestroy {
   }
 
   viewMore(oxalate: Oxalate): void {
-    console.log('Selected Oxalate:', oxalate);
+    // console.log('Selected Oxalate:', oxalate);
     this.selectedOxalate = oxalate;
     document.body.style.overflow = 'hidden';
   }
