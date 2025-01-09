@@ -1,13 +1,23 @@
 import { CommonModule } from '@angular/common';
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { FoodItem } from '../model/food-item';
+// import { FoodItem } from '../model/food-item';
 import { slideInAnimation } from 'src/app/shared/animations/animations';
 import { CalculateOxalateComponent } from '../calculate-oxalate/calculate-oxalate.component';
 import { ResultsSectionComponent } from '../calculate-oxalate/results-section/results-section.component';
 import { DateSwitcherComponent } from './date-switcher/date-switcher.component';
 import { FoodEntryService } from './service/food-entry.service';
 import { Subscription } from 'rxjs';
+
+// Update the FoodItem interface in your models
+export interface FoodItem {
+  foodName: string;
+  servingSize: string;
+  numberOfServings: number;
+  oxalatePerServing: number;
+  solubleOxalatePerServing: number;
+  isExpanded?: boolean;
+}
 
 @Component({
   selector: 'app-food-entry',
@@ -38,7 +48,7 @@ export class FoodEntryComponent implements OnInit, OnDestroy {
   constructor(private foodEntryService: FoodEntryService) {}
 
   ngOnInit() {
-    this.fetchFoodEntries(); // Load food entries for the current date
+    this.fetchFoodEntries();
   }
 
   ngOnDestroy() {
@@ -52,16 +62,29 @@ export class FoodEntryComponent implements OnInit, OnDestroy {
       this.subscription.unsubscribe();
     }
 
-    this.resetMealItems(); // Clear the UI before fetching new data
+    this.resetMealItems();
 
-    const utcDate = convertToUTC(this.currentDate); // Use UTC date
+    const utcDate = this.convertToUTC(this.currentDate);
     this.subscription = this.foodEntryService.getDailyEntry(utcDate).subscribe({
       next: (entry) => {
         if (entry) {
-          this.breakfastItems = entry.breakfast || [];
-          this.lunchItems = entry.lunch || [];
-          this.dinnerItems = entry.dinner || [];
-          this.snackItems = entry.snacks || [];
+          // Initialize each food item with isExpanded set to false
+          this.breakfastItems = (entry.breakfast || []).map((item) => ({
+            ...item,
+            isExpanded: false,
+          }));
+          this.lunchItems = (entry.lunch || []).map((item) => ({
+            ...item,
+            isExpanded: false,
+          }));
+          this.dinnerItems = (entry.dinner || []).map((item) => ({
+            ...item,
+            isExpanded: false,
+          }));
+          this.snackItems = (entry.snacks || []).map((item) => ({
+            ...item,
+            isExpanded: false,
+          }));
         }
       },
       error: (error) => {
@@ -90,15 +113,18 @@ export class FoodEntryComponent implements OnInit, OnDestroy {
   async onMealLogged(foodItem: FoodItem) {
     const mealType = this.selectedMealType;
     if (mealType) {
-      const updatedItems = [...this.getMealItems(mealType), foodItem];
+      const updatedItems = [
+        ...this.getMealItems(mealType),
+        { ...foodItem, isExpanded: false },
+      ];
       try {
-        const utcDate = convertToUTC(this.currentDate);
+        const utcDate = this.convertToUTC(this.currentDate);
         await this.foodEntryService.updateMealItems(
           utcDate,
           mealType,
           updatedItems
         );
-        this.fetchFoodEntries(); // Refresh data after logging
+        this.fetchFoodEntries();
         this.closeCalculator();
       } catch (error) {
         console.error('Error logging meal:', error);
@@ -109,25 +135,7 @@ export class FoodEntryComponent implements OnInit, OnDestroy {
   onDateChange(newDate: Date) {
     const cleanDate = new Date(newDate.toISOString().split('T')[0]);
     this.currentDate = cleanDate;
-    this.fetchFoodEntries(); // Fetch entries for the new date
-  }
-
-  addFoodItem(mealType: string, foodItem: FoodItem) {
-    const items = this.getMealItems(mealType);
-    switch (mealType) {
-      case 'breakfast':
-        this.breakfastItems = [...items, foodItem];
-        break;
-      case 'lunch':
-        this.lunchItems = [...items, foodItem];
-        break;
-      case 'dinner':
-        this.dinnerItems = [...items, foodItem];
-        break;
-      case 'snacks':
-        this.snackItems = [...items, foodItem];
-        break;
-    }
+    this.fetchFoodEntries();
   }
 
   getMealItems(mealType: string): FoodItem[] {
@@ -151,12 +159,14 @@ export class FoodEntryComponent implements OnInit, OnDestroy {
     );
 
     try {
-      const utcDate = convertToUTC(this.currentDate); // Ensure consistent date usage
+      const utcDate = this.convertToUTC(this.currentDate);
       await this.foodEntryService.updateMealItems(
         utcDate,
         mealType as 'breakfast' | 'lunch' | 'dinner' | 'snacks',
         updatedItems
       );
+
+      // Update the local arrays
       switch (mealType) {
         case 'breakfast':
           this.breakfastItems = updatedItems;
@@ -183,18 +193,17 @@ export class FoodEntryComponent implements OnInit, OnDestroy {
   toggleResults() {
     this.showCalculationResult = !this.showCalculationResult;
   }
-}
 
-function convertToUTC(currentDate: Date): Date {
-  const utcDate = new Date(
-    Date.UTC(
-      currentDate.getFullYear(),
-      currentDate.getMonth(),
-      currentDate.getDate(),
-      currentDate.getHours(),
-      currentDate.getMinutes(),
-      currentDate.getSeconds()
-    )
-  );
-  return utcDate;
+  private convertToUTC(date: Date): Date {
+    return new Date(
+      Date.UTC(
+        date.getFullYear(),
+        date.getMonth(),
+        date.getDate(),
+        date.getHours(),
+        date.getMinutes(),
+        date.getSeconds()
+      )
+    );
+  }
 }
