@@ -252,6 +252,10 @@ thead .header-detail th {
     0 10px 10px -5px rgba(0, 0, 0, 0.04);
 }
 
+.meal-total {
+  text-align: right;
+}
+
 /* Responsive Styles */
 @media (max-width: 768px) {
   .hide-mobile {

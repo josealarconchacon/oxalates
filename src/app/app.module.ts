@@ -1,3 +1,4 @@
+import { ContributionComponent } from './landing-page/contribution/contribution.component';
 import { APP_INITIALIZER, NgModule, OnInit } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { MatSidenavModule } from '@angular/material/sidenav';
@@ -111,6 +112,7 @@ export function initializeApp(configService: ConfigService) {
     SearchInputComponent,
     SavedMealsComponent,
     FoodEntryComponent,
+    ContributionComponent,
   ],
   providers: [
     ConfigService,

@@ -1,0 +1,81 @@
+<div class="onboarding-container">
+  <div class="abstract-background"></div>
+  <div class="content-wrapper">
+    <aside class="left-panel">
+      <div class="logo">
+        <span>Oxalate Info</span>
+      </div>
+      <div class="steps">
+        <div
+          class="step"
+          *ngFor="let step of steps; let i = index"
+          [class.completed]="isStepCompleted(i)"
+          [class.active]="currentStep === i + 1"
+          (click)="setCurrentStep(i + 1)"
+        >
+          <span class="step-icon">{{ isStepCompleted(i) ? "✓" : i + 1 }}</span>
+          <div class="step-details">
+            <h4>{{ step.title }}</h4>
+            <p>{{ step.description }}</p>
+          </div>
+        </div>
+      </div>
+      <button class="login-button" (click)="goToLogin()">
+        Already have an account?
+      </button>
+    </aside>
+    <main class="right-panel">
+      <div class="step-content" *ngIf="currentStep === 1">
+        <h2>Contribution</h2>
+        <p>
+          The application is designed to adapt to diverse oxalate-related needs,
+          providing features such as meal visibility with detailed oxalate
+          content to ensure inclusivity for all users. By offering tools that
+          allow users to track and manage oxalate intake effectively, the app
+          serves as a valuable resource for those with specific dietary
+          requirements.
+        </p>
+        <p>
+          Contributors can expand on this foundation by developing innovative
+          features that enhance functionality, improve user experience, and
+          address a broader range of oxalate management challenges, ultimately
+          benefiting a wider audience.
+        </p>
+        <p>
+          By contributing, you not only help maintain and improve the
+          application but also play a vital role in creating a reliable,
+          community-driven resource for oxalate tracking and dietary management.
+          Together, we can ensure the app evolves to meet the changing needs of
+          its users while fostering a collaborative and inclusive environment
+          for innovation.
+        </p>
+      </div>
+      <div class="step-content" *ngIf="currentStep === 2">
+        <h2>How</h2>
+        <p>
+          Contributing to the application is simple and accessible. Users can
+          support the maintenance and development of the app by opting into a
+          monthly contribution of $2. This small amount helps cover ongoing
+          costs and ensures the app continues to evolve and meet the needs of
+          the community.
+        </p>
+        <p>
+          Additionally, users who wish to provide further support are welcome to
+          make additional one-time donations. These contributions enable the
+          development of new features, improved functionality, and enhanced user
+          experiences, making the app even more valuable for everyone. Your
+          support, no matter the amount, helps build a stronger, more
+          sustainable platform for oxalate tracking and management.
+        </p>
+        <p>
+          Thank you for helping to maintain and grow this community-driven
+          resource!
+        </p>
+      </div>
+      <div class="navigation">
+        <button *ngIf="currentStep > 1" (click)="previousStep()">Back</button>
+        <button (click)="continue()">Next</button>
+      </div>
+    </main>
+  </div>
+</div>
