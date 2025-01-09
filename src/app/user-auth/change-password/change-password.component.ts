@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Output, OnInit } from '@angular/core';
+import { Component, EventEmitter, Output, OnInit, Input } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { AuthService } from '../service/auth-service.service';
 import { AlertService } from 'src/app/shared/alert-service/alert.service';
@@ -14,6 +14,7 @@ export class ChangePasswordComponent implements OnInit {
   showAlert: boolean = false;
   alertMessage: string = '';
 
+  @Input() isVisible: boolean = false;
   @Output() close = new EventEmitter<void>();
 
   constructor(

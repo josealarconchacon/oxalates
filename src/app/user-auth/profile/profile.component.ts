@@ -133,6 +133,7 @@ export class ProfileComponent implements OnInit {
       this.cancelColor();
     }
   }
+
   onLogout(): void {
     this.authService.signOut();
   }

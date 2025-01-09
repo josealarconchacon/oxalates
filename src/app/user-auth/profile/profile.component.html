@@ -152,7 +152,7 @@
         </div>
       </div>
       <app-change-password
-        *ngIf="isChangePasswordVisible"
+        [isVisible]="isChangePasswordVisible"
         (close)="toggleChangePassword()"
       ></app-change-password>
       <app-save-items *ngIf="activeSection === 'saveItem'"></app-save-items>
