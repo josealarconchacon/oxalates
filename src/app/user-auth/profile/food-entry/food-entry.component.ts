@@ -8,7 +8,6 @@ import { ResultsSectionComponent } from '../calculate-oxalate/results-section/re
 import { DateSwitcherComponent } from './date-switcher/date-switcher.component';
 import { FoodEntryService } from './service/food-entry.service';
 import { Subscription } from 'rxjs';
-import { MealTotalsComponent } from './meal-totals/meal-totals.component';
 
 // Update the FoodItem interface in your models
 export interface FoodItem {
@@ -29,7 +28,6 @@ export interface FoodItem {
     CalculateOxalateComponent,
     ResultsSectionComponent,
     DateSwitcherComponent,
-    MealTotalsComponent,
   ],
   templateUrl: './food-entry.component.html',
   styleUrls: ['./food-entry.component.css'],
@@ -206,6 +204,23 @@ export class FoodEntryComponent implements OnInit, OnDestroy {
         date.getMinutes(),
         date.getSeconds()
       )
+    );
+  }
+
+  calculateTotalOxalate(items: FoodItem[]): number {
+    return items.reduce(
+      (total, food) =>
+        total + (food.oxalatePerServing || 0) * (food.numberOfServings || 0),
+      0
+    );
+  }
+
+  calculateTotalSolubleOxalate(items: FoodItem[]): number {
+    return items.reduce(
+      (total, food) =>
+        total +
+        (food.solubleOxalatePerServing || 0) * (food.numberOfServings || 0),
+      0
     );
   }
 }

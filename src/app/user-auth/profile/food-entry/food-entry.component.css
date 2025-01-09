@@ -23,6 +23,11 @@
   border-radius: 0.5rem;
   overflow: hidden;
 }
+
+.food-table td,
+.food-table th {
+  padding: 1rem;
+}
 thead .header-detail th {
   color: #1a202c;
 }
@@ -256,7 +261,6 @@ thead .header-detail th {
   text-align: right;
 }
 
-/* Responsive Styles */
 @media (max-width: 768px) {
   .hide-mobile {
     display: none;
@@ -304,5 +308,53 @@ thead .header-detail th {
   .mobile-details {
     margin-top: 0.75rem;
     padding: 0.75rem;
+  }
+}
+
+.total-row {
+  font-weight: 600;
+  background-color: #f8fafc;
+  border-top: 1px solid #e2e8f0;
+}
+
+.total-row td {
+  padding: 1rem;
+  color: #2b6cb0;
+}
+
+@media (max-width: 768px) {
+  .total-row .food-name-col {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .total-row .oxalate-mobile,
+  .total-row .soluble-mobile {
+    display: inline;
+    margin-left: 0.5rem;
+    color: #2b6cb0;
+    font-weight: 400;
+  }
+
+  .total-row .oxalate-col,
+  .total-row .soluble-col {
+    display: none;
+  }
+}
+
+@media (min-width: 769px) {
+  .total-row .food-name-col {
+    display: block;
+  }
+
+  .total-row .oxalate-col,
+  .total-row .soluble-col {
+    display: table-cell;
+  }
+
+  .total-row .oxalate-mobile,
+  .total-row .soluble-mobile {
+    display: none;
   }
 }
