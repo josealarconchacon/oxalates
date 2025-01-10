@@ -1,81 +1,125 @@
 <div class="onboarding-container">
-  <div class="abstract-background"></div>
-  <div class="content-wrapper">
-    <aside class="left-panel">
-      <div class="logo">
-        <span>Oxalate Info</span>
-      </div>
-      <div class="steps">
-        <div
-          class="step"
-          *ngFor="let step of steps; let i = index"
-          [class.completed]="isStepCompleted(i)"
-          [class.active]="currentStep === i + 1"
-          (click)="setCurrentStep(i + 1)"
-        >
-          <span class="step-icon">{{ isStepCompleted(i) ? "✓" : i + 1 }}</span>
-          <div class="step-details">
-            <h4>{{ step.title }}</h4>
-            <p>{{ step.description }}</p>
-          </div>
+  <div class="onboarding-card">
+    <h1 class="onboarding-title">Contribution</h1>
+    <br />
+    <div class="step-indicators">
+      <div
+        class="step-indicator"
+        [class.active]="currentStep === 1"
+        (click)="setStep(1)"
+      >
+        <div class="step-number">1</div>
+        <div class="step-details">
+          <p class="step-title">Why Contributing?</p>
         </div>
       </div>
-      <button class="login-button" (click)="goToLogin()">
-        Already have an account?
+      <div
+        class="step-indicator"
+        [class.active]="currentStep === 2"
+        (click)="setStep(2)"
+      >
+        <div class="step-number">2</div>
+        <div class="step-details">
+          <p class="step-description">Choose Payment Method</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="step-content" *ngIf="currentStep === 1">
+      <h2>Details</h2>
+      <p>Please Read Carefully.</p>
+      <p>
+        The application is designed to adapt to diverse oxalate-related needs,
+        providing features such as meal visibility with detailed oxalate content
+        to ensure inclusivity for all users. Users to track and manage oxalate
+        intake effectively, the app serves as a valuable resource for those with
+        specific dietary requirements.
+      </p>
+      <p>
+        Contributors can expand on this foundation by developing innovative
+        features that enhance functionality, improve user experience, and
+        address a broader range of oxalate management challenges, ultimately
+        benefiting a wider audience.
+      </p>
+      <p>
+        By contributing, you not only help maintain and improve the application
+        but also play a vital role in creating a reliable, community-driven
+        resource for oxalate tracking and dietary management. Together, we can
+        ensure the app evolves to meet the changing needs of its users while
+        fostering a collaborative and inclusive environment for innovation.
+      </p>
+    </div>
+
+    <div class="step-content" *ngIf="currentStep === 2">
+      <h2>Choose Payment Method</h2>
+      <p>Select your preferred payment method to contribute:</p>
+
+      <div class="payment-buttons">
+        <button class="payment-btn venmo" (click)="openPaymentModal('venmo')">
+          <svg
+            class="payment-icon"
+            viewBox="0 0 24 24"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              d="M20 12C20 16.4183 16.4183 20 12 20C7.58172 20 4 16.4183 4 12C4 7.58172 7.58172 4 12 4C16.4183 4 20 7.58172 20 12Z"
+              stroke="white"
+              stroke-width="2"
+            />
+            <path d="M14 8L12 16M10 8L8 16" stroke="white" stroke-width="2" />
+          </svg>
+          Pay with Venmo
+        </button>
+        <button class="payment-btn paypal" (click)="openPaymentModal('paypal')">
+          <svg
+            class="payment-icon"
+            viewBox="0 0 24 24"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              d="M19.5 8.5C19.5 11.5 17 14 14 14H11L10 19H7L8.5 8.5H14C17 8.5 19.5 5.5 19.5 8.5Z"
+              stroke="white"
+              stroke-width="2"
+            />
+            <path
+              d="M16.5 11.5C16.5 14.5 14 17 11 17H8L7 22H4L5.5 11.5H11C14 11.5 16.5 8.5 16.5 11.5Z"
+              stroke="white"
+              stroke-width="2"
+            />
+          </svg>
+          Pay with PayPal
+        </button>
+      </div>
+
+      <button class="btn-primary mt-4" (click)="setStep(1)">
+        Back to Step 1
       </button>
-    </aside>
-    <main class="right-panel">
-      <div class="step-content" *ngIf="currentStep === 1">
-        <h2>Contribution</h2>
-        <p>
-          The application is designed to adapt to diverse oxalate-related needs,
-          providing features such as meal visibility with detailed oxalate
-          content to ensure inclusivity for all users. By offering tools that
-          allow users to track and manage oxalate intake effectively, the app
-          serves as a valuable resource for those with specific dietary
-          requirements.
-        </p>
-        <p>
-          Contributors can expand on this foundation by developing innovative
-          features that enhance functionality, improve user experience, and
-          address a broader range of oxalate management challenges, ultimately
-          benefiting a wider audience.
-        </p>
-        <p>
-          By contributing, you not only help maintain and improve the
-          application but also play a vital role in creating a reliable,
-          community-driven resource for oxalate tracking and dietary management.
-          Together, we can ensure the app evolves to meet the changing needs of
-          its users while fostering a collaborative and inclusive environment
-          for innovation.
-        </p>
-      </div>
-      <div class="step-content" *ngIf="currentStep === 2">
-        <h2>How</h2>
-        <p>
-          Contributing to the application is simple and accessible. Users can
-          support the maintenance and development of the app by opting into a
-          monthly contribution of $2. This small amount helps cover ongoing
-          costs and ensures the app continues to evolve and meet the needs of
-          the community.
-        </p>
-        <p>
-          Additionally, users who wish to provide further support are welcome to
-          make additional one-time donations. These contributions enable the
-          development of new features, improved functionality, and enhanced user
-          experiences, making the app even more valuable for everyone. Your
-          support, no matter the amount, helps build a stronger, more
-          sustainable platform for oxalate tracking and management.
-        </p>
-        <p>
-          Thank you for helping to maintain and grow this community-driven
-          resource!
-        </p>
-      </div>
-      <div class="navigation">
-        <button *ngIf="currentStep > 1" (click)="previousStep()">Back</button>
-        <button (click)="continue()">Next</button>
-      </div>
-    </main>
+    </div>
+  </div>
+</div>
+
+<!-- Payment Modal -->
+<div class="modal-overlay" *ngIf="showModal" (click)="closeModal()">
+  <div class="modal-content" (click)="$event.stopPropagation()">
+    <button class="modal-close" (click)="closeModal()">×</button>
+    <h2>
+      Scan {{ selectedPaymentMethod === "venmo" ? "Venmo" : "PayPal" }} QR Code
+    </h2>
+    <div class="qr-code-container">
+      <img
+        [src]="
+          selectedPaymentMethod === 'venmo'
+            ? '../../../assets/app-logo/IMG_0860 2.jpg'
+            : '../../../assets/app-logo/IMG_0861.jpg'
+        "
+        [alt]="
+          selectedPaymentMethod === 'venmo' ? 'Venmo QR Code' : 'PayPal QR Code'
+        "
+        class="qr-code"
+      />
+    </div>
+    <button class="btn-primary" (click)="closeModal()">Close</button>
   </div>
 </div>
