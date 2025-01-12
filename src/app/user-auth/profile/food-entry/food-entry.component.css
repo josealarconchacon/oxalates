@@ -294,7 +294,7 @@ thead .header-detail th {
 
 @media (max-width: 480px) {
   .food-table-container {
-    padding: 0.5rem;
+    padding: 0.1rem;
   }
 
   .meal-section {
@@ -308,6 +308,7 @@ thead .header-detail th {
   .mobile-details {
     margin-top: 0.75rem;
     padding: 0.75rem;
+    max-width: 1400px;
   }
 }
 

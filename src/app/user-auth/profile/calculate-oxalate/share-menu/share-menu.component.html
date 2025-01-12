@@ -20,10 +20,9 @@
                 <div *ngFor="let food of meal.items" class="food-item">
                   <i class="material-icons">local_dining</i>
                   <span>
-                    {{ food.foodName }}: <br />{{
-                      food.oxalatePerServing
-                    }}
-                    oxalate, {{ food.solubleOxalatePerServing }} soluble oxalate
+                    {{ food.foodName }}: <br />{{ food.oxalatePerServing }} mg
+                    of oxalate, {{ food.solubleOxalatePerServing }} mg of
+                    soluble oxalate
                   </span>
                 </div>
               </div>

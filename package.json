@@ -23,10 +23,13 @@
     "@angular/platform-browser-dynamic": "^18.2.8",
     "@angular/router": "^18.2.8",
     "@fortawesome/fontawesome-free": "^6.6.0",
+    "@zxing/browser": "^0.1.5",
+    "angularx-qrcode": "^19.0.0",
     "crypto-js": "^4.2.0",
     "firebase": "^10.13.1",
     "fuse.js": "^7.0.0",
     "ngx-color": "^9.0.0",
+    "ngx-qrcode2": "^9.0.0",
     "rxjs": "^7.8.1",
     "tslib": "^2.3.0",
     "zone.js": "~0.14.10"
