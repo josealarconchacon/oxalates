@@ -26,29 +26,33 @@ export class ShareMenuComponent {
   };
 
   getShareableText(): string {
-    return (
-      `📅 *Daily Oxalate Summary*\n\n` +
-      `🔹 *Total Oxalate for the Day*: ${this.dailyTotal.totalOxalate}mg\n\n` +
-      `🍽️ *Meals Breakdown:*\n` +
-      this.dailyMeals
-        .map(
-          (meal) =>
-            `  🥄 *${meal.title}:*\n` +
-            meal.items
-              .map(
-                (food: {
-                  foodName: any;
-                  oxalatePerServing: any;
-                  solubleOxalatePerServing: any;
-                }) =>
-                  `    - 🌿 *${food.foodName}*: ${food.oxalatePerServing}mg oxalate, ${food.solubleOxalatePerServing}mg soluble oxalate`
-              )
-              .join('\n')
-        )
-        .join('\n') +
-      `\n🔖 *Note*: Keep track of your daily oxalate intake to maintain a healthy balance.\n\n` +
-      `📲 Stay healthy, and track your meals!`
-    );
+    const dailyTotal = this.dailyTotal;
+    const dailyMeals = this.dailyMeals;
+
+    let text = `📅 *Daily Oxalate Summary*\n\n`;
+    text += `🔹 *Total Oxalate for the Day*: ${dailyTotal.totalOxalate}mg\n\n`;
+
+    if (dailyMeals.length > 0) {
+      text += `🍽️ *Meals Breakdown:*\n`;
+      dailyMeals.forEach((meal) => {
+        text += `  🥄 *${meal.title}:*\n`;
+        meal.items.forEach(
+          (item: {
+            foodName: any;
+            oxalatePerServing: any;
+            solubleOxalatePerServing: any;
+          }) => {
+            text += `    - 🌿 *${item.foodName}*: ${item.oxalatePerServing}mg oxalate, ${item.solubleOxalatePerServing}mg soluble oxalate\n`;
+          }
+        );
+      });
+      text += `\n`;
+    }
+
+    text += `🔖 *Note*: Keep track of your daily oxalate intake to maintain a healthy balance.\n\n`;
+    text += `📲 Stay healthy, and track your meals!`;
+
+    return text;
   }
 
   async copyToClipboard(): Promise<void> {

@@ -164,6 +164,8 @@ const mockData: Oxalate[] = [
     soluble_oxalate: '',
     reference: '',
     notes: '',
+    iconUrl: '',
+    savedAt: '',
   },
   {
     id: '2',
@@ -180,5 +182,7 @@ const mockData: Oxalate[] = [
     soluble_oxalate: '',
     reference: '',
     notes: '',
+    iconUrl: '',
+    savedAt: '',
   },
 ];

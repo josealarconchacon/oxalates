@@ -1,7 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-// import { FoodItem } from '../model/food-item';
 import { slideInAnimation } from 'src/app/shared/animations/animations';
 import { CalculateOxalateComponent } from '../calculate-oxalate/calculate-oxalate.component';
 import { ResultsSectionComponent } from '../calculate-oxalate/results-section/results-section.component';
@@ -9,7 +8,6 @@ import { DateSwitcherComponent } from './date-switcher/date-switcher.component';
 import { FoodEntryService } from './service/food-entry.service';
 import { Subscription } from 'rxjs';
 
-// Update the FoodItem interface in your models
 export interface FoodItem {
   foodName: string;
   servingSize: string;

@@ -48,14 +48,18 @@ export class FoodByCategoryComponent implements OnInit {
       });
   }
 
-  private validateSvgs(): void {
+  validateSvgs(): void {
     this.cards.forEach((card) => {
       if (!card.iconSvg) {
         console.warn(`Missing SVG for category: ${card.title}`);
-      } else if (!card.iconSvg.includes('svg')) {
+      } else if (!this.isSvgValid(card.iconSvg)) {
         console.warn(`Invalid SVG format for category: ${card.title}`);
       }
     });
+  }
+
+  isSvgValid(svg: string): boolean {
+    return svg.startsWith('<svg') && svg.endsWith('</svg>');
   }
 
   onCardClick(category: string): void {
