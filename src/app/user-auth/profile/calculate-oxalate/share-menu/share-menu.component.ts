@@ -29,27 +29,21 @@ export class ShareMenuComponent {
     const dailyTotal = this.dailyTotal;
     const dailyMeals = this.dailyMeals;
 
-    let text = `📅 *Daily Oxalate Summary*\n\n`;
-    text += `🔹 *Total Oxalate for the Day*: ${dailyTotal.totalOxalate}mg\n\n`;
+    let text = `📅 Daily Oxalate Summary\n\n`;
+    text += `🔹 Total Oxalate for the Day: ${dailyTotal.totalOxalate}mg\n\n`;
 
     if (dailyMeals.length > 0) {
-      text += `🍽️ *Meals Breakdown:*\n`;
+      text += `🍽️ Meals Breakdown:\n`;
       dailyMeals.forEach((meal) => {
-        text += `  🥄 *${meal.title}:*\n`;
-        meal.items.forEach(
-          (item: {
-            foodName: any;
-            oxalatePerServing: any;
-            solubleOxalatePerServing: any;
-          }) => {
-            text += `    - 🌿 *${item.foodName}*: ${item.oxalatePerServing}mg oxalate, ${item.solubleOxalatePerServing}mg soluble oxalate\n`;
-          }
-        );
+        text += `  🥄 ${meal.title}:\n`;
+        meal.items.forEach((item: any) => {
+          text += `    - 🌿 ${item.foodName}: ${item.oxalatePerServing}mg oxalate, ${item.solubleOxalatePerServing}mg soluble oxalate\n`;
+        });
       });
       text += `\n`;
     }
 
-    text += `🔖 *Note*: Keep track of your daily oxalate intake to maintain a healthy balance.\n\n`;
+    text += `🔖 Note: Keep track of your daily oxalate intake to maintain a healthy balance.\n\n`;
     text += `📲 Stay healthy, and track your meals!`;
 
     return text;

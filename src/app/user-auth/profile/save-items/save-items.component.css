@@ -231,5 +231,6 @@
 @media (min-width: 768px) {
   .mobile-detail-dropdown {
     display: none;
+    font-size: var(--font-size-small);
   }
 }

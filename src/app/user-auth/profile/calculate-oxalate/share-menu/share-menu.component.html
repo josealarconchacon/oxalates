@@ -51,16 +51,25 @@
 
     <div class="share-options">
       <a
-        *ngFor="let option of shareOptions; let i = index"
         class="share-button"
-        [href]="option.getShareUrl(getShareableText())"
+        [href]="shareOptions[0].getShareUrl(getShareableText())"
         target="_blank"
-        [@slideIn]="{ value: true, params: { delay: i * 50 } }"
       >
-        <i class="material-icons" [style.color]="option.color">{{
-          option.icon
-        }}</i>
-        <span>{{ option.label }}</span>
+        <i class="material-icons" [style.color]="shareOptions[0].color"
+          >facebook</i
+        >
+        <span>{{ shareOptions[0].label }}</span>
+      </a>
+
+      <a
+        class="share-button"
+        [href]="shareOptions[1].getShareUrl(getShareableText())"
+        target="_blank"
+      >
+        <i class="material-icons" [style.color]="shareOptions[1].color"
+          >reddit</i
+        >
+        <span>{{ shareOptions[1].label }}</span>
       </a>
       <button
         class="share-button copy-button"
