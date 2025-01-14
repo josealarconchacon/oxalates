@@ -9,12 +9,49 @@
       <i class="fas fa-share-alt"></i>
     </button>
   </div>
-  <div class="total-oxalates">
-    <span>Total Oxalate: {{ totalOxalate | number : "1.1-1" }} mg</span>
-    <span
-      >Total Soluble Oxalate:
-      {{ totalSolubleOxalate | number : "1.1-1" }} mg</span
-    >
+
+  <div class="content-container">
+    <div class="total-oxalates">
+      <span>Total Oxalate: {{ totalOxalate | number : "1.1-1" }} mg</span>
+      <span
+        >Total Soluble Oxalate:
+        {{ totalSolubleOxalate | number : "1.1-1" }} mg</span
+      >
+    </div>
+
+    <div class="indicators-and-totals">
+      <div class="oxalate-level-indicators">
+        <div class="bar-chart">
+          <!-- Green section (0-50mg) -->
+          <div
+            class="bar green"
+            [style.width]="getGreenWidth()"
+            [style.opacity]="getGreenOpacity()"
+          ></div>
+          <!-- Yellow section (50-350mg) -->
+          <div
+            class="bar yellow"
+            [style.width]="getYellowWidth()"
+            [style.opacity]="getYellowOpacity()"
+          ></div>
+          <!-- Red section (350-500mg) -->
+          <div
+            class="bar red"
+            [style.width]="getRedWidth()"
+            [style.opacity]="getRedOpacity()"
+          ></div>
+          <!-- Dark Red section (500-1000mg) -->
+          <div
+            class="bar dark-red"
+            [style.width]="getDarkRedWidth()"
+            [style.opacity]="getDarkRedOpacity()"
+          ></div>
+        </div>
+        <span class="indicator-label"
+          >Oxalate Level: {{ getOxalateLevel(totalOxalate) }}</span
+        >
+      </div>
+    </div>
   </div>
 </div>
 
