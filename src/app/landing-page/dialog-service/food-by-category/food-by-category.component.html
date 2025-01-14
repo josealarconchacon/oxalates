@@ -3,7 +3,7 @@
   <div class="cards-wrapper">
     <div
       class="category-card"
-      *ngFor="let card of cards"
+      *ngFor="let card of cardsArray"
       (click)="onCardClick(card.title)"
     >
       <div class="category-badge" *ngIf="card.badge">{{ card.badge }}</div>

@@ -16,7 +16,7 @@ import { SvgService } from './service/svg.service';
   styleUrl: './food-by-category.component.css',
 })
 export class FoodByCategoryComponent implements OnInit {
-  cards: CategoryCard[] = [];
+  cardsMap: Map<string, CategoryCard> = new Map();
 
   constructor(
     private router: Router,
@@ -30,6 +30,10 @@ export class FoodByCategoryComponent implements OnInit {
     this.loadCards();
   }
 
+  get cardsArray(): CategoryCard[] {
+    return Array.from(this.cardsMap.values());
+  }
+
   loadCards(): void {
     this.http
       .get<CategoryCard[]>(
@@ -37,9 +41,7 @@ export class FoodByCategoryComponent implements OnInit {
       )
       .subscribe({
         next: (data) => {
-          this.cards = data;
-          // console.log('Cards loaded successfully:', this.cards);
-          // Validate SVGs
+          this.populateCardsMap(data);
           this.validateSvgs();
         },
         error: (error) => {
@@ -48,12 +50,22 @@ export class FoodByCategoryComponent implements OnInit {
       });
   }
 
+  populateCardsMap(data: CategoryCard[]): void {
+    data.forEach((card) => {
+      if (card.title) {
+        this.cardsMap.set(card.title, card);
+      } else {
+        console.warn('Card without a title found and skipped:', card);
+      }
+    });
+  }
+
   validateSvgs(): void {
-    this.cards.forEach((card) => {
+    this.cardsMap.forEach((card, title) => {
       if (!card.iconSvg) {
-        console.warn(`Missing SVG for category: ${card.title}`);
+        console.warn(`Missing SVG for category: ${title}`);
       } else if (!this.isSvgValid(card.iconSvg)) {
-        console.warn(`Invalid SVG format for category: ${card.title}`);
+        console.warn(`Invalid SVG format for category: ${title}`);
       }
     });
   }
@@ -64,17 +76,20 @@ export class FoodByCategoryComponent implements OnInit {
 
   onCardClick(category: string): void {
     console.log('Category selected:', category);
-    this.categoryService.changeCategory(category);
-    this.filterService.updateFilter({
-      category: category,
-      calc_level: '',
-    });
-    this.router.navigate(['/oxalate']);
+    if (this.cardsMap.has(category)) {
+      this.categoryService.changeCategory(category);
+      this.filterService.updateFilter({
+        category: category,
+        calc_level: '',
+      });
+      this.router.navigate(['/oxalate']);
+    } else {
+      console.warn(`Category "${category}" not found in cardsMap.`);
+    }
   }
 
   getSanitizedIcon(iconSvg: string): SafeHtml {
     const processed = this.svgService.sanitizeAndPrepareSvg(iconSvg);
-    // console.log('Processed SVG for debugging:', processed);
     return processed;
   }
 }
