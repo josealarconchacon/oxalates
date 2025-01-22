@@ -1,125 +1,135 @@
-<div class="onboarding-container">
-  <div class="onboarding-card">
-    <h1 class="onboarding-title">Contribution</h1>
-    <br />
-    <div class="step-indicators">
-      <div
-        class="step-indicator"
-        [class.active]="currentStep === 1"
-        (click)="setStep(1)"
-      >
-        <div class="step-number">1</div>
-        <div class="step-details">
-          <p class="step-title">Why Contributing?</p>
+<div class="container">
+  <div class="card">
+    <div class="card-header">
+      <h1 class="title">Contribution</h1>
+
+      <nav class="steps-container">
+        <div
+          class="step-item"
+          [class.active]="currentStep === 1"
+          (click)="setStep(1)"
+        >
+          <div class="step-number">1</div>
+          <div class="step-text">Why Contributing?</div>
         </div>
-      </div>
-      <div
-        class="step-indicator"
-        [class.active]="currentStep === 2"
-        (click)="setStep(2)"
-      >
-        <div class="step-number">2</div>
-        <div class="step-details">
-          <p class="step-description">Choose Payment Method</p>
+
+        <div class="step-divider"></div>
+
+        <div
+          class="step-item"
+          [class.active]="currentStep === 2"
+          (click)="setStep(2)"
+        >
+          <div class="step-number">2</div>
+          <div class="step-text">Choose Payment</div>
         </div>
-      </div>
+      </nav>
     </div>
 
-    <div class="step-content" *ngIf="currentStep === 1">
-      <h2>Details</h2>
-      <p>Please Read Carefully.</p>
-      <p>
-        The application is designed to adapt to diverse oxalate-related needs,
-        providing features such as meal visibility with detailed oxalate content
-        to ensure inclusivity for all users. Users to track and manage oxalate
-        intake effectively, the app serves as a valuable resource for those with
-        specific dietary requirements.
-      </p>
-      <p>
-        Contributors can expand on this foundation by developing innovative
-        features that enhance functionality, improve user experience, and
-        address a broader range of oxalate management challenges, ultimately
-        benefiting a wider audience.
-      </p>
-      <p>
-        By contributing, you not only help maintain and improve the application
-        but also play a vital role in creating a reliable, community-driven
-        resource for oxalate tracking and dietary management. Together, we can
-        ensure the app evolves to meet the changing needs of its users while
-        fostering a collaborative and inclusive environment for innovation.
-      </p>
-    </div>
+    <div class="card-body">
+      <div class="step-content" *ngIf="currentStep === 1">
+        <h2 class="section-title">Details</h2>
+        <p class="emphasis-text">Please Read Carefully.</p>
 
-    <div class="step-content" *ngIf="currentStep === 2">
-      <h2>Choose Payment Method</h2>
-      <p>Select your preferred payment method to contribute:</p>
+        <div class="text-content">
+          <p>
+            The application is designed to adapt to diverse oxalate-related
+            needs, providing features such as meal visibility with detailed
+            oxalate content to ensure inclusivity for all users.
+          </p>
+          <p>
+            Contributors can expand on this foundation by developing innovative
+            features that enhance functionality, improve user experience, and
+            address a broader range of oxalate management challenges.
+          </p>
+          <p>
+            By contributing, you help maintain and improve the application while
+            creating a reliable, community-driven resource for oxalate tracking.
+          </p>
+        </div>
 
-      <div class="payment-buttons">
-        <button class="payment-btn venmo" (click)="openPaymentModal('venmo')">
-          <svg
-            class="payment-icon"
-            viewBox="0 0 24 24"
-            fill="none"
-            xmlns="http://www.w3.org/2000/svg"
-          >
-            <path
-              d="M20 12C20 16.4183 16.4183 20 12 20C7.58172 20 4 16.4183 4 12C4 7.58172 7.58172 4 12 4C16.4183 4 20 7.58172 20 12Z"
-              stroke="white"
-              stroke-width="2"
-            />
-            <path d="M14 8L12 16M10 8L8 16" stroke="white" stroke-width="2" />
-          </svg>
-          Pay with Venmo
-        </button>
-        <button class="payment-btn paypal" (click)="openPaymentModal('paypal')">
-          <svg
-            class="payment-icon"
-            viewBox="0 0 24 24"
-            fill="none"
-            xmlns="http://www.w3.org/2000/svg"
-          >
-            <path
-              d="M19.5 8.5C19.5 11.5 17 14 14 14H11L10 19H7L8.5 8.5H14C17 8.5 19.5 5.5 19.5 8.5Z"
-              stroke="white"
-              stroke-width="2"
-            />
-            <path
-              d="M16.5 11.5C16.5 14.5 14 17 11 17H8L7 22H4L5.5 11.5H11C14 11.5 16.5 8.5 16.5 11.5Z"
-              stroke="white"
-              stroke-width="2"
-            />
-          </svg>
-          Pay with PayPal
+        <button class="button-primary" (click)="setStep(2)">
+          Continue to Payment
         </button>
       </div>
 
-      <button class="btn-primary mt-4" (click)="setStep(1)">
-        Back to Step 1
-      </button>
+      <div class="step-content" *ngIf="currentStep === 2">
+        <h2 class="section-title">Choose Payment Method</h2>
+        <p>Select your preferred payment method to contribute:</p>
+
+        <div class="payment-options">
+          <button
+            class="payment-button venmo-button"
+            (click)="openPaymentModal('venmo')"
+          >
+            <svg class="payment-icon" viewBox="0 0 24 24" fill="none">
+              <path
+                d="M20 12C20 16.4183 16.4183 20 12 20C7.58172 20 4 16.4183 4 12C4 7.58172 7.58172 4 12 4C16.4183 4 20 7.58172 20 12Z"
+                stroke="currentColor"
+                stroke-width="2"
+              />
+              <path
+                d="M14 8L12 16M10 8L8 16"
+                stroke="currentColor"
+                stroke-width="2"
+              />
+            </svg>
+            <span>Pay with Venmo</span>
+          </button>
+
+          <button
+            class="payment-button paypal-button"
+            (click)="openPaymentModal('paypal')"
+          >
+            <svg class="payment-icon" viewBox="0 0 24 24" fill="none">
+              <path
+                d="M19.5 8.5C19.5 11.5 17 14 14 14H11L10 19H7L8.5 8.5H14C17 8.5 19.5 5.5 19.5 8.5Z"
+                stroke="currentColor"
+                stroke-width="2"
+              />
+              <path
+                d="M16.5 11.5C16.5 14.5 14 17 11 17H8L7 22H4L5.5 11.5H11C14 11.5 16.5 8.5 16.5 11.5Z"
+                stroke="currentColor"
+                stroke-width="2"
+              />
+            </svg>
+            <span>Pay with PayPal</span>
+          </button>
+        </div>
+
+        <button class="button-secondary" (click)="setStep(1)">
+          Back to Details
+        </button>
+      </div>
     </div>
   </div>
 </div>
 
 <!-- Payment Modal -->
-<div class="modal-overlay" *ngIf="showModal" (click)="closeModal()">
-  <div class="modal-content" (click)="$event.stopPropagation()">
-    <button class="modal-close" (click)="closeModal()">×</button>
-    <h2>
+<div class="modal-backdrop" *ngIf="showModal" (click)="closeModal()">
+  <div class="modal-box" (click)="$event.stopPropagation()">
+    <button class="modal-close-button" (click)="closeModal()">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+        <path
+          d="M18 6L6 18M6 6l12 12"
+          stroke-width="2"
+          stroke-linecap="round"
+        />
+      </svg>
+    </button>
+
+    <h2 class="modal-title">
       Scan {{ selectedPaymentMethod === "venmo" ? "Venmo" : "PayPal" }} QR Code
     </h2>
-    <div class="qr-code-container">
+
+    <div class="qr-wrapper">
       <img
-        [src]="
-          selectedPaymentMethod === 'venmo'
-            ? '../../../assets/app-logo/IMG_0860 2.jpg'
-            : '../../../assets/app-logo/IMG_0861.jpg'
-        "
-        [alt]="
-          selectedPaymentMethod === 'venmo' ? 'Venmo QR Code' : 'PayPal QR Code'
-        "
-        class="qr-code"
+        [src]="getQRCodeSource()"
+        [alt]="selectedPaymentMethod + ' QR Code'"
+        class="qr-image"
       />
     </div>
-    <button class="btn-primary" (click)="closeModal()">Close</button>
+
+    <button class="button-primary" (click)="closeModal()">Close</button>
   </div>
 </div>

@@ -28,6 +28,12 @@ export class ContributionComponent {
     this.showModal = true;
   }
 
+  getQRCodeSource(): string {
+    return this.selectedPaymentMethod === 'venmo'
+      ? '../../../assets/app-logo/IMG_0860 2.jpg'
+      : '../../../assets/app-logo/IMG_0861.jpg';
+  }
+
   closeModal(): void {
     this.showModal = false;
     this.selectedPaymentMethod = null;
