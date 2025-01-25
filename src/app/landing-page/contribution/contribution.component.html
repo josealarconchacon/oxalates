@@ -109,20 +109,6 @@
             </svg>
             <span>Contribute with CashApp</span>
           </button>
-          <button
-            class="payment-button zelle-button"
-            (click)="openPaymentModal('zelle')"
-          >
-            <svg class="payment-icon" viewBox="0 0 24 24" fill="none">
-              <path
-                d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2z"
-                stroke="currentColor"
-                stroke-width="2"
-              />
-              <path d="M8 12h8m-4-4v8" stroke="currentColor" stroke-width="2" />
-            </svg>
-            <span>Contribute with Zelle</span>
-          </button>
         </div>
 
         <button class="button-secondary" (click)="setStep(1)">
@@ -184,15 +170,6 @@
         class="payment-link"
       >
         Contribute with Cash App
-      </a>
-      <a
-        *ngIf="selectedPaymentMethod === 'zelle'"
-        href=""
-        class="payment-link"
-        target="_blank"
-        rel="noopener noreferrer"
-      >
-        Open Zelle App to Contribute
       </a>
     </div>
 

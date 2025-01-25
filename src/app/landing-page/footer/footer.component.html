@@ -1,27 +1,35 @@
-<section class="footer" id="footer">
+<footer class="footer" id="footer">
   <div class="footer-content">
-    <footer>
-      <hr class="footer-divider" />
-      <div class="footer-links-container">
+    <div class="footer-links-container">
+      <nav aria-label="Footer navigation">
         <ul class="footer-links">
-          <li *ngIf="showBackToHome"><a href="#resources">Back to Home</a></li>
           <li>
-            <a class="search-icon" aria-label="Search">
-              <mat-icon (click)="search()">search</mat-icon>
-            </a>
+            <button class="search-button" aria-label="Open search">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="24"
+                height="24"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                class="search-icon"
+              >
+                <circle cx="11" cy="11" r="8"></circle>
+                <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+              </svg>
+            </button>
           </li>
           <li>
-            <a
-              href="/contribution"
-              rel="noopener noreferrer"
-              class="contribution-link"
-            >
-              Contribute to Improve
+            <a href="/contribution" class="footer-link contribution-link">
+              Why Contribute?
             </a>
           </li>
         </ul>
-      </div>
-      <p class="footer-text">2024 Oxalate Info.</p>
-    </footer>
+      </nav>
+    </div>
+    <p class="footer-text">2024 Oxalate Info.</p>
   </div>
-</section>
+</footer>

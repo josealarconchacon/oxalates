@@ -1,5 +1,5 @@
 .container {
-  min-height: 100vh;
+  min-height: 75vh;
   padding: 24px;
   display: flex;
   justify-content: center;
@@ -8,13 +8,19 @@
 
 .card {
   width: 100%;
-  max-width: 640px;
+  max-width: 740px;
   margin: 0 auto;
   background: white;
   border-radius: 16px;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   max-height: 90vh;
   overflow-y: auto;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
 }
 
 .card-header {
@@ -30,6 +36,7 @@
   font-weight: 700;
   color: #0f172a;
   margin-bottom: 32px;
+  text-align: left;
 }
 
 .steps-container {
@@ -43,6 +50,7 @@
   grid-template-columns: auto 1fr;
   gap: 16px;
   cursor: pointer;
+  align-items: center;
 }
 
 .step-number {
@@ -62,21 +70,15 @@
   color: #64748b;
   transition: 0.2s ease;
   padding-top: 8px;
-
-  @media (max-width: 640px) {
-    display: none;
-  }
 }
 
-.step-item.active {
-  .step-number {
-    background-color: #3b82f6;
-    color: white;
-  }
+.step-item.active .step-number {
+  background-color: #3b82f6;
+  color: white;
+}
 
-  .step-text {
-    color: #3b82f6;
-  }
+.step-item.active .step-text {
+  color: #3b82f6;
 }
 
 .step-divider {
@@ -101,16 +103,16 @@
 
 .text-content {
   margin-bottom: 32px;
+}
 
-  p {
-    color: #475569;
-    margin-bottom: 20px;
-    line-height: 1.6;
+.text-content p {
+  color: #475569;
+  margin-bottom: 20px;
+  line-height: 1.6;
+}
 
-    &:last-child {
-      margin-bottom: 0;
-    }
-  }
+.text-content p:last-child {
+  margin-bottom: 0;
 }
 
 .button-primary {
@@ -123,10 +125,10 @@
   font-weight: 600;
   cursor: pointer;
   transition: 0.2s ease;
+}
 
-  &:hover {
-    background-color: #2563eb;
-  }
+.button-primary:hover {
+  background-color: #2563eb;
 }
 
 .button-secondary {
@@ -139,22 +141,22 @@
   font-weight: 600;
   cursor: pointer;
   transition: 0.2s ease;
+}
 
-  &:hover {
-    background-color: #e2e8f0;
-  }
+.button-secondary:hover {
+  background-color: #e2e8f0;
 }
 
 .payment-options {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-  gap: 16px;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 6px;
   margin: 32px 0;
 }
 
 .payment-button {
   display: grid;
-  grid-template-columns: auto 1fr;
+  align-items: center;
   gap: 12px;
   padding: 16px;
   border-radius: 8px;
@@ -164,22 +166,35 @@
   transition: 0.2s ease;
 }
 
+.payment-button:hover {
+  transform: translateY(-2px);
+}
+
 .venmo-button {
   background-color: #008cff;
   color: white;
+}
 
-  &:hover {
-    background-color: #0070cc;
-  }
+.venmo-button:hover {
+  background-color: #0070cc;
 }
 
 .paypal-button {
   background-color: #003087;
   color: white;
+}
 
-  &:hover {
-    background-color: #002266;
-  }
+.paypal-button:hover {
+  background-color: #002266;
+}
+
+.cashapp-button {
+  background-color: #25d366;
+  color: white;
+}
+
+.cashapp-button:hover {
+  background-color: #1da851;
 }
 
 .payment-icon {
@@ -204,6 +219,7 @@
   background: white;
   border-radius: 16px;
   padding: 32px;
+  animation: slideIn 0.3s ease-out;
 }
 
 .modal-close-button {
@@ -216,15 +232,10 @@
   cursor: pointer;
   color: #64748b;
   transition: 0.2s ease;
+}
 
-  svg {
-    width: 24px;
-    height: 24px;
-  }
-
-  &:hover {
-    color: #0f172a;
-  }
+.modal-close-button:hover {
+  color: #0f172a;
 }
 
 .modal-title {
@@ -248,10 +259,6 @@
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 
-.step-content {
-  animation: fadeIn 0.3s ease-out;
-}
-
 .payment-links {
   text-align: center;
   margin-top: 16px;
@@ -269,28 +276,22 @@
 .payment-link:hover {
   color: #059669;
 }
-.cashapp-button {
-  background-color: #25d366;
-  color: white;
-
-  &:hover {
-    background-color: #1da851;
-  }
-}
-
-.zelle-button {
-  background-color: #00f;
-  color: white;
-
-  &:hover {
-    background-color: #00d;
-  }
-}
 
 @keyframes fadeIn {
   from {
     opacity: 0;
     transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateY(-20px);
   }
   to {
     opacity: 1;
