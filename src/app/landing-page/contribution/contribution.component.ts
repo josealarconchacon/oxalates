@@ -13,7 +13,7 @@ export class ContributionComponent {
   currentStep = 1;
   verificationCode = '123456';
   showModal = false;
-  selectedPaymentMethod: 'venmo' | 'paypal' | null = null;
+  selectedPaymentMethod: 'venmo' | 'paypal' | 'cashapp' | 'zelle' | null = null;
 
   setStep(step: number): void {
     this.currentStep = step;
@@ -23,15 +23,24 @@ export class ContributionComponent {
     navigator.clipboard.writeText(this.verificationCode);
   }
 
-  openPaymentModal(method: 'venmo' | 'paypal'): void {
+  openPaymentModal(method: 'venmo' | 'paypal' | 'cashapp' | 'zelle'): void {
     this.selectedPaymentMethod = method;
     this.showModal = true;
   }
 
   getQRCodeSource(): string {
-    return this.selectedPaymentMethod === 'venmo'
-      ? '../../../assets/app-logo/IMG_0860 2.jpg'
-      : '../../../assets/app-logo/IMG_0861.jpg';
+    switch (this.selectedPaymentMethod) {
+      case 'venmo':
+        return '../../../assets/app-logo/IMG_0860 2.jpg';
+      case 'paypal':
+        return '../../../assets/app-logo/IMG_0861.jpg';
+      case 'cashapp':
+        return '../../../assets/app-logo/IMG_0962.png';
+      case 'zelle':
+        return '../../../assets/app-logo/Image-1.jpg';
+      default:
+        return '';
+    }
   }
 
   closeModal(): void {

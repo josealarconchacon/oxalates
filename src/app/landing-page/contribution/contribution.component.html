@@ -10,7 +10,7 @@
           (click)="setStep(1)"
         >
           <div class="step-number">1</div>
-          <div class="step-text">Why Contributing?</div>
+          <div class="step-text">Why Contribute?</div>
         </div>
 
         <div class="step-divider"></div>
@@ -74,7 +74,7 @@
                 stroke-width="2"
               />
             </svg>
-            <span>Pay with Venmo</span>
+            <span>Contribute with Venmo</span>
           </button>
 
           <button
@@ -93,7 +93,35 @@
                 stroke-width="2"
               />
             </svg>
-            <span>Pay with PayPal</span>
+            <span>Contribute with PayPal</span>
+          </button>
+          <button
+            class="payment-button cashapp-button"
+            (click)="openPaymentModal('cashapp')"
+          >
+            <svg class="payment-icon" viewBox="0 0 24 24" fill="none">
+              <path
+                d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2z"
+                stroke="currentColor"
+                stroke-width="2"
+              />
+              <path d="M8 12h8m-4-4v8" stroke="currentColor" stroke-width="2" />
+            </svg>
+            <span>Contribute with CashApp</span>
+          </button>
+          <button
+            class="payment-button zelle-button"
+            (click)="openPaymentModal('zelle')"
+          >
+            <svg class="payment-icon" viewBox="0 0 24 24" fill="none">
+              <path
+                d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2z"
+                stroke="currentColor"
+                stroke-width="2"
+              />
+              <path d="M8 12h8m-4-4v8" stroke="currentColor" stroke-width="2" />
+            </svg>
+            <span>Contribute with Zelle</span>
           </button>
         </div>
 
@@ -105,7 +133,6 @@
   </div>
 </div>
 
-<!-- Payment Modal -->
 <div class="modal-backdrop" *ngIf="showModal" (click)="closeModal()">
   <div class="modal-box" (click)="$event.stopPropagation()">
     <button class="modal-close-button" (click)="closeModal()">
@@ -119,7 +146,7 @@
     </button>
 
     <h2 class="modal-title">
-      Scan {{ selectedPaymentMethod === "venmo" ? "Venmo" : "PayPal" }} QR Code
+      Scan {{ selectedPaymentMethod | titlecase }} QR Code
     </h2>
 
     <div class="qr-wrapper">
@@ -128,6 +155,45 @@
         [alt]="selectedPaymentMethod + ' QR Code'"
         class="qr-image"
       />
+    </div>
+
+    <div class="payment-links" *ngIf="selectedPaymentMethod">
+      <a
+        *ngIf="selectedPaymentMethod === 'venmo'"
+        href="https://venmo.com/u/JoseCarlos-AlarconChacon"
+        target="_blank"
+        rel="noopener noreferrer"
+        class="payment-link"
+      >
+        Contribute with Venmo
+      </a>
+      <a
+        *ngIf="selectedPaymentMethod === 'paypal'"
+        href="https://www.paypal.com/paypalme/JAlarconChacon/10"
+        target="_blank"
+        rel="noopener noreferrer"
+        class="payment-link"
+      >
+        Contribute with PayPal
+      </a>
+      <a
+        *ngIf="selectedPaymentMethod === 'cashapp'"
+        href="https://cash.app/$josecarlo"
+        target="_blank"
+        rel="noopener noreferrer"
+        class="payment-link"
+      >
+        Contribute with Cash App
+      </a>
+      <a
+        *ngIf="selectedPaymentMethod === 'zelle'"
+        href=""
+        class="payment-link"
+        target="_blank"
+        rel="noopener noreferrer"
+      >
+        Open Zelle App to Contribute
+      </a>
     </div>
 
     <button class="button-primary" (click)="closeModal()">Close</button>
