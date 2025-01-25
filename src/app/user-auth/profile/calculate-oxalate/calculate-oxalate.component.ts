@@ -93,7 +93,7 @@ export class CalculateOxalateComponent implements OnInit, OnDestroy {
     this.isCalculating = true;
     const servingSizeValue = this.parseServingSize(this.servingSize);
     if (servingSizeValue === null) {
-      alert('Please enter a valid serving size.');
+      alert('Food can not be logged as serving size is not available.');
       this.isCalculating = false;
       return;
     }
@@ -102,7 +102,7 @@ export class CalculateOxalateComponent implements OnInit, OnDestroy {
       this.numberOfServings.toString()
     );
     if (numberOfServingsValue === null) {
-      alert('Please enter a valid number of servings.');
+      alert('Food can not be logged as serving size is not available.');
       this.isCalculating = false;
       return;
     }
@@ -131,7 +131,6 @@ export class CalculateOxalateComponent implements OnInit, OnDestroy {
     if (!isNaN(numericValue) && numericValue > 0) {
       return numericValue;
     }
-
     return null;
   }
 
@@ -140,7 +139,6 @@ export class CalculateOxalateComponent implements OnInit, OnDestroy {
     if (!isNaN(numericValue) && numericValue > 0) {
       return numericValue;
     }
-
     return null;
   }
 
@@ -169,7 +167,13 @@ export class CalculateOxalateComponent implements OnInit, OnDestroy {
 
   selectSuggestedFood(food: SimilarFood): void {
     this.foodName = food.name;
-    this.servingSize = food.servingSize;
+    const parsedServingSize = parseFloat(food.servingSize);
+    if (isNaN(parsedServingSize) || parsedServingSize <= 0) {
+      this.servingSize = 'no available';
+    } else {
+      this.servingSize = food.servingSize;
+    }
+    console.log('Final serving size:', this.servingSize);
     this.totalOxalatePerServing = food.totalOxalate;
     this.totalSolubleOxalatePerServing = food.solubleOxalate;
     this.showResults = false;
