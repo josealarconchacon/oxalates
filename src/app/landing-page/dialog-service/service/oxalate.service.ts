@@ -75,10 +75,10 @@ export class OxalateService {
   searchOxalateData(query: string): Observable<Oxalate[]> {
     return this.getOxalateData().pipe(
       map((data) => {
-        // Ensure the data is an array before proceeding
-        if (!Array.isArray(data)) {
-          console.error('Received data is not an array:', data);
-          return []; // Return an empty array if data is not in the expected format
+        // Ensure data is not null or undefined
+        if (!data || !Array.isArray(data)) {
+          console.error('Received data is invalid or not an array:', data);
+          return []; // Return an empty array if the data is invalid
         }
 
         if (query && query.trim() !== '') {
@@ -118,7 +118,6 @@ export class OxalateService {
       })
     );
   }
-
   initiateDynamicSearch(): void {
     this.searchTerms
       .pipe(
