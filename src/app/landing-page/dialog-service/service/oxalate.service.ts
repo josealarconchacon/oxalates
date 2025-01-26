@@ -36,9 +36,51 @@ export class OxalateService {
     return this.http.get<Oxalate[]>(this.dataUrl);
   }
 
+  // searchOxalateData(query: string): Observable<Oxalate[]> {
+  //   return this.getOxalateData().pipe(
+  //     map((data) => {
+  //       if (query && query.trim() !== '') {
+  //         const preprocessQuery = (q: string): string =>
+  //           q
+  //             .toLowerCase()
+  //             .replace(/[^\w\s]/g, '')
+  //             .trim();
+
+  //         const processedQuery = preprocessQuery(query);
+
+  //         const fuse = new Fuse(data, {
+  //           keys: [
+  //             { name: 'item', weight: 0.7 },
+  //             { name: 'category', weight: 0.3 },
+  //             'notes',
+  //           ],
+  //           threshold: 0.3,
+  //           ignoreLocation: true,
+  //           includeScore: true,
+  //           findAllMatches: true,
+  //           useExtendedSearch: true,
+  //         });
+
+  //         const searchResults = fuse.search(processedQuery);
+
+  //         return searchResults
+  //           .sort((a, b) => (a.score ?? 0) - (b.score ?? 0))
+  //           .map((result) => result.item);
+  //       }
+
+  //       return data;
+  //     })
+  //   );
+  // }
   searchOxalateData(query: string): Observable<Oxalate[]> {
     return this.getOxalateData().pipe(
       map((data) => {
+        // Ensure the data is an array before proceeding
+        if (!Array.isArray(data)) {
+          console.error('Received data is not an array:', data);
+          return []; // Return an empty array if data is not in the expected format
+        }
+
         if (query && query.trim() !== '') {
           const preprocessQuery = (q: string): string =>
             q
@@ -69,6 +111,10 @@ export class OxalateService {
         }
 
         return data;
+      }),
+      catchError((error) => {
+        console.error('Error occurred during search:', error);
+        return of([]); // Return an empty array in case of error
       })
     );
   }
