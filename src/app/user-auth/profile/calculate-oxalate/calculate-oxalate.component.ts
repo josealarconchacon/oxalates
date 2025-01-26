@@ -167,13 +167,14 @@ export class CalculateOxalateComponent implements OnInit, OnDestroy {
 
   selectSuggestedFood(food: SimilarFood): void {
     this.foodName = food.name;
-    const parsedServingSize = parseFloat(food.servingSize);
-    if (isNaN(parsedServingSize) || parsedServingSize <= 0) {
-      this.servingSize = 'no available';
-    } else {
-      this.servingSize = food.servingSize;
-    }
-    console.log('Final serving size:', this.servingSize);
+    this.servingSize = food.servingSize;
+    // const parsedServingSize = parseFloat(food.servingSize);
+    // if (isNaN(parsedServingSize) || parsedServingSize <= 0) {
+    //   this.servingSize = 'no available';
+    // } else {
+    //   this.servingSize = food.servingSize;
+    // }
+    // console.log('Final serving size:', this.servingSize);
     this.totalOxalatePerServing = food.totalOxalate;
     this.totalSolubleOxalatePerServing = food.solubleOxalate;
     this.showResults = false;
