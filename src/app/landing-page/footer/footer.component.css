@@ -59,12 +59,12 @@
 }
 
 .contribution-link {
-  color: #28a745;
+  color: #2f2f2f;
 }
 
 .contribution-link:hover,
 .contribution-link:focus {
-  color: #218838;
+  color: #0c0c0c;
 }
 
 .footer-text {

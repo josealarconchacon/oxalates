@@ -4,7 +4,11 @@
       <nav aria-label="Footer navigation">
         <ul class="footer-links">
           <li>
-            <button class="search-button" aria-label="Open search">
+            <button
+              class="search-button"
+              aria-label="Open search"
+              (click)="search()"
+            >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 width="24"
@@ -24,7 +28,7 @@
           </li>
           <li>
             <a href="/contribution" class="footer-link contribution-link">
-              Support the Project
+              Support
             </a>
           </li>
         </ul>
