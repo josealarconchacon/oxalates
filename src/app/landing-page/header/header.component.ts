@@ -57,6 +57,9 @@ export class HeaderComponent implements OnInit {
   search() {
     this.router.navigate(['/oxalate']);
   }
+  goToSupport() {
+    this.router.navigate(['/contribution']);
+  }
 
   @HostListener('window:scroll')
   onWindowScroll() {
@@ -68,5 +71,11 @@ export class HeaderComponent implements OnInit {
         header.classList.remove('scrolled');
       }
     }
+  }
+  navigateToCalculateDailyIntake(): void {
+    this.router.navigate(['/profile'], {
+      queryParams: { section: 'calculate-oxalate' },
+    });
+    this.closeNav(); // Close the hamburger menu after navigation
   }
 }

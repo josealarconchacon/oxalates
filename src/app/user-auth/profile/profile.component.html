@@ -29,7 +29,6 @@
             <span class="picker-icon">🎨</span>
           </button>
 
-          <!-- Modern Color Picker -->
           <div
             *ngIf="isColorPickerVisible"
             class="color-picker-backdrop"
@@ -107,8 +106,6 @@
           </p>
         </div>
       </div>
-
-      <!-- Rest of your template remains the same -->
       <nav class="sidebar-nav">
         <a
           [class.active]="activeSection === 'profile'"
@@ -126,7 +123,8 @@
           [class.active]="activeSection === 'calculate-oxalate'"
           (click)="showSection('calculate-oxalate')"
         >
-          <i class="fa fa-i-cursor" aria-hidden="true"></i>Log Oxalate
+          <i class="fa fa-i-cursor" aria-hidden="true"></i>Calculate Daily
+          Intake
         </a>
 
         <a (click)="onLogout()" class="logout">
