@@ -13,42 +13,129 @@
     <nav class="nav" id="nav-bar" [class.open]="isNavOpen">
       <button class="nav-close" (click)="closeNav()"></button>
 
-      <a
-        *ngIf="currentRoute !== '/' && currentRoute === '/oxalate'"
-        href="#resources"
-        class="nav-link"
-        (click)="closeNav()"
-        >Resources</a
-      >
-      <a class="nav-link" (click)="goToSupport()">Support</a>
-      <button class="search-btn" (click)="search()" (click)="closeNav()">
-        <mat-icon>search</mat-icon>
-      </button>
+      <ng-container *ngIf="!(isMobile$ | async)">
+        <a
+          *ngIf="currentRoute !== '/' && currentRoute === '/oxalate'"
+          href="#resources"
+          class="nav-link"
+          (click)="closeNav()"
+        >
+          <span>Resources</span>
+        </a>
+        <button class="search-btn" (click)="search(); closeNav()">
+          <mat-icon>search</mat-icon>
+        </button>
 
-      <button
-        *ngIf="userProfile"
-        class="profile-btn"
-        (click)="goToProfile()"
-        (click)="closeNav()"
-      >
-        <img
-          [src]="
-            userProfile.photoURL || '../../../assets/images/default-profile.jpg'
-          "
-          alt="User Image"
-          class="user-image"
-        />
-        <span class="profile-text">My Profile</span>
-      </button>
+        <button
+          *ngIf="userProfile"
+          class="profile-btn"
+          (click)="goToProfile(); closeNav()"
+        >
+          <img
+            [src]="
+              userProfile.photoURL ||
+              '../../../assets/images/default-profile.jpg'
+            "
+            alt="User Image"
+            class="user-image"
+          />
+        </button>
 
-      <button
-        *ngIf="!userProfile"
-        class="user-icon-btn"
-        (click)="goToLoginPage()"
-        (click)="closeNav()"
-      >
-        <mat-icon>person_outline</mat-icon>
-      </button>
+        <button
+          *ngIf="!userProfile"
+          class="user-icon-btn"
+          (click)="goToLoginPage(); closeNav()"
+        >
+          <mat-icon>person_outline</mat-icon>
+        </button>
+      </ng-container>
+
+      <ng-container *ngIf="isMobile$ | async">
+        <div class="mobile-sidebar-nav">
+          <div
+            class="profile-info-container"
+            (click)="setActiveSection('profile'); goToProfile()"
+          >
+            <img
+              *ngIf="userProfile"
+              [src]="
+                userProfile.photoURL ||
+                '../../../assets/images/default-profile.jpg'
+              "
+              alt="User Image"
+              class="user-image"
+            />
+            <mat-icon *ngIf="!userProfile" class="default-user-icon"
+              >person_outline</mat-icon
+            >
+            <a
+              class="nav-link profile-link"
+              [class.active]="(activeSection$ | async) === 'profile'"
+            >
+              <span>Profile Info</span>
+            </a>
+            <input
+              type="file"
+              id="profile-image-upload"
+              class="profile-image-upload"
+              (change)="onProfileImageChange($event)"
+              accept="image/*"
+              style="display: none"
+            />
+            <label
+              for="profile-image-upload"
+              class="profile-image-upload-label"
+            >
+              <mat-icon>edit</mat-icon>
+            </label>
+          </div>
+
+          <a class="nav-link" (click)="search(); closeNav()">
+            <i class="fas fa-search"></i>
+            <span>Search</span>
+          </a>
+          <a
+            class="nav-link"
+            [class.active]="(activeSection$ | async) === 'saveItem'"
+            (click)="setActiveSection('saveItem'); navigateToSavedItems()"
+          >
+            <i class="fas fa-bookmark"></i>
+            <span>Saved Items</span>
+          </a>
+
+          <a
+            class="nav-link"
+            [class.active]="(activeSection$ | async) === 'calculate-oxalate'"
+            (click)="
+              setActiveSection('calculate-oxalate');
+              navigateToCalculateDailyIntake()
+            "
+          >
+            <i class="fa fa-calculator"></i>
+            <span>Calculate Daily Intake</span>
+          </a>
+
+          <a
+            *ngIf="currentRoute !== '/' && currentRoute === '/oxalate'"
+            href="#resources"
+            class="nav-link"
+            (click)="closeNav()"
+          >
+            <i class="fas fa-book"></i>
+            <span>Resources</span>
+          </a>
+
+          <a class="nav-link" (click)="goToSupport()">
+            <i class="fas fa-life-ring"></i>
+            <span>Support</span>
+          </a>
+
+          <a (click)="onLogout()" class="nav-link logout">
+            <i class="fas fa-sign-out-alt"></i>
+            <span>Logout</span>
+          </a>
+        </div>
+      </ng-container>
     </nav>
   </div>
 </header>

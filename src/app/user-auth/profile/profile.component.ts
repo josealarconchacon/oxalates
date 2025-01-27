@@ -1,11 +1,15 @@
 import { Component, OnInit } from '@angular/core';
 import { AuthService } from '../service/auth-service.service';
 import { AngularFireStorage } from '@angular/fire/compat/storage';
-import { finalize } from 'rxjs/operators';
+import { finalize, map } from 'rxjs/operators';
 import { Router } from '@angular/router';
 import { fadeInOut } from 'src/app/shared/animations/fadeInOut';
 import { presetColors, colorToHex } from '../../shared/utils/color-utils';
 import { HSLA, HSVA, RGBA } from 'ngx-color';
+import { HeaderComponent } from 'src/app/landing-page/header/header.component';
+import { Observable } from 'rxjs';
+import { NavigationService } from '../service/navigation.service';
+import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
 
 @Component({
   selector: 'app-profile',
@@ -24,13 +28,23 @@ export class ProfileComponent implements OnInit {
   firstName: string = '';
   lastName: string = '';
 
+  activeSection$: Observable<string> | undefined;
+  isMobile$: Observable<boolean> | undefined;
+
   presetColors: string[] = presetColors;
 
   constructor(
     private authService: AuthService,
     private storage: AngularFireStorage,
-    private router: Router
-  ) {}
+    private router: Router,
+    private navigationService: NavigationService,
+    private breakpointObserver: BreakpointObserver
+  ) {
+    this.activeSection$ = this.navigationService.activeSection$;
+    this.isMobile$ = this.breakpointObserver
+      .observe(Breakpoints.Handset)
+      .pipe(map((result) => result.matches));
+  }
 
   ngOnInit(): void {
     if (!this.authService.isAuthenticated()) {
@@ -44,7 +58,9 @@ export class ProfileComponent implements OnInit {
       this.selectedColor = savedColor;
     }
   }
-
+  setActiveSection(section: string): void {
+    this.navigationService.setActiveSection(section);
+  }
   getUserInfo() {
     this.authService.getUserProfile().subscribe((response) => {
       this.userProfile = response;

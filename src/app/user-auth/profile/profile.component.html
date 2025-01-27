@@ -1,163 +1,168 @@
 <div class="app-container">
   <main class="app-main">
-    <aside class="sidebar">
-      <div class="profile-card">
-        <div
-          class="profile-header"
-          [style.backgroundColor]="currentHeaderColor"
-        >
-          <img
-            [src]="userProfile?.photoURL || 'assets/default-avatar.png'"
-            alt="Profile Picture"
-            class="profile-picture"
-          />
-          <input
-            id="file-upload"
-            type="file"
-            (change)="onFileSelected($event)"
-            accept="image/*"
-            hidden
-          />
-          <label for="file-upload" class="edit-avatar">
-            <i class="fas fa-camera"></i>
-          </label>
-          <button
-            class="color-picker-toggle"
-            (click)="toggleColorPicker()"
-            aria-label="Open color picker"
-          >
-            <span class="picker-icon">🎨</span>
-          </button>
-
+    <ng-container *ngIf="(isMobile$ | async) === false">
+      <aside class="sidebar">
+        <div class="profile-card">
           <div
-            *ngIf="isColorPickerVisible"
-            class="color-picker-backdrop"
-            (click)="onBackdropClick($event)"
-            [@fadeInOut]
+            class="profile-header"
+            [style.backgroundColor]="currentHeaderColor"
           >
-            <div
-              class="color-picker-content"
-              role="dialog"
-              aria-modal="true"
-              aria-label="Color picker"
+            <img
+              [src]="userProfile?.photoURL || 'assets/default-avatar.png'"
+              alt="Profile Picture"
+              class="profile-picture"
+            />
+            <input
+              id="file-upload"
+              type="file"
+              (change)="onFileSelected($event)"
+              accept="image/*"
+              hidden
+            />
+            <label for="file-upload" class="edit-avatar">
+              <i class="fas fa-camera"></i>
+            </label>
+            <button
+              class="color-picker-toggle"
+              (click)="toggleColorPicker()"
+              aria-label="Open color picker"
             >
-              <div class="color-picker-header">
-                <h3 class="color-picker-title">Choose Color</h3>
-                <button
-                  class="close-button"
-                  (click)="cancelColor()"
-                  aria-label="Close color picker"
-                >
-                  ✕
-                </button>
-              </div>
+              <span class="picker-icon">🎨</span>
+            </button>
 
+            <div
+              *ngIf="isColorPickerVisible"
+              class="color-picker-backdrop"
+              (click)="onBackdropClick($event)"
+              [@fadeInOut]
+            >
               <div
-                class="color-preview"
-                [style.backgroundColor]="selectedColor"
-                role="img"
-                [attr.aria-label]="'Selected color: ' + selectedColor"
-              ></div>
-
-              <div class="color-grid" role="listbox" aria-label="Preset colors">
-                <button
-                  *ngFor="let color of presetColors"
-                  class="color-preset"
-                  [class.selected]="selectedColor === color"
-                  [style.backgroundColor]="color"
-                  (click)="onColorSelect(color)"
-                  role="option"
-                  [attr.aria-selected]="selectedColor === color"
-                  [attr.aria-label]="'Color: ' + color"
-                >
-                  <span class="sr-only">{{ color }}</span>
-                </button>
-              </div>
-
-              <div class="color-input-group">
-                <color-sketch
-                  [(color)]="selectedColor"
-                  (colorChange)="onColorSelect($event)"
-                  aria-label="Color picker"
-                ></color-sketch>
-                <div class="color-value" role="status" aria-live="polite">
-                  {{ selectedColor }}
+                class="color-picker-content"
+                role="dialog"
+                aria-modal="true"
+                aria-label="Color picker"
+              >
+                <div class="color-picker-header">
+                  <h3 class="color-picker-title">Choose Color</h3>
+                  <button
+                    class="close-button"
+                    (click)="cancelColor()"
+                    aria-label="Close color picker"
+                  >
+                    ✕
+                  </button>
                 </div>
-              </div>
 
-              <div class="color-actions">
-                <button class="btn btn-primary" (click)="saveColor()">
-                  Save
-                </button>
-                <button class="btn btn-secondary" (click)="cancelColor()">
-                  Cancel
-                </button>
+                <div
+                  class="color-preview"
+                  [style.backgroundColor]="selectedColor"
+                  role="img"
+                  [attr.aria-label]="'Selected color: ' + selectedColor"
+                ></div>
+
+                <div
+                  class="color-grid"
+                  role="listbox"
+                  aria-label="Preset colors"
+                >
+                  <button
+                    *ngFor="let color of presetColors"
+                    class="color-preset"
+                    [class.selected]="selectedColor === color"
+                    [style.backgroundColor]="color"
+                    (click)="onColorSelect(color)"
+                    role="option"
+                    [attr.aria-selected]="selectedColor === color"
+                    [attr.aria-label]="'Color: ' + color"
+                  >
+                    <span class="sr-only">{{ color }}</span>
+                  </button>
+                </div>
+
+                <div class="color-input-group">
+                  <color-sketch
+                    [(color)]="selectedColor"
+                    (colorChange)="onColorSelect($event)"
+                    aria-label="Color picker"
+                  ></color-sketch>
+                  <div class="color-value" role="status" aria-live="polite">
+                    {{ selectedColor }}
+                  </div>
+                </div>
+
+                <div class="color-actions">
+                  <button class="btn btn-primary" (click)="saveColor()">
+                    Save
+                  </button>
+                  <button class="btn btn-secondary" (click)="cancelColor()">
+                    Cancel
+                  </button>
+                </div>
               </div>
             </div>
           </div>
+
+          <div class="profile-info">
+            <h2 class="profile-name">
+              {{ userProfile?.displayName || "Username" }}
+            </h2>
+            <p class="profile-email">
+              {{ userProfile?.email || "username@example.com" }}
+            </p>
+          </div>
         </div>
-
-        <div class="profile-info">
-          <h2 class="profile-name">
-            {{ userProfile?.displayName || "Username" }}
-          </h2>
-          <p class="profile-email">
-            {{ userProfile?.email || "username@example.com" }}
-          </p>
-        </div>
-      </div>
-      <nav class="sidebar-nav">
-        <a
-          [class.active]="activeSection === 'profile'"
-          (click)="showSection('profile')"
-        >
-          <i class="fas fa-user"></i> Profile Info
-        </a>
-        <a
-          [class.active]="activeSection === 'saveItem'"
-          (click)="showSection('saveItem')"
-        >
-          <i class="fas fa-bookmark"></i> Saved Items
-        </a>
-        <a
-          [class.active]="activeSection === 'calculate-oxalate'"
-          (click)="showSection('calculate-oxalate')"
-        >
-          <i class="fa fa-i-cursor" aria-hidden="true"></i>Calculate Daily
-          Intake
-        </a>
-
-        <a (click)="onLogout()" class="logout">
-          <i class="fas fa-sign-out-alt"></i> Logout
-        </a>
-      </nav>
-    </aside>
-
+        <nav class="sidebar-nav">
+          <a
+            [class.active]="(activeSection$ | async) === 'profile'"
+            (click)="setActiveSection('profile')"
+          >
+            <i class="fas fa-user"></i> Profile Info
+          </a>
+          <a
+            [class.active]="(activeSection$ | async) === 'saveItem'"
+            (click)="setActiveSection('saveItem')"
+          >
+            <i class="fas fa-bookmark"></i> Saved Items
+          </a>
+          <a
+            [class.active]="(activeSection$ | async) === 'calculate-oxalate'"
+            (click)="setActiveSection('calculate-oxalate')"
+          >
+            <i class="fa fa-i-cursor" aria-hidden="true"></i> Calculate Daily
+            Intake
+          </a>
+          <a (click)="onLogout()" class="logout">
+            <i class="fas fa-sign-out-alt"></i> Logout
+          </a>
+        </nav>
+      </aside>
+    </ng-container>
     <section class="content-area">
-      <div *ngIf="activeSection === 'profile'" class="profile-details">
-        <h2 class="section-title">Profile Information</h2>
-        <div class="info-card">
-          <div class="info-item">
-            <label>Name</label>
-            <p>{{ userProfile?.displayName || "Username" }}</p>
+      <ng-container [ngSwitch]="activeSection$ | async">
+        <div *ngSwitchCase="'profile'" class="profile-details">
+          <!-- Profile details content -->
+          <h2 class="section-title">Profile Information</h2>
+          <div class="info-card">
+            <div class="info-item">
+              <label>Name</label>
+              <p>{{ userProfile?.displayName || "Username" }}</p>
+            </div>
+            <div class="info-item">
+              <label>Email</label>
+              <p>{{ userProfile?.email || "username@example.com" }}</p>
+            </div>
+            <button (click)="toggleChangePassword()" class="edit-button">
+              <i class="fas fa-key"></i> Change Password
+            </button>
           </div>
-          <div class="info-item">
-            <label>Email</label>
-            <p>{{ userProfile?.email || "username@example.com" }}</p>
-          </div>
-          <button (click)="toggleChangePassword()" class="edit-button">
-            <i class="fas fa-key"></i> Change Password
-          </button>
         </div>
-      </div>
-      <app-change-password
-        [isVisible]="isChangePasswordVisible"
-        (close)="toggleChangePassword()"
-      ></app-change-password>
-      <app-save-items *ngIf="activeSection === 'saveItem'"></app-save-items>
-      <app-food-entry
-        *ngIf="activeSection === 'calculate-oxalate'"
-      ></app-food-entry>
+        <app-change-password
+          [isVisible]="isChangePasswordVisible"
+          (close)="toggleChangePassword()"
+        ></app-change-password>
+        <app-save-items *ngSwitchCase="'saveItem'"></app-save-items>
+        <app-food-entry *ngSwitchCase="'calculate-oxalate'"></app-food-entry>
+      </ng-container>
     </section>
   </main>
 </div>
