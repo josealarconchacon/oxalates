@@ -12,15 +12,14 @@
   margin: 0 auto;
   background: white;
   border-radius: 16px;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   max-height: 90vh;
   overflow-y: auto;
   transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
 .card:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+  transform: translateY(-1px);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
 }
 
 .card-header {
@@ -157,7 +156,7 @@
 .payment-button {
   display: grid;
   align-items: center;
-  gap: 12px;
+  gap: 4px;
   padding: 16px;
   border-radius: 8px;
   font-weight: 500;
@@ -296,5 +295,85 @@
   to {
     opacity: 1;
     transform: translateY(0);
+  }
+}
+
+@media (max-width: 768px) {
+  .container {
+    padding: 16px;
+  }
+
+  .card {
+    max-width: 100%;
+    border-radius: 8px;
+  }
+
+  .card-header,
+  .card-body {
+    padding: 24px;
+  }
+
+  .title {
+    font-size: 24px;
+    margin-bottom: 24px;
+  }
+
+  .steps-container {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+
+  .step-divider {
+    display: none;
+  }
+
+  .step-item {
+    grid-template-columns: auto 1fr;
+    gap: 8px;
+  }
+
+  .step-number {
+    width: 32px;
+    height: 32px;
+    font-size: 14px;
+  }
+
+  .step-text {
+    font-size: 14px;
+  }
+
+  .section-title {
+    font-size: 20px;
+  }
+
+  .emphasis-text {
+    font-size: 14px;
+  }
+
+  .text-content p {
+    font-size: 14px;
+  }
+
+  .payment-options {
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+
+  .payment-button {
+    padding: 12px;
+    font-size: 14px;
+  }
+
+  .modal-box {
+    padding: 24px;
+  }
+
+  .modal-title {
+    font-size: 20px;
+  }
+
+  .qr-image {
+    width: 150px;
+    height: 150px;
   }
 }
