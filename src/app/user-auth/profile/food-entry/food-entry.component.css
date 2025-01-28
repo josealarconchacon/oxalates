@@ -24,10 +24,6 @@
   overflow: hidden;
 }
 
-.food-table td,
-.food-table th {
-  padding: 1rem;
-}
 thead .header-detail th {
   color: #1a202c;
 }
@@ -128,7 +124,6 @@ thead .header-detail th {
 .meal-section {
   background: #ffffff;
   border-radius: 0.75rem;
-  padding: 1rem;
   position: relative;
 }
 
@@ -153,7 +148,6 @@ thead .header-detail th {
   padding: 1rem;
   background: #f8fafc;
   border-radius: 0.5rem;
-  margin: 1rem;
 }
 
 .add-button {

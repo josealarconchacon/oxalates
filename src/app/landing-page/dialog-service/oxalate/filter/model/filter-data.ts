@@ -28,12 +28,12 @@ export const categories: string[] = [
 ];
 
 export const calcLevels: string[] = [
-  'High',
-  'Medium',
+  'Very Low',
   'Low',
+  'Medium',
+  'High',
   'Very High',
   'Extremely High',
-  'Very Low',
 ];
 
 export const levels: string[] = ['1', '2', '3', '4', '5', '6', '7'];

@@ -90,11 +90,6 @@
               <mat-icon>edit</mat-icon>
             </label>
           </div>
-
-          <a class="nav-link" (click)="search(); closeNav()">
-            <i class="fas fa-search"></i>
-            <span>Search</span>
-          </a>
           <a
             class="nav-link"
             [class.active]="(activeSection$ | async) === 'saveItem'"
@@ -102,6 +97,10 @@
           >
             <i class="fas fa-bookmark"></i>
             <span>Saved Items</span>
+          </a>
+          <a class="nav-link" (click)="search(); closeNav()">
+            <i class="fas fa-search"></i>
+            <span>Search For Foods</span>
           </a>
 
           <a
@@ -115,7 +114,10 @@
             <i class="fa fa-calculator"></i>
             <span>Calculate Daily Intake</span>
           </a>
-
+          <a class="nav-link" (click)="goToSupport()">
+            <i class="fas fa-life-ring"></i>
+            <span>Support The Project</span>
+          </a>
           <a
             *ngIf="currentRoute !== '/' && currentRoute === '/oxalate'"
             href="#resources"
@@ -124,11 +126,6 @@
           >
             <i class="fas fa-book"></i>
             <span>Resources</span>
-          </a>
-
-          <a class="nav-link" (click)="goToSupport()">
-            <i class="fas fa-life-ring"></i>
-            <span>Support</span>
           </a>
 
           <a (click)="onLogout()" class="nav-link logout">
