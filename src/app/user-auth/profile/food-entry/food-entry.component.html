@@ -49,15 +49,16 @@
             class="food-row"
           >
             <td class="food-name-col">
-              <button
+              <span
                 class="food-name-btn"
                 (click)="food.isExpanded = !food.isExpanded"
               >
                 {{ food.foodName }}
-                <span class="expand-icon">{{
-                  food.isExpanded ? "−" : "+"
-                }}</span>
-              </button>
+
+                <span class="expand-icon">
+                  {{ food.isExpanded ? "−" : "+" }}</span
+                >
+              </span>
               <div class="mobile-details" *ngIf="food.isExpanded">
                 <div class="detail-row">
                   <span class="detail-label">Serving:</span>
@@ -98,7 +99,6 @@
               </button>
             </td>
           </tr>
-          <!-- Total Row -->
           <tr class="total-row">
             <td class="food-name-col">
               Total
@@ -215,7 +215,6 @@
               </button>
             </td>
           </tr>
-          <!-- Total Row -->
           <tr class="total-row">
             <td class="food-name-col">
               Total
@@ -328,7 +327,6 @@
               </button>
             </td>
           </tr>
-          <!-- Total Row -->
           <tr class="total-row">
             <td class="food-name-col">
               Total
