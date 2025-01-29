@@ -269,16 +269,16 @@
   }
 
   .profile-info-container .user-image {
-    width: 40px;
-    height: 40px;
+    width: 32px;
+    height: 32px;
     border-radius: 50%;
     object-fit: cover;
     border: 1px solid #dbdbdb;
   }
 
   .profile-info-container .default-user-icon {
-    width: 40px;
-    height: 40px;
+    width: 25%;
+    height: 50%;
     font-size: 24px;
     display: flex;
     align-items: center;
@@ -337,6 +337,14 @@
 }
 
 @media screen and (max-width: 768px) {
+  .user-image {
+    display: block;
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    object-fit: cover;
+  }
+
   .header {
     padding: 0 16px;
   }
