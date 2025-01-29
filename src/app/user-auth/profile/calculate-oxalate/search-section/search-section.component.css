@@ -63,6 +63,7 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
+  flex-wrap: wrap;
 }
 
 .food-name {
@@ -107,4 +108,39 @@
   justify-content: space-between;
   font-size: 0.875rem;
   color: #64748b;
+}
+
+@media (max-width: 768px) {
+  .food-info {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.5rem;
+  }
+
+  .confidence-badge {
+    align-self: flex-start;
+  }
+}
+
+@media (max-width: 480px) {
+  .search-input {
+    padding: 0.75rem 0.75rem 0.75rem 2.5rem;
+    font-size: 0.875rem;
+  }
+
+  .food-card {
+    padding: 0.75rem;
+  }
+
+  .food-name {
+    font-size: 0.9rem;
+  }
+
+  .confidence-badge {
+    font-size: 0.7em;
+  }
+
+  .info-item {
+    font-size: 0.8rem;
+  }
 }

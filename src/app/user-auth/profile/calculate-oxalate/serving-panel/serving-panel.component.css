@@ -10,14 +10,14 @@
 }
 
 .serving-input {
-  flex: 1 1 calc(25% - 1rem);
+  flex: 1 1 calc(50% - 0.5rem);
   display: flex;
   flex-direction: column;
   background: white;
   padding: 1rem;
   border-radius: 1rem;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-  min-width: 200px;
+  min-width: 150px;
 }
 
 .serving-input label {
@@ -27,7 +27,7 @@
   color: #64748b;
   margin-bottom: 0.5rem;
   font-size: 0.875rem;
-  height: 2rem;
+  height: 1rem;
   line-height: 1rem;
 }
 
@@ -38,6 +38,12 @@
   border-radius: 0.5rem;
   font-size: 1rem;
 }
+.input-field:focus {
+  border-color: #dedede;
+  background-color: #fff;
+  box-shadow: 0 0 8px rgba(0, 123, 255, 0.2);
+}
+
 .disabled-input {
   background-color: #f5f5f5;
   color: #a9a9a9;
@@ -50,14 +56,72 @@
   color: #b0b0b0;
 }
 
-@media (max-width: 1024px) {
-  .serving-input {
-    flex: 1 1 calc(50% - 1rem);
-  }
-}
-
 @media (max-width: 768px) {
   .serving-input {
     flex: 1 1 100%;
+  }
+  .input-field {
+    width: 100%;
+    padding: 12px 16px;
+    font-size: 1rem;
+    border: 2px dotted #ccc;
+    border-radius: 8px;
+    background-color: #fafafa;
+    transition: all 0.3s ease-in-out;
+    outline: none;
+  }
+
+  .input-field:hover {
+    border-color: #999;
+  }
+
+  .input-field:focus {
+    border-color: #dedede;
+    background-color: #fff;
+    box-shadow: 0 0 8px rgba(0, 123, 255, 0.2);
+  }
+
+  .input-field:disabled {
+    background-color: #e9ecef;
+    cursor: not-allowed;
+    border-color: #ddd;
+    color: #b0b0b0;
+  }
+}
+
+@media (max-width: 480px) {
+  .serving-panel {
+    gap: 0.75rem;
+  }
+
+  .serving-input {
+    padding: 0.75rem;
+  }
+  .input-field {
+    width: 100%;
+    padding: 12px 16px;
+    font-size: 1rem;
+    border: 2px dotted #ccc;
+    border-radius: 8px;
+    background-color: #fafafa;
+    transition: all 0.3s ease-in-out;
+    outline: none;
+  }
+
+  .input-field:hover {
+    border-color: #999;
+  }
+
+  .input-field:focus {
+    border-color: #dedede;
+    background-color: #fff;
+    box-shadow: 0 0 8px rgba(0, 123, 255, 0.2);
+  }
+
+  .input-field:disabled {
+    background-color: #e9ecef;
+    cursor: not-allowed;
+    border-color: #ddd;
+    color: #777;
   }
 }
