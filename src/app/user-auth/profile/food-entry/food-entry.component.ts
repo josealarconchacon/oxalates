@@ -1,7 +1,10 @@
 import { CommonModule } from '@angular/common';
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { slideInAnimation } from 'src/app/shared/animations/animations';
+import {
+  dialogAnimation,
+  slideInAnimation,
+} from 'src/app/shared/animations/animations';
 import { CalculateOxalateComponent } from '../calculate-oxalate/calculate-oxalate.component';
 import { ResultsSectionComponent } from '../calculate-oxalate/results-section/results-section.component';
 import { DateSwitcherComponent } from './date-switcher/date-switcher.component';
@@ -29,7 +32,7 @@ export interface FoodItem {
   ],
   templateUrl: './food-entry.component.html',
   styleUrls: ['./food-entry.component.css'],
-  animations: [slideInAnimation],
+  animations: [slideInAnimation, dialogAnimation],
 })
 export class FoodEntryComponent implements OnInit, OnDestroy {
   lunchItems: FoodItem[] = [];
