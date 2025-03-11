@@ -1,27 +1,84 @@
-# Oxalates
+# Oxalates Tracker
 
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 16.2.0.
+A comprehensive web application for tracking and managing oxalate intake in your diet. Built with Angular and Firebase, this application helps users monitor their oxalate consumption and make informed dietary choices.
 
-## Development server
+## Overview
 
-Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The application will automatically reload if you change any of the source files.
+Oxalates are naturally occurring compounds found in many foods, particularly plant-based ones. While they can be part of a healthy diet, some individuals need to monitor their oxalate intake due to various health conditions. This application provides tools and information to help users track and manage their oxalate consumption effectively.
 
-## Code scaffolding
+## Features
 
-Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.
+### 1. Oxalate Content Database
 
-## Build
+- Extensive database of foods with their oxalate content
+- Detailed information including:
+  - Total oxalate content per 100g
+  - Soluble oxalate content
+  - Serving sizes
+  - Categories
+  - Calculation levels (Low to Extremely High)
+
+### 2. Calculation Tools
+
+- Calculate oxalate intake per meal
+- Track daily oxalate consumption
+- Customize serving sizes
+- Save frequently consumed meals
+- View historical intake data
+
+### 3. User Features
+
+- Personal profile management
+- Save favorite foods and meals
+- Track daily intake history
+- Password management
+- Customizable settings
+
+### 4. Educational Resources
+
+- Information about oxalates
+- Tips for managing oxalate intake
+- Community support links
+- Best practices for dietary management
+
+### 5. Search and Filter
+
+- Search foods by name
+- Filter by categories
+- Sort by oxalate levels
+- View similar food alternatives
+
+1. Clone the repository:
+
+```bash
+git clone [repository-url]
+cd oxalates
+```
+
+2. Install dependencies:
+
+```bash
+npm install
+```
+
+3. Configure Firebase:
+
+- Create a Firebase project
+- Add your Firebase configuration to ``
+- Enable Authentication and Firestore in your Firebase console
+
+4. Start the development server:
+
+```bash
+ng serve
+```
+
+5. Navigate to `http://localhost:4200/` in your browser
+
+## Building for Production
 
 Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory.
 
-## Running unit tests
+## Acknowledgments
 
-Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
-
-## Running end-to-end tests
-
-Run `ng e2e` to execute the end-to-end tests via a platform of your choice. To use this command, you need to first add a package that implements end-to-end testing capabilities.
-
-## Further help
-
-To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI Overview and Command Reference](https://angular.io/cli) page.
+- Data sources for oxalate content
