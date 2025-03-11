@@ -2,10 +2,11 @@
 
 <div class="auth-container">
   <div class="auth-card">
-    <h2>{{ isSignInMode ? "Sign In" : "Sign Up" }}</h2>
+    <h2 class="auth-title">{{ isSignInMode ? "Sign In" : "Sign Up" }}</h2>
+
     <div class="auth-form-wrapper">
       <div class="form-left">
-        <form [formGroup]="authForm" (ngSubmit)="onSubmit()">
+        <form [formGroup]="authForm" (ngSubmit)="onSubmit()" class="auth-form">
           <div class="form-group">
             <input
               type="email"
@@ -69,7 +70,7 @@
                 ? "Don't have an account?"
                 : "Already have an account?"
             }}
-            <a (click)="toggleAuthMode()">
+            <a (click)="toggleAuthMode()" class="toggle-link">
               {{ isSignInMode ? "Sign Up" : "Sign In" }}
             </a>
           </p>
@@ -83,7 +84,7 @@
               src="https://png.pngtree.com/png-vector/20230817/ourmid/pngtree-google-internet-icon-vector-png-image_9183287.png"
               alt="Google icon"
             />
-            Sign in with Google
+            <span>Sign in with Google</span>
           </button>
         </div>
       </div>

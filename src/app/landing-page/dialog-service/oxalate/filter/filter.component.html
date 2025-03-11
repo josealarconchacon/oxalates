@@ -1,4 +1,4 @@
-<div class="dropdown-container">
+<!-- <div class="dropdown-container">
   <div class="dropdown filter-group">
     <select
       id="time"
@@ -32,4 +32,38 @@
       Clear Filters
     </button>
   </div>
+</div> -->
+<div class="filter-inline-container">
+  <!-- Category Dropdown -->
+  <select
+    id="time"
+    name="time"
+    [(ngModel)]="filters.category"
+    (ngModelChange)="applyFilters()"
+    class="filter-inline-select"
+  >
+    <option [ngValue]="''">Any Category</option>
+    <option *ngFor="let category of categories" [ngValue]="category">
+      {{ category }}
+    </option>
+  </select>
+
+  <!-- Level Dropdown -->
+  <select
+    id="results"
+    name="results"
+    [(ngModel)]="filters.calc_level"
+    (ngModelChange)="applyFilters()"
+    class="filter-inline-select"
+  >
+    <option [ngValue]="''">All Levels</option>
+    <option *ngFor="let level of calcLevels" [ngValue]="level">
+      {{ level }}
+    </option>
+  </select>
+
+  <!-- Clear Filters Button -->
+  <button type="button" class="btn-clear-inline" (click)="clearFilters()">
+    ✖ Clear
+  </button>
 </div>
