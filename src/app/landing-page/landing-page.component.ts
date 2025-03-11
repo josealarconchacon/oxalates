@@ -1,5 +1,4 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-landing-page',
@@ -7,19 +6,11 @@ import { ActivatedRoute } from '@angular/router';
   styleUrls: ['./landing-page.component.css'],
 })
 export class LandingPageComponent implements OnInit {
-  [x: string]: any;
-  showOxalateComponent = false;
+  constructor() {}
 
-  constructor(private route: ActivatedRoute) {
-    this.route.queryParams.subscribe((params) => {
-      if (params['showOxalate']) {
-        this.showOxalateComponent = true;
-        this.scrollToOxalate();
-      }
-    });
+  ngOnInit() {
+    // Initialize any necessary data or services
   }
-
-  ngOnInit(): void {}
 
   onRegister() {
     console.log('Register button clicked');

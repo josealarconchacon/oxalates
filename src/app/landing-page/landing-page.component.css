@@ -135,3 +135,30 @@ main {
     padding: 15px 5px;
   }
 }
+
+section {
+  padding: var(--section-padding);
+  background-color: var(--white);
+}
+
+section:nth-child(even) {
+  background-color: var(--background-color);
+}
+
+.section-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 1rem;
+}
+
+@media screen and (max-width: 768px) {
+  .section-container {
+    padding: 0 0.75rem;
+  }
+}
+
+@media screen and (max-width: 480px) {
+  .section-container {
+    padding: 0 0.5rem;
+  }
+}

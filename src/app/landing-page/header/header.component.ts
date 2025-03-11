@@ -4,17 +4,25 @@ import { AuthService } from 'src/app/user-auth/service/auth-service.service';
 import { NavigationService } from 'src/app/user-auth/service/navigation.service';
 import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
 import { map, Observable } from 'rxjs';
+import { MatIconModule } from '@angular/material/icon';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-header',
   templateUrl: './header.component.html',
   styleUrls: ['./header.component.css'],
+  standalone: true,
+  imports: [CommonModule, MatIconModule],
 })
 export class HeaderComponent implements OnInit {
   isNavOpen = false;
   isLoggedIn = false;
   userProfile: any;
   currentRoute: string = '';
+  isScrolled = false;
+  isMobileMenuOpen = false;
+  userImage: string | null = null;
+  userName: string | null = null;
 
   activeSection$: Observable<string>;
   isMobile$: Observable<boolean>;
@@ -52,6 +60,9 @@ export class HeaderComponent implements OnInit {
     this.router.events.subscribe(() => {
       this.currentRoute = this.router.url;
     });
+
+    // Initialize user data from your auth service
+    this.initializeUserData();
   }
 
   toggleNav() {
@@ -90,14 +101,29 @@ export class HeaderComponent implements OnInit {
 
   @HostListener('window:scroll')
   onWindowScroll() {
-    const header = document.querySelector('.header');
-    if (header) {
-      if (window.scrollY > 0) {
-        header.classList.add('scrolled');
-      } else {
-        header.classList.remove('scrolled');
-      }
-    }
+    this.isScrolled = window.scrollY > 0;
+  }
+
+  toggleMobileMenu() {
+    this.isMobileMenuOpen = !this.isMobileMenuOpen;
+    // Prevent body scroll when mobile menu is open
+    document.body.style.overflow = this.isMobileMenuOpen ? 'hidden' : '';
+  }
+
+  closeMobileMenu() {
+    this.isMobileMenuOpen = false;
+    document.body.style.overflow = '';
+  }
+
+  toggleProfileMenu() {
+    // Implement profile menu toggle logic
+  }
+
+  private initializeUserData() {
+    // Implement user data initialization from your auth service
+    // This is a placeholder - replace with actual implementation
+    this.userImage = null;
+    this.userName = null;
   }
 
   navigateToCalculateDailyIntake(): void {
