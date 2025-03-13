@@ -13,6 +13,7 @@
   cursor: pointer;
   font-size: 1.25rem;
   color: #64748b;
+  transition: color 0.2s ease;
 }
 
 .close-button:hover {
@@ -24,6 +25,7 @@
   border-radius: 0.75rem;
   padding: 1rem;
   margin-bottom: 1rem;
+  transition: all 0.3s ease;
 }
 
 .day-header {
@@ -33,9 +35,15 @@
   margin-bottom: 1rem;
 }
 
+.day-header h4 {
+  color: #1a1a1a;
+  transition: color 0.3s ease;
+}
+
 .daily-total {
   font-size: 0.875rem;
   color: #64748b;
+  transition: color 0.3s ease;
 }
 
 .meals-list {
@@ -50,11 +58,14 @@
   padding: 0.75rem;
   border-radius: 0.5rem;
   box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+  transition: all 0.3s ease;
 }
 
 .meal-name {
   font-weight: 500;
   margin-bottom: 0.5rem;
+  color: #1a1a1a;
+  transition: color 0.3s ease;
 }
 
 .meal-details {
@@ -63,6 +74,7 @@
   gap: 1rem;
   font-size: 0.875rem;
   color: #64748b;
+  transition: color 0.3s ease;
 }
 
 .meal-actions {
@@ -77,6 +89,7 @@
   cursor: pointer;
   padding: 0.5rem;
   font-size: 1.25rem;
+  transition: color 0.2s ease;
 }
 
 .edit-button {
@@ -107,7 +120,7 @@
   border: none;
   border-radius: 0.375rem;
   cursor: pointer;
-  transition: background-color 0.2s;
+  transition: all 0.2s ease;
 }
 
 .share-button:hover {
@@ -118,4 +131,71 @@
   text-align: center;
   margin-top: 2rem;
   color: #64748b;
+  transition: color 0.3s ease;
+}
+
+/* Dark theme styles */
+.dark-theme .close-button {
+  color: #9ca3af;
+}
+
+.dark-theme .close-button:hover {
+  color: #5fa8e6;
+}
+
+.dark-theme .day-section {
+  background: #242937;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.dark-theme .day-header h4 {
+  color: #e5e7eb;
+}
+
+.dark-theme .daily-total {
+  color: #9ca3af;
+}
+
+.dark-theme .meal-card {
+  background: #1a1f2e;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.dark-theme .meal-name {
+  color: #e5e7eb;
+}
+
+.dark-theme .meal-details {
+  color: #9ca3af;
+}
+
+.dark-theme .edit-button {
+  color: #5fa8e6;
+}
+
+.dark-theme .edit-button:hover {
+  color: #3b82f6;
+}
+
+.dark-theme .delete-button {
+  color: #ef4444;
+}
+
+.dark-theme .delete-button:hover {
+  color: #dc2626;
+}
+
+.dark-theme .share-button {
+  background-color: rgba(95, 168, 230, 0.1);
+  color: #5fa8e6;
+  border: 1px solid rgba(95, 168, 230, 0.2);
+}
+
+.dark-theme .share-button:hover {
+  background-color: rgba(95, 168, 230, 0.15);
+}
+
+.dark-theme .no-meals-message {
+  color: #9ca3af;
 }

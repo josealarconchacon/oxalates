@@ -10,6 +10,7 @@ import { HeaderComponent } from 'src/app/landing-page/header/header.component';
 import { Observable } from 'rxjs';
 import { NavigationService } from '../service/navigation.service';
 import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
+import { ThemeService } from '../../shared/services/theme.service';
 
 @Component({
   selector: 'app-profile',
@@ -30,6 +31,7 @@ export class ProfileComponent implements OnInit {
 
   activeSection$: Observable<string> | undefined;
   isMobile$: Observable<boolean> | undefined;
+  isDarkTheme$: Observable<boolean>;
 
   presetColors: string[] = presetColors;
 
@@ -38,12 +40,14 @@ export class ProfileComponent implements OnInit {
     private storage: AngularFireStorage,
     private router: Router,
     private navigationService: NavigationService,
-    private breakpointObserver: BreakpointObserver
+    private breakpointObserver: BreakpointObserver,
+    private themeService: ThemeService
   ) {
     this.activeSection$ = this.navigationService.activeSection$;
     this.isMobile$ = this.breakpointObserver
       .observe(Breakpoints.Handset)
       .pipe(map((result) => result.matches));
+    this.isDarkTheme$ = this.themeService.isDarkTheme$;
   }
 
   ngOnInit(): void {
@@ -152,5 +156,9 @@ export class ProfileComponent implements OnInit {
 
   onLogout(): void {
     this.authService.signOut();
+  }
+
+  toggleTheme(): void {
+    this.themeService.toggleTheme();
   }
 }

@@ -36,6 +36,7 @@
               {{ userProfile?.displayName || "Username" }}
             </h2>
             <p class="profile-email">
+              <i class="fas fa-envelope"></i>
               {{ userProfile?.email || "username@example.com" }}
             </p>
           </div>
@@ -70,7 +71,24 @@
       <ng-container [ngSwitch]="activeSection$ | async">
         <div *ngSwitchCase="'profile'" class="profile-details">
           <!-- Profile details content -->
-          <h2 class="section-title">Profile Information</h2>
+          <div class="profile-header-container">
+            <h2 class="section-title">Profile Information</h2>
+            <button
+              class="theme-toggle"
+              (click)="toggleTheme()"
+              [attr.aria-label]="
+                (isDarkTheme$ | async)
+                  ? 'Switch to light mode'
+                  : 'Switch to dark mode'
+              "
+            >
+              <i
+                class="fas"
+                [class.fa-sun]="isDarkTheme$ | async"
+                [class.fa-moon]="!(isDarkTheme$ | async)"
+              ></i>
+            </button>
+          </div>
           <div class="info-card">
             <div class="info-item">
               <label>Name</label>

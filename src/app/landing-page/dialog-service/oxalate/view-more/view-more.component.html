@@ -1,4 +1,8 @@
-<div class="oxalate-card" *ngIf="oxalateData">
+<div
+  class="oxalate-card"
+  *ngIf="oxalateData"
+  [ngClass]="{ 'dark-theme': isDarkTheme }"
+>
   <h3 class="version animate-fade-in">{{ oxalateData.item }}</h3>
   <div class="features-grid">
     <div

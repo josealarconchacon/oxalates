@@ -1,10 +1,11 @@
-<div class="results-container">
+<div class="results-container" [ngClass]="{ 'dark-theme': isDarkTheme }">
   <div class="title-container">
     <h2 class="title">Daily Oxalate Breakdown</h2>
     <button
       class="share-icon"
       (click)="openShareMenu()"
       [disabled]="!hasFoodItems()"
+      [attr.aria-label]="'Share daily oxalate breakdown'"
     >
       <i class="fas fa-share-alt"></i>
     </button>
@@ -27,24 +28,28 @@
             class="bar green"
             [style.width]="getGreenWidth()"
             [style.opacity]="getGreenOpacity()"
+            [attr.aria-label]="'Low oxalate range (0-50mg)'"
           ></div>
           <!-- Yellow section (50-350mg) -->
           <div
             class="bar yellow"
             [style.width]="getYellowWidth()"
             [style.opacity]="getYellowOpacity()"
+            [attr.aria-label]="'Medium oxalate range (50-350mg)'"
           ></div>
           <!-- Red section (350-500mg) -->
           <div
             class="bar red"
             [style.width]="getRedWidth()"
             [style.opacity]="getRedOpacity()"
+            [attr.aria-label]="'High oxalate range (350-500mg)'"
           ></div>
           <!-- Dark Red section (500-1000mg) -->
           <div
             class="bar dark-red"
             [style.width]="getDarkRedWidth()"
             [style.opacity]="getDarkRedOpacity()"
+            [attr.aria-label]="'Very high oxalate range (500-1000mg)'"
           ></div>
         </div>
         <span class="indicator-label"

@@ -1,5 +1,100 @@
-.header {
+/* Dark theme styles */
+.dark-theme .header {
   background-color: var(--background-color);
+  border-bottom-color: var(--border-color);
+}
+
+.dark-theme .header.scrolled {
+  background-color: rgba(45, 45, 45, 0.98);
+}
+
+.dark-theme .logo-container {
+  color: var(--text-color);
+}
+
+.dark-theme .hamburger:hover {
+  background-color: var(--gray-700);
+}
+
+.dark-theme .hamburger .bar {
+  background-color: var(--text-color);
+}
+
+.dark-theme .nav-close::before,
+.dark-theme .nav-close::after {
+  background-color: var(--text-color);
+}
+
+.dark-theme .nav-close:hover {
+  background-color: var(--gray-700);
+}
+
+.dark-theme .nav-link {
+  color: var(--text-secondary);
+}
+
+.dark-theme .nav-link:hover {
+  color: var(--text-color);
+  background-color: var(--gray-700);
+}
+
+.dark-theme .nav-link.active {
+  color: var(--primary-color);
+  background-color: var(--gray-700);
+}
+
+.dark-theme .search-btn,
+.dark-theme .profile-btn,
+.dark-theme .user-icon-btn {
+  color: var(--text-color);
+}
+
+.dark-theme .search-btn:hover,
+.dark-theme .profile-btn:hover,
+.dark-theme .user-icon-btn:hover {
+  background-color: var(--gray-700);
+}
+
+.dark-theme .mobile-sidebar-nav {
+  background-color: var(--background-color);
+}
+
+.dark-theme .mobile-sidebar-nav .nav-link {
+  color: var(--text-color);
+}
+
+.dark-theme .mobile-sidebar-nav .nav-link:hover,
+.dark-theme .mobile-sidebar-nav .nav-link.active {
+  background-color: var(--gray-700);
+}
+
+.dark-theme .profile-info-container:hover {
+  background-color: var(--gray-700);
+}
+
+.dark-theme .profile-info-container .default-user-icon {
+  background-color: var(--gray-700);
+  border-color: var(--border-color);
+}
+
+.dark-theme .profile-image-upload-label:hover {
+  background-color: var(--gray-700);
+}
+
+.dark-theme .profile-image-upload-label mat-icon {
+  color: var(--text-color);
+}
+
+/* Update existing styles with CSS variables */
+:root {
+  --header-bg: var(--background-color, #ffffff);
+  --header-border: var(--border-color, #e5e7eb);
+  --header-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  --header-backdrop: blur(8px);
+}
+
+.header {
+  background-color: var(--header-bg);
   color: var(--text-primary);
   padding: var(--spacing-2) var(--spacing-4);
   position: sticky;
@@ -7,16 +102,17 @@
   left: 0;
   right: 0;
   z-index: var(--z-50);
-  border-bottom: 1px solid var(--border-color);
+  border-bottom: 1px solid var(--header-border);
   transition: background-color var(--transition-base),
     box-shadow var(--transition-base);
+  box-shadow: var(--header-shadow);
 }
 
 .header.scrolled {
+  backdrop-filter: var(--header-backdrop);
+  -webkit-backdrop-filter: var(--header-backdrop);
   box-shadow: var(--shadow-sm);
   background-color: rgba(255, 255, 255, 0.98);
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
 }
 
 .header-content {
@@ -259,6 +355,11 @@
     transition: right var(--transition-base);
   }
 
+  .dark-theme .nav {
+    background-color: var(--background-color);
+    box-shadow: var(--shadow-lg);
+  }
+
   .nav.open {
     right: 0;
   }
@@ -286,7 +387,11 @@
   }
 
   .profile-info-container:hover {
-    background-color: #f8f8f8;
+    background-color: var(--gray-100);
+  }
+
+  .dark-theme .profile-info-container:hover {
+    background-color: var(--gray-700);
   }
 
   .profile-info-container .user-image {
@@ -294,7 +399,7 @@
     height: 32px;
     border-radius: 50%;
     object-fit: cover;
-    border: 1px solid #dbdbdb;
+    border: 1px solid var(--border-color);
   }
 
   .profile-info-container .default-user-icon {
@@ -305,8 +410,13 @@
     align-items: center;
     justify-content: center;
     border-radius: 50%;
-    background-color: #f0f0f0;
-    border: 1px solid #dbdbdb;
+    background-color: var(--gray-100);
+    border: 1px solid var(--border-color);
+  }
+
+  .dark-theme .profile-info-container .default-user-icon {
+    background-color: var(--gray-700);
+    border-color: var(--border-color);
   }
 
   .profile-image-upload-label {
@@ -321,12 +431,16 @@
   }
 
   .profile-image-upload-label:hover {
-    background-color: #e0e0e0;
+    background-color: var(--gray-100);
+  }
+
+  .dark-theme .profile-image-upload-label:hover {
+    background-color: var(--gray-700);
   }
 
   .profile-image-upload-label mat-icon {
     font-size: 16px;
-    color: #262626;
+    color: var(--text-color);
   }
 
   .mobile-sidebar-nav .nav-link {
@@ -336,24 +450,43 @@
     gap: 12px;
     width: 100%;
     border-radius: 8px;
-    color: #262626;
+    color: var(--text-color);
     text-decoration: none;
     transition: background-color 0.2s ease;
   }
 
   .mobile-sidebar-nav .nav-link:hover,
   .mobile-sidebar-nav .nav-link.active {
-    background-color: #e3e3e3;
+    background-color: var(--gray-100);
+  }
+
+  .dark-theme .mobile-sidebar-nav .nav-link:hover,
+  .dark-theme .mobile-sidebar-nav .nav-link.active {
+    background-color: var(--gray-700);
+    color: var(--text-color);
   }
 
   .mobile-sidebar-nav .nav-link i {
     width: 24px;
     text-align: center;
+    color: var(--text-secondary);
+  }
+
+  .dark-theme .mobile-sidebar-nav .nav-link i {
+    color: var(--text-secondary);
   }
 
   .mobile-sidebar-nav .logout {
     margin-top: auto;
-    color: #e0245e;
+    color: var(--danger-color);
+  }
+
+  .dark-theme .mobile-sidebar-nav .logout {
+    color: var(--danger-color);
+  }
+
+  .dark-theme .mobile-sidebar-nav .logout:hover {
+    background-color: var(--danger-50);
   }
 }
 
@@ -364,6 +497,11 @@
     height: 100px;
     border-radius: 50%;
     object-fit: cover;
+    border: 1px solid var(--border-color);
+  }
+
+  .dark-theme .user-image {
+    border-color: var(--border-color);
   }
 
   .header {

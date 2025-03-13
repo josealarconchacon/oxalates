@@ -1,6 +1,14 @@
 import { CommonModule } from '@angular/common';
-import { Component, Input } from '@angular/core';
+import {
+  Component,
+  Input,
+  OnInit,
+  OnDestroy,
+  HostBinding,
+} from '@angular/core';
 import { ShareMenuComponent } from '../share-menu/share-menu.component';
+import { ThemeService } from 'src/app/shared/services/theme.service';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-results-section',
@@ -9,7 +17,7 @@ import { ShareMenuComponent } from '../share-menu/share-menu.component';
   templateUrl: './results-section.component.html',
   styleUrls: ['./results-section.component.css'],
 })
-export class ResultsSectionComponent {
+export class ResultsSectionComponent implements OnInit, OnDestroy {
   @Input() breakfastItems: any[] = [];
   @Input() lunchItems: any[] = [];
   @Input() dinnerItems: any[] = [];
@@ -21,6 +29,38 @@ export class ResultsSectionComponent {
   readonly MAX_RED_HEIGHT = 1000; // Maximum value for dark red section
 
   shareMenuVisible = false;
+  isDarkTheme = false;
+  private themeSubscription: Subscription | null = null;
+
+  // Add HostBinding to apply dark theme class to the host element
+  @HostBinding('class.dark-theme') get darkTheme() {
+    return this.isDarkTheme;
+  }
+
+  constructor(private themeService: ThemeService) {}
+
+  ngOnInit() {
+    // Subscribe to theme changes
+    this.themeSubscription = this.themeService.isDarkTheme$.subscribe(
+      (isDark) => {
+        this.isDarkTheme = isDark;
+        // Force change detection on theme change
+        this.updateChartColors();
+      }
+    );
+  }
+
+  ngOnDestroy() {
+    if (this.themeSubscription) {
+      this.themeSubscription.unsubscribe();
+    }
+  }
+
+  // Update chart colors based on theme
+  private updateChartColors() {
+    // Chart will automatically update due to CSS variables
+    // This method can be extended if needed for dynamic color updates
+  }
 
   get mealItems() {
     const meals = [

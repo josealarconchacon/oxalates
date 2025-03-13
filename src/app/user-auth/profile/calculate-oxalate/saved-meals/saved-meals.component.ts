@@ -21,6 +21,7 @@ import { DailyTotal } from '../../model/daily-total';
 })
 export class SavedMealsComponent implements OnInit {
   @Input() savedMeals: SavedMeal[] = [];
+  @Input() isDarkTheme: boolean = false;
   @Output() close = new EventEmitter<void>();
 
   groupedMeals: { [key: string]: SavedMeal[] } = {};

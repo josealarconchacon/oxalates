@@ -1,4 +1,8 @@
-<div class="share-menu-overlay" (click)="closeShareMenu($event)">
+<div
+  class="share-menu-overlay"
+  (click)="closeShareMenu($event)"
+  [ngClass]="{ 'dark-theme': isDarkTheme }"
+>
   <div
     class="share-menu-content"
     [@menuAnimation]="'show'"

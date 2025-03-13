@@ -1,4 +1,4 @@
-<div class="date-switcher">
+<div class="date-switcher" [ngClass]="{ 'dark-theme': isDarkTheme }">
   <button (click)="previousDay()" class="nav-button" aria-label="Previous day">
     <svg
       xmlns="http://www.w3.org/2000/svg"
@@ -6,7 +6,7 @@
       height="24"
       viewBox="0 0 24 24"
       fill="none"
-      stroke="currentColor"
+      [attr.stroke]="isDarkTheme ? '#e1e1e1' : 'currentColor'"
     >
       <path
         d="M15 18l-6-6 6-6"
@@ -38,7 +38,7 @@
       height="24"
       viewBox="0 0 24 24"
       fill="none"
-      stroke="currentColor"
+      [attr.stroke]="isDarkTheme ? '#e1e1e1' : 'currentColor'"
     >
       <path
         d="M9 18l6-6-6-6"

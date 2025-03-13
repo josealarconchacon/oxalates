@@ -1,56 +1,62 @@
 .search-section {
-  margin-bottom: 2rem;
+  margin-bottom: var(--spacing-8);
   position: relative;
 }
 
 .search-wrapper {
   position: relative;
-  margin-bottom: 1rem;
+  margin-bottom: var(--spacing-4);
 }
 
 .search-wrapper i {
   position: absolute;
-  left: 1rem;
+  left: var(--spacing-4);
   top: 50%;
   transform: translateY(-50%);
-  color: #64748b;
+  color: var(--text-secondary);
 }
 
 .search-input {
   width: 100%;
-  padding: 1rem 1rem 1rem 3rem;
-  border: 2px solid #e2e8f0;
-  border-radius: 1rem;
-  font-size: 1rem;
-  background: white;
-  transition: all 0.3s ease;
+  padding: var(--spacing-4) var(--spacing-4) var(--spacing-4) var(--spacing-12);
+  border: 2px solid var(--border-color);
+  border-radius: var(--radius-xl);
+  font-size: var(--font-size-base);
+  background: var(--background-color);
+  color: var(--text-color);
+  transition: all var(--transition-base);
+}
+
+.search-input:hover {
+  border-color: var(--primary-color);
 }
 
 .search-input:focus {
   outline: none;
-  border-color: #6366f1;
-  box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.1);
+  border-color: var(--primary-color);
+  box-shadow: 0 0 0 4px var(--primary-light);
 }
 
 .suggestions-panel {
   position: absolute;
   width: 100%;
-  background: white;
-  border-radius: 1rem;
-  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1);
+  background: var(--background-color);
+  border-radius: var(--radius-xl);
+  box-shadow: var(--shadow-lg);
   z-index: 10;
   overflow: hidden;
+  border: 1px solid var(--border-color);
 }
 
 .food-card {
-  padding: 1rem;
-  border-bottom: 1px solid #e2e8f0;
+  padding: var(--spacing-4);
+  border-bottom: 1px solid var(--border-color);
   cursor: pointer;
-  transition: background-color 0.2s;
+  transition: background-color var(--transition-base);
 }
 
 .food-card:hover {
-  background-color: #f1f5f9;
+  background-color: var(--hover-background);
 }
 
 .food-header {
@@ -110,6 +116,80 @@
   color: #64748b;
 }
 
+/* Dark theme styles */
+.dark-theme .search-wrapper i {
+  color: var(--text-secondary);
+}
+
+.dark-theme .search-input {
+  background: var(--background-color);
+  border-color: var(--border-color);
+  color: var(--text-color);
+}
+
+.dark-theme .search-input:hover {
+  border-color: var(--primary-color);
+}
+
+.dark-theme .search-input:focus {
+  border-color: var(--primary-color);
+  box-shadow: 0 0 0 4px var(--primary-light);
+}
+
+.dark-theme .search-input::placeholder {
+  color: var(--text-secondary);
+}
+
+.dark-theme .suggestions-panel {
+  background: var(--card-background);
+  box-shadow: var(--shadow-lg);
+  border: 1px solid var(--border-color);
+}
+
+.dark-theme .food-card {
+  border-bottom: 1px solid var(--border-color);
+}
+
+.dark-theme .food-card:hover {
+  background-color: var(--hover-background);
+}
+
+.dark-theme .food-name {
+  color: var(--text-color);
+}
+
+.dark-theme .info-item {
+  color: var(--text-secondary);
+}
+
+.dark-theme .confidence-badge {
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.dark-theme .confidence-badge.very-high {
+  background-color: rgba(5, 150, 105, 0.2);
+  color: #34d399;
+  border-color: rgba(52, 211, 153, 0.4);
+}
+
+.dark-theme .confidence-badge.high {
+  background-color: rgba(101, 163, 13, 0.2);
+  color: #a3e635;
+  border-color: rgba(163, 230, 53, 0.4);
+}
+
+.dark-theme .confidence-badge.medium {
+  background-color: rgba(217, 119, 6, 0.2);
+  color: #fbbf24;
+  border-color: rgba(251, 191, 36, 0.4);
+}
+
+.dark-theme .confidence-badge.low {
+  background-color: rgba(220, 38, 38, 0.2);
+  color: #f87171;
+  border-color: rgba(248, 113, 113, 0.4);
+}
+
 @media (max-width: 768px) {
   .food-info {
     flex-direction: column;
@@ -119,6 +199,14 @@
 
   .confidence-badge {
     align-self: flex-start;
+  }
+
+  .dark-theme .food-card {
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  }
+
+  .dark-theme .food-info {
+    border-color: rgba(255, 255, 255, 0.1);
   }
 }
 
@@ -142,5 +230,34 @@
 
   .info-item {
     font-size: 0.8rem;
+  }
+
+  .dark-theme .search-input {
+    background: #1a1f2e;
+    border-color: rgba(255, 255, 255, 0.1);
+    color: #e5e7eb;
+  }
+
+  .dark-theme .search-input:hover {
+    border-color: rgba(95, 168, 230, 0.3);
+    background-color: #1a1f2e;
+  }
+
+  .dark-theme .search-input:focus {
+    border-color: #5fa8e6;
+    background-color: #1a1f2e;
+    box-shadow: 0 0 0 4px rgba(95, 168, 230, 0.15);
+  }
+
+  .dark-theme .food-card {
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  }
+
+  .dark-theme .food-name {
+    color: #e5e7eb;
+  }
+
+  .dark-theme .info-item {
+    color: #9ca3af;
   }
 }

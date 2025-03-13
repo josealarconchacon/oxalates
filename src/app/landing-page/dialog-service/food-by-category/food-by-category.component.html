@@ -1,4 +1,4 @@
-<section class="category-container">
+<section class="category-container" [class.dark-theme]="isDarkTheme$ | async">
   <h2 class="by-category">Browse by Category</h2>
   <div class="cards-wrapper">
     <div

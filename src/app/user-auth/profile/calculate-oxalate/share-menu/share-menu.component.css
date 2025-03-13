@@ -123,6 +123,100 @@
   transition: all 0.3s ease;
 }
 
+/* Dark theme styles */
+.dark-theme .share-menu-overlay {
+  background: rgba(0, 0, 0, 0.6);
+}
+
+.dark-theme .share-menu-content {
+  background: #242937;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+}
+
+.dark-theme .preview-title {
+  color: #e5e7eb;
+}
+
+.dark-theme .result-card {
+  background: #1a1f2e;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.25);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.dark-theme .result-header {
+  background: #242937;
+  color: #e5e7eb;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.dark-theme .result-item {
+  border-bottom-color: rgba(255, 255, 255, 0.1);
+}
+
+.dark-theme .result-item.highlight {
+  background-color: rgba(95, 168, 230, 0.1);
+  color: #5fa8e6;
+}
+
+.dark-theme .food-item {
+  color: #e5e7eb;
+}
+
+.dark-theme .food-item i {
+  color: #9ca3af;
+}
+
+.dark-theme .share-button {
+  background: #1a1f2e;
+  color: #e5e7eb;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.dark-theme .share-button:hover {
+  background: #242937;
+  border-color: rgba(255, 255, 255, 0.2);
+}
+
+.dark-theme .copy-button {
+  background: rgba(95, 168, 230, 0.1);
+  border-color: rgba(95, 168, 230, 0.2);
+  color: #5fa8e6;
+}
+
+.dark-theme .copy-button:hover {
+  background: rgba(95, 168, 230, 0.15);
+}
+
+.dark-theme .share-menu-content::-webkit-scrollbar {
+  width: 12px;
+}
+
+.dark-theme .share-menu-content::-webkit-scrollbar-track {
+  background: #1a1f2e;
+  border-radius: 6px;
+}
+
+.dark-theme .share-menu-content::-webkit-scrollbar-thumb {
+  background-color: #242937;
+  border-radius: 6px;
+  border: 3px solid #1a1f2e;
+}
+
+.dark-theme .share-menu-content::-webkit-scrollbar-thumb:hover {
+  background-color: #2d3748;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .share-menu-content {
+    animation: none;
+  }
+
+  .dark-theme .share-button,
+  .dark-theme .copy-button {
+    transition: none;
+  }
+}
+
 @media (max-width: 1200px) {
   .preview-title {
     font-size: 1.6rem;
@@ -248,20 +342,17 @@
   }
 
   .meal-items {
-    margin-left: 0.5rem;
-  }
-
-  .copy-button {
-    padding: 0.6rem;
-    font-size: 0.85rem;
+    margin-left: 0.8rem;
   }
 }
 
 @keyframes fadeIn {
-  0% {
+  from {
     opacity: 0;
+    transform: scale(0.95);
   }
-  100% {
+  to {
     opacity: 1;
+    transform: scale(1);
   }
 }

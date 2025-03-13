@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { ThemeService } from '../shared/services/theme.service';
 
 @Component({
   selector: 'app-landing-page',
@@ -6,7 +7,9 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./landing-page.component.css'],
 })
 export class LandingPageComponent implements OnInit {
-  constructor() {}
+  isDarkTheme$ = this.themeService.isDarkTheme$;
+
+  constructor(private themeService: ThemeService) {}
 
   ngOnInit() {
     // Initialize any necessary data or services

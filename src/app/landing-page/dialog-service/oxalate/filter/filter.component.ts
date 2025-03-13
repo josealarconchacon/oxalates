@@ -9,6 +9,7 @@ import { Filter } from './model/filter';
 import { categories, calcLevels, levels } from './model/filter-data';
 import { CategoryService } from '../service/category.service';
 import { FilterService } from '../service/filter.service';
+import { ThemeService } from 'src/app/shared/services/theme.service';
 import { Subscription } from 'rxjs';
 
 @Component({
@@ -25,18 +26,27 @@ export class FilterComponent implements OnInit, OnDestroy {
   calcLevels = calcLevels;
   levels = levels;
   searchQuery: string = '';
+  isDarkTheme: boolean = false;
 
   @Output() filterChanged = new EventEmitter<Filter>();
   private subscriptions: Subscription[] = [];
 
   constructor(
     private categoryService: CategoryService,
-    private filterService: FilterService
+    private filterService: FilterService,
+    private themeService: ThemeService
   ) {}
 
   ngOnInit(): void {
     this.onCategoryChange();
     this.onFilterChange();
+
+    // Subscribe to theme changes
+    this.subscriptions.push(
+      this.themeService.isDarkTheme$.subscribe((isDark) => {
+        this.isDarkTheme = isDark;
+      })
+    );
   }
 
   onCategoryChange() {

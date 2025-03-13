@@ -340,3 +340,48 @@
     scroll-behavior: auto !important;
   }
 }
+
+.dark-theme .list-item {
+  color: var(--text-color);
+}
+
+.dark-theme .list-item:hover {
+  background-color: var(--hover-background);
+}
+
+.dark-theme .list-item.selected {
+  background-color: var(--nav-active);
+  color: var(--primary-color);
+}
+
+.dark-theme .item-title {
+  color: var(--text-color);
+}
+
+.dark-theme .item-subtitle {
+  color: var(--text-secondary);
+}
+
+.dark-theme .detail-item {
+  background-color: var(--card-background);
+}
+
+.dark-theme .detail-item:hover {
+  background-color: var(--hover-background);
+}
+
+.dark-theme .detail-key {
+  color: var(--text-secondary);
+}
+
+.dark-theme .detail-value {
+  color: var(--text-color);
+}
+
+.dark-theme .no-items {
+  color: var(--text-secondary);
+}
+
+.dark-theme .no-items i {
+  color: var(--text-muted);
+}

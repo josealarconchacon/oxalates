@@ -1,5 +1,5 @@
 body {
-  font-family: "Helvetica Neue", Arial, sans-serif;
+  font-family: var(--font-family-sans);
   margin: 0;
   padding: 0;
 }
@@ -7,6 +7,8 @@ body {
 .container {
   padding: 40px 1.75%;
   box-sizing: border-box;
+  background-color: var(--background-color);
+  color: var(--text-color);
 }
 
 .header {
@@ -27,14 +29,14 @@ body {
 .header-text h2 {
   text-align: left;
   font-size: 1.8rem;
-  color: #474747;
+  color: var(--text-color);
   margin-bottom: 10px;
 }
 
 p {
   text-align: left;
   font-size: 1.125rem;
-  color: #474747;
+  color: var(--text-color);
   line-height: 1.6;
   margin-bottom: 20px;
 }
@@ -50,20 +52,21 @@ p {
 .step {
   flex: 1 1 calc(33.33% - 30px);
   padding: 20px;
-  border: 0.5px solid #c5c5c5;
+  border: 0.5px solid var(--border-color);
   border-radius: 10px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+  box-shadow: var(--shadow-sm);
   transition: transform 0.3s ease, box-shadow 0.3s ease;
   text-align: left;
+  background-color: var(--card-background);
 }
 
 .step:hover {
   transform: translateY(-5px);
-  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+  box-shadow: var(--shadow-md);
 }
 
 .step-number {
-  background-color: #6bd3b3;
+  background-color: var(--primary-color);
   color: white;
   width: 40px;
   height: 40px;
@@ -78,13 +81,13 @@ p {
 
 .step h3 {
   font-size: 1.5rem;
-  color: #474747;
+  color: var(--text-color);
   margin-bottom: 10px;
 }
 
 .step p {
   font-size: 1.05rem;
-  color: #474747;
+  color: var(--text-secondary);
   line-height: 1.6;
 }
 
@@ -102,7 +105,7 @@ img {
   }
 
   .step {
-    flex: 1 1 calc(50% - 30px); /* Adjust to 2 columns */
+    flex: 1 1 calc(50% - 30px);
   }
 
   h1 {
@@ -132,7 +135,7 @@ img {
   }
 
   .step {
-    flex: 1 1 100%; /* Single column layout */
+    flex: 1 1 100%;
     text-align: center;
     padding: 15px;
   }

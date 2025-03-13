@@ -1,4 +1,7 @@
-<div class="daily-food-log" [ngClass]="{ shrink: showCalculationResult }">
+<div
+  class="daily-food-log"
+  [ngClass]="{ shrink: showCalculationResult, 'dark-theme': isDarkTheme }"
+>
   <app-date-switcher
     [selectedDate]="currentDate"
     (dateChange)="onDateChange($event)"
@@ -26,7 +29,11 @@
             fill="none"
             class="svg-icon"
           >
-            <g stroke-width="1.5" stroke-linecap="round" stroke="#2b6cb0">
+            <g
+              stroke-width="1.5"
+              stroke-linecap="round"
+              [attr.stroke]="isDarkTheme ? '#5fa8e6' : '#2b6cb0'"
+            >
               <path d="M10 2v16M2 10h16" />
             </g>
           </svg>
@@ -146,7 +153,11 @@
             fill="none"
             class="svg-icon"
           >
-            <g stroke-width="1.5" stroke-linecap="round" stroke="#2b6cb0">
+            <g
+              stroke-width="1.5"
+              stroke-linecap="round"
+              [attr.stroke]="isDarkTheme ? '#5fa8e6' : '#2b6cb0'"
+            >
               <path d="M10 2v16M2 10h16" />
             </g>
           </svg>
@@ -258,7 +269,11 @@
             fill="none"
             class="svg-icon"
           >
-            <g stroke-width="1.5" stroke-linecap="round" stroke="#2b6cb0">
+            <g
+              stroke-width="1.5"
+              stroke-linecap="round"
+              [attr.stroke]="isDarkTheme ? '#5fa8e6' : '#2b6cb0'"
+            >
               <path d="M10 2v16M2 10h16" />
             </g>
           </svg>
@@ -370,7 +385,11 @@
             fill="none"
             class="svg-icon"
           >
-            <g stroke-width="1.5" stroke-linecap="round" stroke="#2b6cb0">
+            <g
+              stroke-width="1.5"
+              stroke-linecap="round"
+              [attr.stroke]="isDarkTheme ? '#5fa8e6' : '#2b6cb0'"
+            >
               <path d="M10 2v16M2 10h16" />
             </g>
           </svg>

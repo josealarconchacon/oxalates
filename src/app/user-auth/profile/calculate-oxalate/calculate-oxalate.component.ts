@@ -15,7 +15,13 @@ import { ServingPanelComponent } from './serving-panel/serving-panel.component';
 import { SavedMealsComponent } from './saved-meals/saved-meals.component';
 import { SimilarFood } from '../model/similar-food';
 import { SavedMeal } from '../model/saved-meal';
-import { BehaviorSubject, debounceTime, distinctUntilChanged } from 'rxjs';
+import {
+  BehaviorSubject,
+  Subscription,
+  debounceTime,
+  distinctUntilChanged,
+} from 'rxjs';
+import { ThemeService } from 'src/app/shared/services/theme.service';
 
 @Component({
   selector: 'app-calculate-oxalate',
@@ -46,15 +52,18 @@ export class CalculateOxalateComponent implements OnInit, OnDestroy {
   isSavedMealsVisible: boolean = false;
   isMobileView: boolean = false;
   showResults: boolean = false;
+  isDarkTheme: boolean = false;
 
   @Input() mealType: string = '';
   @Output() mealLogged = new EventEmitter<any>();
 
   private foodInputSubject = new BehaviorSubject<string>('');
+  private themeSubscription: Subscription | null = null;
 
   constructor(
     private oxalateService: CalculateOxalateService,
-    private cdr: ChangeDetectorRef
+    private cdr: ChangeDetectorRef,
+    private themeService: ThemeService
   ) {
     this.checkMobileView();
     window.addEventListener('resize', () => this.checkMobileView());
@@ -70,10 +79,21 @@ export class CalculateOxalateComponent implements OnInit, OnDestroy {
           this.clearSuggestions();
         }
       });
+
+    // Subscribe to theme changes
+    this.themeSubscription = this.themeService.isDarkTheme$.subscribe(
+      (isDark) => {
+        this.isDarkTheme = isDark;
+        this.cdr.detectChanges();
+      }
+    );
   }
 
   ngOnDestroy() {
     window.removeEventListener('resize', () => this.checkMobileView());
+    if (this.themeSubscription) {
+      this.themeSubscription.unsubscribe();
+    }
   }
 
   checkMobileView() {

@@ -10,6 +10,7 @@ import { ResultsSectionComponent } from '../calculate-oxalate/results-section/re
 import { DateSwitcherComponent } from './date-switcher/date-switcher.component';
 import { FoodEntryService } from './service/food-entry.service';
 import { Subscription } from 'rxjs';
+import { ThemeService } from 'src/app/shared/services/theme.service';
 
 export interface FoodItem {
   foodName: string;
@@ -45,11 +46,19 @@ export class FoodEntryComponent implements OnInit, OnDestroy {
   showCalculationResult: boolean = false;
   private subscription: Subscription | null = null;
   selectedMealType: 'breakfast' | 'lunch' | 'dinner' | 'snacks' = 'breakfast';
+  isDarkTheme: boolean = false;
 
-  constructor(private foodEntryService: FoodEntryService) {}
+  constructor(
+    private foodEntryService: FoodEntryService,
+    private themeService: ThemeService
+  ) {}
 
   ngOnInit() {
     this.fetchFoodEntries();
+    // Subscribe to theme changes
+    this.themeService.isDarkTheme$.subscribe((isDark) => {
+      this.isDarkTheme = isDark;
+    });
   }
 
   ngOnDestroy() {

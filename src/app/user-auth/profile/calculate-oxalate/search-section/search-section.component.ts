@@ -14,6 +14,7 @@ export class SearchSectionComponent {
   @Input() foodName: string = '';
   @Input() similarFoods: SimilarFood[] = [];
   @Input() showSuggestions: boolean = false;
+  @Input() isDarkTheme: boolean = false;
   @Output() foodNameChange = new EventEmitter<string>();
   @Output() selectFood = new EventEmitter<SimilarFood>();
 

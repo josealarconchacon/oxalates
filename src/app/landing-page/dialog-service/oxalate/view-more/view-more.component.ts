@@ -1,35 +1,54 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnInit, OnDestroy } from '@angular/core';
 import { Router } from '@angular/router';
 import { Oxalate } from 'src/app/landing-page/model/oxalate';
 import { AuthService } from 'src/app/user-auth/service/auth-service.service';
 import { OxalateService } from '../../service/oxalate.service';
 import { NotificationService } from '../service/notification.service';
+import { ThemeService } from 'src/app/shared/services/theme.service';
 import { OXALATE_INFO_FIELDS } from '../filter/model/oxalate-constants';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-view-more',
   templateUrl: './view-more.component.html',
   styleUrls: ['./view-more.component.css'],
 })
-export class ViewMoreComponent implements OnInit {
+export class ViewMoreComponent implements OnInit, OnDestroy {
   @Input() oxalateData: Oxalate | undefined;
   savedItems: Oxalate[] = [];
   isSaving = false;
+  isDarkTheme: boolean = false;
 
   OXALATE_INFO_FIELDS: { label: string; field: keyof Oxalate }[] =
     OXALATE_INFO_FIELDS;
+
+  private themeSubscription: Subscription | null = null;
 
   constructor(
     private router: Router,
     private authService: AuthService,
     private oxalateService: OxalateService,
-    private notificationService: NotificationService
+    private notificationService: NotificationService,
+    private themeService: ThemeService
   ) {}
 
   ngOnInit(): void {
     // console.log('Oxalate Data on Init:', this.oxalateData);
     this.loadOxalateDataFromNavigation();
     this.loadSavedOxalatesForCurrentUser();
+
+    // Subscribe to theme changes
+    this.themeSubscription = this.themeService.isDarkTheme$.subscribe(
+      (isDark) => {
+        this.isDarkTheme = isDark;
+      }
+    );
+  }
+
+  ngOnDestroy(): void {
+    if (this.themeSubscription) {
+      this.themeSubscription.unsubscribe();
+    }
   }
 
   getFilteredFields(): {

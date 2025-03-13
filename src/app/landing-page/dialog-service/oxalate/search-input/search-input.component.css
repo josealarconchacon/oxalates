@@ -14,9 +14,10 @@
 .search-input-container:hover {
   box-shadow: 0 3px 8px rgba(0, 0, 0, 0.2);
 }
+
 .search-input::placeholder {
   font-size: 16px;
-  transition: font-size 0.3s ease, color 0.3s ease;
+  transition: font-size 0.3s ease;
 }
 
 .search-input {
@@ -57,6 +58,62 @@
 .search-icon:active {
   transform: scale(0.3);
 }
+
+/* Dark theme styles */
+.dark-theme .search-input-container {
+  border: 1px solid #404040;
+  background-color: #262626;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+}
+
+.dark-theme .search-input-container:hover {
+  border-color: #4a4a4a;
+  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.3);
+}
+
+.dark-theme .search-input-container:focus-within {
+  border-color: #5fa8e6;
+  box-shadow: 0 0 0 2px rgba(95, 168, 230, 0.2);
+}
+
+.dark-theme .search-input::placeholder {
+  color: #9ca3af;
+}
+
+.dark-theme .search-input {
+  color: #f3f4f6;
+  caret-color: #5fa8e6;
+}
+
+.dark-theme .search-input:focus {
+  background-color: #333333;
+}
+
+.dark-theme .search-icon {
+  color: #9ca3af;
+  transition: all 0.2s ease;
+}
+
+.dark-theme .search-icon:hover {
+  color: #e5e7eb;
+}
+
+.dark-theme .search-icon.typing {
+  color: #5fa8e6;
+}
+
+.dark-theme .search-icon.typing:hover {
+  color: #60a5fa;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .dark-theme .search-input-container,
+  .dark-theme .search-input,
+  .dark-theme .search-icon {
+    transition: none;
+  }
+}
+
 @media (max-width: 768px) {
   .search-input::placeholder {
     font-size: 14px;

@@ -7,6 +7,7 @@ import { CommonModule } from '@angular/common';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import { HttpClient } from '@angular/common/http';
 import { SvgService } from './service/svg.service';
+import { ThemeService } from '../../../shared/services/theme.service';
 
 @Component({
   selector: 'app-food-by-category',
@@ -17,13 +18,15 @@ import { SvgService } from './service/svg.service';
 })
 export class FoodByCategoryComponent implements OnInit {
   cardsMap: Map<string, CategoryCard> = new Map();
+  isDarkTheme$ = this.themeService.isDarkTheme$;
 
   constructor(
     private router: Router,
     private http: HttpClient,
     private categoryService: CategoryService,
     private filterService: FilterService,
-    private svgService: SvgService
+    private svgService: SvgService,
+    private themeService: ThemeService
   ) {}
 
   ngOnInit(): void {

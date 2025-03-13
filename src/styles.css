@@ -1,7 +1,7 @@
 /* Modern Design System - Bootstrap 5 Inspired */
 :root {
   /* Color System */
-  --primary-color: #0d6efd;
+  --primary-color: #1da1f2;
   --primary-dark: #0a58ca;
   --primary-light: #6ea8fe;
   --secondary-color: #6c757d;
@@ -31,7 +31,7 @@
   /* Background Colors */
   --background-color: #ffffff;
   --surface-color: var(--gray-100);
-  --border-color: var(--gray-300);
+  --border-color: #e1e4e8;
 
   /* Elevation Shadows */
   --shadow-sm: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
@@ -112,6 +112,104 @@
   --container-lg: 960px;
   --container-xl: 1140px;
   --container-2xl: 1320px;
+
+  /* Light theme variables */
+  --secondary-background: #f8f9fa;
+  --text-color: #333333;
+  --secondary-text-color: #666666;
+  --card-background: #ffffff;
+  --hover-background: #f5f5f5;
+  --shadow-color: rgba(0, 0, 0, 0.1);
+  --dialog-background: #ffffff;
+  --input-background: #ffffff;
+  --sidebar-background: #f8f9fa;
+  --header-background: #ffffff;
+  --footer-background: #f8f9fa;
+  --link-color: #1da1f2;
+  --button-text: #333333;
+  --button-background: #ffffff;
+  --nav-active: #e3f2fd;
+  --nav-hover: #f5f5f5;
+  --dropdown-background: #ffffff;
+  --tooltip-background: #333333;
+  --tooltip-text: #ffffff;
+  --scrollbar-track: #f1f1f1;
+  --scrollbar-thumb: #c1c1c1;
+}
+
+/* Dark theme variables */
+.dark-theme {
+  --primary-color: #1a91da;
+  --primary-dark: #1577b5;
+  --primary-light: #4ba9e1;
+  --primary-color-rgb: 26, 145, 218;
+
+  /* Theme Colors */
+  --background-color: #1a1a1a;
+  --secondary-background: #2d2d2d;
+  --surface-color: #2d2d2d;
+  --text-color: #ffffff;
+  --text-secondary: #b0b0b0;
+  --text-muted: #808080;
+  --border-color: #404040;
+  --card-background: #2d2d2d;
+  --hover-background: #3a3a3a;
+  --shadow-color: rgba(0, 0, 0, 0.3);
+  --dialog-background: #2d2d2d;
+  --input-background: #333333;
+  --sidebar-background: #2d2d2d;
+  --header-background: #1a1a1a;
+  --footer-background: #2d2d2d;
+  --link-color: #4ba9e1;
+  --button-text: #ffffff;
+  --button-background: #333333;
+  --nav-active: #1a91da33;
+  --nav-hover: #3a3a3a;
+  --dropdown-background: #333333;
+  --tooltip-background: #4a4a4a;
+  --tooltip-text: #ffffff;
+  --scrollbar-track: #2d2d2d;
+  --scrollbar-thumb: #404040;
+
+  /* Shadows for dark theme */
+  --shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.3);
+  --shadow-md: 0 4px 8px rgba(0, 0, 0, 0.4);
+  --shadow-lg: 0 8px 16px rgba(0, 0, 0, 0.5);
+
+  /* Override specific component colors */
+  --gray-100: #2d2d2d;
+  --gray-200: #333333;
+  --gray-300: #404040;
+  --gray-400: #4a4a4a;
+  --gray-500: #666666;
+  --gray-600: #808080;
+  --gray-700: #b0b0b0;
+  --gray-800: #d0d0d0;
+  --gray-900: #ffffff;
+
+  /* Form elements */
+  --input-placeholder: #666666;
+  --input-border-focus: #4ba9e1;
+  --input-shadow-focus: rgba(75, 169, 225, 0.2);
+}
+
+/* Global theme transitions */
+body,
+.app-container,
+.sidebar,
+.content-area,
+.card,
+.info-card,
+.profile-card,
+button,
+input,
+select,
+textarea,
+.dialog-content,
+.header,
+.footer {
+  transition: background-color 0.3s ease, color 0.3s ease,
+    border-color 0.3s ease, box-shadow 0.3s ease;
 }
 
 /* Reset and Base Styles */
@@ -135,8 +233,9 @@ body {
   font-size: var(--font-size-base);
   font-weight: var(--font-weight-normal);
   line-height: var(--line-height-normal);
-  color: var(--text-primary);
+  color: var(--text-color);
   background-color: var(--background-color);
+  transition: background-color 0.3s ease, color 0.3s ease;
 }
 
 /* Modern Typography */
@@ -178,13 +277,13 @@ p {
 
 /* Links */
 a {
-  color: var(--primary-color);
+  color: var(--link-color);
   text-decoration: none;
   transition: color var(--transition-fast);
 }
 
 a:hover {
-  color: var(--primary-dark);
+  color: var(--primary-light);
 }
 
 /* Container */
@@ -282,8 +381,8 @@ a:hover {
   font-size: var(--font-size-base);
   font-weight: var(--font-weight-normal);
   line-height: var(--line-height-normal);
-  color: var(--text-primary);
-  background-color: var(--background-color);
+  color: var(--text-color);
+  background-color: var(--input-background);
   background-clip: padding-box;
   border: 1px solid var(--border-color);
   border-radius: var(--radius-base);
@@ -292,9 +391,9 @@ a:hover {
 }
 
 .form-control:focus {
-  color: var(--text-primary);
-  background-color: var(--background-color);
-  border-color: var(--primary-light);
+  color: var(--text-color);
+  background-color: var(--input-background);
+  border-color: var(--primary-color);
   outline: 0;
   box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25);
 }
@@ -306,7 +405,7 @@ a:hover {
   flex-direction: column;
   min-width: 0;
   word-wrap: break-word;
-  background-color: var(--background-color);
+  background-color: var(--card-background);
   background-clip: border-box;
   border: 1px solid var(--border-color);
   border-radius: var(--radius-lg);
@@ -692,4 +791,102 @@ img {
   .d-lg-block {
     display: block !important;
   }
+}
+
+/* Apply theme variables to elements */
+.app-container {
+  background-color: var(--background-color);
+  color: var(--text-color);
+}
+
+.sidebar {
+  background-color: var(--sidebar-background);
+  border-color: var(--border-color);
+}
+
+.content-area {
+  background-color: var(--surface-color);
+  color: var(--text-color);
+  border-color: var(--border-color);
+}
+
+.card,
+.info-card,
+.profile-card {
+  background-color: var(--card-background);
+  border-color: var(--border-color);
+  color: var(--text-color);
+}
+
+button {
+  color: var(--button-text);
+  background-color: var(--button-background);
+  border-color: var(--border-color);
+}
+
+button:hover {
+  background-color: var(--hover-background);
+}
+
+input,
+select,
+textarea {
+  background-color: var(--input-background);
+  color: var(--text-color);
+  border-color: var(--border-color);
+}
+
+.dialog-content {
+  background-color: var(--dialog-background);
+  color: var(--text-color);
+}
+
+/* Navigation styles */
+.sidebar-nav a {
+  color: var(--text-color);
+}
+
+.sidebar-nav a:hover {
+  background-color: var(--nav-hover);
+}
+
+.sidebar-nav a.active {
+  background-color: var(--nav-active);
+  color: var(--primary-color);
+}
+
+/* Tables */
+table {
+  color: var(--text-color);
+  border-color: var(--border-color);
+}
+
+th,
+td {
+  border-color: var(--border-color);
+}
+
+/* Scrollbar styling */
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--scrollbar-track);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--scrollbar-thumb);
+  border-radius: 5px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--primary-color);
+}
+
+/* Tooltips */
+[data-tooltip] {
+  background-color: var(--tooltip-background);
+  color: var(--tooltip-text);
 }

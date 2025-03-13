@@ -14,6 +14,7 @@ export class ServingPanelComponent {
   @Input() totalOxalatePerServing: number = 0;
   @Input() totalSolubleOxalatePerServing: number = 0;
   @Input() numberOfServings: string = '1';
+  @Input() isDarkTheme: boolean = false;
   @Output() numberOfServingsChange = new EventEmitter<string>();
 
   isFoodSelected: boolean = false;

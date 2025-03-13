@@ -9,6 +9,12 @@
   backdrop-filter: blur(8px);
   border: 1px solid rgba(229, 231, 235, 0.5);
   border-radius: 1rem;
+  transition: all 0.3s ease;
+}
+
+.dark-theme .date-switcher {
+  background: rgba(26, 31, 46, 0.8);
+  border-color: rgba(255, 255, 255, 0.1);
 }
 
 .date-display {
@@ -24,9 +30,19 @@
   transition: all 0.2s ease;
 }
 
+.dark-theme .date-display {
+  background: #242937;
+  box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.2);
+}
+
 .date-display:hover {
   background: white;
   box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.1);
+}
+
+.dark-theme .date-display:hover {
+  background: #1f2937;
+  box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.3);
 }
 
 .current-date {
@@ -38,8 +54,16 @@
   transition: color 0.2s ease;
 }
 
+.dark-theme .current-date {
+  color: #e5e7eb;
+}
+
 .date-display:hover .current-date {
   color: var(--gray-900);
+}
+
+.dark-theme .date-display:hover .current-date {
+  color: #f3f4f6;
 }
 
 .nav-button {
@@ -57,6 +81,12 @@
   transition: all 0.2s ease;
 }
 
+.dark-theme .nav-button {
+  background: #242937;
+  color: #9ca3af;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
 .nav-button:hover {
   background: white;
   color: var(--gray-800);
@@ -65,14 +95,29 @@
     0 2px 4px -1px rgba(0, 0, 0, 0.03);
 }
 
+.dark-theme .nav-button:hover {
+  background: #1f2937;
+  color: #e5e7eb;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.2),
+    0 2px 4px -1px rgba(0, 0, 0, 0.1);
+}
+
 .nav-button:focus-visible {
   outline: none;
   box-shadow: 0 0 0 2px var(--primary-100);
 }
 
+.dark-theme .nav-button:focus-visible {
+  box-shadow: 0 0 0 2px rgba(95, 168, 230, 0.2);
+}
+
 .nav-button:active {
   transform: translateY(0);
   background: var(--gray-50);
+}
+
+.dark-theme .nav-button:active {
+  background: #242937;
 }
 
 .nav-button svg {
@@ -101,6 +146,12 @@
   transition: all 0.2s ease;
 }
 
+.dark-theme .today-button {
+  background: rgba(95, 168, 230, 0.1);
+  border-color: rgba(95, 168, 230, 0.2);
+  color: #5fa8e6;
+}
+
 .today-button:hover {
   background: var(--primary-100);
   border-color: var(--primary-200);
@@ -110,9 +161,21 @@
     0 2px 4px -1px rgba(var(--primary-rgb), 0.06);
 }
 
+.dark-theme .today-button:hover {
+  background: rgba(95, 168, 230, 0.15);
+  border-color: rgba(95, 168, 230, 0.3);
+  color: #60a5e9;
+  box-shadow: 0 4px 6px -1px rgba(95, 168, 230, 0.2),
+    0 2px 4px -1px rgba(95, 168, 230, 0.1);
+}
+
 .today-button:focus-visible {
   outline: none;
   box-shadow: 0 0 0 2px var(--primary-100);
+}
+
+.dark-theme .today-button:focus-visible {
+  box-shadow: 0 0 0 2px rgba(95, 168, 230, 0.2);
 }
 
 .today-button:active {
@@ -120,7 +183,10 @@
   background: var(--primary-100);
 }
 
-/* Calendar Popup Styles */
+.dark-theme .today-button:active {
+  background: rgba(95, 168, 230, 0.2);
+}
+
 .calendar-popup {
   position: absolute;
   top: calc(100% + 0.75rem);
@@ -140,6 +206,12 @@
   min-width: 300px;
 }
 
+.dark-theme .calendar-popup {
+  background: #1a1f2e;
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.2),
+    0 10px 10px -5px rgba(0, 0, 0, 0.1), 0 0 0 1px rgba(255, 255, 255, 0.1);
+}
+
 .calendar-popup::before {
   content: "";
   position: absolute;
@@ -153,13 +225,17 @@
   border-top: 1px solid rgba(0, 0, 0, 0.05);
 }
 
+.dark-theme .calendar-popup::before {
+  border-left-color: rgba(255, 255, 255, 0.1);
+  border-top-color: rgba(255, 255, 255, 0.1);
+}
+
 .calendar-popup.show {
   opacity: 1;
   visibility: visible;
   transform: translateX(-50%) translateY(0);
 }
 
-/* Mobile Styles */
 @media (max-width: 640px) {
   .date-switcher {
     gap: 0.5rem;
@@ -210,6 +286,12 @@
       0 -4px 6px -2px rgba(0, 0, 0, 0.05);
   }
 
+  .dark-theme .calendar-popup {
+    background: rgba(17, 24, 39, 0.98);
+    box-shadow: 0 -10px 20px -5px rgba(0, 0, 0, 0.2),
+      0 -4px 6px -2px rgba(0, 0, 0, 0.1);
+  }
+
   .calendar-popup::before {
     display: none;
   }
@@ -226,6 +308,10 @@
     border-radius: 2px;
   }
 
+  .dark-theme .calendar-popup::after {
+    background: var(--gray-700);
+  }
+
   .calendar-popup.show {
     transform: translateY(0);
   }
@@ -236,6 +322,11 @@
 
   .month-year {
     font-size: 1.25rem;
+    color: var(--gray-900);
+  }
+
+  .dark-theme .month-year {
+    color: var(--gray-100);
   }
 
   .calendar-grid {
@@ -246,21 +337,23 @@
 
   .calendar-day {
     font-size: 0.938rem;
+    color: var(--gray-700);
+  }
+
+  .dark-theme .calendar-day {
+    color: var(--gray-300);
   }
 
   .weekday-header {
     font-size: 0.75rem;
-    padding: 0.5rem 0;
+    color: var(--gray-500);
   }
 
-  /* Add touch feedback */
-  .calendar-day:active {
-    transform: scale(0.95);
-    transition: transform 0.1s ease;
+  .dark-theme .weekday-header {
+    color: var(--gray-400);
   }
 }
 
-/* Animation for date changes */
 @keyframes dateChange {
   0% {
     opacity: 0;
@@ -276,7 +369,6 @@
   animation: dateChange 0.2s cubic-bezier(0.4, 0, 0.2, 1) forwards;
 }
 
-/* Reduced Motion */
 @media (prefers-reduced-motion: reduce) {
   *,
   *::before,
@@ -288,7 +380,6 @@
   }
 }
 
-/* Calendar Content Styles */
 .calendar-header {
   display: flex;
   align-items: center;
@@ -435,7 +526,6 @@
   border: 1px solid var(--gray-100);
 }
 
-/* Month Transition Animation */
 @keyframes slideRight {
   from {
     opacity: 0;
@@ -466,7 +556,6 @@
   animation: slideLeft 0.2s ease-out forwards;
 }
 
-/* Enhanced Animations */
 @keyframes scaleIn {
   from {
     opacity: 0;
@@ -482,7 +571,6 @@
   animation: scaleIn 0.2s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-/* Dark mode support */
 @media (prefers-color-scheme: dark) {
   .calendar-popup {
     background: rgba(30, 30, 30, 0.95);

@@ -4,14 +4,14 @@
   align-items: center;
   min-height: 100vh;
   padding: 2rem;
-  background: linear-gradient(135deg, #f0f4f8 0%, #d9e2ec 100%);
+  background: var(--background-color);
 }
 
 .auth-card {
-  background: #ffffff;
+  background: var(--card-background);
   padding: 3rem 2rem;
   border-radius: 1.5rem;
-  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+  box-shadow: var(--shadow-md);
   width: 100%;
   max-width: 450px;
   transition: transform 0.3s ease, box-shadow 0.3s ease;
@@ -20,12 +20,12 @@
 
 .auth-card:hover {
   transform: translateY(-5px);
-  box-shadow: 0 15px 50px rgba(0, 0, 0, 0.15);
+  box-shadow: var(--shadow-lg);
 }
 
 .auth-title {
   font-size: 2rem;
-  color: #333333;
+  color: var(--text-color);
   font-weight: 700;
   text-align: center;
   margin-bottom: 1.5rem;
@@ -54,22 +54,22 @@
   width: 100%;
   padding: 0.75rem 1rem;
   font-size: 1rem;
-  color: #333333;
-  background-color: #f9f9f9;
-  border: 1px solid #cccccc;
+  color: var(--text-color);
+  background-color: var(--input-background);
+  border: 1px solid var(--border-color);
   border-radius: 0.75rem;
   transition: border-color 0.2s ease, box-shadow 0.2s ease;
 }
 
 .form-control:focus {
-  border-color: #4f46e5;
-  box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.2);
+  border-color: var(--primary-color);
+  box-shadow: 0 0 0 3px rgba(var(--primary-color-rgb), 0.2);
   outline: none;
-  background-color: #ffffff;
+  background-color: var(--input-background);
 }
 
 .form-control:hover {
-  border-color: #b0b0b0;
+  border-color: var(--gray-400);
 }
 
 .error-message {
@@ -103,11 +103,11 @@
 .toggle-text {
   text-align: center;
   font-size: 0.875rem;
-  color: #6b7280;
+  color: var(--text-secondary);
 }
 
 .toggle-link {
-  color: #4f46e5;
+  color: var(--primary-color);
   cursor: pointer;
   font-weight: 600;
   margin-left: 0.25rem;
@@ -115,7 +115,7 @@
 }
 
 .toggle-link:hover {
-  color: #4338ca;
+  color: var(--primary-dark);
   text-decoration: underline;
 }
 
@@ -128,15 +128,15 @@
   display: flex;
   align-items: center;
   gap: 0.5rem;
-  background-color: #ffffff;
-  color: #3c4043;
-  border: 1px solid #e5e7eb;
+  background-color: var(--card-background);
+  color: var(--text-color);
+  border: 1px solid var(--border-color);
   border-radius: 0.75rem;
   padding: 0.75rem 1rem;
   font-size: 1rem;
   font-weight: 500;
   cursor: pointer;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  box-shadow: var(--shadow-sm);
   transition: box-shadow 0.2s ease, transform 0.2s ease,
     background-color 0.2s ease;
 }
@@ -147,8 +147,8 @@
 }
 
 .google-button:hover {
-  background-color: #f1f3f4;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  background-color: var(--hover-background);
+  box-shadow: var(--shadow-md);
   transform: translateY(-2px);
 }
 

@@ -1,4 +1,4 @@
-<div class="search-input-container">
+<div class="search-input-container" [ngClass]="{ 'dark-theme': isDarkTheme }">
   <input
     [(ngModel)]="searchQuery"
     (ngModelChange)="onSearchQueryChange()"

@@ -1,6 +1,7 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { ThemeService } from 'src/app/shared/services/theme.service';
 
 @Component({
   selector: 'app-date-switcher',
@@ -12,6 +13,13 @@ import { FormsModule } from '@angular/forms';
 export class DateSwitcherComponent {
   @Input() selectedDate: Date = new Date();
   @Output() dateChange = new EventEmitter<Date>();
+  isDarkTheme: boolean = false;
+
+  constructor(private themeService: ThemeService) {
+    this.themeService.isDarkTheme$.subscribe((isDark) => {
+      this.isDarkTheme = isDark;
+    });
+  }
 
   previousDay() {
     const newDate = new Date(this.selectedDate);

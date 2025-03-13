@@ -6,6 +6,7 @@ import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
 import { map, Observable } from 'rxjs';
 import { MatIconModule } from '@angular/material/icon';
 import { CommonModule } from '@angular/common';
+import { ThemeService } from '../../shared/services/theme.service';
 
 @Component({
   selector: 'app-header',
@@ -26,6 +27,7 @@ export class HeaderComponent implements OnInit {
 
   activeSection$: Observable<string>;
   isMobile$: Observable<boolean>;
+  isDarkTheme$ = this.themeService.isDarkTheme$;
 
   navItems = [
     { title: 'Profile Info', section: 'profile' },
@@ -42,7 +44,8 @@ export class HeaderComponent implements OnInit {
     private activatedRoute: ActivatedRoute,
     private authService: AuthService,
     private navigationService: NavigationService,
-    private breakpointObserver: BreakpointObserver
+    private breakpointObserver: BreakpointObserver,
+    private themeService: ThemeService
   ) {
     this.activeSection$ = this.navigationService.activeSection$;
     this.isMobile$ = this.breakpointObserver
@@ -78,7 +81,7 @@ export class HeaderComponent implements OnInit {
   }
 
   goToLoginPage() {
-    this.router.navigate(['/login']);
+    this.router.navigate(['/auth']);
   }
 
   goToProfile() {
@@ -169,5 +172,9 @@ export class HeaderComponent implements OnInit {
       };
       reader.readAsDataURL(file);
     }
+  }
+
+  toggleTheme() {
+    this.themeService.toggleTheme();
   }
 }

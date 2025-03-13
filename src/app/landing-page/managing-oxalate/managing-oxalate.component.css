@@ -1,7 +1,7 @@
 h2,
 h3,
 h4 {
-  color: #474747;
+  color: var(--text-color);
   margin-bottom: 20px;
 }
 
@@ -20,6 +20,7 @@ h4 {
 
 section {
   padding: 80px 20px;
+  background-color: var(--background-color);
 }
 
 @media screen and (max-width: 1200px) {
@@ -67,11 +68,13 @@ section {
   max-width: 1150px;
   margin: 0 auto;
   border-radius: 8px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  box-shadow: var(--shadow-sm);
+  background-color: var(--card-background);
 }
 
 .info {
   width: 100%;
+  color: var(--text-color);
 }
 
 .food-list {
@@ -81,11 +84,13 @@ section {
 
 .food-list li {
   padding: 8px 0;
-  border-bottom: 1px solid #eee;
+  border-bottom: 1px solid var(--border-color);
+  color: var(--text-color);
 }
 
 ul {
   padding-left: 20px;
+  color: var(--text-color);
 }
 
 .tips {
@@ -98,11 +103,12 @@ ul {
 .tip-item {
   flex: 1 1 calc(50% - 20px);
   padding: 15px;
-  background: #e8f6f3;
+  background: var(--surface-color);
   border-radius: 8px;
-  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
+  box-shadow: var(--shadow-sm);
 }
 
 .tip-item h4 {
   margin-bottom: 10px;
+  color: var(--text-color);
 }

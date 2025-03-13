@@ -1,11 +1,11 @@
 .resources {
-  background: #f5f5f5;
+  background: var(--background-color);
   padding: 60px 20px;
   text-align: center;
 }
 
 .resource-title {
-  color: #474747;
+  color: var(--text-color);
   font-size: 1.8rem;
   font-weight: 600;
   margin-top: 40px;
@@ -23,7 +23,7 @@
   left: 50%;
   transform: translateX(-50%);
   border-radius: 2px;
-  background: #474747;
+  background: var(--primary-color);
   display: block;
 }
 
@@ -38,9 +38,9 @@
 
 .resource-info {
   flex: 1 1 calc(33.333% - 20px);
-  background: #ffffff;
+  background: var(--card-background);
   border-radius: 12px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  box-shadow: var(--shadow-sm);
   padding: 20px;
   text-align: center;
   transition: transform 0.3s ease, box-shadow 0.3s ease;
@@ -48,7 +48,7 @@
 
 .resource-info:hover {
   transform: translateY(-5px);
-  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+  box-shadow: var(--shadow-md);
 }
 
 .resource-header {
@@ -64,19 +64,19 @@
   height: 60px;
   border-radius: 50%;
   object-fit: scale-down;
-  border: 1px solid #adadad;
+  border: 1px solid var(--border-color);
 }
 
 .resource-info h4 {
   font-size: 1.5rem;
-  color: #474747;
+  color: var(--text-color);
   margin: 0;
   font-weight: 500;
 }
 
 .resource-text {
   font-size: 1.125rem;
-  color: #474747;
+  color: var(--text-secondary);
   line-height: 1.6;
   margin-top: 10px;
 }

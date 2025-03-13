@@ -4,6 +4,7 @@ import { OxalateService } from '../service/oxalate.service';
 import { FilterService } from './service/filter.service';
 import { Filter } from './filter/model/filter';
 import { Router } from '@angular/router';
+import { ThemeService } from 'src/app/shared/services/theme.service';
 import {
   debounceTime,
   distinctUntilChanged,
@@ -27,6 +28,7 @@ export class OxalateComponent implements OnInit, OnDestroy {
   oxalates: Oxalate[] = [];
   originalOxalates: Oxalate[] = [];
   displayedOxalates: Oxalate[] = [];
+  isDarkTheme: boolean = false;
 
   searchQuery: string = '';
   alertMessage: string = '';
@@ -42,13 +44,22 @@ export class OxalateComponent implements OnInit, OnDestroy {
     public filterService: FilterService,
     private oxalateService: OxalateService,
     private categoryService: CategoryService,
-    private paginationService: PaginationService
+    private paginationService: PaginationService,
+    private themeService: ThemeService
   ) {}
 
   ngOnInit(): void {
     this.initializeViewMode();
     this.setupSearchSubscription();
     this.initializeWithRouteParams();
+
+    // Subscribe to theme changes
+    this.subscriptions.push(
+      this.themeService.isDarkTheme$.subscribe((isDark) => {
+        this.isDarkTheme = isDark;
+        this.cdr.detectChanges();
+      })
+    );
   }
 
   private initializeWithRouteParams(): void {

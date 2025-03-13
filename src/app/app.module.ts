@@ -49,6 +49,7 @@ import { FoodByCategoryComponent } from './landing-page/dialog-service/food-by-c
 import { SearchInputComponent } from './landing-page/dialog-service/oxalate/search-input/search-input.component';
 import { SavedMealsComponent } from './user-auth/profile/calculate-oxalate/saved-meals/saved-meals.component';
 import { FoodEntryComponent } from './user-auth/profile/food-entry/food-entry.component';
+import { ThemeService } from './shared/services/theme.service';
 
 export function initializeApp(configService: ConfigService) {
   return (): Promise<void> => {
@@ -125,6 +126,7 @@ export function initializeApp(configService: ConfigService) {
       multi: true,
     },
     provideHttpClient(withInterceptorsFromDi()),
+    ThemeService,
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
   bootstrap: [AppComponent],
