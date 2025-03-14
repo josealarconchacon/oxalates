@@ -104,7 +104,8 @@ export class HeaderComponent implements OnInit {
 
   @HostListener('window:scroll')
   onWindowScroll() {
-    this.isScrolled = window.scrollY > 0;
+    // Change header background when scrolled past 50px
+    this.isScrolled = window.scrollY > 50;
   }
 
   toggleMobileMenu() {
