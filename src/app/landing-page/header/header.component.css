@@ -1,10 +1,12 @@
 .dark-theme .header {
   background-color: transparent;
+  backdrop-filter: none;
 }
 
 .dark-theme .header.scrolled {
-  background-color: rgba(33, 33, 33, 0.9);
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+  background-color: var(--header-bg-scrolled-dark);
+  box-shadow: var(--header-shadow-dark);
+  backdrop-filter: var(--header-backdrop);
 }
 
 .dark-theme .logo-container {
@@ -84,14 +86,15 @@
   color: var(--text-color);
 }
 
-/* Update existing styles with CSS variables */
 :root {
   --header-bg: var(--background-color, #ffffff);
   --header-border: var(--border-color, #e5e7eb);
   --header-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
   --header-backdrop: blur(8px);
   --header-bg-scrolled: rgba(255, 255, 255, 0.95);
-  --header-bg-scrolled-dark: rgba(45, 45, 45, 0.95);
+  --header-bg-scrolled-dark: rgba(18, 18, 18, 0.95);
+  --header-shadow-light: 0 2px 8px rgba(0, 0, 0, 0.1);
+  --header-shadow-dark: 0 2px 8px rgba(0, 0, 0, 0.3);
   --header-transform-duration: 0.3s;
   --header-transform-timing: cubic-bezier(0.4, 0, 0.2, 1);
 }
@@ -105,20 +108,25 @@
   background-color: transparent;
   transition: all 0.3s ease;
   padding: 1rem 2rem;
+  backdrop-filter: none;
 }
 
 .header.scrolled {
-  background-color: rgba(255, 255, 255, 0.9);
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  background-color: var(--header-bg-scrolled);
+  box-shadow: var(--header-shadow-light);
+  backdrop-filter: blur(8px);
 }
 
-/* Dark theme support */
+.dark-theme .header {
+  background-color: transparent;
+}
+
 .dark-theme .header.scrolled {
-  background-color: rgba(33, 33, 33, 0.9);
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+  background-color: var(--header-bg-scrolled-dark);
+  box-shadow: var(--header-shadow-dark);
+  backdrop-filter: blur(8px);
 }
 
-/* Scroll direction styles */
 .header.scrolling-down {
   transform: translateY(-100%);
 }
@@ -131,7 +139,6 @@
   transform: translateY(0);
 }
 
-/* Ensure content is pushed down by header height */
 body {
   padding-top: 64px;
 }

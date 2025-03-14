@@ -39,6 +39,10 @@ export class HeaderComponent implements OnInit {
     },
   ];
 
+  private scrollThreshold = 50;
+  private lastScrollPosition = 0;
+  private scrollTimer: any;
+
   constructor(
     private router: Router,
     private activatedRoute: ActivatedRoute,
@@ -102,10 +106,23 @@ export class HeaderComponent implements OnInit {
     this.closeNav();
   }
 
-  @HostListener('window:scroll')
+  @HostListener('window:scroll', ['$event'])
   onWindowScroll() {
-    // Change header background when scrolled past 50px
-    this.isScrolled = window.scrollY > 50;
+    // Clear the existing timer
+    if (this.scrollTimer) {
+      clearTimeout(this.scrollTimer);
+    }
+
+    // Set a new timer to debounce the scroll event
+    this.scrollTimer = setTimeout(() => {
+      const currentScroll = window.scrollY;
+
+      // Update scroll state
+      this.isScrolled = currentScroll > this.scrollThreshold;
+
+      // Store the last scroll position
+      this.lastScrollPosition = currentScroll;
+    }, 10); // 10ms debounce time
   }
 
   toggleMobileMenu() {

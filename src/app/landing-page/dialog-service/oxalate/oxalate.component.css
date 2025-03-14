@@ -297,6 +297,7 @@ h1 {
   }
   .search-container {
     padding: 25px;
+    margin-top: 50px;
   }
   .result-snippets {
     flex-direction: column;

@@ -287,10 +287,6 @@
 }
 
 @media (max-width: 768px) {
-  .app-container {
-    padding: var(--spacing-md);
-  }
-
   .content-wrapper {
     padding: 0;
   }
