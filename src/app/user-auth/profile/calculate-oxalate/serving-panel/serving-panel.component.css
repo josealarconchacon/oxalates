@@ -68,7 +68,6 @@
   color: var(--text-muted);
 }
 
-/* Dark theme styles */
 .dark-theme .serving-input {
   background: var(--card-background);
   box-shadow: var(--shadow-sm);
@@ -123,7 +122,6 @@
   user-select: none;
 }
 
-/* Mobile styles */
 @media (max-width: 768px) {
   .serving-input {
     flex: 1 1 100%;

@@ -28,7 +28,6 @@
   --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
   --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
 
-  /* Use global theme variables instead */
   --mdc-theme-primary: var(--primary-color);
   --mdc-theme-surface: var(--background-color);
   --mdc-theme-on-surface: var(--text-primary);
@@ -36,10 +35,9 @@
   --mdc-elevation-2: var(--shadow-md);
 }
 
-/* Dark theme */
 .dark-theme {
-  --background-color: #1a1f2e;
-  --surface-color: #242937;
+  --background-color: #1a1a1a;
+  --surface-color: #3a3a3a;
   --text-primary: #e5e7eb;
   --text-secondary: #9ca3af;
   --border-color: rgba(255, 255, 255, 0.1);
@@ -50,7 +48,6 @@
   --shadow-md: 0 4px 8px rgba(0, 0, 0, 0.4);
   --shadow-lg: 0 8px 16px rgba(0, 0, 0, 0.5);
 
-  /* Remove custom dark theme variables and use global ones */
   --mdc-theme-surface: var(--background-color);
   --mdc-theme-on-surface: var(--text-primary);
   --mdc-theme-primary: var(--primary-color);
@@ -289,7 +286,6 @@
   transform: none !important;
 }
 
-/* Mobile styles */
 @media (max-width: 768px) {
   .app-container {
     padding: var(--spacing-md);

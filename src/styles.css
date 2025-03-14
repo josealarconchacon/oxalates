@@ -162,14 +162,14 @@
   --footer-background: #2d2d2d;
   --link-color: #4ba9e1;
   --button-text: #ffffff;
-  --button-background: #333333;
+  --button-background: #3a3a3a;
   --nav-active: #1a91da33;
   --nav-hover: #3a3a3a;
-  --dropdown-background: #333333;
-  --tooltip-background: #4a4a4a;
+  --dropdown-background: #3a3a3a;
+  --tooltip-background: #3a3a3a;
   --tooltip-text: #ffffff;
   --scrollbar-track: #2d2d2d;
-  --scrollbar-thumb: #404040;
+  --scrollbar-thumb: #3a3a3a;
 
   /* Shadows for dark theme */
   --shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.3);
@@ -179,8 +179,8 @@
   /* Override specific component colors */
   --gray-100: #2d2d2d;
   --gray-200: #333333;
-  --gray-300: #404040;
-  --gray-400: #4a4a4a;
+  --gray-300: #3a3a3a;
+  --gray-400: #3a3a3a;
   --gray-500: #666666;
   --gray-600: #808080;
   --gray-700: #b0b0b0;

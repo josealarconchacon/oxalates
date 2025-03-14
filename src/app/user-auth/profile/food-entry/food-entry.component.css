@@ -1,5 +1,4 @@
 :root {
-  /* Use global theme variables instead */
   --mdc-theme-primary: var(--primary-color);
   --mdc-theme-surface: var(--background-color);
   --mdc-theme-on-surface: var(--text-color);
@@ -8,9 +7,8 @@
   --spacing-unit: var(--spacing-2);
 }
 
-/* Remove custom dark theme variables and use global ones */
 .dark-theme {
-  --mdc-theme-surface: var(--background-color);
+  --mdc-theme-surface: #3a3a3a;
   --mdc-theme-on-surface: var(--text-color);
   --mdc-theme-primary: var(--primary-color);
   --mdc-elevation-1: var(--shadow-sm);
@@ -47,8 +45,8 @@
 }
 
 .dark-theme .food-table {
-  background: #242937;
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: #3a3a3a;
+  border: 1px solid var(--border-color);
   box-shadow: var(--mdc-elevation-1);
 }
 
@@ -95,7 +93,7 @@ thead .header-detail th {
 }
 
 .dark-theme .food-row:hover {
-  background-color: rgba(255, 255, 255, 0.02);
+  background-color: #3a3a3a;
 }
 
 .food-row td {
@@ -126,8 +124,8 @@ thead .header-detail th {
 }
 
 .dark-theme .food-name-btn:hover {
-  background-color: rgba(95, 168, 230, 0.1);
-  color: var(--mdc-theme-primary);
+  background-color: #3a3a3a;
+  color: var(--primary-color);
 }
 
 .expand-icon {
@@ -149,8 +147,8 @@ thead .header-detail th {
 }
 
 .dark-theme .mobile-details {
-  background: rgba(255, 255, 255, 0.02);
-  border-color: rgba(255, 255, 255, 0.1);
+  background: #3a3a3a;
+  border-color: var(--border-color);
 }
 
 .detail-label {
@@ -170,8 +168,8 @@ thead .header-detail th {
 }
 
 .dark-theme .meal-section {
-  background: #242937;
-  border-color: rgba(255, 255, 255, 0.1);
+  background: #3a3a3a;
+  border-color: var(--border-color);
   box-shadow: var(--mdc-elevation-1);
 }
 
@@ -195,9 +193,9 @@ thead .header-detail th {
 }
 
 .dark-theme .empty-state {
-  color: rgba(255, 255, 255, 0.5);
-  background: rgba(255, 255, 255, 0.02);
-  border-color: rgba(255, 255, 255, 0.1);
+  color: var(--text-secondary);
+  background: #3a3a3a;
+  border-color: var(--border-color);
 }
 
 .add-button {
@@ -217,8 +215,9 @@ thead .header-detail th {
 }
 
 .dark-theme .add-button {
-  background: rgba(95, 168, 230, 0.1);
-  border-color: rgba(95, 168, 230, 0.2);
+  background: #3a3a3a;
+  border-color: var(--border-color);
+  color: var(--primary-color);
 }
 
 .add-button:hover {
@@ -228,7 +227,8 @@ thead .header-detail th {
 }
 
 .dark-theme .add-button:hover {
-  background: rgba(95, 168, 230, 0.15);
+  background: #3a3a3a;
+  border-color: var(--primary-color);
 }
 
 .delete-btn {
@@ -247,16 +247,18 @@ thead .header-detail th {
 }
 
 .dark-theme .delete-btn {
-  color: #ef4444;
+  color: var(--danger-color);
   background: transparent;
 }
 
 .dark-theme .delete-btn:hover {
-  background: rgba(239, 68, 68, 0.1);
+  background: #3a3a3a;
+  color: var(--danger-color);
 }
 
 .dark-theme .delete-btn:focus {
-  box-shadow: 0 0 0 2px rgba(239, 68, 68, 0.2);
+  background: #3a3a3a;
+  color: var(--danger-color);
   outline: none;
 }
 
@@ -278,7 +280,8 @@ thead .header-detail th {
 }
 
 .dark-theme .dialog-overlay {
-  background: rgba(0, 0, 0, 0.7);
+  background: rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(4px);
 }
 
 .dialog-content {
@@ -295,11 +298,15 @@ thead .header-detail th {
 }
 
 .dark-theme .dialog-content {
-  border-color: rgba(255, 255, 255, 0.05);
+  background: #3a3a3a;
+  border-color: var(--border-color);
+  box-shadow: var(--shadow-lg);
 }
 
 .total-row td {
   font-weight: 600;
+  height: 20px;
+  padding: 1rem;
   background: rgba(0, 0, 0, 0.02);
   border-top: 2px solid rgba(0, 0, 0, 0.1);
   color: var(--mdc-theme-on-surface);
@@ -307,8 +314,8 @@ thead .header-detail th {
 }
 
 .dark-theme .total-row {
-  background: rgba(255, 255, 255, 0.02);
-  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  background-color: #3a3a3a;
+  border-color: var(--border-color);
 }
 
 .dark-theme .total-row td {
@@ -369,12 +376,12 @@ thead .header-detail th {
   }
 
   .dark-theme .mobile-details {
-    background: rgba(255, 255, 255, 0.02);
-    border: 1px solid rgba(255, 255, 255, 0.1);
+    background: #3a3a3a;
+    border-color: var(--border-color);
   }
 
   .dark-theme .detail-row {
-    border-bottom-color: rgba(255, 255, 255, 0.1);
+    border-color: var(--border-color);
   }
 }
 
@@ -382,9 +389,7 @@ thead .header-detail th {
   *,
   *::before,
   *::after {
-    animation-duration: 0.01ms !important;
-    animation-iteration-count: 1 !important;
-    transition-duration: 0.01ms !important;
-    scroll-behavior: auto !important;
+    transition: none !important;
+    animation: none !important;
   }
 }

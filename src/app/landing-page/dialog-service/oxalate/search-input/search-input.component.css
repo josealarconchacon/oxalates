@@ -59,7 +59,6 @@
   transform: scale(0.3);
 }
 
-/* Dark theme styles */
 .dark-theme .search-input-container {
   border: 1px solid #404040;
   background-color: #262626;

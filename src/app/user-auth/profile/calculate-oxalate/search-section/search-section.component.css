@@ -116,7 +116,6 @@
   color: #64748b;
 }
 
-/* Dark theme styles */
 .dark-theme .search-wrapper i {
   color: var(--text-secondary);
 }

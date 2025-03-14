@@ -1,51 +1,41 @@
 <div class="date-switcher" [ngClass]="{ 'dark-theme': isDarkTheme }">
-  <button (click)="previousDay()" class="nav-button" aria-label="Previous day">
-    <svg
-      xmlns="http://www.w3.org/2000/svg"
-      width="24"
-      height="24"
-      viewBox="0 0 24 24"
-      fill="none"
-      [attr.stroke]="isDarkTheme ? '#e1e1e1' : 'currentColor'"
-    >
-      <path
-        d="M15 18l-6-6 6-6"
-        stroke-width="2"
-        stroke-linecap="round"
-        stroke-linejoin="round"
-      />
-    </svg>
+  <button
+    mat-icon-button
+    (click)="previousDay()"
+    class="nav-button"
+    aria-label="Previous day"
+  >
+    <mat-icon>chevron_left</mat-icon>
   </button>
 
-  <div class="date-display" (click)="openDatePicker()">
+  <div
+    class="date-display"
+    matRipple
+    [matRippleColor]="isDarkTheme ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.1)'"
+  >
+    <mat-datepicker #picker (opened)="openDatePicker()"></mat-datepicker>
+    <button class="date-button" (click)="picker.open()">
+      <div class="formatted-date">
+        <span class="day">{{ selectedDate | date : "EEEE" }}</span>
+        <span class="date">{{ selectedDate | date : "MMM d, y" }}</span>
+      </div>
+      <mat-icon class="calendar-icon">calendar_today</mat-icon>
+    </button>
     <input
-      type="date"
-      [ngModel]="selectedDate | date : 'yyyy-MM-dd'"
+      [matDatepicker]="picker"
+      [ngModel]="selectedDate"
       (ngModelChange)="onDateChange($event)"
       class="date-input"
       #dateInput
     />
-    <div class="formatted-date">
-      <span class="day">{{ selectedDate | date : "EEEE" }}</span>
-      <span class="date">{{ selectedDate | date : "MMM d, y" }}</span>
-    </div>
   </div>
 
-  <button (click)="nextDay()" class="nav-button" aria-label="Next day">
-    <svg
-      xmlns="http://www.w3.org/2000/svg"
-      width="24"
-      height="24"
-      viewBox="0 0 24 24"
-      fill="none"
-      [attr.stroke]="isDarkTheme ? '#e1e1e1' : 'currentColor'"
-    >
-      <path
-        d="M9 18l6-6-6-6"
-        stroke-width="2"
-        stroke-linecap="round"
-        stroke-linejoin="round"
-      />
-    </svg>
+  <button
+    mat-icon-button
+    (click)="nextDay()"
+    class="nav-button"
+    aria-label="Next day"
+  >
+    <mat-icon>chevron_right</mat-icon>
   </button>
 </div>

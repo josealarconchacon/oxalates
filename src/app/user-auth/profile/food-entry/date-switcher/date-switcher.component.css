@@ -3,59 +3,45 @@
   align-items: center;
   justify-content: center;
   gap: var(--spacing-4);
-  padding: var(--spacing-4);
+  padding: var(--spacing-2);
   margin-bottom: var(--spacing-6);
   background: var(--background-color);
-  border: 1px solid var(--border-color);
   border-radius: var(--radius-xl);
-  box-shadow: var(--shadow-sm);
   transition: all var(--transition-base);
   position: relative;
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
-}
-
-.dark-theme .date-switcher {
-  background: var(--card-background);
-  border-color: var(--border-color);
-  box-shadow: var(--shadow-md);
 }
 
 .date-display {
   display: flex;
-  flex-direction: column;
   align-items: center;
-  gap: var(--spacing-1);
-  min-width: 400px;
-  max-width: 200px;
-  padding: var(--spacing-3) var(--spacing-4);
+  min-width: 280px;
   background: var(--background-color);
-  border: 1px solid var(--border-color);
   border-radius: var(--radius-lg);
-  cursor: pointer;
   transition: all var(--transition-base);
+  overflow: hidden;
 }
 
 .dark-theme .date-display {
   background: var(--card-background);
-  border-color: var(--border-color);
 }
 
-.date-display:hover {
-  border-color: var(--primary-color);
-  box-shadow: var(--shadow-sm);
-  transform: translateY(-1px);
-}
-
-.dark-theme .date-display:hover {
-  border-color: var(--primary-color);
-  background: var(--hover-background);
+.date-button {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  padding: var(--spacing-2) var(--spacing-3);
+  border: none;
+  background: transparent;
+  color: var(--text-color);
+  cursor: pointer;
+  transition: all var(--transition-base);
 }
 
 .formatted-date {
   display: flex;
   flex-direction: column;
-  align-items: center;
+  align-items: flex-start;
   gap: var(--spacing-1);
 }
 
@@ -74,6 +60,15 @@
   letter-spacing: -0.02em;
 }
 
+.calendar-icon {
+  color: var(--text-secondary);
+  transition: color var(--transition-base);
+}
+
+.date-button:hover .calendar-icon {
+  color: var(--primary-color);
+}
+
 .date-input {
   position: absolute;
   width: 1px;
@@ -87,70 +82,134 @@
 }
 
 .nav-button {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: var(--spacing-10);
-  height: var(--spacing-10);
-  padding: 0;
-  border: 1px solid var(--border-color);
-  background: var(--background-color);
-  color: var(--text-color);
-  border-radius: var(--radius-lg);
-  cursor: pointer;
+  color: var(--text-secondary);
   transition: all var(--transition-base);
 }
 
-.dark-theme .nav-button {
+.nav-button:hover {
+  color: var(--primary-color);
+  transform: scale(1.1);
+}
+
+/* Material Date Picker Customization */
+::ng-deep .mat-datepicker-content {
+  background: var(--background-color);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-lg) !important;
+}
+
+.dark-theme ::ng-deep .mat-datepicker-content {
   background: var(--card-background);
-  border-color: var(--border-color);
+}
+
+::ng-deep .mat-calendar {
+  background: transparent;
+}
+
+::ng-deep .mat-calendar-body-selected {
+  background-color: var(--primary-color);
+  color: white;
+}
+
+::ng-deep .mat-calendar-body-today:not(.mat-calendar-body-selected) {
+  border-color: var(--primary-color);
+}
+
+::ng-deep .mat-datepicker-popup.dark-theme {
+  background: var(--card-background);
+}
+
+::ng-deep .mat-datepicker-popup.dark-theme .mat-calendar {
+  background: var(--card-background);
   color: var(--text-color);
 }
 
-.nav-button:hover {
+::ng-deep .mat-datepicker-popup.dark-theme .mat-calendar-body-cell-content {
+  color: var(--text-color);
+}
+
+::ng-deep .mat-datepicker-popup.dark-theme .mat-calendar-body-label,
+::ng-deep .mat-datepicker-popup.dark-theme .mat-calendar-period-button,
+::ng-deep .mat-datepicker-popup.dark-theme .mat-calendar-table-header {
+  color: var(--text-color);
+}
+
+::ng-deep .mat-datepicker-popup.dark-theme .mat-calendar-arrow {
+  fill: var(--text-color);
+}
+
+::ng-deep .mat-datepicker-popup.dark-theme .mat-calendar-body-selected {
+  background-color: var(--primary-color);
+  color: white !important;
+}
+
+::ng-deep
+  .mat-datepicker-popup.dark-theme
+  .mat-calendar-body-today:not(.mat-calendar-body-selected) {
+  border-color: var(--primary-color);
+}
+
+::ng-deep
+  .mat-datepicker-popup.dark-theme
+  .mat-calendar-body-cell:not(.mat-calendar-body-disabled):hover
+  > .mat-calendar-body-cell-content:not(.mat-calendar-body-selected):not(
+    .mat-calendar-body-comparison-identical
+  ) {
+  background-color: var(--hover-background);
+}
+
+::ng-deep
+  .mat-datepicker-popup.dark-theme
+  .mat-calendar-body-disabled
+  > .mat-calendar-body-cell-content:not(.mat-calendar-body-selected):not(
+    .mat-calendar-body-comparison-identical
+  ) {
+  color: var(--text-secondary);
+}
+
+/* Calendar header styles */
+::ng-deep .mat-datepicker-popup.dark-theme .mat-calendar-header {
+  background: var(--card-background);
+  padding: var(--spacing-3);
+  border-bottom: 1px solid var(--border-color);
+}
+
+/* Navigation arrows < > */
+::ng-deep .mat-datepicker-popup.dark-theme .mat-calendar-previous-button,
+::ng-deep .mat-datepicker-popup.dark-theme .mat-calendar-next-button {
+  color: var(--text-color) !important;
+  background: transparent;
+  border-radius: var(--radius-sm);
+}
+
+::ng-deep .mat-datepicker-popup.dark-theme .mat-calendar-previous-button:hover,
+::ng-deep .mat-datepicker-popup.dark-theme .mat-calendar-next-button:hover {
   background: var(--hover-background);
-  border-color: var(--primary-color);
-  color: var(--primary-color);
-  transform: translateY(-1px);
-  box-shadow: var(--shadow-sm);
+  color: var(--primary-color) !important;
 }
 
-.dark-theme .nav-button:hover {
-  background: var(--hover-background);
-  border-color: var(--primary-color);
-  color: var(--primary-color);
+/* Weekday headers (S M T W T F S) */
+::ng-deep .mat-datepicker-popup.dark-theme .mat-calendar-table-header th {
+  color: var(--text-color) !important;
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-medium);
+  opacity: 0.9;
+  padding: var(--spacing-2) 0;
 }
 
-.nav-button:focus-visible {
-  outline: none;
-  box-shadow: 0 0 0 2px var(--primary-light);
-  border-color: var(--primary-color);
-}
-
-.nav-button:active {
-  transform: translateY(0);
-}
-
-.nav-button svg {
-  width: var(--spacing-5);
-  height: var(--spacing-5);
-  transition: transform var(--transition-base);
-}
-
-.nav-button:hover svg {
-  transform: scale(1.1);
+::ng-deep .mat-datepicker-popup.dark-theme .mat-calendar-table-header-divider {
+  display: none;
 }
 
 @media (max-width: 768px) {
   .date-switcher {
     gap: var(--spacing-2);
-    padding: var(--spacing-3);
-    margin-bottom: var(--spacing-4);
+    padding: var(--spacing-2);
   }
 
   .date-display {
-    min-width: 160px;
-    padding: var(--spacing-2) var(--spacing-3);
+    min-width: 220px;
+    padding: var(--spacing-2);
   }
 
   .day {
@@ -160,33 +219,21 @@
   .date {
     font-size: var(--font-size-base);
   }
-
-  .nav-button {
-    width: var(--spacing-8);
-    height: var(--spacing-8);
-  }
-
-  .nav-button svg {
-    width: var(--spacing-4);
-    height: var(--spacing-4);
-  }
 }
 
 @media (max-width: 480px) {
   .date-switcher {
-    gap: var(--spacing-2);
-    padding: var(--spacing-2);
-    margin-bottom: var(--spacing-3);
-    border-radius: var(--radius-lg);
+    gap: var(--spacing-1);
+    padding: var(--spacing-1);
   }
 
   .date-display {
-    min-width: 140px;
-    padding: var(--spacing-2);
+    min-width: 180px;
+    padding: var(--spacing-1);
   }
 
   .formatted-date {
-    gap: var(--spacing-0_5);
+    gap: 0;
   }
 
   .day {
@@ -195,10 +242,5 @@
 
   .date {
     font-size: var(--font-size-sm);
-  }
-
-  .nav-button {
-    width: var(--spacing-7);
-    height: var(--spacing-7);
   }
 }
