@@ -1,0 +1,124 @@
+<div
+  class="auth-message-overlay"
+  *ngIf="authMessageService.showMessage$ | async"
+  [@fadeInOut]
+  role="dialog"
+  aria-label="Welcome Tour"
+  (touchstart)="onTouchStart($event)"
+  (touchmove)="onTouchMove($event)"
+  (touchend)="onTouchEnd()"
+  tabindex="0"
+>
+  <div class="auth-message-content" role="document">
+    <div
+      class="demo-deck"
+      (mouseenter)="pauseAutoPlay()"
+      (mouseleave)="resumeAutoPlay()"
+    >
+      <!-- Progress indicators -->
+      <div
+        class="progress-indicators"
+        role="tablist"
+        aria-label="Presentation Navigation"
+      >
+        <div
+          *ngFor="let slide of slides; let i = index"
+          class="indicator"
+          [class.active]="currentSlide === i"
+          (click)="goToSlide(i)"
+          [@indicatorPulse]="currentSlide === i"
+          role="tab"
+          [attr.aria-selected]="currentSlide === i"
+          [attr.aria-label]="'Slide ' + (i + 1) + ' of ' + slides.length"
+          [attr.tabindex]="currentSlide === i ? 0 : -1"
+          (keydown.enter)="goToSlide(i)"
+        ></div>
+      </div>
+
+      <!-- Slide content -->
+      <div
+        class="slide-container"
+        role="tabpanel"
+        [attr.aria-label]="'Slide ' + (currentSlide + 1)"
+      >
+        <div class="slide" [@slideAnimation]="currentSlide">
+          <!-- Welcome Slide -->
+          <div
+            *ngIf="currentSlide === 0"
+            class="slide-content welcome-slide"
+            [@contentAnimation]
+            role="region"
+            aria-label="Welcome"
+          >
+            <div class="welcome-content-wrapper">
+              <div class="welcome-text-content">
+                <p class="welcome-subtitle">
+                  Sign in to log<br />
+                  oxalate intake and add items to favorites
+                </p>
+              </div>
+              <div class="welcome-image-container">
+                <img
+                  src="assets/app-logo/load.png"
+                  alt="Welcome Image"
+                  class="slide-image"
+                  loading="lazy"
+                />
+              </div>
+            </div>
+          </div>
+
+          <!-- Demo Features Slide -->
+          <div
+            *ngIf="currentSlide === 1"
+            class="slide-content"
+            [@contentAnimation]
+            role="region"
+            aria-label="Features Overview"
+          >
+            <h2>Real-time Insights</h2>
+            <div class="feature-image">
+              <img
+                src="assets/app-logo/daily.png"
+                alt="Daily Stats"
+                class="slide-image"
+                loading="lazy"
+              />
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Navigation buttons -->
+      <div class="nav-buttons">
+        <button
+          class="nav-button"
+          (click)="previousSlide()"
+          [disabled]="currentSlide === 0"
+          [@fadeInOut]
+          aria-label="Previous slide"
+        >
+          <i class="fas fa-chevron-left" aria-hidden="true"></i>
+        </button>
+        <button
+          class="nav-button"
+          (click)="nextSlide()"
+          [disabled]="currentSlide === slides.length - 1"
+          [@fadeInOut]
+          aria-label="Next slide"
+        >
+          <i class="fas fa-chevron-right" aria-hidden="true"></i>
+        </button>
+      </div>
+    </div>
+
+    <button
+      class="continue-button"
+      (click)="onContinue()"
+      [@pulseAnimation]
+      aria-label="Get Started"
+    >
+      Get Started Now
+    </button>
+  </div>
+</div>
