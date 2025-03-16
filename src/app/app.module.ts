@@ -72,7 +72,6 @@ export function initializeApp(configService: ConfigService) {
     LandingPageComponent,
     OxalateComponent,
     FilterComponent,
-    FooterComponent,
     ResourcesComponent,
     BenefitsComponent,
     ManagingOxalateComponent,
@@ -115,6 +114,7 @@ export function initializeApp(configService: ConfigService) {
     FoodEntryComponent,
     ContributionComponent,
     HeaderComponent,
+    FooterComponent,
   ],
   providers: [
     ConfigService,

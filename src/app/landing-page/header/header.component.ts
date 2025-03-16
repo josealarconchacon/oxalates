@@ -148,9 +148,11 @@ export class HeaderComponent implements OnInit {
   }
 
   navigateToCalculateDailyIntake(): void {
-    this.router.navigate(['/profile'], {
-      queryParams: { section: 'calculate-oxalate' },
-    });
+    if (!this.isLoggedIn) {
+      this.router.navigate(['/auth']);
+      return;
+    }
+    this.router.navigate(['/food-entry']);
     this.closeNav();
   }
 

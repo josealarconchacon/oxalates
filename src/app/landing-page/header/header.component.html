@@ -14,7 +14,6 @@
       <button class="nav-close" (click)="closeNav()"></button>
 
       <ng-container *ngIf="!(isMobile$ | async)">
-        <a href="/contribution" class="nav-link"> Support </a>
         <a
           *ngIf="currentRoute !== '/' && currentRoute === '/oxalate'"
           href="#resources"
@@ -23,8 +22,16 @@
         >
           <span>Resources</span>
         </a>
+        <a href="/contribution" class="nav-link"> Support The Project </a>
+        <button
+          class="calculate-btn"
+          (click)="navigateToCalculateDailyIntake(); closeNav()"
+        >
+          <span>Calculate Daily Intake</span>
+        </button>
         <button class="search-btn" (click)="search(); closeNav()">
-          <mat-icon>search</mat-icon>
+          <!-- <mat-icon>search</mat-icon> -->
+          <span>Search for Foods</span>
         </button>
 
         <button

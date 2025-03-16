@@ -1,502 +1,551 @@
-<div
-  class="daily-food-log"
-  [ngClass]="{ shrink: showCalculationResult, 'dark-theme': isDarkTheme }"
->
-  <app-date-switcher
-    [selectedDate]="currentDate"
-    (dateChange)="onDateChange($event)"
-  ></app-date-switcher>
+<div class="app-container">
+  <main class="app-main">
+    <section class="content-area">
+      <div
+        class="daily-food-log"
+        [ngClass]="{ shrink: showCalculationResult, 'dark-theme': isDarkTheme }"
+      >
+        <app-date-switcher
+          [selectedDate]="currentDate"
+          (dateChange)="onDateChange($event)"
+        ></app-date-switcher>
 
-  <div>
-    <app-results-section
-      [breakfastItems]="breakfastItems"
-      [lunchItems]="lunchItems"
-      [dinnerItems]="dinnerItems"
-      [snackItems]="snackItems"
-    ></app-results-section>
-  </div>
+        <div>
+          <app-results-section
+            [breakfastItems]="breakfastItems"
+            [lunchItems]="lunchItems"
+            [dinnerItems]="dinnerItems"
+            [snackItems]="snackItems"
+          ></app-results-section>
+        </div>
 
-  <div class="food-table-container">
-    <section class="meal-section">
-      <div class="title-and-button">
-        <h2 class="meal-title">Breakfast</h2>
-        <button class="add-button" (click)="openCalculator('breakfast')">
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            width="20"
-            height="20"
-            viewBox="0 0 20 20"
-            fill="none"
-            class="svg-icon"
-          >
-            <g
-              stroke-width="1.5"
-              stroke-linecap="round"
-              [attr.stroke]="isDarkTheme ? '#5fa8e6' : '#2b6cb0'"
-            >
-              <path d="M10 2v16M2 10h16" />
-            </g>
-          </svg>
-          <span class="label">Add Food</span>
-        </button>
-      </div>
-      <table class="food-table" *ngIf="breakfastItems.length > 0">
-        <thead>
-          <tr class="header-detail">
-            <th class="food-name-col">Food Name</th>
-            <th class="serving-col hide-mobile">Serving Info</th>
-            <th class="oxalate-col hide-mobile">Total Oxalate</th>
-            <th class="soluble-col hide-mobile">Soluble Oxalate</th>
-            <th class="action-col"><span class="sr-only">Actions</span></th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr
-            *ngFor="let food of breakfastItems; let i = index"
-            class="food-row"
-          >
-            <td class="food-name-col">
-              <span
-                class="food-name-btn"
-                (click)="food.isExpanded = !food.isExpanded"
-              >
-                {{ food.foodName }}
-
-                <span class="expand-icon">
-                  {{ food.isExpanded ? "−" : "+" }}</span
+        <div class="food-table-container">
+          <section class="meal-section">
+            <div class="title-and-button">
+              <h2 class="meal-title">Breakfast</h2>
+              <button class="add-button" (click)="openCalculator('breakfast')">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="20"
+                  height="20"
+                  viewBox="0 0 20 20"
+                  fill="none"
+                  class="svg-icon"
                 >
-              </span>
-              <div class="mobile-details" *ngIf="food.isExpanded">
-                <div class="detail-row">
-                  <span class="detail-label">Serving:</span>
-                  <span
-                    >{{ food.numberOfServings }} {{ food.servingSize }}
-                    {{
-                      food.numberOfServings <= 1 ? "serving" : "servings"
-                    }}</span
+                  <g
+                    stroke-width="1.5"
+                    stroke-linecap="round"
+                    [attr.stroke]="isDarkTheme ? '#5fa8e6' : '#2b6cb0'"
                   >
-                </div>
-                <div class="detail-row">
-                  <span class="detail-label">Total Oxalate:</span>
-                  <span>{{ food.oxalatePerServing }}</span>
-                </div>
-                <div class="detail-row">
-                  <span class="detail-label">Soluble Oxalate:</span>
-                  <span>{{ food.solubleOxalatePerServing }}</span>
-                </div>
-              </div>
-            </td>
-            <td class="serving-col hide-mobile">
-              {{ food.numberOfServings }} {{ food.servingSize }}
-              {{ food.numberOfServings <= 1 ? "serving" : "servings" }}
-            </td>
-            <td class="oxalate-col hide-mobile">
-              {{ food.oxalatePerServing }}
-            </td>
-            <td class="soluble-col hide-mobile">
-              {{ food.solubleOxalatePerServing }}
-            </td>
-            <td class="action-col">
-              <button
-                class="delete-btn"
-                (click)="deleteFood('breakfast', i)"
-                [attr.aria-label]="'Delete ' + food.foodName"
-              >
-                <i class="material-icons">close</i>
+                    <path d="M10 2v16M2 10h16" />
+                  </g>
+                </svg>
+                <span class="label">Add Food</span>
               </button>
-            </td>
-          </tr>
-          <tr class="total-row">
-            <td class="food-name-col">
-              Total
-              <span class="oxalate-mobile">
-                {{ calculateTotalOxalate(breakfastItems) | number : "1.2-2" }}
-                mg
-              </span>
-              <span class="soluble-mobile">
-                {{
-                  calculateTotalSolubleOxalate(breakfastItems)
-                    | number : "1.2-2"
-                }}
-                mg
-              </span>
-            </td>
-            <td class="serving-col hide-mobile"></td>
-            <td class="oxalate-col hide-mobile">
-              {{ calculateTotalOxalate(breakfastItems) | number : "1.2-2" }} mg
-            </td>
-            <td class="soluble-col hide-mobile">
-              {{
-                calculateTotalSolubleOxalate(breakfastItems) | number : "1.2-2"
-              }}
-              mg
-            </td>
-            <td class="action-col"></td>
-          </tr>
-        </tbody>
-      </table>
+            </div>
+            <table class="food-table" *ngIf="breakfastItems.length > 0">
+              <thead>
+                <tr class="header-detail">
+                  <th class="food-name-col">Food Name</th>
+                  <th class="serving-col hide-mobile">Serving Info</th>
+                  <th class="oxalate-col hide-mobile">Total Oxalate</th>
+                  <th class="soluble-col hide-mobile">Soluble Oxalate</th>
+                  <th class="action-col">
+                    <span class="sr-only">Actions</span>
+                  </th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr
+                  *ngFor="let food of breakfastItems; let i = index"
+                  class="food-row"
+                >
+                  <td class="food-name-col">
+                    <span
+                      class="food-name-btn"
+                      (click)="food.isExpanded = !food.isExpanded"
+                    >
+                      {{ food.foodName }}
 
-      <div class="empty-state" *ngIf="breakfastItems.length === 0">
-        <span>No foods added yet</span>
+                      <span class="expand-icon">
+                        {{ food.isExpanded ? "−" : "+" }}</span
+                      >
+                    </span>
+                    <div class="mobile-details" *ngIf="food.isExpanded">
+                      <div class="detail-row">
+                        <span class="detail-label">Serving:</span>
+                        <span
+                          >{{ food.numberOfServings }} {{ food.servingSize }}
+                          {{
+                            food.numberOfServings <= 1 ? "serving" : "servings"
+                          }}</span
+                        >
+                      </div>
+                      <div class="detail-row">
+                        <span class="detail-label">Total Oxalate:</span>
+                        <span>{{ food.oxalatePerServing }}</span>
+                      </div>
+                      <div class="detail-row">
+                        <span class="detail-label">Soluble Oxalate:</span>
+                        <span>{{ food.solubleOxalatePerServing }}</span>
+                      </div>
+                    </div>
+                  </td>
+                  <td class="serving-col hide-mobile">
+                    {{ food.numberOfServings }} {{ food.servingSize }}
+                    {{ food.numberOfServings <= 1 ? "serving" : "servings" }}
+                  </td>
+                  <td class="oxalate-col hide-mobile">
+                    {{ food.oxalatePerServing }}
+                  </td>
+                  <td class="soluble-col hide-mobile">
+                    {{ food.solubleOxalatePerServing }}
+                  </td>
+                  <td class="action-col">
+                    <button
+                      class="delete-btn"
+                      (click)="deleteFood('breakfast', i)"
+                      [attr.aria-label]="'Delete ' + food.foodName"
+                    >
+                      <i class="material-icons">close</i>
+                    </button>
+                  </td>
+                </tr>
+                <tr class="total-row">
+                  <td class="food-name-col">
+                    Total
+                    <span class="oxalate-mobile">
+                      {{
+                        calculateTotalOxalate(breakfastItems) | number : "1.2-2"
+                      }}
+                      mg
+                    </span>
+                    <span class="soluble-mobile">
+                      {{
+                        calculateTotalSolubleOxalate(breakfastItems)
+                          | number : "1.2-2"
+                      }}
+                      mg
+                    </span>
+                  </td>
+                  <td class="serving-col hide-mobile"></td>
+                  <td class="oxalate-col hide-mobile">
+                    {{
+                      calculateTotalOxalate(breakfastItems) | number : "1.2-2"
+                    }}
+                    mg
+                  </td>
+                  <td class="soluble-col hide-mobile">
+                    {{
+                      calculateTotalSolubleOxalate(breakfastItems)
+                        | number : "1.2-2"
+                    }}
+                    mg
+                  </td>
+                  <td class="action-col"></td>
+                </tr>
+              </tbody>
+            </table>
+
+            <div class="empty-state" *ngIf="breakfastItems.length === 0">
+              <span>No foods added yet</span>
+            </div>
+          </section>
+
+          <section class="meal-section">
+            <div class="title-and-button">
+              <h2 class="meal-title">Lunch</h2>
+              <button class="add-button" (click)="openCalculator('lunch')">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="20"
+                  height="20"
+                  viewBox="0 0 20 20"
+                  fill="none"
+                  class="svg-icon"
+                >
+                  <g
+                    stroke-width="1.5"
+                    stroke-linecap="round"
+                    [attr.stroke]="isDarkTheme ? '#5fa8e6' : '#2b6cb0'"
+                  >
+                    <path d="M10 2v16M2 10h16" />
+                  </g>
+                </svg>
+                <span class="label">Add Food</span>
+              </button>
+            </div>
+            <table class="food-table" *ngIf="lunchItems.length > 0">
+              <thead>
+                <tr class="header-detail">
+                  <th class="food-name-col">Food Name</th>
+                  <th class="serving-col hide-mobile">Serving Info</th>
+                  <th class="oxalate-col hide-mobile">Total Oxalate</th>
+                  <th class="soluble-col hide-mobile">Soluble Oxalate</th>
+                  <th class="action-col">
+                    <span class="sr-only">Actions</span>
+                  </th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr
+                  *ngFor="let food of lunchItems; let i = index"
+                  class="food-row"
+                >
+                  <td class="food-name-col">
+                    <button
+                      class="food-name-btn"
+                      (click)="food.isExpanded = !food.isExpanded"
+                    >
+                      {{ food.foodName }}
+                      <span class="expand-icon">{{
+                        food.isExpanded ? "−" : "+"
+                      }}</span>
+                    </button>
+                    <div class="mobile-details" *ngIf="food.isExpanded">
+                      <div class="detail-row">
+                        <span class="detail-label">Serving:</span>
+                        <span
+                          >{{ food.numberOfServings }} {{ food.servingSize }}
+                          {{
+                            food.numberOfServings <= 1 ? "serving" : "servings"
+                          }}</span
+                        >
+                      </div>
+                      <div class="detail-row">
+                        <span class="detail-label">Total Oxalate:</span>
+                        <span>{{ food.oxalatePerServing }}</span>
+                      </div>
+                      <div class="detail-row">
+                        <span class="detail-label">Soluble Oxalate:</span>
+                        <span>{{ food.solubleOxalatePerServing }}</span>
+                      </div>
+                    </div>
+                  </td>
+                  <td class="serving-col hide-mobile">
+                    {{ food.numberOfServings }} {{ food.servingSize }}
+                    {{ food.numberOfServings <= 1 ? "serving" : "servings" }}
+                  </td>
+                  <td class="oxalate-col hide-mobile">
+                    {{ food.oxalatePerServing }}
+                  </td>
+                  <td class="soluble-col hide-mobile">
+                    {{ food.solubleOxalatePerServing }}
+                  </td>
+                  <td class="action-col">
+                    <button
+                      class="delete-btn"
+                      (click)="deleteFood('lunch', i)"
+                      [attr.aria-label]="'Delete ' + food.foodName"
+                    >
+                      <i class="material-icons">close</i>
+                    </button>
+                  </td>
+                </tr>
+                <tr class="total-row">
+                  <td class="food-name-col">
+                    Total
+                    <span class="oxalate-mobile">
+                      {{ calculateTotalOxalate(lunchItems) | number : "1.2-2" }}
+                      mg
+                    </span>
+                    <span class="soluble-mobile">
+                      {{
+                        calculateTotalSolubleOxalate(lunchItems)
+                          | number : "1.2-2"
+                      }}
+                      mg
+                    </span>
+                  </td>
+                  <td class="serving-col hide-mobile"></td>
+                  <td class="oxalate-col hide-mobile">
+                    {{ calculateTotalOxalate(lunchItems) | number : "1.2-2" }}
+                    mg
+                  </td>
+                  <td class="soluble-col hide-mobile">
+                    {{
+                      calculateTotalSolubleOxalate(lunchItems)
+                        | number : "1.2-2"
+                    }}
+                    mg
+                  </td>
+                  <td class="action-col"></td>
+                </tr>
+              </tbody>
+            </table>
+
+            <div class="empty-state" *ngIf="lunchItems.length === 0">
+              <span>No foods added yet</span>
+            </div>
+          </section>
+
+          <section class="meal-section">
+            <div class="title-and-button">
+              <h2 class="meal-title">Dinner</h2>
+              <button class="add-button" (click)="openCalculator('dinner')">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="20"
+                  height="20"
+                  viewBox="0 0 20 20"
+                  fill="none"
+                  class="svg-icon"
+                >
+                  <g
+                    stroke-width="1.5"
+                    stroke-linecap="round"
+                    [attr.stroke]="isDarkTheme ? '#5fa8e6' : '#2b6cb0'"
+                  >
+                    <path d="M10 2v16M2 10h16" />
+                  </g>
+                </svg>
+                <span class="label">Add Food</span>
+              </button>
+            </div>
+            <table class="food-table" *ngIf="dinnerItems.length > 0">
+              <thead>
+                <tr class="header-detail">
+                  <th class="food-name-col">Food Name</th>
+                  <th class="serving-col hide-mobile">Serving Info</th>
+                  <th class="oxalate-col hide-mobile">Total Oxalate</th>
+                  <th class="soluble-col hide-mobile">Soluble Oxalate</th>
+                  <th class="action-col">
+                    <span class="sr-only">Actions</span>
+                  </th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr
+                  *ngFor="let food of dinnerItems; let i = index"
+                  class="food-row"
+                >
+                  <td class="food-name-col">
+                    <button
+                      class="food-name-btn"
+                      (click)="food.isExpanded = !food.isExpanded"
+                    >
+                      {{ food.foodName }}
+                      <span class="expand-icon">{{
+                        food.isExpanded ? "−" : "+"
+                      }}</span>
+                    </button>
+                    <div class="mobile-details" *ngIf="food.isExpanded">
+                      <div class="detail-row">
+                        <span class="detail-label">Serving:</span>
+                        <span
+                          >{{ food.numberOfServings }} {{ food.servingSize }}
+                          {{
+                            food.numberOfServings <= 1 ? "serving" : "servings"
+                          }}</span
+                        >
+                      </div>
+                      <div class="detail-row">
+                        <span class="detail-label">Total Oxalate:</span>
+                        <span>{{ food.oxalatePerServing }}</span>
+                      </div>
+                      <div class="detail-row">
+                        <span class="detail-label">Soluble Oxalate:</span>
+                        <span>{{ food.solubleOxalatePerServing }}</span>
+                      </div>
+                    </div>
+                  </td>
+                  <td class="serving-col hide-mobile">
+                    {{ food.numberOfServings }} {{ food.servingSize }}
+                    {{ food.numberOfServings <= 1 ? "serving" : "servings" }}
+                  </td>
+                  <td class="oxalate-col hide-mobile">
+                    {{ food.oxalatePerServing }}
+                  </td>
+                  <td class="soluble-col hide-mobile">
+                    {{ food.solubleOxalatePerServing }}
+                  </td>
+                  <td class="action-col">
+                    <button
+                      class="delete-btn"
+                      (click)="deleteFood('dinner', i)"
+                      [attr.aria-label]="'Delete ' + food.foodName"
+                    >
+                      <i class="material-icons">close</i>
+                    </button>
+                  </td>
+                </tr>
+                <tr class="total-row">
+                  <td class="food-name-col">
+                    Total
+                    <span class="oxalate-mobile">
+                      {{
+                        calculateTotalOxalate(dinnerItems) | number : "1.2-2"
+                      }}
+                      mg
+                    </span>
+                    <span class="soluble-mobile">
+                      {{
+                        calculateTotalSolubleOxalate(dinnerItems)
+                          | number : "1.2-2"
+                      }}
+                      mg
+                    </span>
+                  </td>
+                  <td class="serving-col hide-mobile"></td>
+                  <td class="oxalate-col hide-mobile">
+                    {{ calculateTotalOxalate(dinnerItems) | number : "1.2-2" }}
+                    mg
+                  </td>
+                  <td class="soluble-col hide-mobile">
+                    {{
+                      calculateTotalSolubleOxalate(dinnerItems)
+                        | number : "1.2-2"
+                    }}
+                    mg
+                  </td>
+                  <td class="action-col"></td>
+                </tr>
+              </tbody>
+            </table>
+
+            <div class="empty-state" *ngIf="dinnerItems.length === 0">
+              <span>No foods added yet</span>
+            </div>
+          </section>
+
+          <section class="meal-section">
+            <div class="title-and-button">
+              <h2 class="meal-title">Snacks</h2>
+              <button class="add-button" (click)="openCalculator('snacks')">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="20"
+                  height="20"
+                  viewBox="0 0 20 20"
+                  fill="none"
+                  class="svg-icon"
+                >
+                  <g
+                    stroke-width="1.5"
+                    stroke-linecap="round"
+                    [attr.stroke]="isDarkTheme ? '#5fa8e6' : '#2b6cb0'"
+                  >
+                    <path d="M10 2v16M2 10h16" />
+                  </g>
+                </svg>
+                <span class="label">Add Food</span>
+              </button>
+            </div>
+            <table class="food-table" *ngIf="snackItems.length > 0">
+              <thead>
+                <tr class="header-detail">
+                  <th class="food-name-col">Food Name</th>
+                  <th class="serving-col hide-mobile">Serving Info</th>
+                  <th class="oxalate-col hide-mobile">Total Oxalate</th>
+                  <th class="soluble-col hide-mobile">Soluble Oxalate</th>
+                  <th class="action-col">
+                    <span class="sr-only">Actions</span>
+                  </th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr
+                  *ngFor="let food of snackItems; let i = index"
+                  class="food-row"
+                >
+                  <td class="food-name-col">
+                    <button
+                      class="food-name-btn"
+                      (click)="food.isExpanded = !food.isExpanded"
+                    >
+                      {{ food.foodName }}
+                      <span class="expand-icon">{{
+                        food.isExpanded ? "−" : "+"
+                      }}</span>
+                    </button>
+                    <div class="mobile-details" *ngIf="food.isExpanded">
+                      <div class="detail-row">
+                        <span class="detail-label">Serving:</span>
+                        <span
+                          >{{ food.numberOfServings }} {{ food.servingSize }}
+                          {{
+                            food.numberOfServings <= 1 ? "serving" : "servings"
+                          }}</span
+                        >
+                      </div>
+                      <div class="detail-row">
+                        <span class="detail-label">Total Oxalate:</span>
+                        <span>{{ food.oxalatePerServing }}</span>
+                      </div>
+                      <div class="detail-row">
+                        <span class="detail-label">Soluble Oxalate:</span>
+                        <span>{{ food.solubleOxalatePerServing }}</span>
+                      </div>
+                    </div>
+                  </td>
+                  <td class="serving-col hide-mobile">
+                    {{ food.numberOfServings }} {{ food.servingSize }}
+                    {{ food.numberOfServings <= 1 ? "serving" : "servings" }}
+                  </td>
+                  <td class="oxalate-col hide-mobile">
+                    {{ food.oxalatePerServing }}
+                  </td>
+                  <td class="soluble-col hide-mobile">
+                    {{ food.solubleOxalatePerServing }}
+                  </td>
+                  <td class="action-col">
+                    <button
+                      class="delete-btn"
+                      (click)="deleteFood('snacks', i)"
+                      [attr.aria-label]="'Delete ' + food.foodName"
+                    >
+                      <i class="material-icons">close</i>
+                    </button>
+                  </td>
+                </tr>
+                <tr class="total-row">
+                  <td class="food-name-col">
+                    Total
+                    <span class="oxalate-mobile">
+                      {{ calculateTotalOxalate(snackItems) | number : "1.2-2" }}
+                      mg
+                    </span>
+                    <span class="soluble-mobile">
+                      {{
+                        calculateTotalSolubleOxalate(snackItems)
+                          | number : "1.2-2"
+                      }}
+                      mg
+                    </span>
+                  </td>
+                  <td class="serving-col hide-mobile"></td>
+                  <td class="oxalate-col hide-mobile">
+                    {{ calculateTotalOxalate(snackItems) | number : "1.2-2" }}
+                    mg
+                  </td>
+                  <td class="soluble-col hide-mobile">
+                    {{
+                      calculateTotalSolubleOxalate(snackItems)
+                        | number : "1.2-2"
+                    }}
+                    mg
+                  </td>
+                  <td class="action-col"></td>
+                </tr>
+              </tbody>
+            </table>
+
+            <div class="empty-state" *ngIf="snackItems.length === 0">
+              <span>No foods added yet</span>
+            </div>
+          </section>
+        </div>
+      </div>
+
+      <div class="calculator-dialog" *ngIf="showCalculator" [@dialogAnimation]>
+        <div class="dialog-overlay" (click)="closeCalculator()"></div>
+        <div class="dialog-content">
+          <app-calculate-oxalate
+            [mealType]="selectedMealType"
+            (mealLogged)="onMealLogged($event)"
+          ></app-calculate-oxalate>
+        </div>
       </div>
     </section>
-
-    <section class="meal-section">
-      <div class="title-and-button">
-        <h2 class="meal-title">Lunch</h2>
-        <button class="add-button" (click)="openCalculator('lunch')">
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            width="20"
-            height="20"
-            viewBox="0 0 20 20"
-            fill="none"
-            class="svg-icon"
-          >
-            <g
-              stroke-width="1.5"
-              stroke-linecap="round"
-              [attr.stroke]="isDarkTheme ? '#5fa8e6' : '#2b6cb0'"
-            >
-              <path d="M10 2v16M2 10h16" />
-            </g>
-          </svg>
-          <span class="label">Add Food</span>
-        </button>
-      </div>
-      <table class="food-table" *ngIf="lunchItems.length > 0">
-        <thead>
-          <tr class="header-detail">
-            <th class="food-name-col">Food Name</th>
-            <th class="serving-col hide-mobile">Serving Info</th>
-            <th class="oxalate-col hide-mobile">Total Oxalate</th>
-            <th class="soluble-col hide-mobile">Soluble Oxalate</th>
-            <th class="action-col"><span class="sr-only">Actions</span></th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr *ngFor="let food of lunchItems; let i = index" class="food-row">
-            <td class="food-name-col">
-              <button
-                class="food-name-btn"
-                (click)="food.isExpanded = !food.isExpanded"
-              >
-                {{ food.foodName }}
-                <span class="expand-icon">{{
-                  food.isExpanded ? "−" : "+"
-                }}</span>
-              </button>
-              <div class="mobile-details" *ngIf="food.isExpanded">
-                <div class="detail-row">
-                  <span class="detail-label">Serving:</span>
-                  <span
-                    >{{ food.numberOfServings }} {{ food.servingSize }}
-                    {{
-                      food.numberOfServings <= 1 ? "serving" : "servings"
-                    }}</span
-                  >
-                </div>
-                <div class="detail-row">
-                  <span class="detail-label">Total Oxalate:</span>
-                  <span>{{ food.oxalatePerServing }}</span>
-                </div>
-                <div class="detail-row">
-                  <span class="detail-label">Soluble Oxalate:</span>
-                  <span>{{ food.solubleOxalatePerServing }}</span>
-                </div>
-              </div>
-            </td>
-            <td class="serving-col hide-mobile">
-              {{ food.numberOfServings }} {{ food.servingSize }}
-              {{ food.numberOfServings <= 1 ? "serving" : "servings" }}
-            </td>
-            <td class="oxalate-col hide-mobile">
-              {{ food.oxalatePerServing }}
-            </td>
-            <td class="soluble-col hide-mobile">
-              {{ food.solubleOxalatePerServing }}
-            </td>
-            <td class="action-col">
-              <button
-                class="delete-btn"
-                (click)="deleteFood('lunch', i)"
-                [attr.aria-label]="'Delete ' + food.foodName"
-              >
-                <i class="material-icons">close</i>
-              </button>
-            </td>
-          </tr>
-          <tr class="total-row">
-            <td class="food-name-col">
-              Total
-              <span class="oxalate-mobile">
-                {{ calculateTotalOxalate(lunchItems) | number : "1.2-2" }} mg
-              </span>
-              <span class="soluble-mobile">
-                {{
-                  calculateTotalSolubleOxalate(lunchItems) | number : "1.2-2"
-                }}
-                mg
-              </span>
-            </td>
-            <td class="serving-col hide-mobile"></td>
-            <td class="oxalate-col hide-mobile">
-              {{ calculateTotalOxalate(lunchItems) | number : "1.2-2" }} mg
-            </td>
-            <td class="soluble-col hide-mobile">
-              {{ calculateTotalSolubleOxalate(lunchItems) | number : "1.2-2" }}
-              mg
-            </td>
-            <td class="action-col"></td>
-          </tr>
-        </tbody>
-      </table>
-
-      <div class="empty-state" *ngIf="lunchItems.length === 0">
-        <span>No foods added yet</span>
-      </div>
-    </section>
-
-    <section class="meal-section">
-      <div class="title-and-button">
-        <h2 class="meal-title">Dinner</h2>
-        <button class="add-button" (click)="openCalculator('dinner')">
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            width="20"
-            height="20"
-            viewBox="0 0 20 20"
-            fill="none"
-            class="svg-icon"
-          >
-            <g
-              stroke-width="1.5"
-              stroke-linecap="round"
-              [attr.stroke]="isDarkTheme ? '#5fa8e6' : '#2b6cb0'"
-            >
-              <path d="M10 2v16M2 10h16" />
-            </g>
-          </svg>
-          <span class="label">Add Food</span>
-        </button>
-      </div>
-      <table class="food-table" *ngIf="dinnerItems.length > 0">
-        <thead>
-          <tr class="header-detail">
-            <th class="food-name-col">Food Name</th>
-            <th class="serving-col hide-mobile">Serving Info</th>
-            <th class="oxalate-col hide-mobile">Total Oxalate</th>
-            <th class="soluble-col hide-mobile">Soluble Oxalate</th>
-            <th class="action-col"><span class="sr-only">Actions</span></th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr *ngFor="let food of dinnerItems; let i = index" class="food-row">
-            <td class="food-name-col">
-              <button
-                class="food-name-btn"
-                (click)="food.isExpanded = !food.isExpanded"
-              >
-                {{ food.foodName }}
-                <span class="expand-icon">{{
-                  food.isExpanded ? "−" : "+"
-                }}</span>
-              </button>
-              <div class="mobile-details" *ngIf="food.isExpanded">
-                <div class="detail-row">
-                  <span class="detail-label">Serving:</span>
-                  <span
-                    >{{ food.numberOfServings }} {{ food.servingSize }}
-                    {{
-                      food.numberOfServings <= 1 ? "serving" : "servings"
-                    }}</span
-                  >
-                </div>
-                <div class="detail-row">
-                  <span class="detail-label">Total Oxalate:</span>
-                  <span>{{ food.oxalatePerServing }}</span>
-                </div>
-                <div class="detail-row">
-                  <span class="detail-label">Soluble Oxalate:</span>
-                  <span>{{ food.solubleOxalatePerServing }}</span>
-                </div>
-              </div>
-            </td>
-            <td class="serving-col hide-mobile">
-              {{ food.numberOfServings }} {{ food.servingSize }}
-              {{ food.numberOfServings <= 1 ? "serving" : "servings" }}
-            </td>
-            <td class="oxalate-col hide-mobile">
-              {{ food.oxalatePerServing }}
-            </td>
-            <td class="soluble-col hide-mobile">
-              {{ food.solubleOxalatePerServing }}
-            </td>
-            <td class="action-col">
-              <button
-                class="delete-btn"
-                (click)="deleteFood('dinner', i)"
-                [attr.aria-label]="'Delete ' + food.foodName"
-              >
-                <i class="material-icons">close</i>
-              </button>
-            </td>
-          </tr>
-          <tr class="total-row">
-            <td class="food-name-col">
-              Total
-              <span class="oxalate-mobile">
-                {{ calculateTotalOxalate(dinnerItems) | number : "1.2-2" }} mg
-              </span>
-              <span class="soluble-mobile">
-                {{
-                  calculateTotalSolubleOxalate(dinnerItems) | number : "1.2-2"
-                }}
-                mg
-              </span>
-            </td>
-            <td class="serving-col hide-mobile"></td>
-            <td class="oxalate-col hide-mobile">
-              {{ calculateTotalOxalate(dinnerItems) | number : "1.2-2" }} mg
-            </td>
-            <td class="soluble-col hide-mobile">
-              {{ calculateTotalSolubleOxalate(dinnerItems) | number : "1.2-2" }}
-              mg
-            </td>
-            <td class="action-col"></td>
-          </tr>
-        </tbody>
-      </table>
-
-      <div class="empty-state" *ngIf="dinnerItems.length === 0">
-        <span>No foods added yet</span>
-      </div>
-    </section>
-
-    <section class="meal-section">
-      <div class="title-and-button">
-        <h2 class="meal-title">Snacks</h2>
-        <button class="add-button" (click)="openCalculator('snacks')">
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            width="20"
-            height="20"
-            viewBox="0 0 20 20"
-            fill="none"
-            class="svg-icon"
-          >
-            <g
-              stroke-width="1.5"
-              stroke-linecap="round"
-              [attr.stroke]="isDarkTheme ? '#5fa8e6' : '#2b6cb0'"
-            >
-              <path d="M10 2v16M2 10h16" />
-            </g>
-          </svg>
-          <span class="label">Add Food</span>
-        </button>
-      </div>
-      <table class="food-table" *ngIf="snackItems.length > 0">
-        <thead>
-          <tr class="header-detail">
-            <th class="food-name-col">Food Name</th>
-            <th class="serving-col hide-mobile">Serving Info</th>
-            <th class="oxalate-col hide-mobile">Total Oxalate</th>
-            <th class="soluble-col hide-mobile">Soluble Oxalate</th>
-            <th class="action-col"><span class="sr-only">Actions</span></th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr *ngFor="let food of snackItems; let i = index" class="food-row">
-            <td class="food-name-col">
-              <button
-                class="food-name-btn"
-                (click)="food.isExpanded = !food.isExpanded"
-              >
-                {{ food.foodName }}
-                <span class="expand-icon">{{
-                  food.isExpanded ? "−" : "+"
-                }}</span>
-              </button>
-              <div class="mobile-details" *ngIf="food.isExpanded">
-                <div class="detail-row">
-                  <span class="detail-label">Serving:</span>
-                  <span
-                    >{{ food.numberOfServings }} {{ food.servingSize }}
-                    {{
-                      food.numberOfServings <= 1 ? "serving" : "servings"
-                    }}</span
-                  >
-                </div>
-                <div class="detail-row">
-                  <span class="detail-label">Total Oxalate:</span>
-                  <span>{{ food.oxalatePerServing }}</span>
-                </div>
-                <div class="detail-row">
-                  <span class="detail-label">Soluble Oxalate:</span>
-                  <span>{{ food.solubleOxalatePerServing }}</span>
-                </div>
-              </div>
-            </td>
-            <td class="serving-col hide-mobile">
-              {{ food.numberOfServings }} {{ food.servingSize }}
-              {{ food.numberOfServings <= 1 ? "serving" : "servings" }}
-            </td>
-            <td class="oxalate-col hide-mobile">
-              {{ food.oxalatePerServing }}
-            </td>
-            <td class="soluble-col hide-mobile">
-              {{ food.solubleOxalatePerServing }}
-            </td>
-            <td class="action-col">
-              <button
-                class="delete-btn"
-                (click)="deleteFood('snacks', i)"
-                [attr.aria-label]="'Delete ' + food.foodName"
-              >
-                <i class="material-icons">close</i>
-              </button>
-            </td>
-          </tr>
-          <tr class="total-row">
-            <td class="food-name-col">
-              Total
-              <span class="oxalate-mobile">
-                {{ calculateTotalOxalate(snackItems) | number : "1.2-2" }} mg
-              </span>
-              <span class="soluble-mobile">
-                {{
-                  calculateTotalSolubleOxalate(snackItems) | number : "1.2-2"
-                }}
-                mg
-              </span>
-            </td>
-            <td class="serving-col hide-mobile"></td>
-            <td class="oxalate-col hide-mobile">
-              {{ calculateTotalOxalate(snackItems) | number : "1.2-2" }} mg
-            </td>
-            <td class="soluble-col hide-mobile">
-              {{ calculateTotalSolubleOxalate(snackItems) | number : "1.2-2" }}
-              mg
-            </td>
-            <td class="action-col"></td>
-          </tr>
-        </tbody>
-      </table>
-
-      <div class="empty-state" *ngIf="snackItems.length === 0">
-        <span>No foods added yet</span>
-      </div>
-    </section>
-  </div>
-</div>
-
-<div class="calculator-dialog" *ngIf="showCalculator" [@dialogAnimation]>
-  <div class="dialog-overlay" (click)="closeCalculator()"></div>
-  <div class="dialog-content">
-    <app-calculate-oxalate
-      [mealType]="selectedMealType"
-      (mealLogged)="onMealLogged($event)"
-    ></app-calculate-oxalate>
-  </div>
+  </main>
 </div>

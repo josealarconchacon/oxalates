@@ -7,6 +7,30 @@
   --spacing-unit: var(--spacing-2);
 }
 
+.app-container {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  background-color: var(--background-color);
+}
+
+.app-main {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  /* padding: 2rem; */
+  background-color: var(--background-color);
+}
+
+.content-area {
+  flex: 1;
+  max-width: 1200px;
+  margin-top: 100px;
+  padding: 2rem;
+  background-color: var(--background-color);
+  border-radius: 1rem;
+}
+
 .dark-theme {
   --mdc-theme-surface: #3a3a3a;
   --mdc-theme-on-surface: var(--text-color);
@@ -16,7 +40,7 @@
 }
 
 .daily-food-log {
-  max-width: 100%;
+  max-width: 1000px;
   margin: 0 auto;
   padding: var(--spacing-1);
   background: var(--background-color);
@@ -340,6 +364,9 @@ thead .header-detail th {
 }
 
 @media (max-width: 768px) {
+  .content-area {
+    max-width: 100%;
+  }
   .hide-mobile {
     display: none;
   }

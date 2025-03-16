@@ -35,6 +35,11 @@ export class ProfileComponent implements OnInit {
 
   presetColors: string[] = presetColors;
 
+  navItems = [
+    { title: 'Profile Info', section: 'profile' },
+    { title: 'Saved Items', section: 'saveItem', icon: 'fas fa-bookmark' },
+  ];
+
   constructor(
     private authService: AuthService,
     private storage: AngularFireStorage,

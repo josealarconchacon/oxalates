@@ -46,13 +46,15 @@
 
 .dark-theme .search-btn,
 .dark-theme .profile-btn,
-.dark-theme .user-icon-btn {
+.dark-theme .user-icon-btn,
+.dark-theme .calculate-btn {
   color: var(--text-color);
 }
 
 .dark-theme .search-btn:hover,
 .dark-theme .profile-btn:hover,
-.dark-theme .user-icon-btn:hover {
+.dark-theme .user-icon-btn:hover,
+.dark-theme .calculate-btn:hover {
   background-color: var(--gray-700);
 }
 
@@ -305,33 +307,32 @@ body {
 
 .search-btn,
 .profile-btn,
-.user-icon-btn {
-  background: none;
-  border: none;
-  cursor: pointer;
-  color: var(--text-primary);
-  width: 40px;
-  height: 40px;
-  border-radius: var(--radius-full);
+.user-icon-btn,
+.calculate-btn {
   display: flex;
   align-items: center;
-  justify-content: center;
-  transition: background-color var(--transition-fast);
-  padding: 0;
+  gap: 8px;
+  padding: 8px 12px;
+  border: none;
+  background: transparent;
+  color: var(--text-secondary);
+  border-radius: var(--radius-base);
+  cursor: pointer;
+  transition: all var(--transition-fast);
 }
 
 .search-btn:hover,
 .profile-btn:hover,
-.user-icon-btn:hover {
-  background-color: var(--surface-color);
+.user-icon-btn:hover,
+.calculate-btn:hover {
+  background-color: var(--gray-100);
+  color: var(--text-primary);
 }
 
-.search-btn mat-icon,
-.user-icon-btn mat-icon {
-  font-size: var(--font-size-xl);
-  width: 24px;
-  height: 24px;
-  color: var(--text-secondary);
+.search-btn span,
+.calculate-btn span {
+  font-size: 14px;
+  font-weight: 500;
 }
 
 .profile-btn {
@@ -515,6 +516,11 @@ body {
 
   .dark-theme .mobile-sidebar-nav .logout:hover {
     background-color: var(--danger-50);
+  }
+
+  .search-btn span,
+  .calculate-btn span {
+    display: none;
   }
 }
 

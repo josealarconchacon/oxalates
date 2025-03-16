@@ -7,6 +7,7 @@ import { AuthComponent } from './user-auth/auth/auth.component';
 import { ProfileComponent } from './user-auth/profile/profile.component';
 import { AuthGuard } from './user-auth/service/auth.guard';
 import { ContributionComponent } from './landing-page/contribution/contribution.component';
+import { FoodEntryComponent } from './user-auth/profile/food-entry/food-entry.component';
 
 const routes: Routes = [
   { path: 'auth', component: AuthComponent },
@@ -15,6 +16,11 @@ const routes: Routes = [
   { path: 'view-more', component: ViewMoreComponent },
   { path: 'contribution', component: ContributionComponent },
   { path: 'profile', component: ProfileComponent, canActivate: [AuthGuard] },
+  {
+    path: 'food-entry',
+    component: FoodEntryComponent,
+    canActivate: [AuthGuard],
+  },
   { path: '', redirectTo: '/auth', pathMatch: 'full' },
   { path: '**', redirectTo: '/auth' },
 ];

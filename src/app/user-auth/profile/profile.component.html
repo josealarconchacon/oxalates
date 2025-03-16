@@ -54,13 +54,6 @@
           >
             <i class="fas fa-bookmark"></i> Saved Items
           </a>
-          <a
-            [class.active]="(activeSection$ | async) === 'calculate-oxalate'"
-            (click)="setActiveSection('calculate-oxalate')"
-          >
-            <i class="fa fa-i-cursor" aria-hidden="true"></i> Calculate Daily
-            Intake
-          </a>
           <a (click)="onLogout()" class="logout">
             <i class="fas fa-sign-out-alt"></i> Logout
           </a>
@@ -108,7 +101,6 @@
           (close)="toggleChangePassword()"
         ></app-change-password>
         <app-save-items *ngSwitchCase="'saveItem'"></app-save-items>
-        <app-food-entry *ngSwitchCase="'calculate-oxalate'"></app-food-entry>
       </ng-container>
     </section>
   </main>

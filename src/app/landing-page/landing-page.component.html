@@ -1,43 +1,52 @@
-<main>
+<main class="main-container">
   <!-- Hero Section -->
   <section class="hero">
-    <div class="hero-content">
-      <div class="hero-img">
-        <img
-          class="hero-image"
-          src="../../assets/app-logo/landing-logo1.png"
-          alt="Oxalate Home Preview"
-        />
-      </div>
-      <div class="hero-text">
-        <h1>What are Oxalates?</h1>
-        <p>
-          Oxalates in food are naturally occurring compounds found in many
-          plants. They can accumulate in the body, causing health problems. They
-          are most well known for causing kidney stones, but can cause a myriad
-          of other potential issues.
-        </p>
+    <div class="container">
+      <div class="hero-content">
+        <div class="hero-img">
+          <img
+            class="hero-image"
+            src="../../assets/app-logo/landing-logo1.png"
+            alt="Oxalate Home Preview"
+          />
+        </div>
+        <div class="hero-text">
+          <h1>What are Oxalates?</h1>
+          <p>
+            Oxalates are naturally occurring compounds found in plants and
+            sometimes produced within the body. In excess, oxalates are most
+            well known for their association with kidney stones, but they can
+            also lead to a myriad of other health problems in sensitive
+            individuals.
+          </p>
+        </div>
       </div>
     </div>
   </section>
 
   <!-- Resources Section -->
-  <section>
-    <app-resources></app-resources>
+  <section class="section resources-section">
+    <div class="container">
+      <app-resources></app-resources>
+    </div>
   </section>
 
   <!-- Food Categories Section -->
-  <section>
-    <app-food-by-category></app-food-by-category>
+  <section class="section categories-section">
+    <div class="container">
+      <app-food-by-category></app-food-by-category>
+    </div>
   </section>
 
   <!-- Managing Oxalate Section -->
-  <section>
-    <app-managing-oxalate></app-managing-oxalate>
+  <section class="section managing-section">
+    <div class="container">
+      <app-managing-oxalate></app-managing-oxalate>
+    </div>
   </section>
 
   <!-- Footer Section -->
-  <section>
+  <section class="footer-section">
     <app-footer></app-footer>
   </section>
 </main>

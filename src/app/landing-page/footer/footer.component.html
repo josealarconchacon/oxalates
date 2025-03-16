@@ -6,7 +6,7 @@
           <li>
             <button
               class="search-button"
-              aria-label="Open search"
+              aria-label="Search for Foods"
               (click)="search()"
             >
               <svg
@@ -16,7 +16,7 @@
                 viewBox="0 0 24 24"
                 fill="none"
                 stroke="currentColor"
-                stroke-width="2"
+                stroke-width="1.5"
                 stroke-linecap="round"
                 stroke-linejoin="round"
                 class="search-icon"
@@ -24,16 +24,58 @@
                 <circle cx="11" cy="11" r="8"></circle>
                 <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
               </svg>
+              <span>Search for Foods</span>
             </button>
           </li>
           <li>
-            <a href="/contribution" class="footer-link contribution-link">
-              Support
+            <button
+              class="calculate-button"
+              aria-label="Calculate Daily Intake"
+              (click)="navigateToCalculateDailyIntake()"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="24"
+                height="24"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="1.5"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                class="calculate-icon"
+              >
+                <rect x="4" y="2" width="16" height="20" rx="2" ry="2"></rect>
+                <line x1="12" y1="10" x2="12" y2="14"></line>
+                <line x1="10" y1="12" x2="14" y2="12"></line>
+              </svg>
+              <span>Calculate Daily Intake</span>
+            </button>
+          </li>
+          <li>
+            <a href="/contribution" class="contribution-link">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="24"
+                height="24"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="1.5"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                class="support-icon"
+              >
+                <path
+                  d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"
+                ></path>
+              </svg>
+              <span>Support the Project</span>
             </a>
           </li>
         </ul>
       </nav>
     </div>
-    <p class="footer-text">2024 Oxalate Info.</p>
+    <p class="footer-text">© 2024 Oxalate Info.</p>
   </div>
 </footer>
