@@ -83,11 +83,23 @@
                       </div>
                       <div class="detail-row">
                         <span class="detail-label">Total Oxalate:</span>
-                        <span>{{ food.oxalatePerServing }}</span>
+                        <span
+                          >{{
+                            food.oxalatePerServing * food.numberOfServings
+                              | number : "1.2-2"
+                          }}
+                          mg</span
+                        >
                       </div>
                       <div class="detail-row">
                         <span class="detail-label">Soluble Oxalate:</span>
-                        <span>{{ food.solubleOxalatePerServing }}</span>
+                        <span
+                          >{{
+                            food.solubleOxalatePerServing *
+                              food.numberOfServings | number : "1.2-2"
+                          }}
+                          mg</span
+                        >
                       </div>
                     </div>
                   </td>
@@ -96,10 +108,18 @@
                     {{ food.numberOfServings <= 1 ? "serving" : "servings" }}
                   </td>
                   <td class="oxalate-col hide-mobile">
-                    {{ food.oxalatePerServing }}
+                    {{
+                      food.oxalatePerServing * food.numberOfServings
+                        | number : "1.2-2"
+                    }}
+                    mg
                   </td>
                   <td class="soluble-col hide-mobile">
-                    {{ food.solubleOxalatePerServing }}
+                    {{
+                      food.solubleOxalatePerServing * food.numberOfServings
+                        | number : "1.2-2"
+                    }}
+                    mg
                   </td>
                   <td class="action-col">
                     <button
@@ -214,11 +234,23 @@
                       </div>
                       <div class="detail-row">
                         <span class="detail-label">Total Oxalate:</span>
-                        <span>{{ food.oxalatePerServing }}</span>
+                        <span
+                          >{{
+                            food.oxalatePerServing * food.numberOfServings
+                              | number : "1.2-2"
+                          }}
+                          mg</span
+                        >
                       </div>
                       <div class="detail-row">
                         <span class="detail-label">Soluble Oxalate:</span>
-                        <span>{{ food.solubleOxalatePerServing }}</span>
+                        <span
+                          >{{
+                            food.solubleOxalatePerServing *
+                              food.numberOfServings | number : "1.2-2"
+                          }}
+                          mg</span
+                        >
                       </div>
                     </div>
                   </td>
@@ -227,10 +259,18 @@
                     {{ food.numberOfServings <= 1 ? "serving" : "servings" }}
                   </td>
                   <td class="oxalate-col hide-mobile">
-                    {{ food.oxalatePerServing }}
+                    {{
+                      food.oxalatePerServing * food.numberOfServings
+                        | number : "1.2-2"
+                    }}
+                    mg
                   </td>
                   <td class="soluble-col hide-mobile">
-                    {{ food.solubleOxalatePerServing }}
+                    {{
+                      food.solubleOxalatePerServing * food.numberOfServings
+                        | number : "1.2-2"
+                    }}
+                    mg
                   </td>
                   <td class="action-col">
                     <button
@@ -341,11 +381,23 @@
                       </div>
                       <div class="detail-row">
                         <span class="detail-label">Total Oxalate:</span>
-                        <span>{{ food.oxalatePerServing }}</span>
+                        <span
+                          >{{
+                            food.oxalatePerServing * food.numberOfServings
+                              | number : "1.2-2"
+                          }}
+                          mg</span
+                        >
                       </div>
                       <div class="detail-row">
                         <span class="detail-label">Soluble Oxalate:</span>
-                        <span>{{ food.solubleOxalatePerServing }}</span>
+                        <span
+                          >{{
+                            food.solubleOxalatePerServing *
+                              food.numberOfServings | number : "1.2-2"
+                          }}
+                          mg</span
+                        >
                       </div>
                     </div>
                   </td>
@@ -354,10 +406,18 @@
                     {{ food.numberOfServings <= 1 ? "serving" : "servings" }}
                   </td>
                   <td class="oxalate-col hide-mobile">
-                    {{ food.oxalatePerServing }}
+                    {{
+                      food.oxalatePerServing * food.numberOfServings
+                        | number : "1.2-2"
+                    }}
+                    mg
                   </td>
                   <td class="soluble-col hide-mobile">
-                    {{ food.solubleOxalatePerServing }}
+                    {{
+                      food.solubleOxalatePerServing * food.numberOfServings
+                        | number : "1.2-2"
+                    }}
+                    mg
                   </td>
                   <td class="action-col">
                     <button
@@ -470,11 +530,23 @@
                       </div>
                       <div class="detail-row">
                         <span class="detail-label">Total Oxalate:</span>
-                        <span>{{ food.oxalatePerServing }}</span>
+                        <span
+                          >{{
+                            food.oxalatePerServing * food.numberOfServings
+                              | number : "1.2-2"
+                          }}
+                          mg</span
+                        >
                       </div>
                       <div class="detail-row">
                         <span class="detail-label">Soluble Oxalate:</span>
-                        <span>{{ food.solubleOxalatePerServing }}</span>
+                        <span
+                          >{{
+                            food.solubleOxalatePerServing *
+                              food.numberOfServings | number : "1.2-2"
+                          }}
+                          mg</span
+                        >
                       </div>
                     </div>
                   </td>
@@ -483,10 +555,18 @@
                     {{ food.numberOfServings <= 1 ? "serving" : "servings" }}
                   </td>
                   <td class="oxalate-col hide-mobile">
-                    {{ food.oxalatePerServing }}
+                    {{
+                      food.oxalatePerServing * food.numberOfServings
+                        | number : "1.2-2"
+                    }}
+                    mg
                   </td>
                   <td class="soluble-col hide-mobile">
-                    {{ food.solubleOxalatePerServing }}
+                    {{
+                      food.solubleOxalatePerServing * food.numberOfServings
+                        | number : "1.2-2"
+                    }}
+                    mg
                   </td>
                   <td class="action-col">
                     <button

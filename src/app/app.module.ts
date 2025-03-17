@@ -51,6 +51,7 @@ import { SearchInputComponent } from './landing-page/dialog-service/oxalate/sear
 import { SavedMealsComponent } from './user-auth/profile/calculate-oxalate/saved-meals/saved-meals.component';
 import { FoodEntryComponent } from './user-auth/profile/food-entry/food-entry.component';
 import { ThemeService } from './shared/services/theme.service';
+import { BeCautiousComponent } from './landing-page/be-cautious/be-cautious.component';
 
 export function initializeApp(configService: ConfigService) {
   return (): Promise<void> => {
@@ -117,6 +118,7 @@ export function initializeApp(configService: ConfigService) {
     HeaderComponent,
     FooterComponent,
     AuthMessageComponent,
+    BeCautiousComponent,
   ],
   providers: [
     ConfigService,
