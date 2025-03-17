@@ -8,6 +8,7 @@ import { ProfileComponent } from './user-auth/profile/profile.component';
 import { AuthGuard } from './user-auth/service/auth.guard';
 import { ContributionComponent } from './landing-page/contribution/contribution.component';
 import { FoodEntryComponent } from './user-auth/profile/food-entry/food-entry.component';
+import { SuggestionsComponent } from './landing-page/suggestions/suggestions.component';
 
 const routes: Routes = [
   { path: 'auth', component: AuthComponent },
@@ -15,6 +16,7 @@ const routes: Routes = [
   { path: 'oxalate', component: OxalateComponent },
   { path: 'view-more', component: ViewMoreComponent },
   { path: 'contribution', component: ContributionComponent },
+  { path: 'suggestions', component: SuggestionsComponent },
   { path: 'profile', component: ProfileComponent, canActivate: [AuthGuard] },
   {
     path: 'food-entry',

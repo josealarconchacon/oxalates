@@ -44,6 +44,10 @@ export class FooterComponent implements OnInit, OnDestroy {
     }
   }
 
+  navigateToSuggestions() {
+    this.router.navigate(['/suggestions']);
+  }
+
   ngOnDestroy(): void {
     this.routerSubscription?.unsubscribe();
   }
