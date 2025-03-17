@@ -218,6 +218,9 @@
   :host {
     --content-height: min(450px, 90vh);
   }
+  .auth-message-content {
+    margin-bottom: 75px;
+  }
 
   .demo-deck {
     padding: var(--spacing-md);
@@ -233,6 +236,9 @@
   :host {
     --content-width: min(450px, 95vw);
     --border-radius: 20px;
+  }
+  .auth-message-content {
+    margin-bottom: 75px;
   }
 
   .welcome-content-wrapper {
@@ -267,6 +273,9 @@
   .auth-message-overlay {
     padding: 0;
   }
+  .auth-message-content {
+    margin-bottom: 75px;
+  }
 
   .demo-deck {
     padding: var(--spacing-md) var(--spacing-sm);
@@ -283,6 +292,9 @@
 @media (max-height: 600px) {
   .progress-indicators {
     margin-bottom: var(--spacing-sm);
+  }
+  .auth-message-content {
+    margin-bottom: 75px;
   }
 
   .slide-image {
