@@ -76,7 +76,8 @@
 }
 
 .search-button,
-.calculate-button {
+.calculate-button,
+.suggestions-button {
   background-color: transparent;
   border: none;
   cursor: pointer;
@@ -93,13 +94,15 @@
 }
 
 .search-button:hover,
-.calculate-button:hover {
+.calculate-button:hover,
+.suggestions-button:hover {
   color: #3a3a3a;
 }
 
 .search-icon,
 .calculate-icon,
-.support-icon {
+.support-icon,
+.suggestions-icon {
   width: 16px;
   height: 16px;
   opacity: 0.7;
@@ -110,7 +113,8 @@
 
 .search-button:hover .search-icon,
 .calculate-button:hover .calculate-icon,
-.contribution-link:hover .support-icon {
+.contribution-link:hover .support-icon,
+.suggestions-button:hover .suggestions-icon {
   opacity: 1;
 }
 
@@ -154,14 +158,16 @@
 
   .search-button,
   .calculate-button,
-  .contribution-link {
+  .contribution-link,
+  .suggestions-button {
     padding: 0.5rem 0.625rem;
     font-size: 0.813rem;
   }
 
   .search-icon,
   .calculate-icon,
-  .support-icon {
+  .support-icon,
+  .suggestions-icon {
     width: 14px;
     height: 14px;
   }
@@ -178,7 +184,8 @@
 
   .search-icon,
   .calculate-icon,
-  .support-icon {
+  .support-icon,
+  .suggestions-icon {
     width: 16px;
     height: 16px;
   }
@@ -195,13 +202,15 @@
 
   .search-button,
   .calculate-button,
-  .contribution-link {
+  .contribution-link,
+  .suggestions-button {
     padding: 0.75rem 1rem;
   }
 
   .search-icon,
   .calculate-icon,
-  .support-icon {
+  .support-icon,
+  .suggestions-icon {
     width: 18px;
     height: 18px;
   }
@@ -210,7 +219,8 @@
 @media (hover: none) {
   .search-button:hover,
   .calculate-button:hover,
-  .contribution-link:hover {
+  .contribution-link:hover,
+  .suggestions-button:hover {
     color: #8892a8;
   }
 }
@@ -219,9 +229,11 @@
   .search-button,
   .calculate-button,
   .contribution-link,
+  .suggestions-button,
   .search-icon,
   .calculate-icon,
-  .support-icon {
+  .support-icon,
+  .suggestions-icon {
     transition: none;
   }
 }

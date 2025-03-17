@@ -1,7 +1,6 @@
 :root {
-  /* Modern color palette */
   --primary-color: #2563eb;
-  --primary-hover: #1d4ed8;
+  --primary-hover: #7b9efc;
   --background-color: #f8fafc;
   --surface-color: #ffffff;
   --text-primary: #0f172a;
@@ -11,13 +10,11 @@
   --border-color: #e2e8f0;
   --accent-color: #eff6ff;
 
-  /* Shadows */
   --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
-  --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+  --shadow-md: 0 1px 2px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
   --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1),
     0 4px 6px -4px rgb(0 0 0 / 0.1);
 
-  /* Typography */
   --font-sans: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont,
     "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
 }
@@ -58,7 +55,7 @@ body {
 .section-header {
   margin-bottom: 3rem;
   text-align: center;
-  border: 1px solid transparent; /* Helps visualize layout */
+  border: 1px solid transparent;
 }
 
 .section-header h2 {
@@ -87,7 +84,7 @@ body {
   border-radius: 16px;
   position: relative;
   z-index: 1;
-  border: 1px solid transparent; /* Helps visualize layout */
+  border: 1px solid transparent;
 }
 
 .tab-button {
@@ -357,7 +354,6 @@ select.form-input {
   opacity: 0.7;
 }
 
-/* Responsive Design */
 @media (min-width: 768px) {
   .suggestions-container {
     padding: 3rem;
@@ -392,7 +388,6 @@ select.form-input {
   }
 }
 
-/* Accessibility */
 @media (prefers-reduced-motion: reduce) {
   * {
     animation: none !important;
@@ -400,7 +395,6 @@ select.form-input {
   }
 }
 
-/* High Contrast Mode */
 @media (prefers-contrast: high) {
   :root {
     --primary-color: #0000ee;
@@ -411,7 +405,6 @@ select.form-input {
   }
 }
 
-/* Accessibility Styles */
 .sr-only {
   position: absolute;
   width: 1px;
@@ -429,14 +422,12 @@ select.form-input {
   margin-left: 0.25rem;
 }
 
-/* Focus Styles */
 :focus-visible {
   outline: 2px solid var(--primary-color);
   outline-offset: 2px;
   border-radius: 4px;
 }
 
-/* Select Wrapper */
 .select-wrapper {
   position: relative;
 }
@@ -455,7 +446,6 @@ select.form-input {
   pointer-events: none;
 }
 
-/* FAQ Animations */
 .faq-button svg {
   transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
@@ -468,7 +458,6 @@ select.form-input {
   color: var(--primary-color);
 }
 
-/* Form Validation States */
 .form-input.ng-touched.ng-invalid {
   border-color: var(--error-color);
 }
@@ -477,7 +466,6 @@ select.form-input {
   border-color: var(--success-color);
 }
 
-/* Loading States */
 .submit-button.loading {
   position: relative;
   color: transparent;
@@ -503,7 +491,6 @@ select.form-input {
   }
 }
 
-/* Micro-interactions */
 .form-input:focus::placeholder {
   transform: translateX(4px);
   opacity: 0.7;
@@ -513,7 +500,6 @@ select.form-input {
   transition: all 0.2s ease;
 }
 
-/* Description Guidelines */
 .description-guidelines {
   background-color: var(--accent-color);
   border-radius: 12px;
@@ -547,7 +533,6 @@ select.form-input {
   color: var(--primary-color);
 }
 
-/* Error Message Enhancements */
 .error-message {
   display: flex;
   align-items: center;
@@ -564,7 +549,6 @@ select.form-input {
   flex-shrink: 0;
 }
 
-/* Input Hint Enhancements */
 .input-hint {
   display: flex;
   align-items: center;
@@ -574,7 +558,6 @@ select.form-input {
   margin-top: 0.5rem;
 }
 
-/* FAQ Enhancements */
 .faq-question {
   flex: 1;
   text-align: left;
@@ -586,7 +569,6 @@ select.form-input {
   border-radius: 8px;
 }
 
-/* Print Styles */
 @media print {
   .suggestions-container {
     box-shadow: none;
@@ -604,7 +586,6 @@ select.form-input {
   }
 }
 
-/* Ensure base visibility */
 [role="tabpanel"] {
   display: block;
   opacity: 1;
@@ -615,21 +596,18 @@ select.form-input {
   display: none;
 }
 
-/* Ensure form visibility */
 app-suggestion-form,
 app-support-form {
   display: block;
   width: 100%;
 }
 
-/* Debug styles - remove after fixing */
 .section-header,
 .tab-buttons,
 .form-container {
-  border: 1px solid transparent; /* Helps visualize layout */
+  border: 1px solid transparent;
 }
 
-/* Loading States */
 .loading-overlay {
   position: absolute;
   top: 0;
@@ -661,7 +639,6 @@ app-support-form {
   }
 }
 
-/* Form Container */
 .form-container {
   position: relative;
   min-height: 300px;

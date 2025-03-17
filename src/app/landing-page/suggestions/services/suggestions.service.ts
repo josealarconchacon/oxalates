@@ -28,7 +28,7 @@ export class SuggestionsService {
     {
       question: 'How do I track my daily oxalate intake?',
       answer:
-        'You can use our daily tracking feature in the app. Simply log in, go to your profile, and click on "Calculate Daily Intake" to start tracking.',
+        'You can use the Calculate Daily Intake feature in the app. Simply log in, go to the "Calculate Daily Intake" page, and click on "+ Add Food" to start tracking.',
       isOpen: false,
     },
     {
@@ -40,7 +40,7 @@ export class SuggestionsService {
     {
       question: 'Can I export my tracking data?',
       answer:
-        'Yes, you can export your data in CSV format from your profile settings. This feature is available for all registered users.',
+        'Yes, you can export your data in CSV format from the "Calculate Daily Intake" page. Switch between days, or top on the calendar button to select the day and data you want to export. This feature is available for all registered users.',
       isOpen: false,
     },
     {
