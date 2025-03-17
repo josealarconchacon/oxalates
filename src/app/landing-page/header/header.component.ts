@@ -7,13 +7,15 @@ import { map, Observable } from 'rxjs';
 import { MatIconModule } from '@angular/material/icon';
 import { CommonModule } from '@angular/common';
 import { ThemeService } from '../../shared/services/theme.service';
+import { AuthMessageService } from '../../shared/services/auth-message.service';
+import { AuthMessageComponent } from '../../shared/components/auth-message/auth-message.component';
 
 @Component({
   selector: 'app-header',
   templateUrl: './header.component.html',
   styleUrls: ['./header.component.css'],
   standalone: true,
-  imports: [CommonModule, MatIconModule],
+  imports: [CommonModule, MatIconModule, AuthMessageComponent],
 })
 export class HeaderComponent implements OnInit {
   isNavOpen = false;
@@ -49,7 +51,8 @@ export class HeaderComponent implements OnInit {
     private authService: AuthService,
     private navigationService: NavigationService,
     private breakpointObserver: BreakpointObserver,
-    private themeService: ThemeService
+    private themeService: ThemeService,
+    private authMessageService: AuthMessageService
   ) {
     this.activeSection$ = this.navigationService.activeSection$;
     this.isMobile$ = this.breakpointObserver
@@ -148,12 +151,11 @@ export class HeaderComponent implements OnInit {
   }
 
   navigateToCalculateDailyIntake(): void {
-    if (!this.isLoggedIn) {
-      this.router.navigate(['/auth']);
-      return;
+    if (this.authService.isAuthenticated()) {
+      this.router.navigate(['/food-entry']);
+    } else {
+      this.authMessageService.showAuthMessage();
     }
-    this.router.navigate(['/food-entry']);
-    this.closeNav();
   }
 
   navigateToSavedItems(): void {

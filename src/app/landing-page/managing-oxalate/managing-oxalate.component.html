@@ -1,26 +1,36 @@
-<section class="use" id="frq">
-  <h2>{{ content?.title }}</h2>
+<section class="managing-oxalate" id="frq">
+  <div class="section-header">
+    <h2>{{ content?.title }}</h2>
+    <div class="section-description" *ngIf="content?.description">
+      <p>{{ content?.description }}</p>
+    </div>
+  </div>
+
   <div class="use-content">
     <div class="info">
-      <p>{{ content?.description }}</p>
-
-      <h3>Tips for Managing Oxalate Intake</h3>
-      <div class="tips">
-        <div class="tip-item" *ngFor="let tip of content?.tips">
-          <h4>{{ tip.title }}</h4>
-          <p>{{ tip.description }}</p>
+      <div class="tips-grid">
+        <div class="tip-card" *ngFor="let tip of content?.tips">
+          <div class="tip-icon">
+            <mat-icon [ngClass]="tip.iconClass">{{ tip.icon }}</mat-icon>
+          </div>
+          <div class="tip-content">
+            <h4>{{ tip.title }}</h4>
+            <p>
+              {{ tip.description }}
+              <a
+                *ngIf="tip.title === 'Community Support'"
+                [href]="content?.link"
+                target="_blank"
+                rel="noopener noreferrer"
+                class="community-link"
+              >
+                Join here
+                <mat-icon class="external-link-icon">open_in_new</mat-icon>
+              </a>
+            </p>
+          </div>
         </div>
       </div>
-
-      <h3>Community Support</h3>
-      <p>
-        Join the
-        <a [href]="content?.link" target="_blank" rel="noopener noreferrer"
-          >Trying Low Oxalates (TLO)</a
-        >
-        community to get support with your journey.
-        <a [href]="content?.link" target="_blank" rel="noopener noreferrer"></a>
-      </p>
     </div>
   </div>
 </section>

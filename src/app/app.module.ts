@@ -20,6 +20,7 @@ import { AngularFireAnalyticsModule } from '@angular/fire/compat/analytics';
 import { AngularFireAuthModule } from '@angular/fire/compat/auth';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
+import { AuthMessageComponent } from './shared/components/auth-message/auth-message.component';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -115,6 +116,7 @@ export function initializeApp(configService: ConfigService) {
     ContributionComponent,
     HeaderComponent,
     FooterComponent,
+    AuthMessageComponent,
   ],
   providers: [
     ConfigService,

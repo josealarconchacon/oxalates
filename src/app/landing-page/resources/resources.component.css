@@ -8,7 +8,7 @@
   color: var(--text-color);
   font-size: 1.8rem;
   font-weight: 600;
-  margin-top: 40px;
+  margin-top: 60px;
   margin-bottom: 40px;
   position: relative;
   display: inline-block;
@@ -23,7 +23,7 @@
   left: 50%;
   transform: translateX(-50%);
   border-radius: 2px;
-  background: var(--primary-color);
+  background: #474747;
   display: block;
 }
 
