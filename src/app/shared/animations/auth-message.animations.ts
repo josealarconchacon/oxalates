@@ -6,6 +6,7 @@ import {
   state,
   query,
   group,
+  keyframes,
 } from '@angular/animations';
 
 export const fadeInOut = trigger('fadeInOut', [
@@ -164,4 +165,19 @@ export const indicatorPulse = trigger('indicatorPulse', [
   state('false', style({ transform: 'scale(1)' })),
   transition('false => true', animate('300ms ease-out')),
   transition('true => false', animate('300ms ease-in')),
+]);
+
+export const pulseAnimation = trigger('pulseAnimation', [
+  state('void', style({})),
+  state('*', style({})),
+  transition('* <=> *', [
+    animate(
+      '1000ms ease-in-out',
+      keyframes([
+        style({ transform: 'scale(1)', offset: 0 }),
+        style({ transform: 'scale(1.05)', offset: 0.5 }),
+        style({ transform: 'scale(1)', offset: 1.0 }),
+      ])
+    ),
+  ]),
 ]);
