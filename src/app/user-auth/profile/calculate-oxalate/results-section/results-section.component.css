@@ -10,9 +10,9 @@
 }
 
 .dark-theme .results-container {
-  background: var(--card-background);
-  box-shadow: var(--shadow-md);
-  border-color: var(--border-color);
+  background: var(--card-background-dark, #1a1a1a);
+  box-shadow: var(--shadow-md-dark, 0 4px 6px rgba(0, 0, 0, 0.3));
+  border-color: var(--border-color-dark, #2a2a2a);
 }
 
 .title-container {
@@ -31,7 +31,7 @@
 }
 
 .dark-theme .title {
-  color: var(--text-color);
+  color: var(--text-color-dark, #ffffff);
 }
 
 .share-icon {
@@ -45,7 +45,7 @@
 }
 
 .dark-theme .share-icon {
-  color: var(--primary-color);
+  color: var(--primary-color-dark, #6ba4ff);
 }
 
 .share-icon:hover {
@@ -53,13 +53,18 @@
 }
 
 .dark-theme .share-icon:hover {
-  background: var(--hover-background);
+  background: var(--hover-background-dark, rgba(107, 164, 255, 0.1));
 }
 
 .share-icon:disabled {
   opacity: 0.5;
   cursor: not-allowed;
   color: var(--text-muted);
+}
+
+.dark-theme .share-icon:disabled {
+  opacity: 0.5;
+  color: var(--text-muted-dark, #666666);
 }
 
 .share-icon i {
@@ -85,8 +90,8 @@
 }
 
 .dark-theme .total-oxalates {
-  background: var(--card-background);
-  border-color: var(--border-color);
+  background: var(--card-background-dark, #1a1a1a);
+  border-color: var(--border-color-dark, #2a2a2a);
 }
 
 .total-oxalates span {
@@ -97,7 +102,7 @@
 }
 
 .dark-theme .total-oxalates span {
-  color: var(--text-color);
+  color: var(--text-color-dark, #ffffff);
 }
 
 .indicators-and-totals {
@@ -126,8 +131,8 @@
 }
 
 .dark-theme .bar-chart {
-  background-color: var(--background-color);
-  border-color: var(--border-color);
+  background-color: var(--background-color-dark, #121212);
+  border-color: var(--border-color-dark, #2a2a2a);
 }
 
 .bar {
@@ -143,7 +148,7 @@
 }
 
 .dark-theme .bar.green {
-  background-color: var(--success-color);
+  background-color: var(--success-color-dark, #4caf50);
 }
 
 .bar.yellow {
@@ -152,7 +157,7 @@
 }
 
 .dark-theme .bar.yellow {
-  background-color: var(--warning-color);
+  background-color: var(--warning-color-dark, #ffc107);
 }
 
 .bar.red {
@@ -161,7 +166,7 @@
 }
 
 .dark-theme .bar.red {
-  background-color: var(--error-color);
+  background-color: var(--error-color-dark, #f44336);
 }
 
 .bar.dark-red {
@@ -170,7 +175,7 @@
 }
 
 .dark-theme .bar.dark-red {
-  background-color: var(--error-dark-color);
+  background-color: var(--error-dark-color-dark, #b71c1c);
 }
 
 .indicator-label {
@@ -181,7 +186,7 @@
 }
 
 .dark-theme .indicator-label {
-  color: var(--text-color);
+  color: var(--text-color-dark, #ffffff);
 }
 
 @media (max-width: 768px) {
