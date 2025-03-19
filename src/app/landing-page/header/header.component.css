@@ -7,68 +7,91 @@
   background-color: var(--header-bg-scrolled-dark);
   box-shadow: var(--header-shadow-dark);
   backdrop-filter: var(--header-backdrop);
+  border-bottom: 1px solid var(--border-color);
 }
 
 .dark-theme .logo-container {
-  color: var(--text-color);
+  color: var(--text-primary);
+}
+
+.dark-theme .hamburger {
+  background-color: transparent;
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-base);
 }
 
 .dark-theme .hamburger:hover {
-  background-color: var(--gray-700);
+  background-color: var(--hover-background);
+  border-color: var(--primary-color);
 }
 
 .dark-theme .hamburger .bar {
-  background-color: var(--text-color);
+  background-color: var(--text-primary);
 }
 
 .dark-theme .nav-close::before,
 .dark-theme .nav-close::after {
-  background-color: var(--text-color);
+  background-color: var(--text-primary);
 }
 
 .dark-theme .nav-close:hover {
-  background-color: var(--gray-700);
+  background-color: var(--hover-background);
+  border-color: var(--primary-color);
 }
 
 .dark-theme .nav-link {
   color: var(--text-secondary);
+  border: 1px solid transparent;
+  border-radius: var(--radius-base);
 }
 
 .dark-theme .nav-link:hover {
-  color: var(--text-color);
-  background-color: var(--gray-700);
+  color: var(--text-primary);
+  background-color: var(--hover-background);
+  border-color: var(--primary-color);
 }
 
 .dark-theme .nav-link.active {
   color: var(--primary-color);
-  background-color: var(--gray-700);
+  background-color: var(--nav-active);
+  border-color: var(--primary-color);
 }
 
 .dark-theme .search-btn,
 .dark-theme .profile-btn,
 .dark-theme .user-icon-btn,
 .dark-theme .calculate-btn {
-  color: var(--text-color);
+  color: var(--text-primary);
+  background-color: transparent;
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-base);
 }
 
 .dark-theme .search-btn:hover,
 .dark-theme .profile-btn:hover,
 .dark-theme .user-icon-btn:hover,
 .dark-theme .calculate-btn:hover {
-  background-color: var(--gray-700);
+  background-color: var(--hover-background);
+  border-color: var(--primary-color);
+  color: var(--primary-color);
 }
 
 .dark-theme .mobile-sidebar-nav {
   background-color: var(--background-color);
+  border-left: 1px solid var(--border-color);
 }
 
 .dark-theme .mobile-sidebar-nav .nav-link {
-  color: var(--text-color);
+  color: var(--text-primary);
+  border: 1px solid transparent;
+  border-radius: var(--radius-base);
 }
 
 .dark-theme .mobile-sidebar-nav .nav-link:hover,
 .dark-theme .mobile-sidebar-nav .nav-link.active {
-  background-color: var(--gray-700);
+  background-color: var(--nav-active);
+  color: var(--primary-color);
+  border-color: var(--primary-color);
 }
 
 .dark-theme .profile-info-container:hover {
