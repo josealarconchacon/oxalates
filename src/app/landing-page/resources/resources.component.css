@@ -6,7 +6,7 @@
 
 .resource-title {
   color: var(--text-secondary);
-  font-size: var(--font-size-2xl);
+  font-size: 2rem;
   font-weight: 600;
   margin-top: 60px;
   margin-bottom: 40px;
