@@ -309,3 +309,74 @@ h6 {
     transition: none;
   }
 }
+
+/* Dark theme styles */
+:host-context(.dark-theme) .container {
+  background: var(--container-bg-dark, rgba(30, 30, 40, 0.7));
+  border-color: var(--container-border-dark, rgba(110, 102, 255, 0.15));
+  box-shadow: 0 10px 30px -5px var(--shadow-dark, rgba(0, 0, 0, 0.2));
+}
+
+:host-context(.dark-theme) .header-text h2 {
+  color: var(--dark-text-color, #e1e1e1);
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+:host-context(.dark-theme) h6 {
+  color: var(--dark-text-color, #e1e1e1);
+}
+
+:host-context(.dark-theme) .warning-icon {
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.3));
+  color: var(--warning-color, #ffa726);
+}
+
+:host-context(.dark-theme) .warning-pulse {
+  background: rgba(255, 170, 0, 0.2);
+}
+
+:host-context(.dark-theme) .highlight {
+  background-color: var(--highlight-bg-dark, rgba(0, 150, 136, 0.2));
+  color: var(--accent-color-dark, #4db6ac);
+}
+
+:host-context(.dark-theme) .highlight:hover {
+  background-color: rgba(0, 150, 136, 0.3);
+}
+
+/* Media query dark theme adjustments */
+@media (max-width: 992px) {
+  :host-context(.dark-theme) .container {
+    background: rgba(30, 30, 40, 0.8);
+  }
+}
+
+@media (max-width: 768px) {
+  :host-context(.dark-theme) .container {
+    box-shadow: 0 8px 24px -4px rgba(0, 0, 0, 0.3);
+  }
+}
+
+/* High contrast support in dark theme */
+@media (prefers-contrast: high) {
+  :host-context(.dark-theme) .container {
+    background: rgba(20, 20, 30, 0.95);
+    border-color: rgba(255, 255, 255, 0.2);
+  }
+
+  :host-context(.dark-theme) .highlight {
+    background-color: rgba(0, 150, 136, 0.4);
+    color: #ffffff;
+  }
+}
+
+/* Reduced motion support in dark theme */
+@media (prefers-reduced-motion: reduce) {
+  :host-context(.dark-theme) .warning-pulse {
+    animation: none;
+  }
+
+  :host-context(.dark-theme) .highlight:hover {
+    transform: none;
+  }
+}
