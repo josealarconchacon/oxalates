@@ -32,11 +32,11 @@
 }
 
 .dark-theme {
-  --mdc-theme-surface: #3a3a3a;
-  --mdc-theme-on-surface: var(--text-color);
+  --mdc-theme-surface: #2d2d2d;
+  --mdc-theme-on-surface: #e0e0e0;
   --mdc-theme-primary: var(--primary-color);
-  --mdc-elevation-1: var(--shadow-sm);
-  --mdc-elevation-2: var(--shadow-md);
+  --mdc-elevation-1: 0 2px 4px rgba(0, 0, 0, 0.2);
+  --mdc-elevation-2: 0 4px 8px rgba(0, 0, 0, 0.3);
 }
 
 .daily-food-log {
@@ -85,7 +85,7 @@ thead .header-detail th {
 }
 
 .dark-theme .food-table thead {
-  background: rgba(255, 255, 255, 0.02);
+  background: rgba(255, 255, 255, 0.05);
 }
 
 .food-table th {
@@ -126,6 +126,10 @@ thead .header-detail th {
   transition: color 0.3s ease;
 }
 
+.dark-theme .food-row td {
+  color: var(--mdc-theme-on-surface);
+}
+
 .food-name-btn {
   width: 100%;
   text-align: left;
@@ -148,7 +152,7 @@ thead .header-detail th {
 }
 
 .dark-theme .food-name-btn:hover {
-  background-color: #3a3a3a;
+  background-color: rgba(255, 255, 255, 0.05);
   color: var(--primary-color);
 }
 
@@ -171,8 +175,8 @@ thead .header-detail th {
 }
 
 .dark-theme .mobile-details {
-  background: #3a3a3a;
-  border-color: var(--border-color);
+  background: rgba(255, 255, 255, 0.02);
+  border-color: rgba(255, 255, 255, 0.1);
 }
 
 .detail-label {
@@ -193,8 +197,8 @@ thead .header-detail th {
 }
 
 .dark-theme .meal-section {
-  background: #3a3a3a;
-  border-color: var(--border-color);
+  background: var(--mdc-theme-surface);
+  border-color: rgba(255, 255, 255, 0.1);
   box-shadow: var(--mdc-elevation-1);
 }
 
@@ -205,6 +209,10 @@ thead .header-detail th {
   margin-bottom: 1rem;
   letter-spacing: -0.02em;
   transition: color 0.3s ease;
+}
+
+.dark-theme .meal-title {
+  color: var(--mdc-theme-on-surface);
 }
 
 .empty-state {
@@ -218,9 +226,9 @@ thead .header-detail th {
 }
 
 .dark-theme .empty-state {
-  color: var(--text-secondary);
-  background: #3a3a3a;
-  border-color: var(--border-color);
+  color: rgba(255, 255, 255, 0.6);
+  background: rgba(255, 255, 255, 0.02);
+  border-color: rgba(255, 255, 255, 0.1);
 }
 
 .add-button {
@@ -240,20 +248,14 @@ thead .header-detail th {
 }
 
 .dark-theme .add-button {
-  background: #3a3a3a;
-  border-color: var(--border-color);
+  background: rgba(90, 172, 132, 0.1);
+  border-color: rgba(90, 172, 132, 0.2);
   color: var(--primary-color);
 }
 
-.add-button:hover {
-  background: rgba(90, 172, 132, 0.15);
-  transform: translateY(-1px);
-  box-shadow: var(--mdc-elevation-1);
-}
-
 .dark-theme .add-button:hover {
-  background: #3a3a3a;
-  border-color: var(--primary-color);
+  background: rgba(90, 172, 132, 0.15);
+  border-color: rgba(90, 172, 132, 0.3);
 }
 
 .delete-btn {
