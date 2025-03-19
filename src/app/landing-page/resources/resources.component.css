@@ -6,7 +6,7 @@
 
 .resource-title {
   color: var(--text-color);
-  font-size: 1.8rem;
+  font-size: var(--font-size-2xl);
   font-weight: 600;
   margin-top: 60px;
   margin-bottom: 40px;
@@ -68,14 +68,14 @@
 }
 
 .resource-info h4 {
-  font-size: 1.5rem;
+  font-size: var(--font-size-lg);
   color: var(--text-color);
   margin: 0;
   font-weight: 500;
 }
 
 .resource-text {
-  font-size: 1.125rem;
+  font-size: var(--font-size-base);
   color: var(--text-secondary);
   line-height: 1.6;
   margin-top: 10px;
@@ -83,47 +83,83 @@
 
 @media screen and (max-width: 1200px) {
   .resource-title {
-    font-size: 1.875rem;
+    font-size: var(--font-size-xl);
   }
 
   .resource-info h4 {
-    font-size: 1.375rem;
+    font-size: var(--font-size-base);
   }
 
   .resource-text {
-    font-size: 1.1rem;
+    font-size: var(--font-size-sm);
   }
 }
 
 @media screen and (max-width: 992px) {
   .resource-title {
-    font-size: 1.75rem;
+    font-size: var(--font-size-lg);
   }
 
   .resource-info h4 {
-    font-size: 1.25rem;
+    font-size: var(--font-size-base);
   }
 
   .resource-text {
-    font-size: 1.05rem;
+    font-size: var(--font-size-sm);
   }
 }
 
 @media screen and (max-width: 768px) {
   .resource-title {
-    font-size: 1.5rem;
+    font-size: var(--font-size-lg);
   }
 
   .resource-info h4 {
-    font-size: 1.125rem;
+    font-size: var(--font-size-base);
   }
 
   .resource-text {
-    font-size: 1rem;
+    font-size: var(--font-size-sm);
   }
 
   .resource-content {
     grid-template-columns: 1fr;
     padding: 0 10px;
   }
+}
+
+.title {
+  font-size: var(--font-size-2xl);
+}
+
+.subtitle {
+  font-size: var(--font-size-lg);
+}
+
+.description {
+  font-size: var(--font-size-base);
+}
+
+.section-title {
+  font-size: var(--font-size-2xl);
+}
+
+.section-subtitle {
+  font-size: var(--font-size-lg);
+}
+
+.section-text {
+  font-size: var(--font-size-base);
+}
+
+.feature-title {
+  font-size: var(--font-size-xl);
+}
+
+.feature-subtitle {
+  font-size: var(--font-size-lg);
+}
+
+.feature-text {
+  font-size: var(--font-size-base);
 }

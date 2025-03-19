@@ -11,16 +11,16 @@ export class ThemeService {
   constructor() {
     // Check if there's a saved theme preference
     const savedTheme = localStorage.getItem('theme');
-    if (savedTheme) {
-      this.isDarkTheme.next(savedTheme === 'dark');
-      this.applyTheme(savedTheme === 'dark');
+    // Only use dark theme if explicitly set in localStorage
+    if (savedTheme === 'dark') {
+      this.isDarkTheme.next(true);
+      this.applyTheme(true);
     } else {
-      // Check system preference
-      const prefersDark = window.matchMedia(
-        '(prefers-color-scheme: dark)'
-      ).matches;
-      this.isDarkTheme.next(prefersDark);
-      this.applyTheme(prefersDark);
+      // Default to light theme
+      this.isDarkTheme.next(false);
+      this.applyTheme(false);
+      // Save the default light theme preference
+      localStorage.setItem('theme', 'light');
     }
   }
 

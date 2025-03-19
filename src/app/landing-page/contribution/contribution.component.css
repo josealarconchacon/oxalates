@@ -34,7 +34,7 @@
 }
 
 .title {
-  font-size: 30px;
+  font-size: var(--font-size-2xl);
   font-weight: 700;
   color: var(--text-color);
   margin-bottom: 32px;
@@ -68,6 +68,7 @@
 }
 
 .step-text {
+  font-size: var(--font-size-sm);
   font-weight: 500;
   color: var(--text-secondary);
   transition: 0.2s ease;
@@ -91,13 +92,14 @@
 }
 
 .section-title {
-  font-size: 24px;
+  font-size: var(--font-size-xl);
   font-weight: 600;
   color: var(--text-color);
   margin-bottom: 16px;
 }
 
 .emphasis-text {
+  font-size: var(--font-size-base);
   font-weight: 500;
   color: var(--text-color);
   margin-bottom: 24px;
@@ -108,6 +110,7 @@
 }
 
 .text-content p {
+  font-size: var(--font-size-sm);
   color: var(--text-secondary);
   margin-bottom: 20px;
   line-height: 1.6;
@@ -162,6 +165,7 @@
   gap: 4px;
   padding: 16px;
   border-radius: 8px;
+  font-size: var(--font-size-sm);
   font-weight: 500;
   border: none;
   cursor: pointer;
@@ -318,7 +322,7 @@
   }
 
   .title {
-    font-size: 24px;
+    font-size: var(--font-size-xl);
     margin-bottom: 24px;
   }
 
@@ -343,19 +347,19 @@
   }
 
   .step-text {
-    font-size: 14px;
+    font-size: var(--font-size-xs);
   }
 
   .section-title {
-    font-size: 20px;
+    font-size: var(--font-size-lg);
   }
 
   .emphasis-text {
-    font-size: 14px;
+    font-size: var(--font-size-sm);
   }
 
   .text-content p {
-    font-size: 14px;
+    font-size: var(--font-size-xs);
   }
 
   .payment-options {
@@ -365,7 +369,7 @@
 
   .payment-button {
     padding: 12px;
-    font-size: 14px;
+    font-size: var(--font-size-xs);
   }
 
   .modal-box {
@@ -380,4 +384,24 @@
     width: 150px;
     height: 150px;
   }
+}
+
+.label {
+  font-size: var(--font-size-sm);
+}
+
+.description {
+  font-size: var(--font-size-base);
+}
+
+.info-text {
+  font-size: var(--font-size-sm);
+}
+
+.info-title {
+  font-size: var(--font-size-xl);
+}
+
+.info-subtitle {
+  font-size: var(--font-size-sm);
 }
