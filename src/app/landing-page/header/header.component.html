@@ -14,14 +14,6 @@
       <button class="nav-close" (click)="closeNav()"></button>
 
       <ng-container *ngIf="!(isMobile$ | async)">
-        <a
-          *ngIf="currentRoute !== '/' && currentRoute === '/oxalate'"
-          href="#resources"
-          class="nav-link"
-          (click)="closeNav()"
-        >
-          <span>Resources</span>
-        </a>
         <a href="/contribution" class="nav-link"> Support the Project </a>
         <button
           class="calculate-btn"
@@ -124,15 +116,6 @@
           <a class="nav-link" (click)="goToSupport()">
             <i class="fas fa-life-ring"></i>
             <span>Support The Project</span>
-          </a>
-          <a
-            *ngIf="currentRoute !== '/' && currentRoute === '/oxalate'"
-            href="#resources"
-            class="nav-link"
-            (click)="closeNav()"
-          >
-            <i class="fas fa-book"></i>
-            <span>Resources</span>
           </a>
 
           <a (click)="onLogout()" class="nav-link logout">

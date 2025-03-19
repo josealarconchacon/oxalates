@@ -67,9 +67,9 @@ export class HeaderComponent implements OnInit {
     });
 
     // Get the current route
-    this.router.events.subscribe(() => {
-      this.currentRoute = this.router.url;
-    });
+    // this.router.events.subscribe(() => {
+    //   this.currentRoute = this.router.url;
+    // });
 
     // Initialize user data from your auth service
     this.initializeUserData();
