@@ -122,12 +122,12 @@
   position: absolute;
   bottom: -44px;
   left: 100px;
-  background-color: var(--background-color);
+  background-color: var(--card-background);
   border-radius: var(--radius-full);
   width: 32px;
   height: 32px;
-  border: 1px solid var(--gray-100);
-  color: var(--gray-600);
+  border: 1px solid var(--border-color);
+  color: var(--text-secondary);
   cursor: pointer;
   display: flex;
   align-items: center;
@@ -136,8 +136,8 @@
 }
 
 .edit-avatar:hover {
-  color: var(--primary-color);
-  border-color: var(--primary-color);
+  color: var(--active-background);
+  border-color: var(--active-background);
   transform: scale(1.1);
 }
 
@@ -152,7 +152,6 @@
 }
 
 .profile-name {
-  color: var(--text-color);
   font-size: 1.5rem;
   font-weight: 600;
   margin: 0;
@@ -256,7 +255,7 @@
 }
 
 .section-title {
-  color: var(--text-color);
+  /* color: var(--text-color); */
   font-size: var(--font-size-2xl);
   font-weight: var(--font-weight-semibold);
   margin-bottom: var(--spacing-8);
@@ -301,7 +300,6 @@
 }
 
 .info-item p {
-  color: var(--text-color);
   font-size: var(--font-size-sm);
   text-align: right;
   margin: 0;
@@ -354,7 +352,7 @@
 
 .color-picker-content {
   position: relative;
-  background-color: var(--dialog-background);
+  background-color: var(--card-background);
   border-radius: 1.5rem;
   padding: 2rem;
   width: 100%;
@@ -691,7 +689,6 @@
 
 .theme-toggle i {
   font-size: 1.2rem;
-  color: var(--text-color);
   transition: transform 0.3s ease;
 }
 
@@ -775,4 +772,130 @@
 
 .dark-theme .color-actions .btn-secondary:hover {
   background-color: var(--hover-background);
+}
+
+.color-picker-content {
+  background-color: var(--card-background);
+  border: 1px solid var(--border-color);
+  box-shadow: 0 4px 6px var(--box-shadow);
+}
+
+.color-picker-header {
+  border-bottom: 1px solid var(--border-color);
+  padding: 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.color-picker-title {
+  color: var(--text-color);
+  margin: 0;
+  font-size: 1.25rem;
+  font-weight: 600;
+}
+
+.color-grid {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: 0.5rem;
+  padding: 1rem;
+  background-color: var(--card-background);
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--border-color);
+}
+
+.color-preset {
+  width: 2.5rem;
+  height: 2.5rem;
+  border-radius: var(--radius-lg);
+  border: 2px solid var(--border-color);
+  cursor: pointer;
+  transition: all var(--transition-base);
+  position: relative;
+}
+
+.color-preset:hover {
+  transform: scale(1.1);
+  box-shadow: 0 2px 4px var(--box-shadow);
+}
+
+.color-preset.selected::after {
+  content: "✓";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  color: white;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
+  font-size: 1rem;
+}
+
+.color-actions {
+  display: flex;
+  gap: 1rem;
+  padding: 1rem;
+  border-top: 1px solid var(--border-color);
+}
+
+.color-actions button {
+  flex: 1;
+  padding: 0.75rem 1.5rem;
+  border-radius: var(--radius-lg);
+  font-weight: 500;
+  transition: all var(--transition-base);
+  cursor: pointer;
+}
+
+.color-actions .btn-primary {
+  background-color: var(--active-background);
+  color: white;
+  border: none;
+}
+
+.color-actions .btn-primary:hover {
+  opacity: 0.9;
+  transform: translateY(-1px);
+}
+
+.color-actions .btn-secondary {
+  background-color: var(--card-background);
+  color: var(--text-color);
+  border: 1px solid var(--border-color);
+}
+
+.color-actions .btn-secondary:hover {
+  background-color: var(--hover-background);
+}
+
+.dark-theme .color-picker-backdrop {
+  background-color: rgba(0, 0, 0, 0.75);
+}
+
+.dark-theme .color-preset {
+  border-color: var(--dark-border);
+}
+
+.dark-theme .color-preset:hover {
+  border-color: var(--dark-text);
+}
+
+.dark-theme .color-actions .btn-secondary {
+  background-color: var(--dark-card-bg);
+  border-color: var(--dark-border);
+  color: var(--dark-text);
+}
+
+.dark-theme .color-actions .btn-secondary:hover {
+  background-color: var(--dark-hover-bg);
+}
+
+.dark-theme .edit-avatar {
+  background-color: var(--dark-card-bg);
+  border-color: var(--dark-border);
+}
+
+.dark-theme .edit-avatar:hover {
+  background-color: var(--dark-hover-bg);
+  border-color: var(--active-background);
 }

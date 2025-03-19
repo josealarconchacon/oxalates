@@ -36,7 +36,7 @@
 .title {
   font-size: var(--font-size-2xl);
   font-weight: 700;
-  color: var(--text-color);
+  color: var(--text-secondary);
   margin-bottom: 32px;
   text-align: left;
 }
