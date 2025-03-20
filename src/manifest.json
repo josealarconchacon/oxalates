@@ -1,0 +1,16 @@
+{
+  "name": "Oxalates",
+  "short_name": "Oxalates",
+  "theme_color": "#1da1f2",
+  "background_color": "#ffffff",
+  "display": "standalone",
+  "scope": "./",
+  "start_url": "./",
+  "icons": [
+    {
+      "src": "assets/icons/icon-72x72.png",
+      "sizes": "72x72",
+      "type": "image/png"
+    }
+  ]
+}
