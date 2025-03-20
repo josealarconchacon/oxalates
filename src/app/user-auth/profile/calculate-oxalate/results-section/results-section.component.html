@@ -1,14 +1,24 @@
 <div class="results-container" [ngClass]="{ 'dark-theme': isDarkTheme }">
   <div class="title-container">
     <h2 class="title">Daily Oxalate Breakdown</h2>
-    <button
-      class="share-icon"
-      (click)="openShareMenu()"
-      [disabled]="!hasFoodItems()"
-      [attr.aria-label]="'Share daily oxalate breakdown'"
-    >
-      <i class="fas fa-share-alt"></i>
-    </button>
+    <div class="action-buttons">
+      <button
+        class="share-icon"
+        (click)="openShareMenu()"
+        [disabled]="!hasFoodItems()"
+        [attr.aria-label]="'Share daily oxalate breakdown'"
+      >
+        <i class="fas fa-share-alt"></i>
+      </button>
+      <button
+        class="download-icon"
+        (click)="openReport()"
+        [disabled]="!hasFoodItems()"
+        [attr.aria-label]="'Download oxalate report'"
+      >
+        <i class="fas fa-download"></i>
+      </button>
+    </div>
   </div>
 
   <div class="content-container">
@@ -65,3 +75,11 @@
   }"
   (close)="closeShareMenu()"
 ></app-share-menu>
+
+<app-get-report
+  *ngIf="showReport"
+  [mealItems]="mealItems"
+  [totalOxalate]="totalOxalate"
+  [totalSolubleOxalate]="totalSolubleOxalate"
+  (close)="closeReport()"
+></app-get-report>

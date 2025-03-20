@@ -9,11 +9,12 @@ import {
 import { ShareMenuComponent } from '../share-menu/share-menu.component';
 import { ThemeService } from 'src/app/shared/services/theme.service';
 import { Subscription } from 'rxjs';
+import { GetReportComponent } from '../get-report/get-report.component';
 
 @Component({
   selector: 'app-results-section',
   standalone: true,
-  imports: [CommonModule, ShareMenuComponent],
+  imports: [CommonModule, ShareMenuComponent, GetReportComponent],
   templateUrl: './results-section.component.html',
   styleUrls: ['./results-section.component.css'],
 })
@@ -29,6 +30,7 @@ export class ResultsSectionComponent implements OnInit, OnDestroy {
   readonly MAX_RED_HEIGHT = 1000; // Maximum value for dark red section
 
   shareMenuVisible = false;
+  showReport = false;
   isDarkTheme = false;
   private themeSubscription: Subscription | null = null;
 
@@ -113,6 +115,14 @@ export class ResultsSectionComponent implements OnInit, OnDestroy {
 
   closeShareMenu(): void {
     this.shareMenuVisible = false;
+  }
+
+  openReport(): void {
+    this.showReport = true;
+  }
+
+  closeReport(): void {
+    this.showReport = false;
   }
 
   hasFoodItems(): boolean {

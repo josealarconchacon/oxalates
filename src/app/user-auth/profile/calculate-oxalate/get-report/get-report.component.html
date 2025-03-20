@@ -1,0 +1,42 @@
+<div class="modal-overlay" (click)="close.emit()">
+  <div class="modal-content" (click)="$event.stopPropagation()">
+    <div class="modal-header">
+      <h2>Download Report</h2>
+      <button class="close-button" (click)="close.emit()" aria-label="Close">
+        <i class="fas fa-times"></i>
+      </button>
+    </div>
+
+    <div class="modal-body">
+      <div class="date-picker">
+        <label for="report-date">Select Date</label>
+        <input
+          type="date"
+          id="report-date"
+          [(ngModel)]="selectedDate"
+          [max]="maxDate"
+        />
+      </div>
+
+      <div class="download-options">
+        <button
+          class="download-button csv"
+          (click)="downloadCSV()"
+          [disabled]="!selectedDate"
+        >
+          <i class="fas fa-file-csv"></i>
+          <span>Download CSV</span>
+        </button>
+
+        <button
+          class="download-button pdf"
+          (click)="downloadPDF()"
+          [disabled]="!selectedDate"
+        >
+          <i class="fas fa-file-pdf"></i>
+          <span>Download PDF</span>
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
