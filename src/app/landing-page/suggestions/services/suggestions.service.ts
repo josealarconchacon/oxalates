@@ -1,5 +1,7 @@
+import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable, of } from 'rxjs';
+import { environment } from 'src/environments/environment.development';
 
 export interface FAQ {
   question: string;
@@ -24,6 +26,14 @@ export interface SupportForm {
   providedIn: 'root',
 })
 export class SuggestionsService {
+  private apiUrl = environment.firebaseConfig;
+
+  constructor(private http: HttpClient) {}
+
+  submitSuggestion(suggestion: any): Observable<any> {
+    return this.http.post(`${this.apiUrl}/submitSuggestion`, suggestion);
+  }
+
   private commonFaqs: FAQ[] = [
     {
       question: 'How do I track my daily oxalate intake?',
@@ -55,11 +65,11 @@ export class SuggestionsService {
     return of(this.commonFaqs);
   }
 
-  submitSuggestion(suggestion: SuggestionForm): Observable<boolean> {
-    // Here you would typically make an HTTP call to your backend
-    console.log('Suggestion submitted:', suggestion);
-    return of(true);
-  }
+  // submitSuggestion(suggestion: SuggestionForm): Observable<boolean> {
+  //   // Here you would typically make an HTTP call to your backend
+  //   console.log('Suggestion submitted:', suggestion);
+  //   return of(true);
+  // }
 
   submitSupport(support: SupportForm): Observable<boolean> {
     // Here you would typically make an HTTP call to your backend

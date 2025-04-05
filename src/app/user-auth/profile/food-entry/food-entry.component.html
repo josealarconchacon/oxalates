@@ -10,7 +10,12 @@
           (dateChange)="onDateChange($event)"
         ></app-date-switcher>
 
-        <div>
+        <div *ngIf="isLoading" class="loading-container">
+          <div class="loading-spinner"></div>
+          <p>Loading your food entries...</p>
+        </div>
+
+        <div *ngIf="!isLoading">
           <app-results-section
             [breakfastItems]="breakfastItems"
             [lunchItems]="lunchItems"
@@ -19,7 +24,7 @@
           ></app-results-section>
         </div>
 
-        <div class="food-table-container">
+        <div class="food-table-container" *ngIf="!isLoading">
           <section class="meal-section">
             <div class="title-and-button">
               <h2 class="meal-title">Breakfast</h2>

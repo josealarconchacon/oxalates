@@ -153,8 +153,10 @@ export class HeaderComponent implements OnInit {
   navigateToCalculateDailyIntake(): void {
     if (this.authService.isAuthenticated()) {
       this.router.navigate(['/food-entry']);
+      this.closeNav();
     } else {
       this.authMessageService.showAuthMessage();
+      this.closeNav();
     }
   }
 

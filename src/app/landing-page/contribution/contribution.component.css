@@ -94,7 +94,7 @@
 .section-title {
   font-size: var(--font-size-xl);
   font-weight: 600;
-  color: var(--text-color);
+  /* color: var(--text-color); */
   margin-bottom: 16px;
 }
 
