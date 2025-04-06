@@ -33,8 +33,8 @@ export class GetReportComponent implements OnInit {
   @Input() mealItems: any[] = [];
   @Input() totalOxalate: number = 0;
   @Input() totalSolubleOxalate: number = 0;
+  @Input() selectedDate: Date = new Date();
   @Output() close = new EventEmitter<void>();
-  selectedDate: string = '';
   maxDate: string;
 
   constructor(private foodEntryService: FoodEntryService) {
@@ -42,18 +42,15 @@ export class GetReportComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    // Initialize with today's date
-    this.selectedDate = this.maxDate;
+    // No need to initialize selectedDate as it's now an input
   }
 
   // Download as CSV
   downloadCSV(): void {
-    if (!this.selectedDate) {
-      alert('Please select a date!');
-      return;
-    }
-
+    // Create a new date object and set it to midnight to avoid timezone issues
     const date = new Date(this.selectedDate);
+    date.setHours(0, 0, 0, 0);
+
     this.foodEntryService.getDailyEntry(date).subscribe({
       next: (entry) => {
         if (!entry || this.isEmpty(entry)) {
@@ -100,7 +97,7 @@ export class GetReportComponent implements OnInit {
         const url = window.URL.createObjectURL(blob);
         const a = document.createElement('a');
         a.href = url;
-        a.download = `Oxalate_Report_${this.selectedDate}.csv`;
+        a.download = `Oxalate_Report_${date.toISOString().split('T')[0]}.csv`;
         a.click();
         window.URL.revokeObjectURL(url);
       },
@@ -113,12 +110,10 @@ export class GetReportComponent implements OnInit {
 
   // Download as PDF
   downloadPDF(): void {
-    if (!this.selectedDate) {
-      alert('Please select a date!');
-      return;
-    }
-
+    // Create a new date object and set it to midnight to avoid timezone issues
     const date = new Date(this.selectedDate);
+    date.setHours(0, 0, 0, 0);
+
     this.foodEntryService.getDailyEntry(date).subscribe({
       next: (entry) => {
         if (!entry || this.isEmpty(entry)) {
@@ -145,11 +140,15 @@ export class GetReportComponent implements OnInit {
           footStyles: { fillColor: [189, 195, 199] },
           didDrawPage: (data) => {
             doc.setFontSize(16);
-            doc.text(`Oxalate Report - ${this.selectedDate}`, 14, 20);
+            doc.text(
+              `Oxalate Report - ${date.toISOString().split('T')[0]}`,
+              14,
+              20
+            );
           },
         });
 
-        doc.save(`Oxalate_Report_${this.selectedDate}.pdf`);
+        doc.save(`Oxalate_Report_${date.toISOString().split('T')[0]}.pdf`);
       },
       error: (error) => {
         console.error('Error fetching data:', error);

@@ -79,7 +79,8 @@
 <app-get-report
   *ngIf="showReport"
   [mealItems]="mealItems"
-  [totalOxalate]="totalOxalate"
-  [totalSolubleOxalate]="totalSolubleOxalate"
+  [totalOxalate]="inputTotalOxalate"
+  [totalSolubleOxalate]="inputTotalSolubleOxalate"
+  [selectedDate]="selectedDate"
   (close)="closeReport()"
 ></app-get-report>

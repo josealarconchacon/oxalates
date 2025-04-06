@@ -1,40 +1,66 @@
 <div class="modal-overlay" (click)="close.emit()">
   <div class="modal-content" (click)="$event.stopPropagation()">
     <div class="modal-header">
-      <h2>Download Report</h2>
-      <button class="close-button" (click)="close.emit()" aria-label="Close">
-        <i class="fas fa-times"></i>
-      </button>
+      <div class="header-content">
+        <div class="title-section">
+          <div class="title-wrapper">
+            <h2>Download Report</h2>
+            <div class="title-decoration"></div>
+          </div>
+          <p class="subtitle">Export your daily oxalate intake data</p>
+        </div>
+        <button class="close-button" (click)="close.emit()" aria-label="Close">
+          <i class="fas fa-times"></i>
+        </button>
+      </div>
+      <div class="date-display">
+        <div class="date-icon">
+          <i class="fas fa-calendar-alt"></i>
+        </div>
+        <div class="date-content">
+          <div class="date-label">Selected Date</div>
+          <div class="selected-date">
+            {{ selectedDate | date : "EEEE, MMMM d, y" }}
+          </div>
+        </div>
+        <div class="date-decoration"></div>
+      </div>
     </div>
 
     <div class="modal-body">
-      <div class="date-picker">
-        <label for="report-date">Select Date</label>
-        <input
-          type="date"
-          id="report-date"
-          [(ngModel)]="selectedDate"
-          [max]="maxDate"
-        />
-      </div>
-
       <div class="download-options">
-        <button
-          class="download-button csv"
-          (click)="downloadCSV()"
-          [disabled]="!selectedDate"
-        >
-          <i class="fas fa-file-csv"></i>
-          <span>Download CSV</span>
+        <button class="download-button csv" (click)="downloadCSV()">
+          <div class="button-content">
+            <div class="icon-wrapper">
+              <i class="fas fa-file-csv"></i>
+              <div class="icon-background"></div>
+            </div>
+            <div class="text-content">
+              <span class="button-title">Download CSV</span>
+              <span class="button-description"
+                >Export data in spreadsheet format</span
+              >
+            </div>
+          </div>
+          <div class="button-hover-effect"></div>
+          <div class="button-ripple"></div>
         </button>
 
-        <button
-          class="download-button pdf"
-          (click)="downloadPDF()"
-          [disabled]="!selectedDate"
-        >
-          <i class="fas fa-file-pdf"></i>
-          <span>Download PDF</span>
+        <button class="download-button pdf" (click)="downloadPDF()">
+          <div class="button-content">
+            <div class="icon-wrapper">
+              <i class="fas fa-file-pdf"></i>
+              <div class="icon-background"></div>
+            </div>
+            <div class="text-content">
+              <span class="button-title">Download PDF</span>
+              <span class="button-description"
+                >Export data in document format</span
+              >
+            </div>
+          </div>
+          <div class="button-hover-effect"></div>
+          <div class="button-ripple"></div>
         </button>
       </div>
     </div>

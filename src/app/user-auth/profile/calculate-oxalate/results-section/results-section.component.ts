@@ -23,6 +23,9 @@ export class ResultsSectionComponent implements OnInit, OnDestroy {
   @Input() lunchItems: any[] = [];
   @Input() dinnerItems: any[] = [];
   @Input() snackItems: any[] = [];
+  @Input() selectedDate: Date = new Date();
+  @Input() inputTotalOxalate: number = 0;
+  @Input() inputTotalSolubleOxalate: number = 0;
 
   readonly MAX_GREEN = 50; // Maximum value for green section
   readonly MAX_YELLOW = 350; // Maximum value for yellow section
