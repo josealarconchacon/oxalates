@@ -684,6 +684,21 @@ section:nth-child(even) {
   color: var(--text-primary);
 }
 
+/* Search input dark theme styling */
+:host-context(.dark-theme) .search-input::placeholder {
+  color: #ffffff;
+  opacity: 0.7;
+}
+
+:host-context(.dark-theme) .search-input {
+  color: #ffffff;
+  background-color: transparent;
+}
+
+:host-context(.dark-theme) .search-container {
+  background-color: transparent;
+}
+
 /* Remove other dark theme styling but keep the theme toggle button styling */
 :host-context(.dark-theme) .theme-toggle-btn {
   background-color: var(--card-background);

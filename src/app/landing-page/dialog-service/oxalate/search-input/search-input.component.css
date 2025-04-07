@@ -61,7 +61,7 @@
 
 .dark-theme .search-input-container {
   border: 1px solid #404040;
-  background-color: #262626;
+  background-color: #000000;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
 }
 
@@ -76,16 +76,18 @@
 }
 
 .dark-theme .search-input::placeholder {
-  color: #9ca3af;
+  color: #ffffff;
+  opacity: 0.7;
 }
 
 .dark-theme .search-input {
-  color: #f3f4f6;
+  color: #ffffff;
   caret-color: #5fa8e6;
+  background-color: transparent;
 }
 
 .dark-theme .search-input:focus {
-  background-color: #333333;
+  background-color: transparent;
 }
 
 .dark-theme .search-icon {
