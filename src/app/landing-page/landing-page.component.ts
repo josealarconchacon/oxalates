@@ -152,10 +152,16 @@ export class LandingPageComponent
   }
 
   viewOxalateDetails(oxalate: Oxalate) {
-    // Navigate to oxalate details page or open modal with details
-    // One option is to navigate to the oxalate page with the selected item
+    // Navigate to oxalate details page with more parameters
     this.router.navigate(['/oxalate'], {
-      queryParams: { search: oxalate.item },
+      queryParams: {
+        search: oxalate.item,
+        category: oxalate.category,
+        level: oxalate.level || oxalate.calc_level,
+        autoOpenDetails: 'true',
+        itemId: oxalate.id,
+        searchPreserved: 'true',
+      },
     });
   }
 
