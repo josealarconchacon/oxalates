@@ -1,5 +1,6 @@
 <div class="search-input-container" [ngClass]="{ 'dark-theme': isDarkTheme }">
   <input
+    #searchInputElement
     [(ngModel)]="searchQuery"
     (ngModelChange)="onSearchQueryChange()"
     placeholder="Search for a food or a category to see oxalate levels..."
