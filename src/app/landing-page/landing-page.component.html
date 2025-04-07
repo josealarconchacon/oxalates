@@ -3,22 +3,34 @@
   <section class="hero">
     <div class="container">
       <div class="hero-content">
-        <div class="hero-img">
-          <img
-            class="hero-image"
-            src="../../assets/app-logo/landing-logo1.png"
-            alt="Oxalate Home Preview"
-          />
-        </div>
-        <div class="hero-text">
-          <h1>What are Oxalates?</h1>
-          <p>
-            Oxalates are naturally occurring compounds found in plants and
-            sometimes produced within the body. In excess, oxalates are most
-            well known for their association with kidney stones, but they can
-            also lead to a myriad of other health problems in sensitive
-            individuals.
-          </p>
+        <div class="hero-top">
+          <div class="hero-img">
+            <img
+              class="hero-image"
+              src="../../assets/app-logo/landing-logo1.png"
+              alt="Oxalate Home Preview"
+            />
+          </div>
+          <div class="hero-text">
+            <h1>What are Oxalates?</h1>
+            <p>
+              Oxalates are naturally occurring compounds found in plants and
+              sometimes produced within the body. In excess, oxalates are most
+              well known for their association with kidney stones, but they can
+              also lead to a myriad of other health problems in sensitive
+              individuals.
+            </p>
+            <!-- Search Section - Moved inside hero-text for better integration -->
+            <div class="search-container">
+              <div class="search-wrapper">
+                <app-search-input
+                  [searchQuery]="searchQuery"
+                  (searchQueryChange)="onSearchQueryChange($event)"
+                  (clearSearch)="onClearSearch()"
+                ></app-search-input>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </div>
