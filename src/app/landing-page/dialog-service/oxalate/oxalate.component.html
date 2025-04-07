@@ -118,7 +118,13 @@
     </div>
   </div>
 
-  <div *ngIf="selectedOxalate" class="modal-overlay" (click)="closeDetail()">
+  <!-- ViewMore Modal -->
+  <div
+    *ngIf="selectedOxalate"
+    class="modal-overlay"
+    (click)="closeDetail()"
+    id="viewmore-modal"
+  >
     <div class="modal-content" (click)="$event.stopPropagation()">
       <button class="close-btn" (click)="closeDetail()">×</button>
       <app-view-more [oxalateData]="selectedOxalate"></app-view-more>

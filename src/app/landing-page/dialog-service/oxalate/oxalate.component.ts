@@ -3,7 +3,7 @@ import { Oxalate } from 'src/app/landing-page/model/oxalate';
 import { OxalateService } from '../service/oxalate.service';
 import { FilterService } from './service/filter.service';
 import { Filter } from './filter/model/filter';
-import { Router } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
 import { ThemeService } from 'src/app/shared/services/theme.service';
 import {
   debounceTime,
@@ -40,6 +40,7 @@ export class OxalateComponent implements OnInit, OnDestroy {
 
   constructor(
     private router: Router,
+    private route: ActivatedRoute,
     private cdr: ChangeDetectorRef,
     public filterService: FilterService,
     private oxalateService: OxalateService,
@@ -51,7 +52,8 @@ export class OxalateComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.initializeViewMode();
     this.setupSearchSubscription();
-    this.initializeWithRouteParams();
+    this.handleQueryParams();
+    this.setupNavigationHandling();
 
     // Subscribe to theme changes
     this.subscriptions.push(
@@ -60,6 +62,190 @@ export class OxalateComponent implements OnInit, OnDestroy {
         this.cdr.detectChanges();
       })
     );
+  }
+
+  private handleQueryParams(): void {
+    this.subscriptions.push(
+      this.route.queryParams.subscribe((params) => {
+        console.log('Received query params:', params);
+
+        // Get data first, then apply filters and search
+        this.oxalateService.getOxalateData().subscribe((data) => {
+          console.log('Data loaded, total items:', data.length);
+          this.oxalates = data;
+          this.originalOxalates = [...data];
+
+          // Process parameters in sequence
+          this.processQueryParams(params);
+        });
+      })
+    );
+  }
+
+  private processQueryParams(params: any): void {
+    let filtersUpdated = false;
+    const filter: Filter = { category: '', calc_level: '' };
+
+    // Track if this came from preserved search
+    const isPreservedSearch = params['searchPreserved'] === 'true';
+
+    // Check for search parameter
+    if (params['search']) {
+      this.searchQuery = params['search'];
+      console.log('Setting search query to:', this.searchQuery);
+    }
+
+    // Apply filters in a specific order
+
+    // First, reset any existing filters
+    this.filterService.clearAll();
+    this.categoryService.clearAll();
+
+    // Check for level parameter
+    if (params['level']) {
+      filter.calc_level = params['level'];
+      filtersUpdated = true;
+    }
+
+    // Check for category parameter - apply this last as it's more important
+    if (params['category']) {
+      filter.category = params['category'];
+
+      // First update service, then trigger filters
+      this.categoryService.changeCategory(params['category']);
+      filtersUpdated = true;
+
+      // Force the dropdown to update by emitting the category again after a short delay
+      setTimeout(() => {
+        this.categoryService.changeCategory(params['category']);
+        this.cdr.detectChanges();
+      }, 100);
+    }
+
+    // Apply filters if needed with a slight delay to ensure services have updated
+    if (filtersUpdated) {
+      this.isFilterApplied = true;
+
+      // Update the filter service first
+      this.filterService.updateFilter(filter);
+
+      // Then apply filters with a short delay
+      setTimeout(() => {
+        this.applyFilters(filter);
+        this.cdr.detectChanges();
+
+        // Check if we should auto-open the details view for an item
+        if (params['autoOpenDetails'] === 'true' && params['itemId']) {
+          this.autoOpenItemDetails(params['itemId']);
+        }
+      }, 300);
+    } else if (this.searchQuery) {
+      // If only search is provided with no filters
+      this.searchSubject.next(this.searchQuery);
+
+      // Check if we should auto-open the details view for an item
+      if (params['autoOpenDetails'] === 'true' && params['itemId']) {
+        this.autoOpenItemDetails(params['itemId']);
+      }
+    } else {
+      // No params, just show all
+      this.updateDisplayedOxalates();
+
+      // Check if we should auto-open the details view for an item
+      if (params['autoOpenDetails'] === 'true' && params['itemId']) {
+        this.autoOpenItemDetails(params['itemId']);
+      }
+    }
+
+    // Store the original search parameters to preserve them when closing the modal
+    if (isPreservedSearch) {
+      // Store the parameters to be used when modal is closed
+      localStorage.setItem('lastSearchQuery', this.searchQuery || '');
+      localStorage.setItem('lastSearchCategory', filter.category || '');
+      localStorage.setItem('lastSearchLevel', filter.calc_level || '');
+    }
+  }
+
+  private autoOpenItemDetails(itemId: string): void {
+    console.log('Attempting to open details for item ID:', itemId);
+
+    // First try to find by ID immediately (in case it's already loaded)
+    let foundItem = this.originalOxalates.find((item) => item.id === itemId);
+
+    if (foundItem) {
+      console.log('Found item immediately, opening details:', foundItem.item);
+      // Try to open it immediately first
+      this.viewMore(foundItem);
+    }
+
+    // Also try with a delay as a fallback in case the first attempt doesn't work
+    setTimeout(() => {
+      // Try to find item in the filtered results first if we didn't find it immediately
+      if (!this.selectedOxalate) {
+        let delayedFoundItem = this.oxalates.find((item) => item.id === itemId);
+
+        // If not found in filtered results, look in the original data
+        if (!delayedFoundItem && this.originalOxalates) {
+          delayedFoundItem = this.originalOxalates.find(
+            (item) => item.id === itemId
+          );
+
+          // If found in original but not in filtered, adjust filters to include it
+          if (delayedFoundItem) {
+            console.log('Found item in original data, updating filters');
+            // Reset filters temporarily to ensure item is visible
+            this.filterService.clearAll();
+            this.categoryService.clearAll();
+
+            // Apply category from the found item
+            this.filterService.setCategory(delayedFoundItem.category);
+            this.categoryService.changeCategory(delayedFoundItem.category);
+
+            // Force a data refresh
+            this.oxalates = [...this.originalOxalates].filter(
+              (ox) =>
+                ox &&
+                ox.category &&
+                delayedFoundItem &&
+                delayedFoundItem.category &&
+                ox.category.toLowerCase() ===
+                  delayedFoundItem.category.toLowerCase()
+            );
+            this.updateDisplayedOxalates();
+          }
+        }
+
+        // If still not found by ID, try finding by name using search parameter
+        if (!delayedFoundItem && this.route.snapshot.queryParams['search']) {
+          console.log('Item not found by ID, trying to find by name');
+          delayedFoundItem = this.findItemByName(
+            this.route.snapshot.queryParams['search']
+          );
+        }
+
+        if (delayedFoundItem) {
+          console.log(
+            'Found item after delay, opening details:',
+            delayedFoundItem.item
+          );
+          // Only open if not already opened
+          if (!this.selectedOxalate) {
+            this.viewMore(delayedFoundItem);
+          }
+        } else {
+          console.warn('Item with ID', itemId, 'not found in data after delay');
+
+          // Final fallback - try to open any item that matches the search query
+          if (
+            this.route.snapshot.queryParams['search'] &&
+            this.oxalates.length > 0
+          ) {
+            console.log('Trying fallback - opening first item from results');
+            this.viewMore(this.oxalates[0]);
+          }
+        }
+      }
+    }, 2000); // Use a longer delay as a final fallback
   }
 
   private initializeWithRouteParams(): void {
@@ -139,6 +325,8 @@ export class OxalateComponent implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     this.subscriptions.forEach((sub) => sub.unsubscribe());
+    // Clean up event listener
+    window.removeEventListener('popstate', () => {});
   }
 
   private initializeViewMode(): void {
@@ -256,8 +444,10 @@ export class OxalateComponent implements OnInit, OnDestroy {
         // console.log('Filtering by category:', filter.category);
         filteredOxalates = filteredOxalates.filter(
           (oxalate) =>
-            oxalate.category?.toLowerCase() ===
-            (filter.category ?? '').toLowerCase()
+            oxalate &&
+            oxalate.category &&
+            oxalate.category.toLowerCase() ===
+              (filter.category ?? '').toLowerCase()
         );
         console.log('Results after category filter:', filteredOxalates.length);
       }
@@ -266,7 +456,7 @@ export class OxalateComponent implements OnInit, OnDestroy {
       if (filter.calc_level) {
         // console.log('Filtering by calc_level:', filter.calc_level);
         filteredOxalates = filteredOxalates.filter(
-          (oxalate) => oxalate.calc_level === filter.calc_level
+          (oxalate) => oxalate && oxalate.calc_level === filter.calc_level
         );
         console.log(
           'Results after calc_level filter:',
@@ -292,12 +482,13 @@ export class OxalateComponent implements OnInit, OnDestroy {
     const searchLower = query.toLowerCase();
     return items.filter((oxalate) => {
       return (
-        (oxalate.item && oxalate.item.toLowerCase().includes(searchLower)) ||
-        (oxalate.category &&
-          oxalate.category.toLowerCase().includes(searchLower)) ||
-        (oxalate.level && oxalate.level.toString().includes(searchLower)) ||
-        (oxalate.calc_level &&
-          oxalate.calc_level.toLowerCase().includes(searchLower))
+        oxalate &&
+        ((oxalate.item && oxalate.item.toLowerCase().includes(searchLower)) ||
+          (oxalate.category &&
+            oxalate.category.toLowerCase().includes(searchLower)) ||
+          (oxalate.level && oxalate.level.toString().includes(searchLower)) ||
+          (oxalate.calc_level &&
+            oxalate.calc_level.toLowerCase().includes(searchLower)))
       );
     });
   }
@@ -335,14 +526,141 @@ export class OxalateComponent implements OnInit, OnDestroy {
   }
 
   viewMore(oxalate: Oxalate): void {
-    // console.log('Selected Oxalate:', oxalate);
+    console.log('Opening details for:', oxalate.item);
     this.selectedOxalate = oxalate;
     document.body.style.overflow = 'hidden';
+
+    // Force several change detection cycles to ensure the view updates
+    this.cdr.detectChanges();
+
+    // Also use a timeout as a backup
+    setTimeout(() => {
+      // Double-check that the selection is still valid
+      if (!this.selectedOxalate) {
+        this.selectedOxalate = oxalate;
+      }
+      this.cdr.detectChanges();
+
+      // Check the modal dom element to verify it exists
+      const modalElement = document.querySelector('.modal-overlay');
+      if (!modalElement) {
+        console.warn('Modal element not found in DOM, forcing another update');
+        this.forceShowModal(oxalate);
+      }
+    }, 100);
+  }
+
+  // Force modal to show as a last resort
+  private forceShowModal(oxalate: Oxalate): void {
+    // Try one more time with a longer delay
+    setTimeout(() => {
+      this.selectedOxalate = oxalate;
+      document.body.style.overflow = 'hidden';
+      this.cdr.detectChanges();
+
+      // Check if the modal element exists now
+      const modalElement = document.querySelector('.modal-overlay');
+      if (!modalElement) {
+        console.error('Modal still not showing after multiple attempts');
+      }
+    }, 500);
   }
 
   closeDetail(): void {
+    // Save references to current state before closing modal
+    const currentSearchQuery = this.searchQuery;
+    const currentFilters = this.filterService.getCurrentFilter();
+    const wasFilterApplied = this.isFilterApplied;
+    const cachedResults = [...this.oxalates]; // Cache current results
+
+    // Close the modal immediately
     this.selectedOxalate = undefined;
     document.body.style.overflow = '';
+
+    // Get stored search parameters
+    const storedSearchQuery = localStorage.getItem('lastSearchQuery');
+    const storedCategory = localStorage.getItem('lastSearchCategory');
+    const storedLevel = localStorage.getItem('lastSearchLevel');
+
+    // Determine which search state to use and apply it immediately
+    if (storedSearchQuery) {
+      console.log('Restoring search from localStorage:', storedSearchQuery);
+
+      // Update search query in the UI
+      this.searchQuery = storedSearchQuery;
+
+      // Apply filters immediately without waiting for observable
+      let filteredOxalates = [...this.originalOxalates];
+
+      // First apply basic search filter
+      filteredOxalates = filteredOxalates.filter(
+        (oxalate) =>
+          oxalate &&
+          oxalate.item &&
+          oxalate.item.toLowerCase().includes(storedSearchQuery.toLowerCase())
+      );
+
+      // Apply category filter if present
+      if (storedCategory) {
+        this.categoryService.changeCategory(storedCategory);
+        this.filterService.setCategory(storedCategory);
+        filteredOxalates = filteredOxalates.filter(
+          (oxalate) =>
+            oxalate &&
+            oxalate.category &&
+            oxalate.category.toLowerCase() === storedCategory.toLowerCase()
+        );
+      }
+
+      // Apply level filter if present
+      if (storedLevel) {
+        this.filterService.updateFilter({ calc_level: storedLevel });
+        filteredOxalates = filteredOxalates.filter(
+          (oxalate) => oxalate && oxalate.calc_level === storedLevel
+        );
+      }
+
+      // Update displayed results immediately
+      this.oxalates = filteredOxalates;
+      this.isFilterApplied = storedCategory || storedLevel ? true : false;
+      this.updateDisplayedOxalates();
+      this.cdr.detectChanges();
+
+      // Sort results by relevance (matching the search method behavior)
+      if (filteredOxalates.length > 0) {
+        this.oxalates = this.sortBySearchTerm(
+          filteredOxalates,
+          storedSearchQuery
+        );
+        this.updateDisplayedOxalates();
+        this.cdr.detectChanges();
+      }
+
+      // Also trigger the real search to update with exact server results
+      this.searchSubject.next(storedSearchQuery);
+
+      // Clear stored values
+      localStorage.removeItem('lastSearchQuery');
+      localStorage.removeItem('lastSearchCategory');
+      localStorage.removeItem('lastSearchLevel');
+    }
+    // If no stored parameters, use current state
+    else if (currentSearchQuery) {
+      console.log('Maintaining current search results:', currentSearchQuery);
+
+      // Use cached results to avoid any delay
+      this.oxalates = cachedResults;
+
+      // Make sure filters are still applied
+      if (wasFilterApplied) {
+        this.isFilterApplied = true;
+        this.filterService.updateFilter(currentFilters);
+      }
+
+      // Ensure pagination is updated
+      this.updateDisplayedOxalates();
+      this.cdr.detectChanges();
+    }
   }
 
   isSidebarOpen = false;
@@ -360,9 +678,14 @@ export class OxalateComponent implements OnInit, OnDestroy {
   }
 
   sortBySearchTerm(data: Oxalate[], searchTerm: string): Oxalate[] {
+    if (!data || !searchTerm) {
+      return data || [];
+    }
+
     const lowerCaseSearchTerm = searchTerm.toLowerCase();
 
     const calculateRelevanceScore = (item: string, term: string) => {
+      if (!item) return 0;
       const lowerCaseItem = item.toLowerCase();
       if (lowerCaseItem === term) {
         return 3;
@@ -377,6 +700,7 @@ export class OxalateComponent implements OnInit, OnDestroy {
     const scoredItems = data
       .filter(
         (oxalate) =>
+          oxalate &&
           oxalate.item &&
           oxalate.item.toLowerCase().includes(lowerCaseSearchTerm)
       )
@@ -392,9 +716,66 @@ export class OxalateComponent implements OnInit, OnDestroy {
       if (b.relevanceScore !== a.relevanceScore) {
         return b.relevanceScore - a.relevanceScore;
       }
-      return a.item.toLowerCase().localeCompare(b.item.toLowerCase());
+      return (
+        a.item?.toLowerCase().localeCompare(b.item?.toLowerCase() || '') || 0
+      );
     });
 
     return scoredItems;
+  }
+
+  // Fallback method if item not found by ID
+  private findItemByName(name: string): Oxalate | undefined {
+    if (!name || !this.originalOxalates) return undefined;
+
+    const searchName = name.toLowerCase().trim();
+
+    // Try exact match first
+    let foundItem = this.originalOxalates.find(
+      (item) => item.item.toLowerCase() === searchName
+    );
+
+    // If not found, try contains match
+    if (!foundItem) {
+      foundItem = this.originalOxalates.find((item) =>
+        item.item.toLowerCase().includes(searchName)
+      );
+    }
+
+    return foundItem;
+  }
+
+  private setupNavigationHandling(): void {
+    // Listen for browser navigation events
+    window.addEventListener('popstate', () => {
+      // Get query params from URL
+      const urlParams = new URLSearchParams(window.location.search);
+
+      if (urlParams.has('search')) {
+        // Ensure search parameter is restored
+        this.searchQuery = urlParams.get('search') || '';
+
+        // Re-apply the search
+        if (this.searchQuery) {
+          this.searchSubject.next(this.searchQuery);
+        }
+
+        // Apply category if present
+        if (urlParams.has('category')) {
+          const category = urlParams.get('category') || '';
+          this.categoryService.changeCategory(category);
+          this.filterService.setCategory(category);
+        }
+
+        // Apply level if present
+        if (urlParams.has('level')) {
+          const level = urlParams.get('level') || '';
+          this.filterService.updateFilter({ calc_level: level });
+        }
+
+        // Force update
+        this.cdr.detectChanges();
+      }
+    });
   }
 }
