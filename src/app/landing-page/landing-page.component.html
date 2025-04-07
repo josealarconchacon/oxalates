@@ -21,13 +21,76 @@
               individuals.
             </p>
             <!-- Search Section - Moved inside hero-text for better integration -->
-            <div class="search-container">
+            <div class="search-container" *ngIf="!showSearchResults">
               <div class="search-wrapper">
                 <app-search-input
                   [searchQuery]="searchQuery"
                   (searchQueryChange)="onSearchQueryChange($event)"
                   (clearSearch)="onClearSearch()"
                 ></app-search-input>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Search Results Section -->
+        <div
+          *ngIf="showSearchResults && searchQuery"
+          class="search-results-container"
+        >
+          <!-- Add search input inside modal -->
+          <div class="modal-search-wrapper">
+            <app-search-input
+              #modalSearchInput
+              [searchQuery]="searchQuery"
+              (searchQueryChange)="onSearchQueryChange($event)"
+              (clearSearch)="onClearSearch()"
+            ></app-search-input>
+          </div>
+
+          <div *ngIf="isLoading" class="loading-container">
+            <div class="loading-spinner"></div>
+            <p>Loading results...</p>
+          </div>
+
+          <div *ngIf="!isLoading" class="search-results">
+            <div class="results-header">
+              <div class="results-stats">
+                {{ searchResults.length }} results found for "{{ searchQuery }}"
+              </div>
+              <div class="close-results">
+                <button (click)="closeSearchResults()" title="Close Results">
+                  ×
+                </button>
+              </div>
+            </div>
+
+            <div *ngIf="searchResults.length === 0" class="no-results">
+              <i class="fas fa-search"></i>
+              <h3>No results found</h3>
+              <p>Try a different search term or check spelling</p>
+            </div>
+
+            <div class="card-container list-view">
+              <div
+                *ngFor="let result of searchResults"
+                class="search-result-card"
+                (click)="viewOxalateDetails(result)"
+              >
+                <div class="result-snippets">
+                  <h3 class="result-title">{{ result.item }}</h3>
+                  <p class="result-snippet" *ngIf="result.serving_size">
+                    Serving Size: {{ result.serving_size }}
+                  </p>
+                </div>
+                <div class="result-snippets">
+                  <p class="result-snippet category">
+                    Category: {{ result.category }}
+                  </p>
+                  <p class="result-snippet">
+                    Oxalate Per Serving: {{ result.calc_oxalate_per_serving }}
+                  </p>
+                </div>
               </div>
             </div>
           </div>
