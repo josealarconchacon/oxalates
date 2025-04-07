@@ -9,7 +9,7 @@ import {
 import { ThemeService } from '../shared/services/theme.service';
 import { OxalateService } from './dialog-service/service/oxalate.service';
 import { Oxalate } from './model/oxalate';
-import { Subject, Subscription } from 'rxjs';
+import { Subject, Subscription, of } from 'rxjs';
 import {
   debounceTime,
   distinctUntilChanged,
@@ -74,14 +74,20 @@ export class LandingPageComponent
       this.searchSubject
         .pipe(
           tap(() => {
-            if (this.searchQuery.trim() !== this.lastQuery) {
+            if (
+              this.searchQuery.trim() !== this.lastQuery &&
+              this.searchQuery.trim() !== ''
+            ) {
               this.isLoading = true;
             }
           }),
-          debounceTime(100),
+          debounceTime(300),
           distinctUntilChanged(),
           switchMap((query) => {
             this.lastQuery = query.trim();
+            if (!query.trim()) {
+              return of([]);
+            }
             return this.oxalateService.searchOxalateData(query);
           })
         )
@@ -116,7 +122,7 @@ export class LandingPageComponent
 
   onSearchQueryChange(query: string) {
     this.searchQuery = query;
-    if (!this.showSearchResults && query.trim()) {
+    if (!this.showSearchResults) {
       this.showSearchResults = true;
       this.pendingFocus = true;
     }
@@ -125,9 +131,10 @@ export class LandingPageComponent
       this.searchResults = [];
       this.isLoading = false;
       this.lastQuery = '';
-      this.showSearchResults = false;
     } else {
-      this.searchSubject.next(query);
+      if (query.trim() !== this.lastQuery) {
+        this.searchSubject.next(query);
+      }
     }
   }
 
