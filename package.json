@@ -40,7 +40,6 @@
     "ngx-color": "^9.0.0",
     "ngx-qrcode2": "^9.0.0",
     "os-browserify": "^0.3.0",
-    "path-browserify": "^1.0.1",
     "process": "^0.11.10",
     "rxjs": "^7.8.1",
     "stream-browserify": "^3.0.0",
@@ -69,6 +68,7 @@
     "karma-coverage": "~2.2.0",
     "karma-jasmine": "~5.1.0",
     "karma-jasmine-html-reporter": "~2.1.0",
+    "path-browserify": "^1.0.1",
     "typescript": "~5.4.5"
   }
 }

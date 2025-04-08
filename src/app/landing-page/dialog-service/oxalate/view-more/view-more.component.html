@@ -1,29 +1,81 @@
 <div
-  class="oxalate-card"
+  class="view-more-container"
   *ngIf="oxalateData"
   [ngClass]="{ 'dark-theme': isDarkTheme }"
+  role="main"
 >
-  <h3 class="version animate-fade-in">{{ oxalateData.item }}</h3>
-  <div class="features-grid">
-    <div
-      class="feature-item"
-      *ngFor="let field of getFilteredFields(); let i = index"
-      [style.animationDelay]="i * 0.15 + 's'"
-    >
-      <div class="icon-container">
-        <span class="feature-icon"></span>
+  <div class="oxalate-card" aria-labelledby="oxalate-title">
+    <div class="card-header">
+      <h2 class="item-name" id="oxalate-title">{{ oxalateData.item }}</h2>
+    </div>
+
+    <div class="content-section" role="region" id="details-content">
+      <div class="section-title">Oxalate Information</div>
+
+      <div class="oxalate-table-container">
+        <table class="oxalate-table" aria-label="Oxalate properties">
+          <tbody>
+            <tr
+              *ngFor="let field of getFilteredFields(); let i = index"
+              class="table-row"
+              [ngClass]="getFieldClass(field.field)"
+              [attr.data-index]="i"
+            >
+              <td class="property-cell">
+                <div class="property-indicator" aria-hidden="true"></div>
+                <span class="property-name" [attr.title]="field.label">{{
+                  field.label || "Feature"
+                }}</span>
+              </td>
+              <td class="value-cell">
+                <span
+                  class="property-value"
+                  [ngClass]="
+                    getValueClass(field.field, oxalateData[field.field])
+                  "
+                  [attr.title]="
+                    oxalateData[field.field] + (field.unit ? field.unit : '')
+                  "
+                >
+                  {{ oxalateData[field.field] || "N/A" }}
+                  <span *ngIf="field.unit" class="value-unit">{{
+                    field.unit
+                  }}</span>
+                </span>
+              </td>
+            </tr>
+          </tbody>
+        </table>
       </div>
-      <div class="feature-text">
-        <span class="feature-label">{{ field.label || "Feature" }}:</span>
-        <span class="oxalate-value">
-          {{ oxalateData[field.field] || "N/A" }}
-          <span *ngIf="field.unit" class="oxalate-unit"> {{ field.unit }}</span>
-        </span>
+
+      <div
+        class="info-note"
+        *ngIf="shouldShowNotes(oxalateData.notes)"
+        role="note"
+      >
+        <div class="note-icon" aria-hidden="true">ℹ️</div>
+        <div class="note-text">{{ getCleanedNotes(oxalateData.notes) }}</div>
       </div>
     </div>
+
+    <div class="card-actions">
+      <button
+        class="action-button save-button"
+        [disabled]="isSaving"
+        (click)="onSave(); onClose()"
+        aria-live="polite"
+      >
+        <span class="button-content">
+          <span
+            class="button-icon"
+            [ngClass]="{ spinner: isSaving, 'heart-icon': !isSaving }"
+            aria-hidden="true"
+          ></span>
+          <span class="button-text">{{
+            isSaving ? "Saving..." : "Add to Favorite"
+          }}</span>
+        </span>
+      </button>
+    </div>
   </div>
-  <button class="save-button" [disabled]="isSaving" (click)="onSave()">
-    <span class="spinner" *ngIf="isSaving"></span>
-    {{ isSaving ? "Saving..." : "Add to Favorite" }}
-  </button>
 </div>

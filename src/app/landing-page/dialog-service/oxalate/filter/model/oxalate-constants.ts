@@ -30,4 +30,5 @@ export const OXALATE_INFO_FIELDS: {
     field: 'calc_soluble_mg_oxalate_per_serving',
     unit: '(mg)',
   },
+  { label: 'Soluble Oxalate', field: 'soluble_oxalate' },
 ];

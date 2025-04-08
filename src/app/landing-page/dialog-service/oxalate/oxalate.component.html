@@ -124,10 +124,14 @@
     class="modal-overlay"
     (click)="closeDetail()"
     id="viewmore-modal"
+    [ngClass]="{ 'dark-theme': isDarkTheme }"
   >
     <div class="modal-content" (click)="$event.stopPropagation()">
       <button class="close-btn" (click)="closeDetail()">×</button>
-      <app-view-more [oxalateData]="selectedOxalate"></app-view-more>
+      <app-view-more
+        [oxalateData]="selectedOxalate"
+        [isDarkTheme]="isDarkTheme"
+      ></app-view-more>
     </div>
   </div>
 </div>

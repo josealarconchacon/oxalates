@@ -453,25 +453,17 @@ h1 {
 }
 
 .dark-theme .modal-overlay {
-  background: rgba(0, 0, 0, 0.6);
-  backdrop-filter: blur(8px);
+  background-color: rgba(0, 0, 0, 0.7);
 }
 
 .dark-theme .modal-content {
-  background-color: #3a3a3a;
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
-  border: 1px solid #404040;
+  background-color: var(--card-bg, #2d3142);
+  border: 1px solid var(--border-color, #3d4053);
 }
 
 .dark-theme .close-btn {
-  color: #e5e7eb;
-  background-color: #3a3a3a;
-  border: 1px solid #404040;
-}
-
-.dark-theme .close-btn:hover {
-  background-color: #3a3a3a;
-  border-color: #404040;
+  color: var(--text-color-dark, #f5f5f5);
+  background-color: rgba(255, 255, 255, 0.1);
 }
 
 @media (prefers-reduced-motion: reduce) {
