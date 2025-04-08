@@ -1,4 +1,11 @@
-import { Component, Input, OnInit, OnDestroy } from '@angular/core';
+import {
+  Component,
+  Input,
+  OnInit,
+  OnDestroy,
+  Optional,
+  Inject,
+} from '@angular/core';
 import { Router } from '@angular/router';
 import { Oxalate } from 'src/app/landing-page/model/oxalate';
 import { AuthService } from 'src/app/user-auth/service/auth-service.service';
@@ -7,6 +14,8 @@ import { NotificationService } from '../service/notification.service';
 import { ThemeService } from 'src/app/shared/services/theme.service';
 import { OXALATE_INFO_FIELDS } from '../filter/model/oxalate-constants';
 import { Subscription } from 'rxjs';
+import { Location } from '@angular/common';
+import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 
 @Component({
   selector: 'app-view-more',
@@ -42,8 +51,16 @@ export class ViewMoreComponent implements OnInit, OnDestroy {
     private authService: AuthService,
     private oxalateService: OxalateService,
     private notificationService: NotificationService,
-    private themeService: ThemeService
-  ) {}
+    private themeService: ThemeService,
+    private location: Location,
+    @Optional() private dialogRef: MatDialogRef<ViewMoreComponent>,
+    @Optional() @Inject(MAT_DIALOG_DATA) public data: any
+  ) {
+    // If we have dialog data and no input data, use the dialog data
+    if (data && data.oxalateData && !this.oxalateData) {
+      this.oxalateData = data.oxalateData;
+    }
+  }
 
   ngOnInit(): void {
     this.loadOxalateDataFromNavigation();
@@ -230,8 +247,19 @@ export class ViewMoreComponent implements OnInit, OnDestroy {
   }
 
   onClose(): void {
-    // Navigate back or close dialog
-    this.router.navigate(['/oxalates']);
+    // If we're in a dialog, close it
+    if (this.dialogRef) {
+      this.dialogRef.close();
+    } else {
+      // Otherwise use router navigation (legacy approach)
+      this.router.navigate(['/oxalates']);
+    }
+  }
+
+  dismissModal(): void {
+    // Use browser history to go back instead of router navigation
+    // This avoids triggering authentication guards
+    this.location.back();
   }
 
   // Methods to handle field hiding and cleaning

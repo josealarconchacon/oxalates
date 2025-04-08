@@ -84,37 +84,27 @@
 }
 
 .dark-theme {
-  --card-bg: #2d3142;
-  --card-text: #f5f5f5;
-  --primary-color: #bb86fc;
-  --primary-color-dark: #bb86fc;
-  --text-color: #f5f5f5;
-  --text-color-dark: #f5f5f5;
-  --text-color-secondary: #bbbbbb;
-  --text-color-secondary-dark: #bbbbbb;
-  --border-color: #3d4053;
-  --surface-hover: rgba(255, 255, 255, 0.05);
-  --surface-hover-dark: rgba(255, 255, 255, 0.08);
   --background-color: #1a1d29;
+  --text-color: #f5f5f5;
   --card-background: #2d3142;
-  --header-bg: #262b3c;
-  --card-shadow: 0 8px 30px rgba(0, 0, 0, 0.3);
-  --indicator-color: #4e9b75;
-  --property-cell-bg: rgba(78, 155, 117, 0.15);
-  --value-cell-bg: #353b52;
-  --hover-bg: rgba(78, 155, 117, 0.1);
+  --card-shadow: none;
+  --header-bg: #1e222f;
+  --indicator-color: #5aac84;
+  --property-cell-bg: transparent;
+  --value-cell-bg: transparent;
+  --border-color: transparent;
+  --unit-color: #bbbbbb;
+  --hover-bg: rgba(90, 172, 132, 0.1);
   --badge-bg: rgba(93, 132, 188, 0.2);
   --badge-color: #8ab3f8;
-  --section-title-color: #d1d5db;
-  --note-bg: rgba(66, 60, 35, 0.5);
-  --note-border: #665e33;
-  --note-color: #fbbf24;
-  --secondary-button-bg: rgba(255, 255, 255, 0.1);
+  --section-title-color: #5aac84;
+  --note-bg: rgba(66, 60, 35, 0.2);
+  --note-border: #5aac84;
+  --note-color: #f0f0f0;
+  --secondary-button-bg: #353b52;
   --secondary-button-color: #e5e7eb;
-  --text-color-secondary-dark: #bbbbbb;
-  --surface-hover-dark: rgba(255, 255, 255, 0.08);
-  --accent-color-dark: #03dac6;
-  --error-color-dark: #cf6679;
+  --primary-color: #5aac84;
+  --text-color-secondary: rgba(255, 255, 255, 0.7);
 }
 
 /* Container Styles */
@@ -159,7 +149,8 @@
 }
 
 .dark-theme .item-name {
-  color: var(--primary-color);
+  color: #ffffff;
+  font-weight: 600;
 }
 
 .category-badge,
@@ -195,7 +186,8 @@
 }
 
 .dark-theme .section-title {
-  color: var(--text-color);
+  font-weight: 600;
+  color: var(--section-title-color);
 }
 
 /* Table Styles */
@@ -241,7 +233,8 @@
 }
 
 .dark-theme .property-indicator {
-  background-color: var(--primary-color);
+  background-color: var(--indicator-color);
+  opacity: 1;
 }
 
 .highlighted .property-indicator {
@@ -249,7 +242,7 @@
 }
 
 .dark-theme .highlighted .property-indicator {
-  background-color: var(--accent-color-dark, #03dac6);
+  background-color: var(--color-secondary, #4a6fa5);
 }
 
 .property-name {
@@ -326,8 +319,9 @@
 }
 
 .dark-theme .info-note {
-  background-color: var(--surface-hover-dark, rgba(255, 255, 255, 0.08));
-  border-left: 3px solid var(--primary-color-dark);
+  background-color: var(--note-bg);
+  border-left: 3px solid var(--note-border);
+  border-radius: 4px;
 }
 
 .note-icon {
@@ -342,7 +336,7 @@
 }
 
 .dark-theme .note-text {
-  color: var(--text-color-secondary-dark, #bbbbbb);
+  color: var(--note-color);
 }
 
 /* Button Styles */
@@ -528,6 +522,10 @@
     min-width: 0;
     font-size: var(--font-size-xs);
   }
+
+  .card-actions {
+    gap: 8px;
+  }
 }
 
 /* Mobile portrait */
@@ -585,15 +583,29 @@
     text-overflow: ellipsis;
   }
 
-  /* Center save button */
+  /* Center action buttons */
   .card-actions {
     justify-content: center;
+    flex-wrap: wrap;
   }
 
-  /* Make sure the button has proper size on mobile */
+  /* Make sure the buttons have proper size on mobile */
   .action-button {
-    min-width: 180px;
+    min-width: 140px;
     height: 40px;
+  }
+
+  /* Make buttons stack on very small screens */
+  @media screen and (max-width: 360px) {
+    .card-actions {
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .action-button {
+      width: 100%;
+      margin-bottom: 8px;
+    }
   }
 
   /* Dark theme specific mobile fixes */
@@ -618,48 +630,47 @@
   }
 
   .dark-theme .oxalate-card {
-    background-color: var(--card-bg);
-  }
-
-  .dark-theme .content-section {
-    color: var(--text-color-dark);
-  }
-
-  .dark-theme .note-text {
-    color: var(--text-color-secondary-dark);
-  }
-
-  /* Override any potential hover effects with proper dark theme colors */
-  .dark-theme .table-row:hover {
-    background-color: var(--surface-hover-dark);
-    border-color: var(--border-color);
-  }
-
-  .dark-theme .action-button {
-    box-shadow: none;
-  }
-
-  .dark-theme .save-button {
-    background-color: var(--primary-color-dark);
-    color: #000;
-  }
-
-  .dark-theme .save-button:active {
-    background-color: #9f66eb;
-  }
-
-  .dark-theme .property-cell,
-  .dark-theme .value-cell {
-    background-color: transparent;
-    border-color: var(--border-color);
-  }
-
-  .dark-theme .table-row {
+    background-color: var(--card-background);
     border: 1px solid var(--border-color);
   }
 
+  .dark-theme .content-section {
+    background-color: var(--card-background);
+  }
+
+  .dark-theme .property-cell {
+    background-color: transparent;
+    border-color: var(--border-color);
+    color: var(--text-color);
+  }
+
+  .dark-theme .value-cell {
+    background-color: transparent;
+    border-color: var(--border-color);
+    color: var(--text-color);
+  }
+
+  .dark-theme .table-row {
+    border-color: var(--border-color);
+    border-bottom: 1px solid var(--border-color);
+  }
+
+  .dark-theme .table-row:hover {
+    background-color: var(--hover-bg);
+  }
+
   .dark-theme .property-indicator {
-    background-color: var(--primary-color);
+    background-color: var(--indicator-color);
+  }
+
+  .dark-theme .section-title {
+    color: var(--section-title-color);
+  }
+
+  .dark-theme .table-row {
+    border: none;
+    border-bottom: none;
+    border-color: transparent;
   }
 }
 
@@ -694,12 +705,13 @@
 
   /* Small screen adjustments for dark theme */
   .dark-theme .property-indicator {
-    background-color: var(--primary-color-dark, #bb86fc);
+    background-color: var(--indicator-color);
   }
 
   .dark-theme .property-cell,
   .dark-theme .value-cell {
-    border-color: var(--border-color);
+    background-color: transparent;
+    border-bottom: none;
   }
 }
 
@@ -808,33 +820,37 @@
 }
 
 .dark-theme .oxalate-card {
-  background-color: var(--card-bg);
-  color: var(--card-text);
-  border: 1px solid var(--border-color);
+  background-color: var(--card-background);
+  color: var(--text-color);
+  box-shadow: none;
+  border: none;
 }
 
 .dark-theme .card-header {
-  border-bottom: 1px solid var(--border-color);
+  border-bottom: none;
+  background-color: var(--header-bg);
+  padding-top: 24px;
+  padding-bottom: 24px;
 }
 
 .dark-theme .card-actions {
-  border-top: 1px solid var(--border-color);
+  border-top: none;
 }
 
-/* Fix table row border colors in dark mode */
 .dark-theme .table-row {
-  border-color: var(--border-color);
+  border: none;
+  border-color: transparent;
 }
 
 /* Ensure dark theme variables are applied regardless of viewport */
 @media screen and (max-width: 768px) {
   .dark-theme .oxalate-card {
-    background-color: var(--card-bg);
-    color: var(--card-text);
+    background-color: var(--card-background);
+    color: var(--text-color);
   }
 
   .dark-theme .section-title {
-    color: var(--text-color);
+    color: var(--section-title-color);
   }
 
   .dark-theme .property-indicator {
@@ -842,21 +858,329 @@
   }
 }
 
-.dark-theme .property-cell,
-.dark-theme .value-cell {
+.dark-theme .property-cell {
+  color: var(--text-color);
   background-color: transparent;
 }
 
-.dark-theme .table-row {
-  border-color: var(--border-color);
+.dark-theme .value-cell {
+  color: var(--text-color);
+  background-color: transparent;
+}
+
+.dark-theme .property-name {
+  color: var(--text-color);
+}
+
+.dark-theme .property-value {
+  color: var(--text-color);
+}
+
+.dark-theme .value-unit {
+  color: var(--unit-color);
+}
+
+.dark-theme .value-high {
+  color: var(--level-6-color);
+}
+
+.dark-theme .value-medium {
+  color: var(--level-4-color);
+}
+
+.dark-theme .value-low {
+  color: var(--level-1-color);
+}
+
+.dark-theme .info-note {
+  background-color: var(--note-bg);
+  border-color: var(--note-border);
+}
+
+.dark-theme .note-text {
+  color: var(--note-color);
+}
+
+.dark-theme .action-button {
+  background-color: var(--indicator-color);
+  color: #ffffff;
+  font-weight: 600;
+  border-radius: 6px;
+}
+
+.dark-theme .action-button:hover:not(:disabled) {
+  background-color: var(--color-primary-dark);
+}
+
+.dark-theme .action-button:disabled {
+  background-color: var(--color-grey-700);
+  color: var(--color-grey-500);
+}
+
+.dark-theme .secondary-button {
+  background-color: var(--secondary-button-bg);
+  color: var(--secondary-button-color);
+}
+
+.dark-theme .secondary-button:hover {
+  background-color: rgba(255, 255, 255, 0.15);
+}
+
+/* Specific dark theme overrides for special states */
+.dark-theme .highlighted .property-indicator {
+  background-color: var(--color-secondary, #4a6fa5);
+}
+
+.dark-theme .highlighted .property-name {
+  color: var(--color-secondary-light, #5d84bc);
+}
+
+.dark-theme .table-row.highlight-row {
+  background-color: rgba(90, 172, 132, 0.1);
+}
+
+.dark-theme .table-row.highlight-row:hover {
+  background-color: rgba(90, 172, 132, 0.2);
+}
+
+.dark-theme .action-button:disabled {
+  background-color: var(--color-grey-700);
+  color: var(--color-grey-500);
+  cursor: not-allowed;
+}
+
+.dark-theme .button-icon.heart-icon::before {
+  color: #ffffff;
+}
+
+.dark-theme .spinner::before {
+  border-color: transparent;
+  border-top-color: var(--card-background);
+}
+
+/* High contrast dark theme for accessibility */
+@media (prefers-contrast: more) {
+  .dark-theme {
+    --text-color: #ffffff;
+    --border-color: #ffffff;
+    --indicator-color: #7ad0a3;
+    --note-color: #ffe066;
+    --card-background: #121212;
+  }
+}
+
+.dark-theme .value-low {
+  color: #4cd964;
+}
+
+.dark-theme .value-medium {
+  color: #ffcc00;
+}
+
+.dark-theme .value-high {
+  color: #ff3b30;
+}
+
+.dark-theme .button-icon.heart-icon::before {
+  color: #ffffff;
 }
 
 .dark-theme .table-row:hover {
-  background-color: var(--surface-hover-dark);
+  background-color: rgba(255, 255, 255, 0.05);
 }
 
-/* Improve title contrast in dark mode */
-.dark-theme .item-name {
-  color: var(--primary-color);
-  font-weight: 600;
+/* Fix close button in dark mode */
+.dark-theme .cdk-overlay-container .cdk-overlay-pane .mat-dialog-container {
+  background-color: transparent !important;
+  box-shadow: none !important;
+}
+
+.dark-theme .cdk-overlay-container .cdk-global-overlay-wrapper {
+  background-color: transparent !important;
+}
+
+.dark-theme button.close-dialog,
+.dark-theme .mat-dialog-title button[mat-icon-button],
+.dark-theme .mat-dialog-title button.mat-icon-button,
+.dark-theme .mat-dialog-actions button[mat-icon-button],
+.dark-theme .mat-dialog-actions button.mat-icon-button,
+.dark-theme .close-button,
+.dark-theme button.mat-button-base,
+.dark-theme .close-icon-button {
+  background-color: transparent !important;
+  color: white !important;
+  box-shadow: none !important;
+  border: none !important;
+}
+
+/* Dialog header area in dark mode */
+.dark-theme .cdk-overlay-pane .dialog-header,
+.dark-theme .cdk-overlay-pane .mat-dialog-title,
+.dark-theme .cdk-overlay-pane .dialog-title-container {
+  background-color: #1e222f !important;
+  color: white !important;
+  box-shadow: none !important;
+  border: none !important;
+}
+
+/* Specifically target the X button */
+.dark-theme .cdk-overlay-pane button.mat-icon-button mat-icon,
+.dark-theme .cdk-overlay-pane button[mat-icon-button] mat-icon,
+.dark-theme .cdk-overlay-pane .close-button mat-icon,
+.dark-theme .mat-dialog-close svg,
+.dark-theme .mat-dialog-close path,
+.dark-theme .close-icon {
+  color: white !important;
+  fill: white !important;
+  background-color: transparent !important;
+}
+
+/* Dialog header and X button fixes for dark mode */
+.dark-theme
+  :is(
+    .mat-dialog-title,
+    .mat-dialog-container,
+    .mat-dialog-content,
+    .mat-dialog-actions
+  ),
+.dark-theme
+  ::ng-deep
+  :is(
+    .mat-dialog-title,
+    .mat-dialog-container,
+    .mat-dialog-content,
+    .mat-dialog-actions
+  ) {
+  background-color: var(--header-bg) !important;
+  color: white !important;
+  box-shadow: none !important;
+  border: none !important;
+}
+
+.dark-theme ::ng-deep .mat-dialog-title,
+.dark-theme ::ng-deep .mat-toolbar {
+  background-color: var(--header-bg) !important;
+  color: white !important;
+  border: none !important;
+}
+
+/* Target all possible close buttons and their icons */
+.dark-theme ::ng-deep button.mat-icon-button,
+.dark-theme ::ng-deep .close-button,
+.dark-theme ::ng-deep .dialog-close-button,
+.dark-theme ::ng-deep .mat-dialog-close,
+.dark-theme ::ng-deep .mat-button-base[aria-label="Close"],
+.dark-theme ::ng-deep .mat-button-base[aria-label="close"],
+.dark-theme ::ng-deep button[aria-label="Close"],
+.dark-theme ::ng-deep button[aria-label="close"],
+.dark-theme ::ng-deep button.dialog-close,
+.dark-theme ::ng-deep .cdk-overlay-container button {
+  background-color: transparent !important;
+  box-shadow: none !important;
+  border: none !important;
+  color: white !important;
+}
+
+/* Target all possible close button icons */
+.dark-theme ::ng-deep button mat-icon,
+.dark-theme ::ng-deep button .mat-icon,
+.dark-theme ::ng-deep .close-button mat-icon,
+.dark-theme ::ng-deep .close-button .mat-icon,
+.dark-theme ::ng-deep .close-icon,
+.dark-theme ::ng-deep svg.mat-dialog-close-svg {
+  color: white !important;
+  fill: white !important;
+  background-color: transparent !important;
+}
+
+/* Fix for the dialog header in dark mode */
+.dark-theme .cdk-overlay-container mat-dialog-container,
+.dark-theme .cdk-overlay-container .mat-dialog-container,
+.dark-theme .cdk-overlay-container .mat-mdc-dialog-container {
+  background-color: var(--card-background) !important;
+  color: var(--text-color) !important;
+  box-shadow: none !important;
+  border: none !important;
+  padding: 0 !important;
+  border-radius: 4px !important;
+}
+
+/* Dialog title/header specific styling for dark mode */
+.dark-theme .cdk-overlay-container .mat-dialog-title,
+.dark-theme .cdk-overlay-container [mat-dialog-title],
+.dark-theme .cdk-overlay-container mat-toolbar,
+.dark-theme .cdk-overlay-container .mat-toolbar {
+  background-color: var(--header-bg) !important;
+  color: white !important;
+  border: none !important;
+  padding: 16px !important;
+  position: relative !important;
+  box-shadow: none !important;
+  border-bottom: none !important;
+  border-radius: 4px 4px 0 0 !important;
+}
+
+/* Clean styling for close button and icon */
+.dark-theme .cdk-overlay-container button[mat-dialog-close],
+.dark-theme .cdk-overlay-container [mat-dialog-close],
+.dark-theme .cdk-overlay-container .mat-dialog-close,
+.dark-theme .cdk-overlay-container button.mat-icon-button,
+.dark-theme .cdk-overlay-container button[mat-icon-button] {
+  position: absolute !important;
+  top: 8px !important;
+  right: 8px !important;
+  width: 32px !important;
+  height: 32px !important;
+  min-width: 32px !important;
+  line-height: 32px !important;
+  padding: 0 !important;
+  background-color: transparent !important;
+  box-shadow: none !important;
+  border: none !important;
+  color: white !important;
+  margin: 0 !important;
+}
+
+/* Fix for x icon */
+.dark-theme .cdk-overlay-container mat-icon,
+.dark-theme .cdk-overlay-container .mat-icon,
+.dark-theme .cdk-overlay-container button mat-icon,
+.dark-theme .cdk-overlay-container button .mat-icon {
+  background-color: transparent !important;
+  color: white !important;
+  fill: white !important;
+  font-size: 18px !important;
+  height: 18px !important;
+  width: 18px !important;
+  line-height: 18px !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+}
+
+/* Close button styles */
+.action-button.close-button {
+  background-color: var(--secondary-button-bg, var(--color-grey-200));
+  color: var(--secondary-button-color, var(--color-grey-700));
+  border: none;
+}
+
+.action-button.close-button:hover {
+  background-color: var(--color-grey-300);
+}
+
+.action-button .close-icon {
+  font-size: 14px;
+  font-weight: bold;
+}
+
+/* Dark theme styles for close button */
+.dark-theme .action-button.close-button {
+  background-color: transparent;
+  color: var(--text-color);
+  border: 1px solid var(--text-color-secondary);
+}
+
+.dark-theme .action-button.close-button:hover {
+  background-color: rgba(255, 255, 255, 0.1);
 }
