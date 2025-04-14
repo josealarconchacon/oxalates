@@ -782,7 +782,7 @@ section:nth-child(even) {
   .search-results-container {
     width: 95%;
     max-height: 90vh;
-    top: 45%;
+    top: 55%;
   }
 
   .results-header {
