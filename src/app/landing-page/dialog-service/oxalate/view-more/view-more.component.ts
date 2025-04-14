@@ -250,9 +250,6 @@ export class ViewMoreComponent implements OnInit, OnDestroy {
     // If we're in a dialog, close it
     if (this.dialogRef) {
       this.dialogRef.close();
-    } else {
-      // Otherwise use router navigation (legacy approach)
-      this.router.navigate(['/oxalates']);
     }
   }
 
