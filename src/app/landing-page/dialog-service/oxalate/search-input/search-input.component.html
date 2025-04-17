@@ -3,9 +3,12 @@
     #searchInputElement
     [(ngModel)]="searchQuery"
     (ngModelChange)="onSearchQueryChange()"
+    (keydown)="onKeyDown($event)"
+    (blur)="onBlur()"
     placeholder="Search for a food or a category to see oxalate levels..."
     class="search-input"
     type="text"
+    autocomplete="off"
   />
   <div class="search-icons">
     <span

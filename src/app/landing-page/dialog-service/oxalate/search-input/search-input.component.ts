@@ -25,10 +25,12 @@ export class SearchInputComponent implements OnInit, OnDestroy {
   @Input() searchQuery: string = '';
   @Output() searchQueryChange = new EventEmitter<string>();
   @Output() clearSearch = new EventEmitter<void>();
+  @Output() enterPressed = new EventEmitter<void>();
   @ViewChild('searchInputElement') searchInputElement?: ElementRef;
 
   isDarkTheme: boolean = false;
   private themeSubscription: Subscription | null = null;
+  private allowBlur: boolean = false;
 
   constructor(
     private themeService: ThemeService,
@@ -64,6 +66,43 @@ export class SearchInputComponent implements OnInit, OnDestroy {
     // Refocus input on resize to keep keyboard visible
     if (this.searchQuery) {
       this.focusInput();
+    }
+  }
+
+  /**
+   * Handle keydown events to prevent keyboard dismissal
+   */
+  @HostListener('keydown', ['$event'])
+  onKeyDown(event: KeyboardEvent) {
+    // Only handle Enter key specially
+    if (event.key === 'Enter') {
+      // Allow blur when Enter is pressed
+      this.allowBlur = true;
+      // Emit event for Enter key press
+      this.enterPressed.emit();
+      // Let the default behavior happen (keyboard dismissal)
+      return;
+    }
+
+    // For all other keys, let the default behavior happen
+    // This prevents character duplication
+  }
+
+  /**
+   * Handle blur event to refocus input on mobile
+   */
+  onBlur() {
+    // Only refocus if we haven't explicitly allowed blur (Enter key)
+    if (!this.allowBlur && this.searchQuery) {
+      // Reset the flag for next time
+      this.allowBlur = false;
+      // Refocus the input
+      setTimeout(() => {
+        this.focusInput();
+      }, 10);
+    } else {
+      // Reset the flag for next time
+      this.allowBlur = false;
     }
   }
 
