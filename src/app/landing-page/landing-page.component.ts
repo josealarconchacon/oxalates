@@ -5,6 +5,7 @@ import {
   ViewChild,
   ElementRef,
   AfterViewChecked,
+  HostListener,
 } from '@angular/core';
 import { ThemeService } from '../shared/services/theme.service';
 import { OxalateService } from './dialog-service/service/oxalate.service';
@@ -38,12 +39,24 @@ export class LandingPageComponent
   private subscriptions: Subscription[] = [];
   private lastQuery: string = '';
   private pendingFocus: boolean = false;
+  private isMobile: boolean = false;
 
   constructor(
     private themeService: ThemeService,
     private oxalateService: OxalateService,
     private router: Router
-  ) {}
+  ) {
+    this.checkMobileDevice();
+  }
+
+  @HostListener('window:resize')
+  onResize() {
+    this.checkMobileDevice();
+  }
+
+  private checkMobileDevice() {
+    this.isMobile = window.innerWidth <= 768;
+  }
 
   ngOnInit() {
     this.setupSearchSubscription();
@@ -122,9 +135,21 @@ export class LandingPageComponent
 
   onSearchQueryChange(query: string) {
     this.searchQuery = query;
-    if (!this.showSearchResults) {
-      this.showSearchResults = true;
-      this.pendingFocus = true;
+
+    // For mobile devices, only show modal after 4 characters
+    if (this.isMobile) {
+      if (query.length >= 4 && !this.showSearchResults) {
+        this.showSearchResults = true;
+        this.pendingFocus = true;
+      } else if (query.length < 4) {
+        this.showSearchResults = false;
+      }
+    } else {
+      // Desktop behavior remains the same
+      if (!this.showSearchResults) {
+        this.showSearchResults = true;
+        this.pendingFocus = true;
+      }
     }
 
     if (!query.trim()) {

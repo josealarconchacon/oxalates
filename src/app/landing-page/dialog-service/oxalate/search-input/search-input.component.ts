@@ -7,6 +7,7 @@ import {
   OnDestroy,
   ElementRef,
   ViewChild,
+  HostListener,
 } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
@@ -58,6 +59,14 @@ export class SearchInputComponent implements OnInit, OnDestroy {
     this.clearSearch.emit();
   }
 
+  @HostListener('window:resize')
+  onResize() {
+    // Refocus input on resize to keep keyboard visible
+    if (this.searchQuery) {
+      this.focusInput();
+    }
+  }
+
   /**
    * Public method to focus the input element
    */
@@ -65,11 +74,15 @@ export class SearchInputComponent implements OnInit, OnDestroy {
     // First try to use ViewChild reference
     if (this.searchInputElement) {
       this.searchInputElement.nativeElement.focus();
+      // Ensure keyboard stays visible on mobile
+      this.searchInputElement.nativeElement.click();
     } else {
       // Otherwise look for input in the component
       const inputElement = this.elementRef.nativeElement.querySelector('input');
       if (inputElement) {
         inputElement.focus();
+        // Ensure keyboard stays visible on mobile
+        inputElement.click();
       }
     }
   }
