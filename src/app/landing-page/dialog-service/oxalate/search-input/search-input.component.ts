@@ -30,7 +30,7 @@ export class SearchInputComponent implements OnInit, OnDestroy {
 
   isDarkTheme: boolean = false;
   private themeSubscription: Subscription | null = null;
-  private allowBlur: boolean = false;
+  private isDoneKeyPressed: boolean = false;
 
   constructor(
     private themeService: ThemeService,
@@ -64,7 +64,7 @@ export class SearchInputComponent implements OnInit, OnDestroy {
   @HostListener('window:resize')
   onResize() {
     // Refocus input on resize to keep keyboard visible
-    if (this.searchQuery) {
+    if (this.searchQuery && !this.isDoneKeyPressed) {
       this.focusInput();
     }
   }
@@ -74,10 +74,15 @@ export class SearchInputComponent implements OnInit, OnDestroy {
    */
   @HostListener('keydown', ['$event'])
   onKeyDown(event: KeyboardEvent) {
-    // Only handle Enter key specially
-    if (event.key === 'Enter') {
-      // Allow blur when Enter is pressed
-      this.allowBlur = true;
+    // Check if this is the "Done" key on mobile keyboard
+    if (
+      event.key === 'Enter' ||
+      event.key === 'Go' ||
+      event.key === 'Search' ||
+      event.key === 'Done'
+    ) {
+      // This is the Done key, allow keyboard dismissal
+      this.isDoneKeyPressed = true;
       // Emit event for Enter key press
       this.enterPressed.emit();
       // Let the default behavior happen (keyboard dismissal)
@@ -92,17 +97,15 @@ export class SearchInputComponent implements OnInit, OnDestroy {
    * Handle blur event to refocus input on mobile
    */
   onBlur() {
-    // Only refocus if we haven't explicitly allowed blur (Enter key)
-    if (!this.allowBlur && this.searchQuery) {
-      // Reset the flag for next time
-      this.allowBlur = false;
+    // Only refocus if the Done key wasn't pressed
+    if (!this.isDoneKeyPressed && this.searchQuery) {
       // Refocus the input
       setTimeout(() => {
         this.focusInput();
       }, 10);
     } else {
       // Reset the flag for next time
-      this.allowBlur = false;
+      this.isDoneKeyPressed = false;
     }
   }
 

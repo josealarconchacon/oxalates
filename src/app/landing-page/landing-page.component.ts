@@ -168,7 +168,7 @@ export class LandingPageComponent
    */
   onSearchEnterPressed() {
     if (this.isMobile) {
-      // On mobile, when Enter is pressed, we want to keep the modal open
+      // On mobile, when Done key is pressed, we want to keep the modal open
       // but allow the keyboard to be dismissed
       this.pendingFocus = false;
     }
