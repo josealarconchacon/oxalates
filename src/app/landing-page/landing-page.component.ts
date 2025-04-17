@@ -136,12 +136,12 @@ export class LandingPageComponent
   onSearchQueryChange(query: string) {
     this.searchQuery = query;
 
-    // For mobile devices, only show modal after 4 characters
+    // For mobile devices, only show modal after 6 characters
     if (this.isMobile) {
-      if (query.length >= 4 && !this.showSearchResults) {
+      if (query.length >= 6 && !this.showSearchResults) {
         this.showSearchResults = true;
         this.pendingFocus = true;
-      } else if (query.length < 4) {
+      } else if (query.length < 6) {
         this.showSearchResults = false;
       }
     } else {
