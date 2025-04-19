@@ -6,6 +6,8 @@ import {
   Input,
   EventEmitter,
   Output,
+  OnChanges,
+  SimpleChanges,
 } from '@angular/core';
 import { CalculateOxalateService } from 'src/app/landing-page/dialog-service/service/calculate-oxalate.service';
 import { CommonModule } from '@angular/common';
@@ -22,6 +24,7 @@ import {
   distinctUntilChanged,
 } from 'rxjs';
 import { ThemeService } from 'src/app/shared/services/theme.service';
+import { Oxalate } from 'src/app/landing-page/model/oxalate';
 
 @Component({
   selector: 'app-calculate-oxalate',
@@ -36,7 +39,7 @@ import { ThemeService } from 'src/app/shared/services/theme.service';
   templateUrl: './calculate-oxalate.component.html',
   styleUrls: ['./calculate-oxalate.component.css'],
 })
-export class CalculateOxalateComponent implements OnInit, OnDestroy {
+export class CalculateOxalateComponent implements OnInit, OnDestroy, OnChanges {
   foodName: string = '';
   servingSize: string = '';
   numberOfServings: number = 1; // Default to 1 serving
@@ -55,6 +58,7 @@ export class CalculateOxalateComponent implements OnInit, OnDestroy {
   isDarkTheme: boolean = false;
 
   @Input() mealType: string = '';
+  @Input() initialFood: Oxalate | null = null;
   @Output() mealLogged = new EventEmitter<any>();
 
   private foodInputSubject = new BehaviorSubject<string>('');
@@ -87,6 +91,22 @@ export class CalculateOxalateComponent implements OnInit, OnDestroy {
         this.cdr.detectChanges();
       }
     );
+  }
+
+  ngOnChanges(changes: SimpleChanges) {
+    if (changes['initialFood'] && changes['initialFood'].currentValue) {
+      const food = changes['initialFood'].currentValue;
+      this.foodName = food.item;
+      this.servingSize = food.serving_size || '1 serving';
+      this.totalOxalatePerServing = Number(food.calc_oxalate_per_serving) || 0;
+      this.totalSolubleOxalatePerServing =
+        Number(food.calc_soluble_mg_oxalate_per_serving) || 0;
+      this.calculatedTotalOxalate =
+        this.totalOxalatePerServing * this.numberOfServings;
+      this.calculatedTotalSolubleOxalate =
+        this.totalSolubleOxalatePerServing * this.numberOfServings;
+      this.showResults = true;
+    }
   }
 
   ngOnDestroy() {

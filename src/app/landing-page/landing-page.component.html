@@ -37,7 +37,7 @@
         <!-- Search Results Section -->
         <div
           class="modal-backdrop"
-          *ngIf="showSearchResults"
+          *ngIf="showSearchResults && !showFoodEntryModal"
           (click)="closeSearchResults()"
         ></div>
         <div *ngIf="showSearchResults" class="search-results-container">
@@ -126,9 +126,20 @@
                       {{ result.calc_oxalate_per_serving }}
                     </p>
                   </div>
-                  <div class="view-more">
-                    <span class="view-more-text">View Details</span>
-                    <i class="fas fa-chevron-right"></i>
+                  <div class="card-actions">
+                    <button
+                      class="log-food-btn"
+                      (click)="
+                        openFoodEntryModal(result); $event.stopPropagation()
+                      "
+                    >
+                      <i class="material-icons">add_circle</i>
+                      <span>Log Food</span>
+                    </button>
+                    <div class="view-more">
+                      <span class="view-more-text">View Details</span>
+                      <i class="fas fa-chevron-right"></i>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -164,4 +175,46 @@
   <section class="footer-section">
     <app-footer></app-footer>
   </section>
+
+  <!-- Food Entry Modal -->
+  <div
+    class="modal-backdrop"
+    *ngIf="showFoodEntryModal"
+    (click)="closeFoodEntryModal()"
+  ></div>
+  <div *ngIf="showFoodEntryModal" class="food-entry-modal">
+    <div class="modal-header">
+      <h2>Log Food</h2>
+      <button
+        class="close-button"
+        (click)="closeFoodEntryModal()"
+        title="Close Modal"
+      >
+        ×
+      </button>
+    </div>
+    <div class="modal-content" *ngIf="selectedFood">
+      <div class="meal-type-selector">
+        <label for="mealType">
+          <i class="material-icons">restaurant</i>
+          Add to:
+        </label>
+        <select
+          id="mealType"
+          [(ngModel)]="selectedMealType"
+          class="meal-type-dropdown"
+        >
+          <option value="breakfast">Breakfast</option>
+          <option value="lunch">Lunch</option>
+          <option value="dinner">Dinner</option>
+          <option value="snacks">Snacks</option>
+        </select>
+      </div>
+      <app-calculate-oxalate
+        [mealType]="selectedMealType"
+        (mealLogged)="onMealLogged($event)"
+        [initialFood]="selectedFood"
+      ></app-calculate-oxalate>
+    </div>
+  </div>
 </main>

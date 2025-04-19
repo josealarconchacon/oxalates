@@ -71,7 +71,6 @@ export function initializeApp(configService: ConfigService) {
 @NgModule({
   declarations: [
     AppComponent,
-    LandingPageComponent,
     OxalateComponent,
     FilterComponent,
     ResourcesComponent,
@@ -119,6 +118,7 @@ export function initializeApp(configService: ConfigService) {
     FooterComponent,
     AuthMessageComponent,
     BeCautiousComponent,
+    LandingPageComponent,
   ],
   providers: [
     ConfigService,

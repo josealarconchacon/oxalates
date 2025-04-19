@@ -6,6 +6,7 @@ import {
   ElementRef,
   AfterViewChecked,
   HostListener,
+  CUSTOM_ELEMENTS_SCHEMA,
 } from '@angular/core';
 import { ThemeService } from '../shared/services/theme.service';
 import { OxalateService } from './dialog-service/service/oxalate.service';
@@ -19,11 +20,30 @@ import {
 } from 'rxjs/operators';
 import { Router } from '@angular/router';
 import { SearchInputComponent } from './dialog-service/oxalate/search-input/search-input.component';
+import { FoodEntryService } from '../user-auth/profile/food-entry/service/food-entry.service';
+import { AuthService } from '../user-auth/service/auth-service.service';
+import { AngularFireAuth } from '@angular/fire/compat/auth';
+import { CalculateOxalateComponent } from '../user-auth/profile/calculate-oxalate/calculate-oxalate.component';
+import { FoodItem } from '../user-auth/profile/food-entry/food-entry.component';
+import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
+import { ResourcesComponent } from './resources/resources.component';
+import { FoodByCategoryComponent } from './dialog-service/food-by-category/food-by-category.component';
+import { ManagingOxalateComponent } from './managing-oxalate/managing-oxalate.component';
+import { FooterComponent } from './footer/footer.component';
 
 @Component({
   selector: 'app-landing-page',
   templateUrl: './landing-page.component.html',
   styleUrls: ['./landing-page.component.css'],
+  standalone: true,
+  imports: [
+    CommonModule,
+    SearchInputComponent,
+    CalculateOxalateComponent,
+    FormsModule,
+  ],
+  schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })
 export class LandingPageComponent
   implements OnInit, OnDestroy, AfterViewChecked
@@ -35,6 +55,9 @@ export class LandingPageComponent
   showSearchResults: boolean = false;
   searchResults: Oxalate[] = [];
   isLoading: boolean = false;
+  showFoodEntryModal: boolean = false;
+  selectedFood: Oxalate | null = null;
+  selectedMealType: 'breakfast' | 'lunch' | 'dinner' | 'snacks' = 'breakfast';
   private searchSubject: Subject<string> = new Subject<string>();
   private subscriptions: Subscription[] = [];
   private lastQuery: string = '';
@@ -44,7 +67,10 @@ export class LandingPageComponent
   constructor(
     private themeService: ThemeService,
     private oxalateService: OxalateService,
-    private router: Router
+    private router: Router,
+    private foodEntryService: FoodEntryService,
+    private authService: AuthService,
+    private afAuth: AngularFireAuth
   ) {
     this.checkMobileDevice();
   }
@@ -203,5 +229,44 @@ export class LandingPageComponent
 
   toggleTheme(): void {
     this.themeService.toggleTheme();
+  }
+
+  openFoodEntryModal(food: Oxalate) {
+    this.selectedFood = food;
+    this.showFoodEntryModal = true;
+    this.showSearchResults = false;
+    this.searchQuery = '';
+  }
+
+  closeFoodEntryModal() {
+    this.showFoodEntryModal = false;
+    this.selectedFood = null;
+  }
+
+  async onMealLogged(foodItem: FoodItem) {
+    try {
+      const utcDate = this.convertToUTC(new Date());
+      await this.foodEntryService.updateMealItems(
+        utcDate,
+        this.selectedMealType,
+        [foodItem]
+      );
+      this.closeFoodEntryModal();
+    } catch (error) {
+      console.error('Error logging meal:', error);
+    }
+  }
+
+  private convertToUTC(date: Date): Date {
+    return new Date(
+      Date.UTC(
+        date.getFullYear(),
+        date.getMonth(),
+        date.getDate(),
+        date.getHours(),
+        date.getMinutes(),
+        date.getSeconds()
+      )
+    );
   }
 }
