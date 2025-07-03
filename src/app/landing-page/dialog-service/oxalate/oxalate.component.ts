@@ -55,6 +55,10 @@ export class OxalateComponent implements OnInit, OnDestroy {
     this.handleQueryParams();
     this.setupNavigationHandling();
 
+    // Set up category and filter change subscriptions
+    this.categoryOnChange();
+    this.filterOnChange();
+
     // Subscribe to theme changes
     this.subscriptions.push(
       this.themeService.isDarkTheme$.subscribe((isDark) => {
@@ -77,6 +81,23 @@ export class OxalateComponent implements OnInit, OnDestroy {
 
           // Process parameters in sequence
           this.processQueryParams(params);
+
+          // Additional check: if category was set in services but not in params, apply it
+          const currentCategory = this.categoryService.currentCategory$.pipe(
+            take(1)
+          );
+          currentCategory.subscribe((category) => {
+            if (category && !params['category']) {
+              console.log(
+                'Category found in service but not in params, applying:',
+                category
+              );
+              this.applyFilters({
+                category: category,
+                calc_level: this.filterService.getCurrentFilter().calc_level,
+              });
+            }
+          });
         });
       })
     );
@@ -110,9 +131,11 @@ export class OxalateComponent implements OnInit, OnDestroy {
     // Check for category parameter - apply this last as it's more important
     if (params['category']) {
       filter.category = params['category'];
+      console.log('Processing category from query params:', params['category']);
 
-      // First update service, then trigger filters
+      // Update services immediately
       this.categoryService.changeCategory(params['category']);
+      this.filterService.setCategory(params['category']);
       filtersUpdated = true;
 
       // Force the dropdown to update by emitting the category again after a short delay
@@ -134,6 +157,9 @@ export class OxalateComponent implements OnInit, OnDestroy {
         this.applyFilters(filter);
         this.cdr.detectChanges();
 
+        // Scroll to top after filters are applied
+        this.scrollToTop();
+
         // Check if we should auto-open the details view for an item
         if (params['autoOpenDetails'] === 'true' && params['itemId']) {
           this.autoOpenItemDetails(params['itemId']);
@@ -143,6 +169,11 @@ export class OxalateComponent implements OnInit, OnDestroy {
       // If only search is provided with no filters
       this.searchSubject.next(this.searchQuery);
 
+      // Scroll to top after search is applied
+      setTimeout(() => {
+        this.scrollToTop();
+      }, 300);
+
       // Check if we should auto-open the details view for an item
       if (params['autoOpenDetails'] === 'true' && params['itemId']) {
         this.autoOpenItemDetails(params['itemId']);
@@ -150,6 +181,11 @@ export class OxalateComponent implements OnInit, OnDestroy {
     } else {
       // No params, just show all
       this.updateDisplayedOxalates();
+
+      // Scroll to top when showing all results
+      setTimeout(() => {
+        this.scrollToTop();
+      }, 100);
 
       // Check if we should auto-open the details view for an item
       if (params['autoOpenDetails'] === 'true' && params['itemId']) {
@@ -298,6 +334,11 @@ export class OxalateComponent implements OnInit, OnDestroy {
               calc_level: '',
             });
             this.paginationService.changePage(1, this.oxalates.length);
+
+            // Scroll to top after category change
+            setTimeout(() => {
+              this.scrollToTop();
+            }, 100);
           }
         },
         error: (error) => {
@@ -360,6 +401,11 @@ export class OxalateComponent implements OnInit, OnDestroy {
             this.oxalates = this.sortBySearchTerm(data, this.searchQuery);
             this.updateDisplayedOxalates();
             this.showAlert = false;
+
+            // Scroll to top after search results are displayed
+            setTimeout(() => {
+              this.scrollToTop();
+            }, 100);
           }
         },
         (error) => {
@@ -475,6 +521,11 @@ export class OxalateComponent implements OnInit, OnDestroy {
 
       this.updateDisplayedOxalates();
       this.cdr.detectChanges();
+
+      // Scroll to top after filters are applied and results are updated
+      setTimeout(() => {
+        this.scrollToTop();
+      }, 100);
     });
   }
 
@@ -777,5 +828,9 @@ export class OxalateComponent implements OnInit, OnDestroy {
         this.cdr.detectChanges();
       }
     });
+  }
+
+  private scrollToTop(): void {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   }
 }

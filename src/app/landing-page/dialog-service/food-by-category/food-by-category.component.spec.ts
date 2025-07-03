@@ -104,7 +104,11 @@ fdescribe('FoodByCategoryComponent', () => {
       category: 'Fruits',
       calc_level: '',
     });
-    expect(router.navigate).toHaveBeenCalledWith(['/oxalate']);
+    expect(router.navigate).toHaveBeenCalledWith(['/oxalate'], {
+      queryParams: {
+        category: 'Fruits',
+      },
+    });
   });
 
   it('should sanitize and prepare SVG', () => {

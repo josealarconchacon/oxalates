@@ -85,7 +85,11 @@ export class FoodByCategoryComponent implements OnInit {
         category: category,
         calc_level: '',
       });
-      this.router.navigate(['/oxalate']);
+      this.router.navigate(['/oxalate'], {
+        queryParams: {
+          category: category,
+        },
+      });
     } else {
       console.warn(`Category "${category}" not found in cardsMap.`);
     }

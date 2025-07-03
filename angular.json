@@ -18,6 +18,12 @@
             "main": "src/main.ts",
             "polyfills": ["zone.js", "src/polyfills.ts"],
             "tsConfig": "tsconfig.app.json",
+            "allowedCommonJsDependencies": [
+              "canvg",
+              "raf",
+              "rgbcolor",
+              "html2canvas"
+            ],
             "assets": [
               "src/favicon.ico",
               "src/assets",
