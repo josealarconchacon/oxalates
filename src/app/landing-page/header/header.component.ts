@@ -44,6 +44,7 @@ export class HeaderComponent implements OnInit {
   private scrollThreshold = 50;
   private lastScrollPosition = 0;
   private scrollTimer: any;
+  private rafId: number | null = null;
 
   constructor(
     private router: Router,
@@ -73,6 +74,13 @@ export class HeaderComponent implements OnInit {
 
     // Initialize user data from your auth service
     this.initializeUserData();
+  }
+
+  ngOnDestroy(): void {
+    // Clean up requestAnimationFrame to prevent memory leaks
+    if (this.rafId) {
+      cancelAnimationFrame(this.rafId);
+    }
   }
 
   toggleNav() {
@@ -111,21 +119,23 @@ export class HeaderComponent implements OnInit {
 
   @HostListener('window:scroll', ['$event'])
   onWindowScroll() {
-    // Clear the existing timer
-    if (this.scrollTimer) {
-      clearTimeout(this.scrollTimer);
+    // Use requestAnimationFrame for better performance
+    if (this.rafId) {
+      cancelAnimationFrame(this.rafId);
     }
 
-    // Set a new timer to debounce the scroll event
-    this.scrollTimer = setTimeout(() => {
+    this.rafId = requestAnimationFrame(() => {
       const currentScroll = window.scrollY;
 
-      // Update scroll state
-      this.isScrolled = currentScroll > this.scrollThreshold;
+      // Only update if there's a significant change to avoid unnecessary updates
+      if (Math.abs(currentScroll - this.lastScrollPosition) > 5) {
+        // Update scroll state
+        this.isScrolled = currentScroll > this.scrollThreshold;
 
-      // Store the last scroll position
-      this.lastScrollPosition = currentScroll;
-    }, 10); // 10ms debounce time
+        // Store the last scroll position
+        this.lastScrollPosition = currentScroll;
+      }
+    });
   }
 
   toggleMobileMenu() {

@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Router } from '@angular/router';
 import { CategoryCard } from '../../model/category-card';
 import { CategoryService } from '../oxalate/service/category.service';
@@ -8,6 +8,7 @@ import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import { HttpClient } from '@angular/common/http';
 import { SvgService } from './service/svg.service';
 import { ThemeService } from '../../../shared/services/theme.service';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-food-by-category',
@@ -16,9 +17,10 @@ import { ThemeService } from '../../../shared/services/theme.service';
   templateUrl: './food-by-category.component.html',
   styleUrl: './food-by-category.component.css',
 })
-export class FoodByCategoryComponent implements OnInit {
+export class FoodByCategoryComponent implements OnInit, OnDestroy {
   cardsMap: Map<string, CategoryCard> = new Map();
   isDarkTheme$ = this.themeService.isDarkTheme$;
+  private subscriptions: Subscription[] = [];
 
   constructor(
     private router: Router,
@@ -33,24 +35,40 @@ export class FoodByCategoryComponent implements OnInit {
     this.loadCards();
   }
 
+  ngOnDestroy(): void {
+    this.subscriptions.forEach((sub) => sub.unsubscribe());
+  }
+
   get cardsArray(): CategoryCard[] {
     return Array.from(this.cardsMap.values());
   }
 
   loadCards(): void {
-    this.http
-      .get<CategoryCard[]>(
-        '../../../../assets/mock-oxalate/food-by-catejory.json'
-      )
-      .subscribe({
-        next: (data) => {
-          this.populateCardsMap(data);
-          this.validateSvgs();
-        },
-        error: (error) => {
-          console.error('Error loading category data:', error);
-        },
-      });
+    this.subscriptions.push(
+      this.http
+        .get<CategoryCard[]>(
+          '../../../../assets/mock-oxalate/food-by-catejory.json'
+        )
+        .subscribe({
+          next: (data) => {
+            this.populateCardsMap(data);
+            // Only validate SVGs in development mode
+            if (!this.isProduction()) {
+              this.validateSvgs();
+            }
+          },
+          error: (error) => {
+            console.error('Error loading category data:', error);
+          },
+        })
+    );
+  }
+
+  private isProduction(): boolean {
+    return (
+      window.location.hostname !== 'localhost' &&
+      !window.location.hostname.includes('127.0.0.1')
+    );
   }
 
   populateCardsMap(data: CategoryCard[]): void {
@@ -64,6 +82,9 @@ export class FoodByCategoryComponent implements OnInit {
   }
 
   validateSvgs(): void {
+    // Only validate in development to avoid performance impact in production
+    if (this.isProduction()) return;
+
     this.cardsMap.forEach((card, title) => {
       if (!card.iconSvg) {
         console.warn(`Missing SVG for category: ${title}`);

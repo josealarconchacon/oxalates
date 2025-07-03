@@ -125,12 +125,12 @@ export class LandingPageComponent
   }
 
   scrollToOxalate() {
-    setTimeout(() => {
+    requestAnimationFrame(() => {
       const element = document.querySelector('app-oxalate');
       if (element) {
         element.scrollIntoView({ behavior: 'smooth' });
       }
-    }, 0);
+    });
   }
 
   onSearchQueryChange(query: string) {

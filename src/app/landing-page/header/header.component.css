@@ -134,6 +134,9 @@
   transition: all 0.3s ease;
   padding: 1rem 2rem;
   backdrop-filter: none;
+  /* Optimize for better scroll performance */
+  will-change: transform, background-color;
+  transform: translateZ(0);
 }
 
 .header.scrolled {
@@ -153,15 +156,15 @@
 }
 
 .header.scrolling-down {
-  transform: translateY(-100%);
+  transform: translate3d(0, -100%, 0);
 }
 
 .header.scrolling-down.scrolled {
-  transform: translateY(-100%);
+  transform: translate3d(0, -100%, 0);
 }
 
 .header.scrolling-up {
-  transform: translateY(0);
+  transform: translate3d(0, 0, 0);
 }
 
 body {

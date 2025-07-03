@@ -47,6 +47,9 @@
   gap: clamp(1rem, 2vw, 1.2rem);
   padding: clamp(1rem, 3vw, 2rem);
   width: 100%;
+  /* Optimize for better scroll performance */
+  will-change: auto;
+  transform: translateZ(0);
 }
 
 @media screen and (max-width: 480px) {
@@ -110,8 +113,12 @@
   background: white;
   border-radius: clamp(1rem, 2vw, 1.5rem);
   overflow: hidden;
-  transition: all 0.4s ease;
+  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+    box-shadow 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   box-shadow: 0 1rem 2rem rgba(0, 0, 0, 0.1);
+  /* Optimize for better scroll performance */
+  will-change: transform;
+  transform: translateZ(0);
 
   &::before {
     content: "";
@@ -121,15 +128,17 @@
     background-image: radial-gradient(circle, #f0f0f0 2px, transparent 2px);
     background-size: clamp(1.5rem, 3vw, 2rem) clamp(1.5rem, 3vw, 2rem);
     opacity: 0.3;
+    /* Optimize background rendering */
+    will-change: auto;
   }
 
   @media (hover: hover) {
     &:hover {
-      transform: translateY(-0.5rem);
+      transform: translate3d(0, -0.5rem, 0);
       box-shadow: 0 1.5rem 3rem rgba(0, 0, 0, 0.15);
 
       .category-title {
-        transform: translateY(-0.5rem);
+        transform: translate3d(0, -0.5rem, 0);
       }
 
       .category-icon {
@@ -160,7 +169,7 @@
 
   @media (hover: hover) {
     &:hover {
-      transform: translateY(-5px);
+      transform: translate3d(0, -5px, 0);
       box-shadow: 0 25px 50px -12px rgba(110, 102, 255, 0.2);
       border-color: rgba(110, 102, 255, 0.25);
     }
@@ -216,12 +225,15 @@
   font-weight: 700;
   color: #2d3436;
   margin: clamp(0.5rem, 2vw, 1rem) 0;
-  transition: all 0.3s ease;
+  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   text-align: center;
   width: 100%;
   overflow-wrap: break-word;
   word-wrap: break-word;
   hyphens: auto;
+  /* Optimize for better performance */
+  will-change: transform;
+  transform: translateZ(0);
 }
 
 .dark-theme .category-title {
@@ -233,11 +245,14 @@
   width: clamp(2.5rem, 5vw, 3.75rem);
   height: clamp(2.5rem, 5vw, 3.75rem);
   margin-bottom: clamp(0.5rem, 2vw, 1rem);
-  transition: all 0.3s ease;
+  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   display: flex;
   justify-content: center;
   align-items: center;
   position: relative;
+  /* Optimize for better performance */
+  will-change: transform;
+  transform: translateZ(0);
 
   &:empty::after {
     content: "No SVG";
@@ -288,8 +303,10 @@
     rgba(45, 52, 54, 0.7)
   );
   height: 0;
-  transition: height 0.3s ease, opacity 0.3s ease;
+  transition: height 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   z-index: 3;
+  /* Optimize for better performance */
+  will-change: height;
 }
 
 .dark-theme .category-overlay {

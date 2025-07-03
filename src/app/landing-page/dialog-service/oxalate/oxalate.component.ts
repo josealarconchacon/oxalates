@@ -170,9 +170,7 @@ export class OxalateComponent implements OnInit, OnDestroy {
       this.searchSubject.next(this.searchQuery);
 
       // Scroll to top after search is applied
-      setTimeout(() => {
-        this.scrollToTop();
-      }, 300);
+      this.scrollToTop();
 
       // Check if we should auto-open the details view for an item
       if (params['autoOpenDetails'] === 'true' && params['itemId']) {
@@ -183,9 +181,7 @@ export class OxalateComponent implements OnInit, OnDestroy {
       this.updateDisplayedOxalates();
 
       // Scroll to top when showing all results
-      setTimeout(() => {
-        this.scrollToTop();
-      }, 100);
+      this.scrollToTop();
 
       // Check if we should auto-open the details view for an item
       if (params['autoOpenDetails'] === 'true' && params['itemId']) {
@@ -336,9 +332,7 @@ export class OxalateComponent implements OnInit, OnDestroy {
             this.paginationService.changePage(1, this.oxalates.length);
 
             // Scroll to top after category change
-            setTimeout(() => {
-              this.scrollToTop();
-            }, 100);
+            this.scrollToTop();
           }
         },
         error: (error) => {
@@ -366,9 +360,40 @@ export class OxalateComponent implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     this.subscriptions.forEach((sub) => sub.unsubscribe());
-    // Clean up event listener
-    window.removeEventListener('popstate', () => {});
+    // Clean up event listener properly
+    window.removeEventListener('popstate', this.handlePopState);
   }
+
+  private handlePopState = () => {
+    // Get query params from URL
+    const urlParams = new URLSearchParams(window.location.search);
+
+    if (urlParams.has('search')) {
+      // Ensure search parameter is restored
+      this.searchQuery = urlParams.get('search') || '';
+
+      // Re-apply the search
+      if (this.searchQuery) {
+        this.searchSubject.next(this.searchQuery);
+      }
+
+      // Apply category if present
+      if (urlParams.has('category')) {
+        const category = urlParams.get('category') || '';
+        this.categoryService.changeCategory(category);
+        this.filterService.setCategory(category);
+      }
+
+      // Apply level if present
+      if (urlParams.has('level')) {
+        const level = urlParams.get('level') || '';
+        this.filterService.updateFilter({ calc_level: level });
+      }
+
+      // Force update
+      this.cdr.detectChanges();
+    }
+  };
 
   private initializeViewMode(): void {
     const savedViewMode = localStorage.getItem('viewMode');
@@ -403,9 +428,7 @@ export class OxalateComponent implements OnInit, OnDestroy {
             this.showAlert = false;
 
             // Scroll to top after search results are displayed
-            setTimeout(() => {
-              this.scrollToTop();
-            }, 100);
+            this.scrollToTop();
           }
         },
         (error) => {
@@ -523,9 +546,7 @@ export class OxalateComponent implements OnInit, OnDestroy {
       this.cdr.detectChanges();
 
       // Scroll to top after filters are applied and results are updated
-      setTimeout(() => {
-        this.scrollToTop();
-      }, 100);
+      this.scrollToTop();
     });
   }
 
@@ -581,24 +602,10 @@ export class OxalateComponent implements OnInit, OnDestroy {
     this.selectedOxalate = oxalate;
     document.body.style.overflow = 'hidden';
 
-    // Force several change detection cycles to ensure the view updates
-    this.cdr.detectChanges();
-
-    // Also use a timeout as a backup
-    setTimeout(() => {
-      // Double-check that the selection is still valid
-      if (!this.selectedOxalate) {
-        this.selectedOxalate = oxalate;
-      }
+    // Use requestAnimationFrame for better performance
+    requestAnimationFrame(() => {
       this.cdr.detectChanges();
-
-      // Check the modal dom element to verify it exists
-      const modalElement = document.querySelector('.modal-overlay');
-      if (!modalElement) {
-        console.warn('Modal element not found in DOM, forcing another update');
-        this.forceShowModal(oxalate);
-      }
-    }, 100);
+    });
   }
 
   // Force modal to show as a last resort
@@ -798,39 +805,13 @@ export class OxalateComponent implements OnInit, OnDestroy {
 
   private setupNavigationHandling(): void {
     // Listen for browser navigation events
-    window.addEventListener('popstate', () => {
-      // Get query params from URL
-      const urlParams = new URLSearchParams(window.location.search);
-
-      if (urlParams.has('search')) {
-        // Ensure search parameter is restored
-        this.searchQuery = urlParams.get('search') || '';
-
-        // Re-apply the search
-        if (this.searchQuery) {
-          this.searchSubject.next(this.searchQuery);
-        }
-
-        // Apply category if present
-        if (urlParams.has('category')) {
-          const category = urlParams.get('category') || '';
-          this.categoryService.changeCategory(category);
-          this.filterService.setCategory(category);
-        }
-
-        // Apply level if present
-        if (urlParams.has('level')) {
-          const level = urlParams.get('level') || '';
-          this.filterService.updateFilter({ calc_level: level });
-        }
-
-        // Force update
-        this.cdr.detectChanges();
-      }
-    });
+    window.addEventListener('popstate', this.handlePopState);
   }
 
   private scrollToTop(): void {
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+    // Use requestAnimationFrame for smoother scrolling
+    requestAnimationFrame(() => {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
   }
 }

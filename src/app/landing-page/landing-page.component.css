@@ -473,6 +473,10 @@ section:nth-child(even) {
   flex-direction: column;
   animation: slideIn 0.3s ease-out;
   animation-fill-mode: both;
+  /* Optimize for better scroll performance */
+  will-change: scroll-position;
+  -webkit-overflow-scrolling: touch;
+  transform: translate3d(-50%, -50%, 0);
 }
 
 @keyframes slideIn {
@@ -1072,4 +1076,30 @@ section:nth-child(even) {
   background-color: var(--hover-background);
   transform: translateY(-2px);
   box-shadow: var(--shadow-md);
+}
+
+/* Optimize categories section for better scroll performance */
+.categories-section {
+  /* Optimize for better scroll performance */
+  will-change: auto;
+  transform: translateZ(0);
+}
+
+.categories-section .container {
+  /* Optimize container for better performance */
+  will-change: auto;
+  transform: translateZ(0);
+}
+
+/* Optimize all sections for better scroll performance */
+.section {
+  /* Optimize for better scroll performance */
+  will-change: auto;
+  transform: translateZ(0);
+}
+
+.section .container {
+  /* Optimize container for better performance */
+  will-change: auto;
+  transform: translateZ(0);
 }

@@ -48,6 +48,20 @@ document.addEventListener(
   supportsPassive ? { passive: true } : false
 );
 
+// Add passive scroll event listeners for better performance
+document.addEventListener(
+  'scroll',
+  function () {},
+  supportsPassive ? { passive: true } : false
+);
+
+// Add wheel event listener with passive option for better scroll performance
+document.addEventListener(
+  'wheel',
+  function () {},
+  supportsPassive ? { passive: true } : false
+);
+
 // Handle older browsers that don't support custom elements
 if (!customElements.get('app-root')) {
   customElements.define(

@@ -5,12 +5,19 @@ import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
   providedIn: 'root',
 })
 export class SvgService {
+  private svgCache = new Map<string, SafeHtml>();
+
   constructor(private sanitizer: DomSanitizer) {}
 
   sanitizeAndPrepareSvg(svg: string): SafeHtml {
     if (!svg) {
       console.warn('Missing SVG, using default.');
       return this.getDefaultSvg();
+    }
+
+    // Check cache first
+    if (this.svgCache.has(svg)) {
+      return this.svgCache.get(svg)!;
     }
 
     try {
@@ -28,7 +35,13 @@ export class SvgService {
         );
       }
 
-      return this.sanitizer.bypassSecurityTrustHtml(normalizedSvg);
+      const sanitizedSvg =
+        this.sanitizer.bypassSecurityTrustHtml(normalizedSvg);
+
+      // Cache the result
+      this.svgCache.set(svg, sanitizedSvg);
+
+      return sanitizedSvg;
     } catch (error) {
       console.error('Error sanitizing SVG:', svg, error);
       return this.getDefaultSvg();
@@ -43,5 +56,10 @@ export class SvgService {
       </svg>
     `;
     return this.sanitizer.bypassSecurityTrustHtml(defaultSvg);
+  }
+
+  // Clear cache if needed
+  clearCache(): void {
+    this.svgCache.clear();
   }
 }
