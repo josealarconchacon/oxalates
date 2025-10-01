@@ -8,7 +8,7 @@ import {
 } from './services/suggestions.service';
 import { of, throwError } from 'rxjs';
 
-fdescribe('SuggestionsComponent', () => {
+describe('SuggestionsComponent', () => {
   let component: SuggestionsComponent;
   let fixture: ComponentFixture<SuggestionsComponent>;
   let mockSuggestionsService: jasmine.SpyObj<SuggestionsService>;
