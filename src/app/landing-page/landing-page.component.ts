@@ -17,7 +17,7 @@ import {
   switchMap,
   tap,
 } from 'rxjs/operators';
-import { Router } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
 import { SearchInputComponent } from './dialog-service/oxalate/search-input/search-input.component';
 
 @Component({
@@ -35,6 +35,7 @@ export class LandingPageComponent
   showSearchResults: boolean = false;
   searchResults: Oxalate[] = [];
   isLoading: boolean = false;
+  showOxalateComponent: boolean = false;
   private searchSubject: Subject<string> = new Subject<string>();
   private subscriptions: Subscription[] = [];
   private lastQuery: string = '';
@@ -44,7 +45,8 @@ export class LandingPageComponent
   constructor(
     private themeService: ThemeService,
     private oxalateService: OxalateService,
-    private router: Router
+    private router: Router,
+    private activatedRoute: ActivatedRoute
   ) {
     this.checkMobileDevice();
   }
@@ -60,6 +62,13 @@ export class LandingPageComponent
 
   ngOnInit() {
     this.setupSearchSubscription();
+    this.checkQueryParams();
+  }
+
+  private checkQueryParams() {
+    this.activatedRoute.queryParams.subscribe((params) => {
+      this.showOxalateComponent = params['showOxalate'] === 'true';
+    });
   }
 
   ngAfterViewChecked() {

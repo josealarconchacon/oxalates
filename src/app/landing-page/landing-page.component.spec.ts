@@ -1,22 +1,34 @@
-import {
-  ComponentFixture,
-  TestBed,
-  fakeAsync,
-  tick,
-} from '@angular/core/testing';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { LandingPageComponent } from './landing-page.component';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { of } from 'rxjs';
 import { NO_ERRORS_SCHEMA } from '@angular/core';
+import { ThemeService } from '../shared/services/theme.service';
+import { OxalateService } from './dialog-service/service/oxalate.service';
 
 describe('LandingPageComponent', () => {
   let component: LandingPageComponent;
   let fixture: ComponentFixture<LandingPageComponent>;
+  let mockOxalateService: jasmine.SpyObj<OxalateService>;
 
   beforeEach(() => {
+    // Create mock OxalateService
+    mockOxalateService = jasmine.createSpyObj('OxalateService', [
+      'searchOxalateData',
+    ]);
+    mockOxalateService.searchOxalateData.and.returnValue(of([]));
+
     TestBed.configureTestingModule({
       declarations: [LandingPageComponent],
       providers: [
+        ThemeService,
+        { provide: OxalateService, useValue: mockOxalateService },
+        {
+          provide: Router,
+          useValue: {
+            navigate: jasmine.createSpy('navigate'),
+          },
+        },
         {
           provide: ActivatedRoute,
           useValue: {
@@ -41,9 +53,23 @@ describe('LandingPageComponent', () => {
   describe('OnInit', () => {
     it('should initialize showOxalateComponent to false by default', () => {
       TestBed.resetTestingModule();
+
+      const mockOxalateServiceLocal = jasmine.createSpyObj('OxalateService', [
+        'searchOxalateData',
+      ]);
+      mockOxalateServiceLocal.searchOxalateData.and.returnValue(of([]));
+
       TestBed.configureTestingModule({
         declarations: [LandingPageComponent],
         providers: [
+          ThemeService,
+          { provide: OxalateService, useValue: mockOxalateServiceLocal },
+          {
+            provide: Router,
+            useValue: {
+              navigate: jasmine.createSpy('navigate'),
+            },
+          },
           {
             provide: ActivatedRoute,
             useValue: {
@@ -63,9 +89,23 @@ describe('LandingPageComponent', () => {
 
     it('should set showOxalateComponent to true when showOxalate query param is present', () => {
       TestBed.resetTestingModule();
+
+      const mockOxalateServiceLocal = jasmine.createSpyObj('OxalateService', [
+        'searchOxalateData',
+      ]);
+      mockOxalateServiceLocal.searchOxalateData.and.returnValue(of([]));
+
       TestBed.configureTestingModule({
         declarations: [LandingPageComponent],
         providers: [
+          ThemeService,
+          { provide: OxalateService, useValue: mockOxalateServiceLocal },
+          {
+            provide: Router,
+            useValue: {
+              navigate: jasmine.createSpy('navigate'),
+            },
+          },
           {
             provide: ActivatedRoute,
             useValue: {
@@ -95,27 +135,34 @@ describe('LandingPageComponent', () => {
   });
 
   describe('scrollToOxalate', () => {
-    it('should scroll to the app-oxalate element smoothly', fakeAsync(() => {
+    it('should scroll to the app-oxalate element smoothly', (done) => {
       const mockElement = document.createElement('div');
       mockElement.scrollIntoView = jasmine.createSpy('scrollIntoView');
       spyOn(document, 'querySelector').and.returnValue(mockElement);
 
       component.scrollToOxalate();
-      tick();
 
-      expect(document.querySelector).toHaveBeenCalledWith('app-oxalate');
-      expect(mockElement.scrollIntoView).toHaveBeenCalledWith({
-        behavior: 'smooth',
+      // Wait for requestAnimationFrame to complete
+      requestAnimationFrame(() => {
+        expect(document.querySelector).toHaveBeenCalledWith('app-oxalate');
+        expect(mockElement.scrollIntoView).toHaveBeenCalledWith({
+          behavior: 'smooth',
+        });
+        done();
       });
-    }));
+    });
 
-    it('should not throw an error if the app-oxalate element does not exist', fakeAsync(() => {
+    it('should not throw an error if the app-oxalate element does not exist', (done) => {
       spyOn(document, 'querySelector').and.returnValue(null);
 
       expect(() => {
         component.scrollToOxalate();
-        tick();
       }).not.toThrow();
-    }));
+
+      requestAnimationFrame(() => {
+        expect(document.querySelector).toHaveBeenCalledWith('app-oxalate');
+        done();
+      });
+    });
   });
 });
