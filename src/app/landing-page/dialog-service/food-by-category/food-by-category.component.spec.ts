@@ -13,7 +13,7 @@ import { FilterService } from '../oxalate/service/filter.service';
 import { SvgService } from './service/svg.service';
 import { Router } from '@angular/router';
 
-fdescribe('FoodByCategoryComponent', () => {
+describe('FoodByCategoryComponent', () => {
   let component: FoodByCategoryComponent;
   let fixture: ComponentFixture<FoodByCategoryComponent>;
   let httpMock: HttpTestingController;
