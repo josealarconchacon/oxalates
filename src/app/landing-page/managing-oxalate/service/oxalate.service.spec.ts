@@ -5,7 +5,7 @@ import {
 } from '@angular/common/http/testing';
 import { OxalateService } from './oxalate.service';
 
-fdescribe('OxalateService', () => {
+describe('OxalateService', () => {
   let service: OxalateService;
   let httpMock: HttpTestingController;
   const jsonUrl = '../../../../assets/mock-oxalate/oxalate-content.json';
