@@ -129,13 +129,6 @@ fdescribe('SuggestionsService', () => {
 
   describe('submitSuggestion', () => {
     it('should make POST request to correct endpoint', () => {
-      const mockSuggestion: SuggestionForm = {
-        title: 'Test Suggestion',
-        category: 'feature',
-        description: 'This is a test suggestion with enough characters',
-      };
-      const mockResponse = { success: true, id: '123' };
-
       service.submitSuggestion(mockSuggestion).subscribe({
         next: (response) => {
           expect(response).toEqual(mockResponse);
@@ -149,14 +142,7 @@ fdescribe('SuggestionsService', () => {
     });
 
     it('should handle suggestion with all required fields', () => {
-      const suggestion: SuggestionForm = {
-        title: 'New Feature Request',
-        category: 'enhancement',
-        description: 'Please add this amazing feature to the application',
-      };
-
       service.submitSuggestion(suggestion).subscribe();
-
       const req = httpMock.expectOne(`${apiUrl}/submitSuggestion`);
       expect(req.request.body.title).toBe('New Feature Request');
       expect(req.request.body.category).toBe('enhancement');
@@ -167,14 +153,7 @@ fdescribe('SuggestionsService', () => {
     });
 
     it('should handle HTTP error response', () => {
-      const mockSuggestion = {
-        title: 'Test',
-        category: 'bug',
-        description: 'Test description with minimum characters',
-      };
-      const errorMessage = 'Server error';
-
-      service.submitSuggestion(mockSuggestion).subscribe({
+      service.submitSuggestion(mockSuggestionTest).subscribe({
         next: () => fail('should have failed with 500 error'),
         error: (error) => {
           expect(error.status).toBe(500);
@@ -186,12 +165,6 @@ fdescribe('SuggestionsService', () => {
     });
 
     it('should accept any type of suggestion object', () => {
-      const customSuggestion = {
-        title: 'Custom',
-        customField: 'value',
-        anotherField: 123,
-      };
-
       service.submitSuggestion(customSuggestion).subscribe();
 
       const req = httpMock.expectOne(`${apiUrl}/submitSuggestion`);
@@ -202,13 +175,6 @@ fdescribe('SuggestionsService', () => {
 
   describe('submitSupport', () => {
     it('should return Observable<boolean> with true value', (done) => {
-      const mockSupport: SupportForm = {
-        name: 'John Doe',
-        email: 'john@example.com',
-        issueType: 'technical',
-        message: 'This is a test support message with enough characters',
-      };
-
       service.submitSupport(mockSupport).subscribe({
         next: (result) => {
           expect(result).toBeTrue();
@@ -219,29 +185,15 @@ fdescribe('SuggestionsService', () => {
 
     it('should log support request to console', () => {
       spyOn(console, 'log');
-      const mockSupport: SupportForm = {
-        name: 'Jane Smith',
-        email: 'jane@example.com',
-        issueType: 'billing',
-        message: 'I have a billing question about my subscription',
-      };
-
-      service.submitSupport(mockSupport).subscribe();
+      service.submitSupport(mockSupportTest).subscribe();
 
       expect(console.log).toHaveBeenCalledWith(
         'Support request submitted:',
-        mockSupport
+        mockSupportTest
       );
     });
 
     it('should handle support with all required fields', (done) => {
-      const support: SupportForm = {
-        name: 'Test User',
-        email: 'test@test.com',
-        issueType: 'account',
-        message: 'I need help with my account settings and preferences',
-      };
-
       service.submitSupport(support).subscribe({
         next: (result) => {
           expect(result).toBe(true);
@@ -252,16 +204,9 @@ fdescribe('SuggestionsService', () => {
     });
 
     it('should return observable that completes synchronously', (done) => {
-      const support: SupportForm = {
-        name: 'Quick Test',
-        email: 'quick@test.com',
-        issueType: 'other',
-        message: 'This should complete synchronously without network delay',
-      };
-
       let completed = false;
 
-      service.submitSupport(support).subscribe({
+      service.submitSupport(supportTest).subscribe({
         next: () => {
           completed = true;
         },
@@ -283,3 +228,57 @@ fdescribe('SuggestionsService', () => {
     });
   });
 });
+
+const mockSuggestion: SuggestionForm = {
+  title: 'Test Suggestion',
+  category: 'feature',
+  description: 'This is a test suggestion with enough characters',
+};
+
+const mockResponse = { success: true, id: '123' };
+
+const suggestion: SuggestionForm = {
+  title: 'New Feature Request',
+  category: 'enhancement',
+  description: 'Please add this amazing feature to the application',
+};
+
+const mockSuggestionTest = {
+  title: 'Test',
+  category: 'bug',
+  description: 'Test description with minimum characters',
+};
+const errorMessage = 'Server error';
+
+const customSuggestion = {
+  title: 'Custom',
+  customField: 'value',
+  anotherField: 123,
+};
+
+const mockSupport: SupportForm = {
+  name: 'John Doe',
+  email: 'john@example.com',
+  issueType: 'technical',
+  message: 'This is a test support message with enough characters',
+};
+
+const mockSupportTest: SupportForm = {
+  name: 'Jane Smith',
+  email: 'jane@example.com',
+  issueType: 'billing',
+  message: 'I have a billing question about my subscription',
+};
+const support: SupportForm = {
+  name: 'Test User',
+  email: 'test@test.com',
+  issueType: 'account',
+  message: 'I need help with my account settings and preferences',
+};
+
+const supportTest: SupportForm = {
+  name: 'Quick Test',
+  email: 'quick@test.com',
+  issueType: 'other',
+  message: 'This should complete synchronously without network delay',
+};
