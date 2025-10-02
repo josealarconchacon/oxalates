@@ -5,7 +5,7 @@ import { ManagingOxalateComponent } from './managing-oxalate.component';
 import { OxalateService } from './service/oxalate.service';
 import { of, throwError } from 'rxjs';
 
-fdescribe('ManagingOxalateComponent', () => {
+describe('ManagingOxalateComponent', () => {
   let component: ManagingOxalateComponent;
   let fixture: ComponentFixture<ManagingOxalateComponent>;
   let mockOxalateService: jasmine.SpyObj<OxalateService>;
