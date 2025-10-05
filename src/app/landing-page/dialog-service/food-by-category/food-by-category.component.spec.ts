@@ -14,7 +14,7 @@ import { SvgService } from './service/svg.service';
 import { ThemeService } from '../../../shared/services/theme.service';
 import { Router } from '@angular/router';
 
-fdescribe('FoodByCategoryComponent', () => {
+describe('FoodByCategoryComponent', () => {
   let component: FoodByCategoryComponent;
   let fixture: ComponentFixture<FoodByCategoryComponent>;
   let httpMock: HttpTestingController;
