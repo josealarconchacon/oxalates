@@ -12,8 +12,14 @@ export class BenefitsComponent implements OnInit {
   constructor(private benefitsService: BenefitsService) {}
 
   ngOnInit(): void {
-    this.benefitsService.getBenefits().subscribe((data) => {
-      this.benefits = data.benefits;
+    this.benefitsService.getBenefits().subscribe({
+      next: (data) => {
+        this.benefits = data.benefits;
+      },
+      error: (error) => {
+        console.error('Error loading benefits:', error);
+        this.benefits = [];
+      },
     });
   }
 }
