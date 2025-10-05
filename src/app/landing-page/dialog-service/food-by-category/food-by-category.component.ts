@@ -64,11 +64,8 @@ export class FoodByCategoryComponent implements OnInit, OnDestroy {
     );
   }
 
-  private isProduction(): boolean {
-    return (
-      window.location.hostname !== 'localhost' &&
-      !window.location.hostname.includes('127.0.0.1')
-    );
+  private isProduction(hostname: string = window.location.hostname): boolean {
+    return hostname !== 'localhost' && !hostname.includes('127.0.0.1');
   }
 
   populateCardsMap(data: CategoryCard[]): void {
