@@ -418,15 +418,11 @@ section:nth-child(even) {
 
 .search-wrapper {
   width: 100%;
-  background: var(--background-color);
-  border-radius: 16px;
+  background: transparent;
+  border-radius: 0;
   padding: 0;
-  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
-}
-
-.search-wrapper:hover {
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
+  transition: all 0.2s ease;
+  border: none;
 }
 
 .search-input {
@@ -813,12 +809,12 @@ section:nth-child(even) {
 
 /* Dark theme support */
 :host-context(.dark-theme) .modal-backdrop {
-  background-color: #1a1a1a;
+  background-color: var(--background-color);
 }
 
 :host-context(.dark-theme) .search-results-container {
-  background-color: var(--dark-card-background);
-  box-shadow: 0 8px 24px #1a1a1a;
+  background-color: var(--card-background);
+  box-shadow: 0 8px 24px var(--shadow-color);
 }
 
 :host-context(.dark-theme) .modal-header,
@@ -832,21 +828,21 @@ section:nth-child(even) {
 }
 
 :host-context(.dark-theme) .close-button {
-  color: #b3b3b3;
+  color: var(--text-muted);
 }
 
 :host-context(.dark-theme) .close-button:hover {
-  background-color: #333333;
-  color: var(--dark-text-color, #fff);
+  background-color: var(--hover-background);
+  color: var(--text-primary);
 }
 
 :host-context(.dark-theme) .loading-spinner {
-  border-color: #222222;
+  border-color: var(--border-color);
   border-top-color: var(--primary-color);
 }
 
 :host-context(.dark-theme) .loading-container p {
-  color: #b3b3b3;
+  color: var(--text-muted);
 }
 
 :host-context(.dark-theme) .search-result-card {
@@ -855,7 +851,7 @@ section:nth-child(even) {
 }
 
 :host-context(.dark-theme) .search-result-card:hover {
-  box-shadow: 0 4px 12px #000000;
+  box-shadow: 0 4px 12px var(--shadow-color);
   border-color: var(--primary-color);
 }
 
@@ -868,16 +864,16 @@ section:nth-child(even) {
 }
 
 :host-context(.dark-theme) .result-snippet {
-  color: #b3b3b3;
+  color: var(--text-muted);
 }
 
 :host-context(.dark-theme) .result-snippet.category {
-  background-color: #202030;
+  background-color: var(--surface-color);
   color: var(--primary-color);
 }
 
 :host-context(.dark-theme) .results-stats {
-  color: #b3b3b3;
+  color: var(--text-muted);
 }
 
 :host-context(.dark-theme) .search-term {
@@ -885,12 +881,12 @@ section:nth-child(even) {
 }
 
 :host-context(.dark-theme) .search-results-container::-webkit-scrollbar-thumb {
-  background-color: #444444;
+  background-color: var(--gray-500);
 }
 
 :host-context(.dark-theme) .search-initial-state i,
 :host-context(.dark-theme) .no-results i {
-  color: #b3b3b3;
+  color: var(--text-muted);
 }
 
 :host-context(.dark-theme) .search-initial-state h3,
@@ -900,7 +896,7 @@ section:nth-child(even) {
 
 :host-context(.dark-theme) .search-initial-state p,
 :host-context(.dark-theme) .no-results p {
-  color: #b3b3b3;
+  color: var(--text-muted);
 }
 
 :host-context(.dark-theme) .search-content-container {
@@ -1034,15 +1030,7 @@ section:nth-child(even) {
   color: var(--text-primary);
 }
 
-:host-context(.dark-theme) .search-input::placeholder {
-  color: #ffffff;
-  opacity: 0.7;
-}
-
-:host-context(.dark-theme) .search-input {
-  color: #ffffff;
-  background-color: transparent;
-}
+/* Search input now uses CSS variables, so these overrides are no longer needed */
 
 :host-context(.dark-theme) .search-container {
   background-color: transparent;

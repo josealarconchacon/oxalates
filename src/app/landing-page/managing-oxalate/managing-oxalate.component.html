@@ -1,21 +1,31 @@
 <section class="managing-oxalate" id="frq">
-  <div class="section-header">
-    <h2>{{ content?.title }}</h2>
-    <div class="section-description" *ngIf="content?.description">
-      <p>{{ content?.description }}</p>
+  <div class="container">
+    <!-- Header Section -->
+    <div class="section-header">
+      <h2>{{ content?.title }}</h2>
+      <p class="section-description" *ngIf="content?.description">
+        {{ content?.description }}
+      </p>
     </div>
-  </div>
 
-  <div class="use-content">
-    <div class="info">
+    <!-- Tips Grid -->
+    <div class="tips-container">
       <div class="tips-grid">
-        <div class="tip-card" *ngFor="let tip of content?.tips">
-          <div class="tip-icon">
-            <mat-icon [ngClass]="tip.iconClass">{{ tip.icon }}</mat-icon>
+        <div
+          class="tip-card"
+          *ngFor="let tip of content?.tips; let i = index"
+          [class.community-card]="tip.title === 'Community Support'"
+        >
+          <div class="tip-icon-wrapper">
+            <div class="tip-icon" [ngClass]="tip.iconClass">
+              <mat-icon>{{ tip.icon }}</mat-icon>
+            </div>
+            <div class="tip-number">{{ i + 1 }}</div>
           </div>
+
           <div class="tip-content">
-            <h4>{{ tip.title }}</h4>
-            <p>
+            <h3 class="tip-title">{{ tip.title }}</h3>
+            <p class="tip-description">
               {{ tip.description }}
               <a
                 *ngIf="tip.title === 'Community Support'"
@@ -24,8 +34,8 @@
                 rel="noopener noreferrer"
                 class="community-link"
               >
-                Join here
-                <mat-icon class="external-link-icon">open_in_new</mat-icon>
+                Join our community
+                <mat-icon class="link-icon">arrow_forward</mat-icon>
               </a>
             </p>
           </div>
