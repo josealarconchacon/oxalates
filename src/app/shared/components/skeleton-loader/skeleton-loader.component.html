@@ -1,0 +1,47 @@
+<div class="skeleton-wrapper">
+  <ng-container *ngIf="type === 'card'">
+    <div class="skeleton-card" *ngFor="let _ of skeletonArray">
+      <div class="skeleton skeleton-image"></div>
+      <div class="skeleton skeleton-title"></div>
+      <div class="skeleton skeleton-text"></div>
+      <div class="skeleton skeleton-text skeleton-short"></div>
+    </div>
+  </ng-container>
+
+  <ng-container *ngIf="type === 'list'">
+    <div class="skeleton-list-item" *ngFor="let _ of skeletonArray">
+      <div class="skeleton skeleton-circle"></div>
+      <div class="skeleton-list-content">
+        <div class="skeleton skeleton-title"></div>
+        <div class="skeleton skeleton-text skeleton-short"></div>
+      </div>
+    </div>
+  </ng-container>
+
+  <ng-container *ngIf="type === 'text'">
+    <div
+      class="skeleton skeleton-text"
+      *ngFor="let _ of skeletonArray"
+      [style.width]="width"
+      [style.height]="height"
+    ></div>
+  </ng-container>
+
+  <ng-container *ngIf="type === 'circle'">
+    <div
+      class="skeleton skeleton-circle"
+      *ngFor="let _ of skeletonArray"
+      [style.width]="width"
+      [style.height]="width"
+    ></div>
+  </ng-container>
+
+  <ng-container *ngIf="type === 'rect'">
+    <div
+      class="skeleton"
+      *ngFor="let _ of skeletonArray"
+      [style.width]="width"
+      [style.height]="height"
+    ></div>
+  </ng-container>
+</div>

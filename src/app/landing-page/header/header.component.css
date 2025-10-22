@@ -122,6 +122,7 @@
   --header-shadow-dark: 0 2px 8px rgba(0, 0, 0, 0.3);
   --header-transform-duration: 0.3s;
   --header-transform-timing: cubic-bezier(0.4, 0, 0.2, 1);
+  --header-height: 64px; /* Standardized header height */
 }
 
 .header {
@@ -132,11 +133,14 @@
   z-index: 1000;
   background-color: transparent;
   transition: all 0.3s ease;
-  padding: 1rem 2rem;
+  padding: 1rem max(2rem, env(safe-area-inset-left)) 1rem
+    max(2rem, env(safe-area-inset-right));
+  padding-top: max(1rem, env(safe-area-inset-top));
   backdrop-filter: none;
   /* Optimize for better scroll performance */
   will-change: transform, background-color;
   transform: translateZ(0);
+  min-height: var(--header-height);
 }
 
 .header.scrolled {
@@ -168,7 +172,7 @@
 }
 
 body {
-  padding-top: 64px;
+  padding-top: var(--header-height);
 }
 
 .header-content {
@@ -177,7 +181,7 @@ body {
   align-items: center;
   max-width: var(--container-xl);
   margin: 0 auto;
-  height: 64px;
+  min-height: var(--header-height);
 }
 
 .logo-container {
@@ -186,7 +190,6 @@ body {
   text-decoration: none;
   color: var(--text-primary);
   transition: opacity var(--transition-fast);
-  gap: var(--spacing-2);
 }
 
 .logo-container:hover {
@@ -205,10 +208,16 @@ body {
   background: transparent;
   border: none;
   cursor: pointer;
-  padding: var(--spacing-2);
+  padding: 8px;
   margin: 0;
   border-radius: var(--radius-base);
   transition: background-color var(--transition-fast);
+  /* Ensure proper touch target size */
+  min-width: 44px;
+  min-height: 44px;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
 }
 
 .hamburger:hover {
@@ -217,12 +226,12 @@ body {
 
 .hamburger .bar {
   display: block;
-  width: 24px;
+  width: 20px;
   height: 2px;
   background-color: var(--text-secondary);
-  margin: 4px 0;
+  margin: 3px 0;
   transition: transform var(--transition-base), opacity var(--transition-base);
-  border-radius: var(--radius-sm);
+  border-radius: 1px;
 }
 
 .hamburger.open .bar:nth-child(1) {
@@ -338,13 +347,16 @@ body {
   display: flex;
   align-items: center;
   gap: 8px;
-  padding: 8px 12px;
+  padding: 10px 16px;
   border: none;
   background: transparent;
   color: var(--text-secondary);
   border-radius: var(--radius-base);
   cursor: pointer;
   transition: all var(--transition-fast);
+  /* Ensure proper touch target size */
+  min-height: 44px;
+  min-width: 44px;
 }
 
 .search-btn:hover,
@@ -389,7 +401,7 @@ body {
 
 @media screen and (max-width: 1024px) {
   .hamburger {
-    display: block;
+    display: flex;
   }
 
   .nav-close {
@@ -400,8 +412,9 @@ body {
     position: fixed;
     top: 0;
     right: -100%;
-    width: 280px;
+    width: min(320px, 85vw);
     height: 100vh;
+    height: 100dvh; /* Dynamic viewport height for mobile */
     background-color: var(--background-color);
     flex-direction: column;
     padding: var(--spacing-6);
@@ -422,7 +435,8 @@ body {
 
   .nav-link {
     width: 100%;
-    padding: var(--spacing-6);
+    padding: var(--spacing-4);
+    min-height: 44px;
   }
 
   .mobile-sidebar-nav {
@@ -509,6 +523,7 @@ body {
     color: var(--text-secondary);
     text-decoration: none;
     transition: background-color 0.2s ease;
+    min-height: 44px;
   }
 
   .mobile-sidebar-nav .nav-link:hover,
@@ -552,6 +567,10 @@ body {
 }
 
 @media screen and (max-width: 768px) {
+  .hamburger {
+    display: flex;
+  }
+
   .user-image {
     display: block;
     width: 100px;

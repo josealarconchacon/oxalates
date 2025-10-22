@@ -82,21 +82,23 @@
   border: none;
   cursor: pointer;
   padding: 0.625rem 0.875rem;
-  color: #8892a8;
+  color: #5a6c7d; /* Improved contrast ratio for WCAG AA */
   font-size: 0.875rem;
-  font-weight: 400;
+  font-weight: 500;
   display: flex;
   align-items: center;
   gap: 0.5rem;
   transition: all 0.2s ease;
   letter-spacing: 0.3px;
   white-space: nowrap;
+  /* Ensure proper touch target size */
+  min-height: 44px;
 }
 
 .search-button:hover,
 .calculate-button:hover,
 .suggestions-button:hover {
-  color: #3a3a3a;
+  color: #2d3436; /* Better contrast for hover state */
 }
 
 .search-icon,
@@ -121,24 +123,25 @@
 .contribution-link {
   text-decoration: none;
   padding: 0.625rem 0.875rem;
-  color: #8892a8;
+  color: #5a6c7d; /* Improved contrast ratio for WCAG AA */
   font-size: 0.875rem;
-  font-weight: 400;
+  font-weight: 500;
   display: inline-flex;
   align-items: center;
   gap: 0.5rem;
   transition: all 0.2s ease;
   letter-spacing: 0.3px;
   white-space: nowrap;
+  min-height: 44px;
 }
 
 .contribution-link:hover {
-  color: #3a3a3a;
+  color: #2d3436; /* Better contrast for hover state */
 }
 
 .footer-text {
   font-size: 0.813rem;
-  color: #8892a8;
+  color: #6b7885; /* Improved contrast ratio for WCAG AA */
   text-align: center;
   margin: 0;
   padding-top: var(--spacing-4);

@@ -1,0 +1,17 @@
+<div class="empty-state" role="status" aria-live="polite">
+  <div class="empty-state-icon" aria-hidden="true">{{ icon }}</div>
+  <h3 class="empty-state-title">{{ title }}</h3>
+  <p class="empty-state-description">{{ description }}</p>
+  <div class="empty-state-actions" *ngIf="actionLabel || secondaryActionLabel">
+    <button *ngIf="actionLabel" class="btn btn-primary" (click)="onAction()">
+      {{ actionLabel }}
+    </button>
+    <button
+      *ngIf="secondaryActionLabel"
+      class="btn btn-secondary"
+      (click)="onSecondaryAction()"
+    >
+      {{ secondaryActionLabel }}
+    </button>
+  </div>
+</div>

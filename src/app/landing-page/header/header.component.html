@@ -4,24 +4,47 @@
       <span class="logo-text">Oxalate Info</span>
     </a>
 
-    <button class="hamburger" (click)="toggleNav()" [class.open]="isNavOpen">
+    <button
+      class="hamburger"
+      (click)="toggleNav()"
+      [class.open]="isNavOpen"
+      [attr.aria-expanded]="isNavOpen"
+      [attr.aria-label]="
+        isNavOpen ? 'Close navigation menu' : 'Open navigation menu'
+      "
+    >
       <span class="bar"></span>
       <span class="bar"></span>
       <span class="bar"></span>
     </button>
 
-    <nav class="nav" id="nav-bar" [class.open]="isNavOpen">
-      <button class="nav-close" (click)="closeNav()"></button>
+    <nav
+      class="nav"
+      id="nav-bar"
+      [class.open]="isNavOpen"
+      role="navigation"
+      aria-label="Main navigation"
+    >
+      <button
+        class="nav-close"
+        (click)="closeNav()"
+        aria-label="Close navigation menu"
+      ></button>
 
       <ng-container *ngIf="!(isMobile$ | async)">
         <a href="/contribution" class="nav-link"> Support the Project </a>
         <button
           class="calculate-btn"
           (click)="navigateToCalculateDailyIntake(); closeNav()"
+          aria-label="Calculate Daily Oxalate Intake"
         >
           <span>Calculate Daily Intake</span>
         </button>
-        <button class="search-btn" (click)="search(); closeNav()">
+        <button
+          class="search-btn"
+          (click)="search(); closeNav()"
+          aria-label="Search for Foods"
+        >
           <!-- <mat-icon>search</mat-icon> -->
           <span>Search for Foods</span>
         </button>
@@ -30,14 +53,18 @@
           *ngIf="userProfile"
           class="profile-btn"
           (click)="goToProfile(); closeNav()"
+          aria-label="Go to Profile"
         >
           <img
             [src]="
               userProfile.photoURL ||
               '../../../assets/images/default-profile.jpg'
             "
-            alt="User Image"
+            alt="User Profile Picture"
             class="user-image"
+            loading="lazy"
+            width="32"
+            height="32"
           />
         </button>
 
@@ -45,6 +72,7 @@
           *ngIf="!userProfile"
           class="user-icon-btn"
           (click)="goToLoginPage(); closeNav()"
+          aria-label="Login or Sign Up"
         >
           <mat-icon>person_outline</mat-icon>
         </button>
@@ -64,6 +92,9 @@
               "
               alt="User Image"
               class="user-image"
+              loading="lazy"
+              width="32"
+              height="32"
             />
             <mat-icon *ngIf="!userProfile" class="default-user-icon"
               >person_outline</mat-icon
