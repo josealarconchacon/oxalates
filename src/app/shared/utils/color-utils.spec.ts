@@ -1,6 +1,6 @@
 import { colorToHex, presetColors } from './color-utils'; // Adjust path as needed
 
-fdescribe('Color Utility Functions', () => {
+describe('Color Utility Functions', () => {
   describe('presetColors', () => {
     it('should be defined and contain valid hex color strings', () => {
       expect(mockPresetColors).toBeDefined();
