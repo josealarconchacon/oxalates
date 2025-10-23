@@ -12,6 +12,9 @@ export const presetColors: string[] = [
 ];
 
 export function colorToHex(color: HSLA | HSVA | RGBA): string {
+  if (!color || typeof color !== 'object') {
+    return '#000000';
+  }
   if ('h' in color && 's' in color && 'l' in color) {
     const { h, s, l } = color;
     const a = color.a !== undefined ? color.a : 1;
