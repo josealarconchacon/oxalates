@@ -18,8 +18,8 @@ describe('HeaderComponent', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [RouterTestingModule, MatIconModule],
-      declarations: [HeaderComponent],
+      imports: [HeaderComponent, RouterTestingModule, MatIconModule],
+      declarations: [],
       providers: [{ provide: AuthService, useClass: MockAuthService }],
     }).compileComponents();
 

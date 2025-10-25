@@ -46,17 +46,17 @@ describe('ShareMenuComponent', () => {
         },
       ];
 
-      const expectedText = `📅 *Daily Oxalate Summary*
+      const expectedText = `📅 Daily Oxalate Summary
   
-  🔹 *Total Oxalate for the Day*: 50mg
+  🔹 Total Oxalate for the Day: 50mg
   
-  🍽️ *Meals Breakdown:*
-    🥄 *Breakfast:*
-      - 🌿 *Spinach*: 15mg oxalate, 5mg soluble oxalate
-    🥄 *Lunch:*
-      - 🌿 *Carrot*: 10mg oxalate, 3mg soluble oxalate
+  🍽️ Meals Breakdown:
+    🥄 Breakfast:
+      - 🌿 Spinach: 15mg oxalate, 5mg soluble oxalate
+    🥄 Lunch:
+      - 🌿 Carrot: 10mg oxalate, 3mg soluble oxalate
   
-  🔖 *Note*: Keep track of your daily oxalate intake to maintain a healthy balance.
+  🔖 Note: Keep track of your daily oxalate intake to maintain a healthy balance.
   
   📲 Stay healthy, and track your meals!`;
 

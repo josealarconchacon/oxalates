@@ -13,7 +13,7 @@ import { BaseFormComponent } from './base-form.component';
 })
 class TestFormComponent extends BaseFormComponent {}
 
-fdescribe('BaseFormComponent (via TestFormComponent)', () => {
+describe('BaseFormComponent (via TestFormComponent)', () => {
   let component: TestFormComponent;
   let fixture: ComponentFixture<TestFormComponent>;
   let formBuilder: FormBuilder;

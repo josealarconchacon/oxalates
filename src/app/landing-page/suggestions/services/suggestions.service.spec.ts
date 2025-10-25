@@ -11,7 +11,7 @@ import {
 } from './suggestions.service';
 import { environment } from 'src/environments/environment.development';
 
-fdescribe('SuggestionsService', () => {
+describe('SuggestionsService', () => {
   let service: SuggestionsService;
   let httpMock: HttpTestingController;
   const apiUrl = environment.firebaseConfig;

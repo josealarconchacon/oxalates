@@ -4,23 +4,37 @@ import { Router, NavigationEnd } from '@angular/router';
 import { of, Subject } from 'rxjs';
 import { MatIconModule } from '@angular/material/icon';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
+import { AuthService } from '../../user-auth/service/auth-service.service';
+import { AuthMessageService } from '../../shared/services/auth-message.service';
 
 describe('FooterComponent', () => {
   let component: FooterComponent;
   let fixture: ComponentFixture<FooterComponent>;
   let routerEvents$: Subject<any>;
   let router: jasmine.SpyObj<Router>;
+  let authService: jasmine.SpyObj<AuthService>;
+  let authMessageService: jasmine.SpyObj<AuthMessageService>;
 
   beforeEach(async () => {
     routerEvents$ = new Subject<any>();
     const routerSpy = jasmine.createSpyObj('Router', ['navigate'], {
       events: routerEvents$.asObservable(),
     });
+    const authServiceSpy = jasmine.createSpyObj('AuthService', [
+      'isAuthenticated',
+    ]);
+    const authMessageServiceSpy = jasmine.createSpyObj('AuthMessageService', [
+      'showAuthMessage',
+    ]);
 
     await TestBed.configureTestingModule({
-      declarations: [FooterComponent],
-      imports: [MatIconModule, NoopAnimationsModule],
-      providers: [{ provide: Router, useValue: routerSpy }],
+      declarations: [],
+      imports: [FooterComponent, MatIconModule, NoopAnimationsModule],
+      providers: [
+        { provide: Router, useValue: routerSpy },
+        { provide: AuthService, useValue: authServiceSpy },
+        { provide: AuthMessageService, useValue: authMessageServiceSpy },
+      ],
     }).compileComponents();
 
     fixture = TestBed.createComponent(FooterComponent);

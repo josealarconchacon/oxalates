@@ -48,6 +48,12 @@ describe('OxalateService', () => {
 
     service = TestBed.inject(OxalateService);
     httpMock = TestBed.inject(HttpTestingController);
+
+    // Flush the initial preload request that happens in constructor
+    const initialReq = httpMock.expectOne(
+      'assets/mock-oxalate/oxolateListData.json'
+    );
+    initialReq.flush(mockData);
   });
 
   afterEach(() => {
@@ -77,22 +83,14 @@ describe('OxalateService', () => {
       service.searchOxalateData('Spinach').subscribe((data) => {
         expect(data).toEqual([mockData[0]]);
       });
-
-      const req = httpMock.expectOne(
-        'assets/mock-oxalate/oxolateListData.json'
-      );
-      req.flush(mockData);
+      // No HTTP request expected because data is already cached from preload
     });
 
-    it('should return all data when query is empty', () => {
+    it('should return empty array when query is empty', () => {
       service.searchOxalateData('').subscribe((data) => {
-        expect(data).toEqual(mockData);
+        expect(data).toEqual([]);
       });
-
-      const req = httpMock.expectOne(
-        'assets/mock-oxalate/oxolateListData.json'
-      );
-      req.flush(mockData);
+      // No HTTP request expected because empty query returns immediately
     });
   });
 
