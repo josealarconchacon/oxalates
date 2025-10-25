@@ -14,8 +14,8 @@ export class AlertComponent implements OnInit {
 
   ngOnInit() {
     this.alertService.getAlertObservable().subscribe((newMessage) => {
-      this.message = newMessage;
-      this.isVisible = !!newMessage;
+      this.message = newMessage.message;
+      this.isVisible = !!newMessage.message;
     });
   }
 
