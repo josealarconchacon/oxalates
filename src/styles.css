@@ -40,7 +40,7 @@
 
   /* Background Colors */
   --background-color: #ffffff;
-  --surface-color: var(--gray-100);
+  --surface-color: #f6f7fb;
   --border-color: #e1e4e8;
 
   /* Elevation Shadows */
@@ -295,7 +295,7 @@ body {
   font-weight: var(--font-weight-normal);
   line-height: var(--line-height-normal);
   color: var(--text-color);
-  background-color: var(--background-color);
+  background-color: var(--surface-color);
   min-height: 100vh;
   min-height: 100dvh; /* Dynamic viewport height for mobile browsers */
   -webkit-tap-highlight-color: transparent;
