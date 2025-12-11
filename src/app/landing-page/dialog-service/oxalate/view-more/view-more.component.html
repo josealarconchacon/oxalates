@@ -5,8 +5,18 @@
   role="main"
 >
   <div class="oxalate-card" aria-labelledby="oxalate-title">
-    <div class="card-header">
-      <h2 class="item-name" id="oxalate-title">{{ oxalateData.item }}</h2>
+    <div class="card-header sticky-header">
+      <div class="header-content">
+        <h2 class="item-name" id="oxalate-title">{{ oxalateData.item }}</h2>
+      </div>
+      <button
+        type="button"
+        class="card-close"
+        aria-label="Close details"
+        (click)="handleClose($event)"
+      >
+        ×
+      </button>
     </div>
 
     <div class="content-section" role="region" id="details-content">
