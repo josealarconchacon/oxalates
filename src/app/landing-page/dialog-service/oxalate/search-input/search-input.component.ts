@@ -51,20 +51,37 @@ export class SearchInputComponent implements OnInit, OnDestroy {
     }
   }
 
-  onSearchQueryChange(): void {
+  get hasSearchQuery(): boolean {
+    return !!this.searchQuery?.trim();
+  }
+
+  onSearchQueryChange(value: string): void {
+    this.searchQuery = value;
     this.searchQueryChange.emit(this.searchQuery);
   }
 
   onClearSearch(): void {
+    if (!this.hasSearchQuery) {
+      return;
+    }
+
     this.searchQuery = '';
     this.searchQueryChange.emit(this.searchQuery);
     this.clearSearch.emit();
   }
 
+  onActionIconClick(): void {
+    if (this.hasSearchQuery) {
+      this.onClearSearch();
+    }
+
+    this.focusInput();
+  }
+
   @HostListener('window:resize')
   onResize() {
     // Refocus input on resize to keep keyboard visible
-    if (this.searchQuery && !this.isDoneKeyPressed) {
+    if (this.hasSearchQuery && !this.isDoneKeyPressed) {
       this.focusInput();
     }
   }
