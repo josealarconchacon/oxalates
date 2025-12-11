@@ -233,46 +233,47 @@ h1 {
 
 .modal-overlay {
   position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
+  inset: 0;
   display: flex;
   align-items: center;
   justify-content: center;
-  backdrop-filter: blur(10px);
+  padding: 1.5rem 1rem;
+  background-color: transparent;
+  backdrop-filter: none;
+  z-index: 1200;
 }
 
 .modal-content {
   background-color: #ffffff;
-  border-radius: 24px;
-  padding: 24px;
-  width: 90%;
-  max-width: 600px;
+  border-radius: 26px;
+  padding: 32px;
+  width: min(92vw, 640px);
+  max-height: 92vh;
   position: relative;
-  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
-  transition: background-color 0.3s ease;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.35);
+  transition: background-color 0.3s ease, transform 0.3s ease;
+  overflow: hidden;
+}
+
+.modal-content::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  pointer-events: none;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.3);
+}
+
+.modal-content .content-wrapper {
+  position: relative;
+  z-index: 2;
+  max-height: 90vh;
+  overflow-y: auto;
 }
 
 .dark-theme .modal-content {
-  background-color: #2d2d2d;
-  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.5);
-}
-
-.close-btn {
-  position: absolute;
-  top: 10px;
-  right: 10px;
-  background: none;
-  border: none;
-  color: #414141;
-  font-size: 32px;
-  cursor: pointer;
-  transition: color 0.3s ease;
-}
-
-.dark-theme .close-btn {
-  color: #e1e1e1;
+  background-color: #1f2333;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.65);
 }
 
 @media screen and (max-width: 1024px) {
@@ -398,6 +399,46 @@ h1 {
   color: #f3f4f6;
 }
 
+.modal-content {
+  position: relative;
+}
+
+@media screen and (max-width: 768px) {
+  .modal-content {
+    padding: 24px;
+    border-radius: 20px;
+  }
+
+  .modal-overlay {
+    padding: 0;
+    align-items: flex-end;
+    justify-content: center;
+  }
+
+  .modal-content {
+    width: 100%;
+    max-width: 100%;
+    border-radius: 20px 20px 0 0;
+    max-height: 90vh;
+  }
+}
+
+@media screen and (max-width: 480px) {
+  .modal-overlay {
+    padding: 1rem;
+  }
+
+  .modal-content {
+    width: min(100%, 460px);
+    padding: 18px;
+    border-radius: 16px;
+  }
+
+  .modal-content {
+    border-radius: 16px 16px 0 0;
+  }
+}
+
 .dark-theme .results-stats {
   color: #9ca3af;
 }
@@ -457,10 +498,6 @@ h1 {
 .dark-theme .modal-content {
   background-color: var(--card-bg, #2d3142);
   border: 1px solid var(--border-color, #3d4053);
-}
-
-.dark-theme .close-btn {
-  color: var(--text-color-dark, #f5f5f5);
 }
 
 @media (prefers-reduced-motion: reduce) {

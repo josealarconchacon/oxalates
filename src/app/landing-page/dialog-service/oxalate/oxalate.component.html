@@ -127,11 +127,13 @@
     [ngClass]="{ 'dark-theme': isDarkTheme }"
   >
     <div class="modal-content" (click)="$event.stopPropagation()">
-      <button class="close-btn" (click)="closeDetail()">×</button>
-      <app-view-more
-        [oxalateData]="selectedOxalate"
-        [isDarkTheme]="isDarkTheme"
-      ></app-view-more>
+      <div class="content-wrapper">
+        <app-view-more
+          [oxalateData]="selectedOxalate"
+          [isDarkTheme]="isDarkTheme"
+          (closeRequested)="closeDetail()"
+        ></app-view-more>
+      </div>
     </div>
   </div>
 </div>
