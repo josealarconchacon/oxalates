@@ -2,7 +2,7 @@
   <input
     #searchInputElement
     [(ngModel)]="searchQuery"
-    (ngModelChange)="onSearchQueryChange()"
+    (ngModelChange)="onSearchQueryChange($event)"
     (keydown)="onKeyDown($event)"
     (blur)="onBlur()"
     placeholder="Search foods to check oxalate levels..."
@@ -13,13 +13,33 @@
     enterkeyhint="search"
     aria-label="Search for foods by name"
   />
-  <div class="search-icons">
-    <span
-      class="search-icon"
-      [class.typing]="searchQuery.length > 0"
-      (click)="onClearSearch()"
-    >
-      {{ searchQuery.length > 0 ? "❌" : "🔍" }}
-    </span>
-  </div>
+  <button
+    type="button"
+    class="search-action-button"
+    [attr.aria-label]="hasSearchQuery ? 'Clear search input' : 'Search input'"
+    (click)="onActionIconClick()"
+  >
+    <ng-container *ngIf="hasSearchQuery; else searchIconTpl">
+      <svg
+        aria-hidden="true"
+        focusable="false"
+        viewBox="0 0 24 24"
+        role="presentation"
+      >
+        <path d="M18 6L6 18M6 6l12 12" />
+      </svg>
+    </ng-container>
+    <ng-template #searchIconTpl>
+      <svg
+        aria-hidden="true"
+        focusable="false"
+        viewBox="0 0 24 24"
+        role="presentation"
+      >
+        <path
+          d="M15.5 14h-.79l-.28-.27a6 6 0 1 0-.7.7l.27.28v.79L20 20.49 21.49 19l-4.49-4.5zM10 16a6 6 0 1 1 0-12 6 6 0 0 1 0 12z"
+        />
+      </svg>
+    </ng-template>
+  </button>
 </div>
