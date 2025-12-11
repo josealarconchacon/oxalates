@@ -133,10 +133,21 @@
 .card-header {
   padding: var(--card-padding);
   display: flex;
-  flex-direction: column;
   align-items: center;
-  text-align: center;
-  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+  justify-content: space-between;
+  gap: 12px;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+  position: sticky;
+  top: 0;
+  z-index: 3;
+  background-color: var(--card-bg);
+}
+
+.header-content {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
 }
 
 .item-name {
@@ -188,6 +199,11 @@
 .dark-theme .section-title {
   font-weight: 600;
   color: var(--section-title-color);
+}
+
+.dark-theme .card-header {
+  background-color: var(--card-background);
+  border-color: rgba(255, 255, 255, 0.1);
 }
 
 /* Table Styles */
@@ -348,6 +364,29 @@
   border-top: 1px solid rgba(0, 0, 0, 0.1);
 }
 
+.card-close {
+  border: none;
+  background: transparent;
+  color: var(--text-color, #333333);
+  font-size: 1.75rem;
+  width: 36px;
+  height: 36px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: color 0.2s ease, transform 0.2s ease;
+  border-radius: 50%;
+}
+
+.card-close:hover {
+  transform: scale(1.1);
+  color: var(--primary-color, #5aac84);
+}
+
+.dark-theme .card-close {
+  color: #f5f5f5;
+}
 .action-button {
   padding: 0 20px;
   height: 40px;
@@ -505,14 +544,30 @@
     table-layout: fixed;
   }
 
+  .table-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 10px;
+    padding: 8px 0;
+    border-radius: 12px;
+  }
+
+  .property-cell,
+  .value-cell {
+    width: auto;
+    padding: 0;
+  }
+
   .property-cell {
-    width: 40%;
-    min-width: 120px;
+    flex: 0 1 55%;
   }
 
   .value-cell {
-    width: 60%;
+    flex: 0 1 45%;
+    text-align: right;
   }
+
 }
 
 /* Mobile landscape */
@@ -530,85 +585,28 @@
 
 /* Mobile portrait */
 @media screen and (max-width: 480px) {
-  .oxalate-table,
-  .oxalate-table tbody,
-  .oxalate-table tr,
-  .oxalate-table td {
-    display: revert;
-    width: auto;
+  .oxalate-table {
+    gap: 8px;
   }
 
-  .table-row {
-    border: none;
-  }
-
-  /* Force property cell to always use flex layout */
-  .property-cell {
-    display: flex !important;
-    flex-direction: row !important;
-    flex-wrap: nowrap !important;
-    align-items: center !important;
-    padding: 8px 6px 8px 8px;
-    min-width: 100px;
-  }
-
-  /* Ensure vertical indicator stays fixed width and doesn't wrap */
-  .property-indicator {
-    flex: 0 0 auto !important; /* Don't grow, don't shrink, fixed width */
-    width: 4px;
-    min-height: 16px;
-    margin-right: 4px;
-    align-self: stretch;
-  }
-
-  /* Ensure property name text stays on same line as indicator */
-  .property-name {
-    flex: 1 1 auto;
-    min-width: 0; /* Allow text to shrink below min-content */
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-  }
-
+  .property-cell,
   .value-cell {
-    width: 60%;
-    text-align: right;
-    padding: 8px;
+    padding: 4px 0;
   }
 
-  /* Value text styling */
   .property-value {
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
+    white-space: normal;
   }
 
-  /* Center action buttons */
   .card-actions {
-    justify-content: center;
-    flex-wrap: wrap;
+    flex-direction: column;
+    align-items: stretch;
   }
 
-  /* Make sure the buttons have proper size on mobile */
   .action-button {
-    min-width: 140px;
-    height: 40px;
+    width: 100%;
   }
 
-  /* Make buttons stack on very small screens */
-  @media screen and (max-width: 360px) {
-    .card-actions {
-      flex-direction: column;
-      align-items: center;
-    }
-
-    .action-button {
-      width: 100%;
-      margin-bottom: 8px;
-    }
-  }
-
-  /* Dark theme specific mobile fixes */
   .dark-theme .property-indicator {
     background-color: var(--primary-color-dark, #bb86fc);
   }
@@ -625,10 +623,6 @@
     color: var(--text-color-secondary-dark, #bbbbbb);
   }
 
-  .dark-theme .table-row:hover {
-    background-color: var(--surface-hover-dark, rgba(255, 255, 255, 0.08));
-  }
-
   .dark-theme .oxalate-card {
     background-color: var(--card-background);
     border: 1px solid var(--border-color);
@@ -638,21 +632,11 @@
     background-color: var(--card-background);
   }
 
-  .dark-theme .property-cell {
-    background-color: transparent;
-    border-color: var(--border-color);
-    color: var(--text-color);
-  }
-
+  .dark-theme .property-cell,
   .dark-theme .value-cell {
     background-color: transparent;
     border-color: var(--border-color);
     color: var(--text-color);
-  }
-
-  .dark-theme .table-row {
-    border-color: var(--border-color);
-    border-bottom: 1px solid var(--border-color);
   }
 
   .dark-theme .table-row:hover {
@@ -665,12 +649,6 @@
 
   .dark-theme .section-title {
     color: var(--section-title-color);
-  }
-
-  .dark-theme .table-row {
-    border: none;
-    border-bottom: none;
-    border-color: transparent;
   }
 }
 

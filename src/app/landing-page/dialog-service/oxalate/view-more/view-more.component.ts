@@ -1,6 +1,8 @@
 import {
   Component,
+  EventEmitter,
   Input,
+  Output,
   OnInit,
   OnDestroy,
   Optional,
@@ -24,6 +26,7 @@ import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 })
 export class ViewMoreComponent implements OnInit, OnDestroy {
   @Input() oxalateData: Oxalate | undefined;
+  @Output() closeRequested = new EventEmitter<void>();
   savedItems: Oxalate[] = [];
   isSaving = false;
   isDarkTheme: boolean = false;
@@ -161,8 +164,27 @@ export class ViewMoreComponent implements OnInit, OnDestroy {
       });
   }
 
+  private isAlreadySaved(): boolean {
+    if (!this.oxalateData) {
+      return false;
+    }
+
+    return this.savedItems.some(
+      (item) => item.item?.toLowerCase() === this.oxalateData?.item?.toLowerCase()
+    );
+  }
+
   onSave(): void {
     if (!this.oxalateData || this.isSaving) {
+      return;
+    }
+
+    if (this.isAlreadySaved()) {
+      this.notificationService.show(
+        'Item already saved to favorites.',
+        'Close',
+        ['info-snackbar']
+      );
       return;
     }
 
@@ -251,6 +273,12 @@ export class ViewMoreComponent implements OnInit, OnDestroy {
     if (this.dialogRef) {
       this.dialogRef.close();
     }
+  }
+
+  handleClose(event: MouseEvent): void {
+    event.stopPropagation();
+    this.onClose();
+    this.closeRequested.emit();
   }
 
   dismissModal(): void {

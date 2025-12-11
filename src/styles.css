@@ -295,7 +295,7 @@ body {
   font-weight: var(--font-weight-normal);
   line-height: var(--line-height-normal);
   color: var(--text-color);
-  background-color: var(--surface-color);
+  background-color: var(--background-color);
   min-height: 100vh;
   min-height: 100dvh; /* Dynamic viewport height for mobile browsers */
   -webkit-tap-highlight-color: transparent;
