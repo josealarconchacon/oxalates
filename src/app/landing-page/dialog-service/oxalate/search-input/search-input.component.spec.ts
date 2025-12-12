@@ -130,7 +130,7 @@ describe('SearchInputComponent', () => {
       spyOn(component.searchQueryChange, 'emit');
       component.searchQuery = 'test query';
 
-      component.onSearchQueryChange();
+      component.onSearchQueryChange('test query');
 
       expect(component.searchQueryChange.emit).toHaveBeenCalledWith(
         'test query'
@@ -141,7 +141,7 @@ describe('SearchInputComponent', () => {
       spyOn(component.searchQueryChange, 'emit');
       component.searchQuery = '';
 
-      component.onSearchQueryChange();
+      component.onSearchQueryChange('');
 
       expect(component.searchQueryChange.emit).toHaveBeenCalledWith('');
     });
@@ -150,7 +150,7 @@ describe('SearchInputComponent', () => {
       spyOn(component.searchQueryChange, 'emit');
       component.searchQuery = 'test';
 
-      component.onSearchQueryChange();
+      component.onSearchQueryChange('test');
 
       expect(component.searchQueryChange.emit).toHaveBeenCalledTimes(1);
     });
@@ -159,11 +159,11 @@ describe('SearchInputComponent', () => {
       spyOn(component.searchQueryChange, 'emit');
 
       component.searchQuery = 'first';
-      component.onSearchQueryChange();
+      component.onSearchQueryChange('first');
       expect(component.searchQueryChange.emit).toHaveBeenCalledWith('first');
 
       component.searchQuery = 'second';
-      component.onSearchQueryChange();
+      component.onSearchQueryChange('second');
       expect(component.searchQueryChange.emit).toHaveBeenCalledWith('second');
     });
   });
@@ -613,7 +613,7 @@ describe('SearchInputComponent', () => {
 
       // User types
       component.searchQuery = 'test';
-      component.onSearchQueryChange();
+      component.onSearchQueryChange('test');
       expect(component.searchQueryChange.emit).toHaveBeenCalledWith('test');
 
       // User clears
@@ -673,11 +673,11 @@ describe('SearchInputComponent', () => {
       spyOn(component.searchQueryChange, 'emit');
 
       component.searchQuery = 'a';
-      component.onSearchQueryChange();
+      component.onSearchQueryChange('a');
       component.searchQuery = 'ab';
-      component.onSearchQueryChange();
+      component.onSearchQueryChange('ab');
       component.searchQuery = 'abc';
-      component.onSearchQueryChange();
+      component.onSearchQueryChange('abc');
 
       expect(component.searchQueryChange.emit).toHaveBeenCalledTimes(3);
     });
