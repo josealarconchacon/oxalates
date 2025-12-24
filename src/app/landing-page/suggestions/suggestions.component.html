@@ -1,102 +1,143 @@
-<div class="suggestions-container">
-  <div class="section-header">
-    <h2>Help & Feedback</h2>
+<section class="suggestions-container">
+  <header class="section-header">
+    <p class="eyebrow">Help us improve</p>
+    <h2>Share feedback with the Oxalate team</h2>
     <p class="section-description">
-      We value your input and are here to help. Share your suggestions or get
-      support when needed.
+      Tell us what you like, what we can improve, or how we can better support
+      your oxalate journey. Your message goes directly to the product team.
     </p>
-  </div>
+  </header>
 
-  <div class="tab-buttons" role="tablist" aria-label="Feedback Options">
-    <button
-      class="tab-button"
-      [class.active]="activeTab === 'suggestions'"
-      (click)="switchTab('suggestions')"
-      role="tab"
-      [attr.aria-selected]="activeTab === 'suggestions'"
-      aria-controls="suggestions-panel"
-      id="suggestions-tab"
-    >
-      <svg
-        xmlns="http://www.w3.org/2000/svg"
-        width="20"
-        height="20"
-        viewBox="0 0 24 24"
-        fill="none"
-        stroke="currentColor"
-        stroke-width="2"
-        stroke-linecap="round"
-        stroke-linejoin="round"
-        aria-hidden="true"
-      >
-        <path
-          d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"
-        ></path>
-      </svg>
-      Feature Suggestions
-    </button>
-    <button
-      class="tab-button"
-      [class.active]="activeTab === 'support'"
-      (click)="switchTab('support')"
-      role="tab"
-      [attr.aria-selected]="activeTab === 'support'"
-      aria-controls="support-panel"
-      id="support-tab"
-    >
-      <svg
-        xmlns="http://www.w3.org/2000/svg"
-        width="20"
-        height="20"
-        viewBox="0 0 24 24"
-        fill="none"
-        stroke="currentColor"
-        stroke-width="2"
-        stroke-linecap="round"
-        stroke-linejoin="round"
-        aria-hidden="true"
-      >
-        <circle cx="12" cy="12" r="10"></circle>
-        <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path>
-        <path d="M12 17h.01"></path>
-      </svg>
-      Help & Support
-    </button>
-  </div>
-
-  <div class="form-container" [class.loading]="isLoading">
-    <!-- Loading Indicator -->
+  <div class="form-card" [class.loading]="isLoading">
     <div class="loading-overlay" *ngIf="isLoading">
-      <div class="loading-spinner"></div>
-      <span class="sr-only">Loading...</span>
+      <span class="spinner" aria-hidden="true"></span>
+      <span class="sr-only">Submitting feedback...</span>
+    </div>
+
+    <form
+      [formGroup]="feedbackForm"
+      (ngSubmit)="submitFeedback()"
+      class="feedback-form"
+      aria-label="Customer feedback form"
+      novalidate
+    >
+      <div class="form-group">
+        <label for="name">
+          Name
+          <span class="required-asterisk" aria-hidden="true">*</span>
+        </label>
+        <input
+          id="name"
+          formControlName="name"
+          type="text"
+          placeholder="Your name"
+          class="form-input"
+          aria-required="true"
+          [attr.aria-invalid]="
+            feedbackForm.get('name')?.invalid &&
+            feedbackForm.get('name')?.touched
+          "
+        />
+        <p
+          class="error-message"
+          *ngIf="
+            feedbackForm.get('name')?.invalid &&
+            feedbackForm.get('name')?.touched
+          "
+          role="alert"
+        >
+          Please enter your name
+        </p>
+      </div>
+
+      <div class="form-group">
+        <label for="email">
+          Email
+          <span class="required-asterisk" aria-hidden="true">*</span>
+        </label>
+        <input
+          id="email"
+          formControlName="email"
+          type="email"
+          placeholder="you@example.com"
+          class="form-input"
+          aria-required="true"
+          [attr.aria-invalid]="
+            feedbackForm.get('email')?.invalid &&
+            feedbackForm.get('email')?.touched
+          "
+        />
+        <p
+          class="error-message"
+          *ngIf="
+            feedbackForm.get('email')?.invalid &&
+            feedbackForm.get('email')?.touched
+          "
+          role="alert"
+        >
+          Provide a valid email address
+        </p>
+      </div>
+
+      <div class="form-group">
+        <label for="feedback">
+          Feedback
+          <span class="required-asterisk" aria-hidden="true">*</span>
+        </label>
+        <textarea
+          id="feedback"
+          formControlName="feedback"
+          rows="5"
+          placeholder="Share your thoughts..."
+          class="form-input"
+          aria-required="true"
+          [attr.aria-invalid]="
+            feedbackForm.get('feedback')?.invalid &&
+            feedbackForm.get('feedback')?.touched
+          "
+        ></textarea>
+        <p
+          class="error-message"
+          *ngIf="
+            feedbackForm.get('feedback')?.invalid &&
+            feedbackForm.get('feedback')?.touched
+          "
+          role="alert"
+        >
+          Feedback must be at least 20 characters
+        </p>
+        <p class="input-hint">
+          Let us know what we did well and where we can do better.
+        </p>
+      </div>
+
+      <button
+        type="submit"
+        class="submit-button"
+        [disabled]="feedbackForm.invalid || isLoading"
+        [attr.aria-busy]="isLoading"
+      >
+        <span *ngIf="!isLoading">Send Feedback</span>
+        <span *ngIf="isLoading">Sending...</span>
+      </button>
+    </form>
+
+    <div
+      class="form-message success"
+      *ngIf="submissionSuccess"
+      role="status"
+      aria-live="polite"
+    >
+      Thank you! We received your message and will review it shortly.
     </div>
 
     <div
-      role="tabpanel"
-      id="suggestions-panel"
-      [attr.aria-labelledby]="'suggestions-tab'"
-      [style.display]="activeTab === 'suggestions' ? 'block' : 'none'"
+      class="form-message error"
+      *ngIf="submissionError"
+      role="alert"
+      aria-live="assertive"
     >
-      <app-suggestion-form
-        *ngIf="activeTab === 'suggestions'"
-        [form]="suggestionForm"
-        (submitted)="onSuggestionSubmit($event)"
-      ></app-suggestion-form>
-    </div>
-
-    <div
-      role="tabpanel"
-      id="support-panel"
-      [attr.aria-labelledby]="'support-tab'"
-      [style.display]="activeTab === 'support' ? 'block' : 'none'"
-    >
-      <app-support-form
-        *ngIf="activeTab === 'support'"
-        [form]="supportForm"
-        [faqs]="faqs"
-        (submitted)="onSupportSubmit($event)"
-        (toggleFaq)="toggleFaq($event)"
-      ></app-support-form>
+      {{ submissionError }}
     </div>
   </div>
-</div>
+</section>
