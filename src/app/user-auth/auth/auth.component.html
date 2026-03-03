@@ -185,7 +185,7 @@
           </div>
 
           <!-- Submit Button -->
-          <button type="submit" class="submit-button" [class.loading]="false">
+          <button type="submit" class="submit-button" [class.loading]="isSubmitting" [disabled]="isSubmitting">
             <span class="button-text">{{
               isSignInMode ? "Sign In" : "Create Account"
             }}</span>

@@ -15,6 +15,7 @@ export class AuthComponent implements OnInit, OnDestroy {
   showAlert: boolean = false;
   alertMessage: string = '';
   showSignUpSuccess = false;
+  isSubmitting = false;
   private alertSubscription!: Subscription;
 
   constructor(
@@ -60,19 +61,23 @@ export class AuthComponent implements OnInit, OnDestroy {
 
     const { email, password, confirmPassword } = this.authForm.value;
 
+    if (!this.isSignInMode && password !== confirmPassword) {
+      this.alertService.showAlert('Passwords do not match');
+      return;
+    }
+
+    this.isSubmitting = true;
     try {
       if (this.isSignInMode) {
         await this.authService.signIn(email, password);
       } else {
-        if (password !== confirmPassword) {
-          this.alertService.showAlert('Passwords do not match');
-          return;
-        }
         await this.authService.signUp(email, password, confirmPassword);
         this.showSignUpSuccess = true;
       }
     } catch (error) {
       console.error('Authentication error:', error);
+    } finally {
+      this.isSubmitting = false;
     }
   }
 
