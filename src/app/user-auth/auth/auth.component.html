@@ -59,6 +59,14 @@
                 formControlName="email"
                 placeholder="Enter your email"
                 class="form-input"
+                [attr.aria-invalid]="
+                  authForm.get('email')?.invalid && authForm.get('email')?.touched
+                "
+                [attr.aria-describedby]="
+                  authForm.get('email')?.invalid && authForm.get('email')?.touched
+                    ? 'email-error'
+                    : null
+                "
                 [class.error]="
                   authForm.get('email')?.touched &&
                   authForm.get('email')?.invalid
@@ -85,13 +93,15 @@
                 authForm.get('email')?.touched && authForm.get('email')?.invalid
               "
               class="error-message"
+              id="email-error"
+              aria-live="polite"
             >
               Please enter a valid email address
             </div>
           </div>
 
           <!-- Password Field -->
-          <div class="input-group">
+            <div class="input-group">
             <label class="input-label">Password</label>
             <div class="input-wrapper">
               <input
@@ -99,6 +109,16 @@
                 formControlName="password"
                 placeholder="Enter your password"
                 class="form-input"
+                [attr.aria-invalid]="
+                  authForm.get('password')?.invalid &&
+                  authForm.get('password')?.touched
+                "
+                [attr.aria-describedby]="
+                  authForm.get('password')?.invalid &&
+                  authForm.get('password')?.touched
+                    ? 'password-error'
+                    : null
+                "
                 [class.error]="
                   authForm.get('password')?.touched &&
                   authForm.get('password')?.invalid
@@ -132,6 +152,8 @@
                 authForm.get('password')?.invalid
               "
               class="error-message"
+              id="password-error"
+              aria-live="polite"
             >
               Password is required
             </div>
@@ -146,6 +168,21 @@
                 formControlName="confirmPassword"
                 placeholder="Confirm your password"
                 class="form-input"
+                [attr.aria-invalid]="
+                  (authForm.get('confirmPassword')?.invalid ||
+                    authForm.hasError('passwordMismatch')) &&
+                  authForm.get('confirmPassword')?.touched
+                "
+                [attr.aria-describedby]="
+                  authForm.hasError('passwordMismatch') &&
+                  authForm.get('confirmPassword')?.touched
+                    ? 'confirmPassword-mismatch-error'
+                    : authForm.get('confirmPassword')?.touched &&
+                        authForm.get('confirmPassword')?.invalid &&
+                        !authForm.hasError('passwordMismatch')
+                      ? 'confirmPassword-required-error'
+                      : null
+                "
                 [class.error]="
                   authForm.get('confirmPassword')?.touched &&
                   authForm.get('confirmPassword')?.invalid
@@ -179,6 +216,8 @@
                 authForm.get('confirmPassword')?.touched
               "
               class="error-message"
+              id="confirmPassword-mismatch-error"
+              aria-live="polite"
             >
               Passwords must match
             </div>
@@ -189,6 +228,8 @@
                 !authForm.hasError('passwordMismatch')
               "
               class="error-message"
+              id="confirmPassword-required-error"
+              aria-live="polite"
             >
               Please confirm your password
             </div>
