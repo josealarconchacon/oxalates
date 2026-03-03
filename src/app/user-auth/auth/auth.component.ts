@@ -36,11 +36,14 @@ export class AuthComponent implements OnInit, OnDestroy {
   }
 
   initializeForm(): void {
-    this.authForm = this.fb.group({
-      email: ['', [Validators.required, Validators.email]],
-      password: ['', Validators.required],
-      confirmPassword: [''], // Only needed in sign-up mode
-    });
+    this.authForm = this.fb.group(
+      {
+        email: ['', [Validators.required, Validators.email]],
+        password: ['', Validators.required],
+        confirmPassword: [''], // Only needed in sign-up mode
+      },
+      { validators: this.passwordMatchValidator }
+    );
 
     if (!this.isSignInMode) {
       this.authForm.controls['confirmPassword'].setValidators(
@@ -51,6 +54,13 @@ export class AuthComponent implements OnInit, OnDestroy {
     }
 
     this.authForm.controls['confirmPassword'].updateValueAndValidity();
+  }
+
+  passwordMatchValidator(formGroup: FormGroup) {
+    const { password, confirmPassword } = formGroup.controls;
+    return password.value === confirmPassword.value
+      ? null
+      : { passwordMismatch: true };
   }
 
   async onSubmit(): Promise<void> {

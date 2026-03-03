@@ -175,8 +175,18 @@
             </div>
             <div
               *ngIf="
+                authForm.hasError('passwordMismatch') &&
+                authForm.get('confirmPassword')?.touched
+              "
+              class="error-message"
+            >
+              Passwords must match
+            </div>
+            <div
+              *ngIf="
                 authForm.get('confirmPassword')?.touched &&
-                authForm.get('confirmPassword')?.invalid
+                authForm.get('confirmPassword')?.invalid &&
+                !authForm.hasError('passwordMismatch')
               "
               class="error-message"
             >
