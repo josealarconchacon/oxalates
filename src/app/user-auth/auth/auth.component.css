@@ -265,6 +265,21 @@
   font-size: 0.75rem;
 }
 
+.success-message {
+  color: var(--success-color);
+  font-size: 0.8rem;
+  font-weight: 500;
+  margin-bottom: 0.5rem;
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+.success-message::before {
+  content: "✓";
+  font-size: 0.75rem;
+}
+
 .submit-button {
   position: relative;
   display: flex;

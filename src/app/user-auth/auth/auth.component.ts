@@ -14,6 +14,7 @@ export class AuthComponent implements OnInit, OnDestroy {
   isSignInMode = true;
   showAlert: boolean = false;
   alertMessage: string = '';
+  showSignUpSuccess = false;
   private alertSubscription!: Subscription;
 
   constructor(
@@ -68,6 +69,7 @@ export class AuthComponent implements OnInit, OnDestroy {
           return;
         }
         await this.authService.signUp(email, password, confirmPassword);
+        this.showSignUpSuccess = true;
       }
     } catch (error) {
       console.error('Authentication error:', error);
@@ -76,6 +78,7 @@ export class AuthComponent implements OnInit, OnDestroy {
 
   toggleAuthMode(): void {
     this.isSignInMode = !this.isSignInMode;
+    this.showSignUpSuccess = false;
     this.initializeForm();
   }
 

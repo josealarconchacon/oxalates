@@ -46,6 +46,9 @@
       </div>
 
       <div class="auth-content">
+        <div *ngIf="showSignUpSuccess" class="success-message">
+          Check your email to verify your account.
+        </div>
         <form [formGroup]="authForm" (ngSubmit)="onSubmit()" class="auth-form">
           <!-- Email Field -->
           <div class="input-group">

@@ -59,13 +59,7 @@ export class AuthService {
 
       await result.user?.sendEmailVerification();
 
-      this.alertService.showAlert(
-        'A verification email has been sent. Please verify your email before logging in.'
-      );
-
       await this.updateUserData(result.user);
-
-      this.router.navigate(['/verification-pending']);
     } catch (error: any) {
       console.error('Error during sign-up:', error);
 
