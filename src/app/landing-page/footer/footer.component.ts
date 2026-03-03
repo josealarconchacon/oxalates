@@ -1,5 +1,5 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { Router, NavigationEnd } from '@angular/router';
+import { Router, NavigationEnd, RouterLink } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { AuthService } from '../../user-auth/service/auth-service.service';
 import { CommonModule } from '@angular/common';
@@ -11,7 +11,7 @@ import { AuthMessageComponent } from '../../shared/components/auth-message/auth-
   templateUrl: './footer.component.html',
   styleUrls: ['./footer.component.css'],
   standalone: true,
-  imports: [CommonModule, AuthMessageComponent],
+  imports: [CommonModule, AuthMessageComponent, RouterLink],
   providers: [AuthService],
 })
 export class FooterComponent implements OnInit, OnDestroy {

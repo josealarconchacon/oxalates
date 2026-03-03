@@ -1,4 +1,4 @@
-import { Router, ActivatedRoute } from '@angular/router';
+import { Router, ActivatedRoute, RouterLink } from '@angular/router';
 import { Component, HostListener, OnInit } from '@angular/core';
 import { AuthService } from 'src/app/user-auth/service/auth-service.service';
 import { NavigationService } from 'src/app/user-auth/service/navigation.service';
@@ -15,7 +15,7 @@ import { AuthMessageComponent } from '../../shared/components/auth-message/auth-
   templateUrl: './header.component.html',
   styleUrls: ['./header.component.css'],
   standalone: true,
-  imports: [CommonModule, MatIconModule, AuthMessageComponent],
+  imports: [CommonModule, MatIconModule, AuthMessageComponent, RouterLink],
 })
 export class HeaderComponent implements OnInit {
   isNavOpen = false;

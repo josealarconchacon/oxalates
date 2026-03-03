@@ -1,8 +1,8 @@
 <header id="header" class="header" [class.scrolled]="isScrolled">
   <div class="header-content">
-    <a href="#" class="logo-container" (click)="goToLandingPage()">
+    <button class="logo-container" (click)="goToLandingPage()">
       <span class="logo-text">Oxalate Info</span>
-    </a>
+    </button>
 
     <button
       class="hamburger"
@@ -32,7 +32,7 @@
       ></button>
 
       <ng-container *ngIf="!(isMobile$ | async)">
-        <a href="/contribution" class="nav-link"> Support the Project </a>
+        <a routerLink="/contribution" class="nav-link">Support the Project</a>
         <button
           class="calculate-btn"
           (click)="navigateToCalculateDailyIntake(); closeNav()"

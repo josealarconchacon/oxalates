@@ -190,6 +190,10 @@ body {
   text-decoration: none;
   color: var(--text-primary);
   transition: opacity var(--transition-fast);
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0;
 }
 
 .logo-container:hover {
