@@ -95,13 +95,14 @@
               <label>Email</label>
               <p>{{ userProfile?.email || "username@example.com" }}</p>
             </div>
-            <button (click)="toggleChangePassword()" class="edit-button">
+            <button #changePasswordTrigger (click)="toggleChangePassword()" class="edit-button">
               <i class="fas fa-key"></i> Change Password
             </button>
           </div>
         </div>
         <app-change-password
           [isVisible]="isChangePasswordVisible"
+          [triggerElement]="changePasswordTrigger"
           (close)="toggleChangePassword()"
         ></app-change-password>
         <app-save-items *ngSwitchCase="'saveItem'"></app-save-items>

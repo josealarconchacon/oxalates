@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
 import { AuthService } from '../service/auth-service.service';
 import { AngularFireStorage } from '@angular/fire/compat/storage';
 import { finalize, map } from 'rxjs/operators';
@@ -19,6 +19,8 @@ import { ThemeService } from '../../shared/services/theme.service';
   animations: [fadeInOut],
 })
 export class ProfileComponent implements OnInit {
+  @ViewChild('changePasswordTrigger') changePasswordTrigger!: ElementRef<HTMLElement>;
+
   activeSection: string = 'profile';
   userProfile: any;
   isChangePasswordVisible: boolean = false;
