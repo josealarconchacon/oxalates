@@ -4,21 +4,29 @@
   [attr.data-theme]="isDarkTheme ? 'dark' : 'light'"
 >
   <div>
-    <h1>Search for a food</h1>
+    <h1>Know what's in your food.</h1>
+    <p class="search-subtitle">Search foods and instantly see their oxalate levels.</p>
   </div>
   <div class="search-wrapper">
     <app-search-input
       type="text"
       [searchQuery]="searchQuery"
       (clearSearch)="handleClearSearch()"
+      (searchQueryChange)="onSearchQueryChange($event)"
       (input)="onInputChange($event)"
+      (enterPressed)="onEnterPressed()"
       [value]="searchQuery"
     ></app-search-input>
+
+    <div *ngIf="errorState" class="error-state-inline">
+      <p>Something went wrong. Please try again.</p>
+      <button type="button" (click)="retrySearch()">Retry</button>
+    </div>
 
     <app-alert *ngIf="showAlert" [message]="alertMessage"></app-alert>
 
     <app-filter
-      (filterChanged)="applyFilters($event)"
+      (filterChanged)="onFilterChanged($event)"
       class="filter-component"
     ></app-filter>
   </div>
@@ -28,33 +36,13 @@
     <p>Loading results...</p>
   </div>
 
-  <div *ngIf="!isLoading" class="search-results">
-    <div class="results-header">
-      <div class="results-stats">
-        {{ oxalates.length }} results found
-        <span *ngIf="filterService.getCurrentFilter().category">
-          in {{ filterService.getCurrentFilter().category }}
-        </span>
-      </div>
-    </div>
-
-    <div *ngIf="displayedOxalates.length === 0" class="no-results">
-      <i class="fas fa-search no-results-icon" aria-hidden="true"></i>
-      <h3 class="no-results-heading">No results found</h3>
-      <p *ngIf="filterService.getCurrentFilter().category" class="no-results-text">
-        No items found in {{ filterService.getCurrentFilter().category }}
-      </p>
-      <p *ngIf="!filterService.getCurrentFilter().category" class="no-results-text">
-        Try different category or food level
-      </p>
-    </div>
-
+  <div *ngIf="!isLoading && showSearchPrompt()" class="preview-section" #resultsList>
     <div class="results-list">
       <div
-        *ngFor="let oxalate of displayedOxalates; let last = last"
+        *ngFor="let oxalate of randomItems; let last = last"
         class="result-item"
         [class.result-item-last]="last"
-        (click)="viewMore(oxalate)"
+        (click)="viewMore(oxalate, $event)"
       >
         <div class="result-left">
           <p class="result-category-breadcrumb">{{ oxalate.category }}</p>
@@ -90,41 +78,110 @@
         </div>
       </div>
     </div>
+  </div>
 
-    <div class="pagination" *ngIf="displayedOxalates.length > 0">
-      <button class="pagination-nav" (click)="changePage(1)" [disabled]="currentPage === 1" title="First page">
-        <i class="fas fa-angle-double-left pagination-icon"></i>
-        <span class="pagination-nav-text">First</span>
-      </button>
-      <button class="pagination-nav" (click)="changePage(currentPage - 1)" [disabled]="currentPage === 1" title="Previous">
-        <i class="fas fa-angle-left pagination-icon"></i>
-        <span class="pagination-nav-text">Previous</span>
-      </button>
-      <ng-container *ngFor="let page of getPages()">
-        <button
-          class="pagination-page"
-          (click)="changePage(page)"
-          [class.active]="page === currentPage"
-          [disabled]="page === '...'"
-        >
-          {{ page }}
-        </button>
-      </ng-container>
-      <button class="pagination-nav" (click)="changePage(currentPage + 1)" [disabled]="currentPage === totalPages" title="Next">
-        <i class="fas fa-angle-right pagination-icon"></i>
-        <span class="pagination-nav-text">Next</span>
-      </button>
-      <button class="pagination-nav" (click)="changePage(totalPages)" [disabled]="currentPage === totalPages" title="Last page">
-        <i class="fas fa-angle-double-right pagination-icon"></i>
-        <span class="pagination-nav-text">Last</span>
-      </button>
+  <div *ngIf="!isLoading && !showSearchPrompt()" class="search-results" #resultsList>
+    <div class="results-header">
+      <div class="results-stats">
+        {{ oxalates.length }} results found
+        <span *ngIf="filterService.getCurrentFilter().category">
+          in {{ filterService.getCurrentFilter().category }}
+        </span>
+      </div>
     </div>
+
+    <div *ngIf="displayedOxalates.length === 0" class="no-results">
+      <i class="fas fa-search no-results-icon" aria-hidden="true"></i>
+      <h3 class="no-results-heading">No results found</h3>
+      <p *ngIf="filterService.getCurrentFilter().category" class="no-results-text">
+        No items found in {{ filterService.getCurrentFilter().category }}
+      </p>
+      <p *ngIf="!filterService.getCurrentFilter().category" class="no-results-text">
+        Try different category or food level
+      </p>
+    </div>
+
+    <div class="results-list">
+      <div
+        *ngFor="let oxalate of displayedOxalates; let last = last"
+        class="result-item"
+        [class.result-item-last]="last"
+        (click)="viewMore(oxalate, $event)"
+      >
+        <div class="result-left">
+          <p class="result-category-breadcrumb">{{ oxalate.category }}</p>
+          <h3 class="result-title">{{ oxalate.item }}</h3>
+          <p class="result-meta-line">
+            Oxalate per serving: {{ oxalate.calc_oxalate_per_serving }}{{ oxalate.calc_oxalate_per_serving !== 'n/a' ? ' mg' : '' }}
+            <span class="meta-sep">·</span>
+            Soluble: {{ oxalate.calc_soluble_mg_oxalate_per_serving }}{{ oxalate.calc_soluble_mg_oxalate_per_serving !== 'n/a' ? ' mg' : '' }}
+            <span *ngIf="oxalate.serving_size" class="meta-sep">·</span>
+            <span *ngIf="oxalate.serving_size">{{ oxalate.serving_size }}</span>
+            <span class="meta-sep level-badge-inline-sep" *ngIf="oxalate.calc_level">·</span>
+            <span
+              *ngIf="oxalate.calc_level"
+              class="level-badge level-badge-inline"
+              [class.badge-high]="oxalate.calc_level === 'High' || oxalate.calc_level === 'Very High' || oxalate.calc_level === 'Extremely High'"
+              [class.badge-medium]="oxalate.calc_level === 'Medium'"
+              [class.badge-low]="oxalate.calc_level === 'Low'"
+              [class.badge-very-low]="oxalate.calc_level === 'Very Low'"
+            >{{ oxalate.calc_level }}</span>
+          </p>
+        </div>
+        <div class="result-right">
+          <span
+            *ngIf="oxalate.calc_level"
+            class="level-badge level-badge-desktop"
+            [class.badge-high]="oxalate.calc_level === 'High' || oxalate.calc_level === 'Very High' || oxalate.calc_level === 'Extremely High'"
+            [class.badge-medium]="oxalate.calc_level === 'Medium'"
+            [class.badge-low]="oxalate.calc_level === 'Low'"
+            [class.badge-very-low]="oxalate.calc_level === 'Very Low'"
+          >{{ oxalate.calc_level }}</span>
+          <span class="result-oxalate-value">{{ oxalate.calc_oxalate_per_serving }}{{ oxalate.calc_oxalate_per_serving !== 'n/a' ? ' mg' : '' }} per serving</span>
+          <span class="result-soluble-value">Soluble: {{ oxalate.calc_soluble_mg_oxalate_per_serving }}{{ oxalate.calc_soluble_mg_oxalate_per_serving !== 'n/a' ? ' mg' : '' }}</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="pagination" *ngIf="displayedOxalates.length > 0 || (randomItems.length > 0 && !hasSearched)">
+    <button class="pagination-nav" (click)="changePage(1)" [disabled]="currentPage === 1" title="First page">
+      <i class="fas fa-angle-double-left pagination-icon"></i>
+      <span class="pagination-nav-text">First</span>
+    </button>
+    <button class="pagination-nav" (click)="changePage(currentPage - 1)" [disabled]="currentPage === 1" title="Previous">
+      <i class="fas fa-angle-left pagination-icon"></i>
+      <span class="pagination-nav-text">Previous</span>
+    </button>
+    <ng-container *ngFor="let page of getPages()">
+      <button
+        class="pagination-page"
+        (click)="changePage(page)"
+        [class.active]="page === currentPage"
+        [disabled]="page === '...'"
+      >
+        {{ page }}
+      </button>
+    </ng-container>
+    <button class="pagination-nav" (click)="changePage(currentPage + 1)" [disabled]="currentPage === totalPages" title="Next">
+      <i class="fas fa-angle-right pagination-icon"></i>
+      <span class="pagination-nav-text">Next</span>
+    </button>
+    <button class="pagination-nav" (click)="changePage(totalPages)" [disabled]="currentPage === totalPages" title="Last page">
+      <i class="fas fa-angle-double-right pagination-icon"></i>
+      <span class="pagination-nav-text">Last</span>
+    </button>
   </div>
 
   <!-- ViewMore Modal -->
   <div
     *ngIf="selectedOxalate"
+    #modalContainer
     class="modal-overlay"
+    tabindex="-1"
+    role="dialog"
+    aria-modal="true"
+    aria-labelledby="oxalate-title"
     (click)="closeDetail()"
     id="viewmore-modal"
     [ngClass]="{ 'dark-theme': isDarkTheme }"

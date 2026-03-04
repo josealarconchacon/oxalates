@@ -111,15 +111,22 @@ export class SearchInputComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * Handle blur event to refocus input on mobile
+   * Handle blur event to refocus input on mobile only.
+   * On desktop/large screens, refocusing when user clicks pagination or results
+   * causes unwanted scroll-to-top (input is at top of page). Only refocus on
+   * mobile to keep keyboard visible when user taps outside input.
    */
   onBlur() {
     // Only refocus if the Done key wasn't pressed
     if (!this.isDoneKeyPressed && this.searchQuery) {
-      // Refocus the input
-      setTimeout(() => {
-        this.focusInput();
-      }, 10);
+      // Only refocus on mobile - on desktop, clicking pagination/results
+      // would scroll page back to top to show the refocused input
+      const isMobileViewport = window.innerWidth < 768;
+      if (isMobileViewport) {
+        setTimeout(() => {
+          this.focusInput();
+        }, 10);
+      }
     } else {
       // Reset the flag for next time
       this.isDoneKeyPressed = false;

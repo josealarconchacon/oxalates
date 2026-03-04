@@ -5,7 +5,6 @@ import {
   ViewChild,
   ElementRef,
   AfterViewChecked,
-  HostListener,
 } from '@angular/core';
 import { ThemeService } from '../shared/services/theme.service';
 import { OxalateService } from './dialog-service/service/oxalate.service';
@@ -40,25 +39,13 @@ export class LandingPageComponent
   private subscriptions: Subscription[] = [];
   private lastQuery: string = '';
   private pendingFocus: boolean = false;
-  private isMobile: boolean = false;
 
   constructor(
     private themeService: ThemeService,
     private oxalateService: OxalateService,
     private router: Router,
     private activatedRoute: ActivatedRoute
-  ) {
-    this.checkMobileDevice();
-  }
-
-  @HostListener('window:resize')
-  onResize() {
-    this.checkMobileDevice();
-  }
-
-  private checkMobileDevice() {
-    this.isMobile = window.innerWidth <= 768;
-  }
+  ) {}
 
   ngOnInit() {
     this.setupSearchSubscription();
@@ -145,20 +132,12 @@ export class LandingPageComponent
   onSearchQueryChange(query: string) {
     this.searchQuery = query;
 
-    // For mobile devices, only show modal after 6 characters
-    if (this.isMobile) {
-      if (query.length >= 6 && !this.showSearchResults) {
-        this.showSearchResults = true;
-        this.pendingFocus = true;
-      } else if (query.length < 6) {
-        this.showSearchResults = false;
-      }
-    } else {
-      // Desktop behavior remains the same
-      if (!this.showSearchResults) {
-        this.showSearchResults = true;
-        this.pendingFocus = true;
-      }
+    // Same behavior for mobile and desktop: only show modal after 6 characters
+    if (query.length >= 6 && !this.showSearchResults) {
+      this.showSearchResults = true;
+      this.pendingFocus = true;
+    } else if (query.length < 6) {
+      this.showSearchResults = false;
     }
 
     if (!query.trim()) {
@@ -173,14 +152,10 @@ export class LandingPageComponent
   }
 
   /**
-   * Handle Enter key press to dismiss keyboard on mobile
+   * Handle Enter key press to dismiss keyboard (same on mobile and desktop)
    */
   onSearchEnterPressed() {
-    if (this.isMobile) {
-      // On mobile, when Done key is pressed, we want to keep the modal open
-      // but allow the keyboard to be dismissed
-      this.pendingFocus = false;
-    }
+    this.pendingFocus = false;
   }
 
   onClearSearch() {
