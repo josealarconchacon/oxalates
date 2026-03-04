@@ -127,6 +127,18 @@
   overflow: hidden;
   width: 100%;
   transition: all 0.3s ease;
+  position: relative;
+}
+
+/* Top accent bar - 4px primary color */
+.accent-bar {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: var(--color-primary, var(--indicator-color));
+  border-radius: var(--border-radius) var(--border-radius) 0 0;
 }
 
 /* Header Styles */
@@ -189,16 +201,25 @@
   padding: var(--card-padding);
 }
 
+.section-label,
 .section-title {
-  font-size: 1.125rem;
+  font-size: 0.7rem;
   font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
   margin-bottom: var(--spacing);
-  color: var(--text-color, #333333);
+  color: var(--color-muted, var(--section-title-color, #666666));
 }
 
+.section-divider {
+  border: none;
+  border-top: 1px solid var(--color-border, var(--border-color));
+  margin: 16px 0;
+}
+
+.dark-theme .section-label,
 .dark-theme .section-title {
-  font-weight: 600;
-  color: var(--section-title-color);
+  color: var(--color-muted, var(--section-title-color));
 }
 
 .dark-theme .card-header {
@@ -282,7 +303,7 @@
 .property-value {
   font-size: 0.9375rem;
   font-weight: 500;
-  color: var(--text-color, #333333);
+  color: var(--color-text, var(--text-color, #333333));
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -367,25 +388,40 @@
 .card-close {
   border: none;
   background: transparent;
-  color: var(--text-color, #333333);
-  font-size: 1.75rem;
-  width: 36px;
-  height: 36px;
+  color: var(--color-text, var(--text-color, #333333));
+  width: 32px;
+  height: 32px;
+  min-width: 32px;
+  min-height: 32px;
   display: inline-flex;
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  transition: color 0.2s ease, transform 0.2s ease;
+  transition: color 0.2s ease, border-color 0.2s ease, background-color 0.2s ease;
   border-radius: 50%;
+  border: 1.5px solid transparent;
 }
 
 .card-close:hover {
-  transform: scale(1.1);
-  color: var(--primary-color, #5aac84);
+  border-color: var(--color-border, rgba(0, 0, 0, 0.2));
+  color: var(--color-primary, var(--primary-color, #5aac84));
+}
+
+.card-close svg {
+  width: 18px;
+  height: 18px;
+  stroke: currentColor;
+  stroke-width: 2;
+  stroke-linecap: round;
+  fill: none;
 }
 
 .dark-theme .card-close {
-  color: #f5f5f5;
+  color: var(--color-text, #f5f5f5);
+}
+
+.dark-theme .card-close:hover {
+  border-color: var(--color-border);
 }
 .action-button {
   padding: 0 20px;

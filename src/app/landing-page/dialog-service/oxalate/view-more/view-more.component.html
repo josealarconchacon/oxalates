@@ -5,6 +5,7 @@
   role="main"
 >
   <div class="oxalate-card" aria-labelledby="oxalate-title">
+    <div class="accent-bar"></div>
     <div class="card-header sticky-header">
       <div class="header-content">
         <h2 class="item-name" id="oxalate-title">{{ oxalateData.item }}</h2>
@@ -15,12 +16,12 @@
         aria-label="Close details"
         (click)="handleClose($event)"
       >
-        ×
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M18 6L6 18M6 6l12 12" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
       </button>
     </div>
 
     <div class="content-section" role="region" id="details-content">
-      <div class="section-title">Oxalate Information</div>
+      <div class="section-label">Oxalate Information</div>
 
       <div class="oxalate-table-container">
         <table class="oxalate-table" aria-label="Oxalate properties">
@@ -57,6 +58,8 @@
           </tbody>
         </table>
       </div>
+
+      <hr class="section-divider" *ngIf="shouldShowNotes(oxalateData.notes)" />
 
       <div
         class="info-note"

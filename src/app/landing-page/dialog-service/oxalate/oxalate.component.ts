@@ -46,7 +46,7 @@ export class OxalateComponent implements OnInit, OnDestroy {
     private oxalateService: OxalateService,
     private categoryService: CategoryService,
     private paginationService: PaginationService,
-    private themeService: ThemeService
+    private themeService: ThemeService,
   ) {}
 
   ngOnInit(): void {
@@ -64,7 +64,7 @@ export class OxalateComponent implements OnInit, OnDestroy {
       this.themeService.isDarkTheme$.subscribe((isDark) => {
         this.isDarkTheme = isDark;
         this.cdr.detectChanges();
-      })
+      }),
     );
   }
 
@@ -84,13 +84,13 @@ export class OxalateComponent implements OnInit, OnDestroy {
 
           // Additional check: if category was set in services but not in params, apply it
           const currentCategory = this.categoryService.currentCategory$.pipe(
-            take(1)
+            take(1),
           );
           currentCategory.subscribe((category) => {
             if (category && !params['category']) {
               console.log(
                 'Category found in service but not in params, applying:',
-                category
+                category,
               );
               this.applyFilters({
                 category: category,
@@ -99,7 +99,7 @@ export class OxalateComponent implements OnInit, OnDestroy {
             }
           });
         });
-      })
+      }),
     );
   }
 
@@ -219,7 +219,7 @@ export class OxalateComponent implements OnInit, OnDestroy {
         // If not found in filtered results, look in the original data
         if (!delayedFoundItem && this.originalOxalates) {
           delayedFoundItem = this.originalOxalates.find(
-            (item) => item.id === itemId
+            (item) => item.id === itemId,
           );
 
           // If found in original but not in filtered, adjust filters to include it
@@ -241,7 +241,7 @@ export class OxalateComponent implements OnInit, OnDestroy {
                 delayedFoundItem &&
                 delayedFoundItem.category &&
                 ox.category.toLowerCase() ===
-                  delayedFoundItem.category.toLowerCase()
+                  delayedFoundItem.category.toLowerCase(),
             );
             this.updateDisplayedOxalates();
           }
@@ -251,14 +251,14 @@ export class OxalateComponent implements OnInit, OnDestroy {
         if (!delayedFoundItem && this.route.snapshot.queryParams['search']) {
           console.log('Item not found by ID, trying to find by name');
           delayedFoundItem = this.findItemByName(
-            this.route.snapshot.queryParams['search']
+            this.route.snapshot.queryParams['search'],
           );
         }
 
         if (delayedFoundItem) {
           console.log(
             'Found item after delay, opening details:',
-            delayedFoundItem.item
+            delayedFoundItem.item,
           );
           // Only open if not already opened
           if (!this.selectedOxalate) {
@@ -310,7 +310,7 @@ export class OxalateComponent implements OnInit, OnDestroy {
         error: (error) => {
           console.error('Error initializing component:', error);
         },
-      })
+      }),
     );
     this.categoryOnChange();
     this.filterOnChange();
@@ -338,7 +338,7 @@ export class OxalateComponent implements OnInit, OnDestroy {
         error: (error) => {
           console.error('Error handling category change:', error);
         },
-      })
+      }),
     );
   }
 
@@ -354,7 +354,7 @@ export class OxalateComponent implements OnInit, OnDestroy {
         error: (error) => {
           console.error('Error handling filter change:', error);
         },
-      })
+      }),
     );
   }
 
@@ -410,9 +410,9 @@ export class OxalateComponent implements OnInit, OnDestroy {
           return this.oxalateService.searchOxalateData(query).pipe(
             finalize(() => {
               this.isLoading = false;
-            })
+            }),
           );
-        })
+        }),
       )
       .subscribe(
         (data) => {
@@ -433,7 +433,7 @@ export class OxalateComponent implements OnInit, OnDestroy {
         },
         (error) => {
           console.error('Error handling search change:', error);
-        }
+        },
       );
   }
 
@@ -501,7 +501,7 @@ export class OxalateComponent implements OnInit, OnDestroy {
     // If there's a search query, perform the advanced search
     if (this.searchQuery?.trim()) {
       filteredOxalates$ = this.oxalateService.searchOxalateData(
-        this.searchQuery
+        this.searchQuery,
       );
     }
 
@@ -516,7 +516,7 @@ export class OxalateComponent implements OnInit, OnDestroy {
             oxalate &&
             oxalate.category &&
             oxalate.category.toLowerCase() ===
-              (filter.category ?? '').toLowerCase()
+              (filter.category ?? '').toLowerCase(),
         );
         console.log('Results after category filter:', filteredOxalates.length);
       }
@@ -525,11 +525,11 @@ export class OxalateComponent implements OnInit, OnDestroy {
       if (filter.calc_level) {
         // console.log('Filtering by calc_level:', filter.calc_level);
         filteredOxalates = filteredOxalates.filter(
-          (oxalate) => oxalate && oxalate.calc_level === filter.calc_level
+          (oxalate) => oxalate && oxalate.calc_level === filter.calc_level,
         );
         console.log(
           'Results after calc_level filter:',
-          filteredOxalates.length
+          filteredOxalates.length,
         );
       }
 
@@ -583,7 +583,7 @@ export class OxalateComponent implements OnInit, OnDestroy {
   updateDisplayedOxalates(): void {
     console.log('Updating displayed oxalates, total:', this.oxalates.length);
     this.displayedOxalates = this.paginationService.updateDisplayedItems(
-      this.oxalates
+      this.oxalates,
     );
     console.log('New displayed oxalates:', this.displayedOxalates.length);
   }
@@ -655,7 +655,7 @@ export class OxalateComponent implements OnInit, OnDestroy {
         (oxalate) =>
           oxalate &&
           oxalate.item &&
-          oxalate.item.toLowerCase().includes(storedSearchQuery.toLowerCase())
+          oxalate.item.toLowerCase().includes(storedSearchQuery.toLowerCase()),
       );
 
       // Apply category filter if present
@@ -666,7 +666,7 @@ export class OxalateComponent implements OnInit, OnDestroy {
           (oxalate) =>
             oxalate &&
             oxalate.category &&
-            oxalate.category.toLowerCase() === storedCategory.toLowerCase()
+            oxalate.category.toLowerCase() === storedCategory.toLowerCase(),
         );
       }
 
@@ -674,7 +674,7 @@ export class OxalateComponent implements OnInit, OnDestroy {
       if (storedLevel) {
         this.filterService.updateFilter({ calc_level: storedLevel });
         filteredOxalates = filteredOxalates.filter(
-          (oxalate) => oxalate && oxalate.calc_level === storedLevel
+          (oxalate) => oxalate && oxalate.calc_level === storedLevel,
         );
       }
 
@@ -688,7 +688,7 @@ export class OxalateComponent implements OnInit, OnDestroy {
       if (filteredOxalates.length > 0) {
         this.oxalates = this.sortBySearchTerm(
           filteredOxalates,
-          storedSearchQuery
+          storedSearchQuery,
         );
         this.updateDisplayedOxalates();
         this.cdr.detectChanges();
@@ -760,13 +760,13 @@ export class OxalateComponent implements OnInit, OnDestroy {
         (oxalate) =>
           oxalate &&
           oxalate.item &&
-          oxalate.item.toLowerCase().includes(lowerCaseSearchTerm)
+          oxalate.item.toLowerCase().includes(lowerCaseSearchTerm),
       )
       .map((oxalate) => ({
         ...oxalate,
         relevanceScore: calculateRelevanceScore(
           oxalate.item,
-          lowerCaseSearchTerm
+          lowerCaseSearchTerm,
         ),
       }));
 
@@ -790,13 +790,13 @@ export class OxalateComponent implements OnInit, OnDestroy {
 
     // Try exact match first
     let foundItem = this.originalOxalates.find(
-      (item) => item.item.toLowerCase() === searchName
+      (item) => item.item.toLowerCase() === searchName,
     );
 
     // If not found, try contains match
     if (!foundItem) {
       foundItem = this.originalOxalates.find((item) =>
-        item.item.toLowerCase().includes(searchName)
+        item.item.toLowerCase().includes(searchName),
       );
     }
 

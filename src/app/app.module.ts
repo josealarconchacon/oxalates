@@ -63,7 +63,7 @@ export function initializeApp(configService: ConfigService) {
           environment.firebaseConfig = config;
           resolve();
         },
-        (error) => reject(error)
+        (error) => reject(error),
       );
     });
   };

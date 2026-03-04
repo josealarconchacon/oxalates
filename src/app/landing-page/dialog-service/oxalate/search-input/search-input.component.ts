@@ -34,14 +34,14 @@ export class SearchInputComponent implements OnInit, OnDestroy {
 
   constructor(
     private themeService: ThemeService,
-    private elementRef: ElementRef
+    private elementRef: ElementRef,
   ) {}
 
   ngOnInit(): void {
     this.themeSubscription = this.themeService.isDarkTheme$.subscribe(
       (isDark) => {
         this.isDarkTheme = isDark;
-      }
+      },
     );
   }
 

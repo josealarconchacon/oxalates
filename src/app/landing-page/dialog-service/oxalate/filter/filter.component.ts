@@ -34,7 +34,7 @@ export class FilterComponent implements OnInit, OnDestroy {
   constructor(
     private categoryService: CategoryService,
     private filterService: FilterService,
-    private themeService: ThemeService
+    private themeService: ThemeService,
   ) {}
 
   ngOnInit(): void {
@@ -45,7 +45,7 @@ export class FilterComponent implements OnInit, OnDestroy {
     this.subscriptions.push(
       this.themeService.isDarkTheme$.subscribe((isDark) => {
         this.isDarkTheme = isDark;
-      })
+      }),
     );
   }
 
@@ -56,14 +56,14 @@ export class FilterComponent implements OnInit, OnDestroy {
           this.filters.category = category ?? '';
           this.applyFilters();
         }
-      })
+      }),
     );
   }
   onFilterChange() {
     this.subscriptions.push(
       this.filterService.currentFilter$.subscribe((filter) => {
         this.filters = { ...filter };
-      })
+      }),
     );
   }
 
