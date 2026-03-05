@@ -78,8 +78,8 @@ import { CommonModule } from '@angular/common';
       .spinner {
         width: 40px;
         height: 40px;
-        border: 3px solid #e2e8f0;
-        border-top-color: #2563eb;
+        border: 3px solid var(--border-color);
+        border-top-color: var(--primary-color);
         border-radius: 50%;
         animation: spin 1s linear infinite;
         margin: 0 auto 1rem;
@@ -91,7 +91,7 @@ import { CommonModule } from '@angular/common';
 
       .progress-bar {
         height: 4px;
-        background: #e2e8f0;
+        background: var(--border-color);
         border-radius: 2px;
         overflow: hidden;
         margin: 0.5rem 0;
@@ -99,13 +99,13 @@ import { CommonModule } from '@angular/common';
 
       .progress-fill {
         height: 100%;
-        background: #2563eb;
+        background: var(--primary-color);
         transition: width 0.3s ease;
       }
 
       .progress-text {
-        font-size: 0.875rem;
-        color: #64748b;
+        font-size: var(--font-size-sm);
+        color: var(--text-muted);
       }
 
       @keyframes spin {

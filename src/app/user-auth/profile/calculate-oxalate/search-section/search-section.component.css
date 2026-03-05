@@ -125,12 +125,12 @@
 }
 
 .dark-theme .search-input:hover {
-  border-color: var(--primary-color-dark, #6ba4ff);
+  border-color: var(--primary-dark);
   background-color: var(--background-color-dark, #1a1a1a);
 }
 
 .dark-theme .search-input:focus {
-  border-color: var(--primary-color-dark, #6ba4ff);
+  border-color: var(--primary-dark);
   background-color: var(--background-color-dark, #1a1a1a);
   box-shadow: 0 0 0 4px var(--primary-light-dark, rgba(107, 164, 255, 0.15));
 }
@@ -143,7 +143,7 @@
   background: var(--card-background-dark, #1a1a1a);
   box-shadow: var(--shadow-lg-dark, 0 10px 15px -3px rgba(0, 0, 0, 0.4));
   border: 1px solid var(--border-color-dark, #2a2a2a);
-  scrollbar-color: var(--primary-color-dark, #6ba4ff)
+  scrollbar-color: var(--primary-dark)
     var(--background-color-dark, #1a1a1a);
 }
 
@@ -152,7 +152,7 @@
 }
 
 .dark-theme .suggestions-panel::-webkit-scrollbar-thumb {
-  background-color: var(--primary-color-dark, #6ba4ff);
+  background-color: var(--primary-dark);
   border: 2px solid var(--background-color-dark, #1a1a1a);
 }
 
@@ -217,12 +217,12 @@
   }
 
   .dark-theme .search-input:hover {
-    border-color: var(--primary-color-dark, #6ba4ff);
+    border-color: var(--primary-dark);
     background-color: var(--background-color-dark, #1a1a1a);
   }
 
   .dark-theme .search-input:focus {
-    border-color: var(--primary-color-dark, #6ba4ff);
+    border-color: var(--primary-dark);
     background-color: var(--background-color-dark, #1a1a1a);
     box-shadow: 0 0 0 4px var(--primary-light-dark, rgba(107, 164, 255, 0.15));
   }

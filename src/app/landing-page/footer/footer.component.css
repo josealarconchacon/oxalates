@@ -5,8 +5,13 @@
 }
 
 .dark-theme .footer {
-  background-color: #0b1528;
-  border-top: 1px solid rgba(255, 255, 255, 0.05);
+  background-color: var(--footer-background);
+  border-top: 1px solid var(--border-color);
+}
+
+.dark-theme .footer-text {
+  color: var(--text-muted);
+  border-top-color: var(--border-color);
 }
 
 .footer-content {
@@ -63,8 +68,13 @@
 .footer-link:hover,
 .footer-link:focus {
   color: var(--primary-color);
-  background-color: rgba(13, 110, 253, 0.1);
+  background-color: var(--nav-active);
   transform: translateY(-1px);
+}
+
+.footer-link:focus-visible {
+  outline: 2px solid var(--primary-color);
+  outline-offset: 2px;
 }
 
 .footer-heading {
@@ -82,23 +92,29 @@
   border: none;
   cursor: pointer;
   padding: 0.625rem 0.875rem;
-  color: #5a6c7d; /* Improved contrast ratio for WCAG AA */
-  font-size: 0.875rem;
-  font-weight: 500;
+  color: var(--text-secondary);
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-medium);
   display: flex;
   align-items: center;
-  gap: 0.5rem;
-  transition: all 0.2s ease;
-  letter-spacing: 0.3px;
+  gap: var(--spacing-2);
+  transition: all var(--transition-base);
+  letter-spacing: 0.02em;
   white-space: nowrap;
-  /* Ensure proper touch target size */
-  min-height: 44px;
+  min-height: 2.75rem;
 }
 
 .search-button:hover,
 .calculate-button:hover,
 .suggestions-button:hover {
-  color: #2d3436; /* Better contrast for hover state */
+  color: var(--text-primary);
+}
+
+.search-button:focus-visible,
+.calculate-button:focus-visible,
+.suggestions-button:focus-visible {
+  outline: 2px solid var(--primary-color);
+  outline-offset: 2px;
 }
 
 .search-icon,
@@ -123,56 +139,74 @@
 .contribution-link {
   text-decoration: none;
   padding: 0.625rem 0.875rem;
-  color: #5a6c7d; /* Improved contrast ratio for WCAG AA */
-  font-size: 0.875rem;
-  font-weight: 500;
+  color: var(--text-secondary);
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-medium);
   display: inline-flex;
   align-items: center;
-  gap: 0.5rem;
-  transition: all 0.2s ease;
-  letter-spacing: 0.3px;
+  gap: var(--spacing-2);
+  transition: all var(--transition-base);
+  letter-spacing: 0.02em;
   white-space: nowrap;
-  min-height: 44px;
+  min-height: 2.75rem;
 }
 
 .contribution-link:hover {
-  color: #2d3436; /* Better contrast for hover state */
+  color: var(--text-primary);
+}
+
+.contribution-link:focus-visible {
+  outline: 2px solid var(--primary-color);
+  outline-offset: 2px;
 }
 
 .footer-text {
-  font-size: 0.813rem;
-  color: #6b7885; /* Improved contrast ratio for WCAG AA */
+  font-size: var(--font-size-sm);
+  color: var(--text-muted);
   text-align: center;
   margin: 0;
   padding-top: var(--spacing-4);
-  border-top: 1px solid rgba(255, 255, 255, 0.05);
+  border-top: 1px solid var(--border-color);
   width: 100%;
-  letter-spacing: 0.3px;
+  letter-spacing: 0.02em;
 }
 
 @media screen and (max-width: 480px) {
   .footer-content {
-    padding: 0 var(--spacing-2);
+    padding: 0 var(--spacing-4);
   }
 
   .footer-links {
     gap: var(--spacing-2);
+    flex-wrap: wrap;
+    justify-content: center;
   }
 
   .search-button,
   .calculate-button,
   .contribution-link,
   .suggestions-button {
-    padding: 0.5rem 0.625rem;
-    font-size: 0.813rem;
+    padding: 0.625rem 0.75rem;
+    font-size: clamp(0.75rem, 3.5vw, 0.813rem);
+    min-height: 2.75rem;
   }
 
   .search-icon,
   .calculate-icon,
   .support-icon,
   .suggestions-icon {
-    width: 14px;
-    height: 14px;
+    width: 1rem;
+    height: 1rem;
+  }
+}
+
+@media screen and (max-width: 375px) {
+  .footer-content {
+    padding: 0 var(--spacing-3);
+  }
+
+  .footer-links {
+    gap: var(--spacing-2);
   }
 }
 
@@ -224,7 +258,7 @@
   .calculate-button:hover,
   .contribution-link:hover,
   .suggestions-button:hover {
-    color: #8892a8;
+    color: var(--text-tertiary);
   }
 }
 

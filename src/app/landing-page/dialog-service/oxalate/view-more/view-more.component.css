@@ -389,10 +389,10 @@
   border: none;
   background: transparent;
   color: var(--color-text, var(--text-color, #333333));
-  width: 32px;
-  height: 32px;
-  min-width: 32px;
-  min-height: 32px;
+  min-width: 2.75rem;
+  min-height: 2.75rem;
+  width: 2.75rem;
+  height: 2.75rem;
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -424,9 +424,9 @@
   border-color: var(--color-border);
 }
 .action-button {
-  padding: 0 20px;
-  height: 40px;
-  border-radius: 20px;
+  padding: 0 1.25rem;
+  min-height: 2.75rem;
+  border-radius: 1.25rem;
   font-family: inherit;
   font-size: 0.9375rem;
   font-weight: 500;
