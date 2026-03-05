@@ -368,14 +368,6 @@
   margin-left: 0.25em;
 }
 
-/* Desktop right-column badge */
-.level-badge-desktop {
-  font-size: 0.75rem;
-  padding: 3px 10px;
-  margin-bottom: 6px;
-  margin-left: 0;
-}
-
 .result-oxalate-value {
   font-size: 0.875rem;
   font-weight: 600;

@@ -62,14 +62,6 @@
           </p>
         </div>
         <div class="result-right">
-          <span
-            *ngIf="oxalate.calc_level"
-            class="level-badge level-badge-desktop"
-            [class.badge-high]="oxalate.calc_level === 'High' || oxalate.calc_level === 'Very High' || oxalate.calc_level === 'Extremely High'"
-            [class.badge-medium]="oxalate.calc_level === 'Medium'"
-            [class.badge-low]="oxalate.calc_level === 'Low'"
-            [class.badge-very-low]="oxalate.calc_level === 'Very Low'"
-          >{{ oxalate.calc_level }}</span>
           <span class="result-oxalate-value">{{ oxalate.calc_oxalate_per_serving }}{{ oxalate.calc_oxalate_per_serving !== 'n/a' ? ' mg' : '' }} per serving</span>
           <span class="result-soluble-value">Soluble: {{ oxalate.calc_soluble_mg_oxalate_per_serving }}{{ oxalate.calc_soluble_mg_oxalate_per_serving !== 'n/a' ? ' mg' : '' }}</span>
         </div>
@@ -126,14 +118,6 @@
           </p>
         </div>
         <div class="result-right">
-          <span
-            *ngIf="oxalate.calc_level"
-            class="level-badge level-badge-desktop"
-            [class.badge-high]="oxalate.calc_level === 'High' || oxalate.calc_level === 'Very High' || oxalate.calc_level === 'Extremely High'"
-            [class.badge-medium]="oxalate.calc_level === 'Medium'"
-            [class.badge-low]="oxalate.calc_level === 'Low'"
-            [class.badge-very-low]="oxalate.calc_level === 'Very Low'"
-          >{{ oxalate.calc_level }}</span>
           <span class="result-oxalate-value">{{ oxalate.calc_oxalate_per_serving }}{{ oxalate.calc_oxalate_per_serving !== 'n/a' ? ' mg' : '' }} per serving</span>
           <span class="result-soluble-value">Soluble: {{ oxalate.calc_soluble_mg_oxalate_per_serving }}{{ oxalate.calc_soluble_mg_oxalate_per_serving !== 'n/a' ? ' mg' : '' }}</span>
         </div>
