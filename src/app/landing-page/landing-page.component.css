@@ -56,7 +56,7 @@ main {
   display: flex;
   justify-content: center;
   align-items: center;
-  padding: 120px 2px 80px;
+  padding: clamp(2rem, 8vw, 7.5rem) clamp(0.125rem, 1vw, 0.5rem) clamp(2rem, 6vw, 5rem);
   min-height: 80vh;
   min-height: 80dvh; /* Dynamic viewport height for mobile browsers */
   background-color: var(--background-color);
@@ -69,9 +69,9 @@ main {
   flex-direction: column;
   align-items: center;
   width: 100%;
-  padding: 0 4px;
+  padding: 0 clamp(0.25rem, 1vw, 0.5rem);
   max-width: 100%;
-  margin-top: 150px;
+  margin-top: clamp(2rem, 12vw, 9.375rem);
 }
 
 .hero-top {
@@ -100,20 +100,19 @@ main {
 }
 
 .hero-text h1 {
-  font-size: clamp(1.5rem, 5vw, 2.5rem);
-  margin: 0 0 16px 0;
-  font-weight: 600;
-  color: var(--text-color);
-  line-height: 1.2;
+  font-size: clamp(var(--font-size-4xl), 5vw, 2.5rem);
+  margin: 0 0 var(--spacing-4) 0;
+  font-weight: var(--font-weight-semibold);
+  color: var(--text-primary);
+  line-height: var(--line-height-tight);
 }
 
 .hero-text p {
-  font-size: 1.125rem;
+  font-size: var(--font-size-lg);
   color: var(--text-secondary);
-  line-height: 1.6;
-  margin: 0 auto;
-  max-width: 800px;
-  margin-bottom: 20px;
+  line-height: var(--line-height-relaxed);
+  margin: 0 auto var(--spacing-5) auto;
+  max-width: 50rem;
 }
 
 .hero-image {
@@ -429,10 +428,11 @@ section:nth-child(even) {
 
 .search-input {
   width: 100%;
-  padding: 16px 24px;
-  font-size: 1.05rem;
+  padding: clamp(0.875rem, 2vw, 1rem) clamp(1rem, 3vw, 1.5rem);
+  font-size: clamp(0.9375rem, 2vw, 1.05rem);
+  min-height: 2.75rem;
   border: 1px solid var(--border-color);
-  border-radius: 16px;
+  border-radius: 1rem;
   background: var(--background-color);
   color: var(--text-color);
   transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
@@ -457,9 +457,10 @@ section:nth-child(even) {
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  width: 90%;
-  max-width: 800px;
+  width: min(95vw, 50rem);
+  max-width: 50rem;
   max-height: 80vh;
+  max-height: 80dvh;
   background-color: var(--card-background);
   border-radius: 12px;
   box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
@@ -540,14 +541,16 @@ section:nth-child(even) {
 .close-button {
   background: none;
   border: none;
-  font-size: 28px;
+  font-size: 1.75rem;
   line-height: 1;
   padding: 0;
   margin: 0;
   cursor: pointer;
   color: var(--text-secondary);
-  width: 32px;
-  height: 32px;
+  min-width: 2.75rem;
+  min-height: 2.75rem;
+  width: 2.75rem;
+  height: 2.75rem;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -714,11 +717,11 @@ section:nth-child(even) {
 }
 
 .result-snippet {
-  font-size: 14px;
+  font-size: var(--font-size-sm);
   color: var(--text-secondary);
   margin: 0;
   flex: 1;
-  min-width: 200px;
+  min-width: 0;
 }
 
 .detail-label {
@@ -781,31 +784,59 @@ section:nth-child(even) {
 /* Responsive styles */
 @media screen and (max-width: 768px) {
   .search-results-container {
-    width: 95%;
+    width: min(95vw, 100%);
     max-height: 90vh;
+    max-height: 90dvh;
     top: 55%;
   }
 
   .results-header {
     flex-direction: column;
-    gap: 10px;
+    gap: var(--spacing-2);
   }
 
   .result-title {
-    font-size: 16px;
+    font-size: var(--font-size-base);
   }
 
   .result-snippet {
-    font-size: 13px;
-    min-width: 100%;
+    font-size: var(--font-size-sm);
+    min-width: 0;
   }
 
   .modal-header h2 {
-    font-size: 16px;
+    font-size: var(--font-size-base);
   }
 
   .card-content {
-    padding: 12px;
+    padding: var(--spacing-3);
+  }
+}
+
+@media screen and (max-width: 480px) {
+  .search-results-container {
+    width: 100%;
+    max-height: 95dvh;
+    border-radius: 0.75rem 0.75rem 0 0;
+  }
+
+  .modal-header,
+  .modal-search-wrapper {
+    padding: var(--spacing-3) var(--spacing-4);
+  }
+
+  .card-content {
+    padding: var(--spacing-2);
+  }
+}
+
+@media screen and (max-width: 375px) {
+  .hero-content {
+    margin-top: clamp(1.5rem, 8vw, 2rem);
+  }
+
+  .search-results-container {
+    max-height: 100dvh;
   }
 }
 
@@ -942,17 +973,18 @@ section:nth-child(even) {
 
 @media (max-width: 480px) {
   .search-wrapper {
-    border-radius: 12px;
+    border-radius: 0.75rem;
   }
 
   .search-input {
-    padding: 12px 16px;
-    font-size: 0.95rem;
-    border-radius: 12px;
+    padding: 0.75rem 1rem;
+    font-size: clamp(0.875rem, 4vw, 0.95rem);
+    border-radius: 0.75rem;
+    min-height: 2.75rem;
   }
 
   .mobile-search-container {
-    padding: 0 8px;
+    padding: 0 var(--spacing-2);
   }
 
   .search-overlay {

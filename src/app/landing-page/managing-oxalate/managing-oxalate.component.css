@@ -129,7 +129,7 @@
 
 /* Icon Colors */
 .icon-water mat-icon {
-  color: #2196f3;
+  color: var(--primary-color);
 }
 
 .icon-nutrition mat-icon {

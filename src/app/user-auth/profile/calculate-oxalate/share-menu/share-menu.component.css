@@ -85,7 +85,7 @@
   background-color: var(--primary-light, #eff6ff);
   border-radius: var(--radius-md, 0.6rem);
   padding: 1rem;
-  color: var(--primary-color, #2563eb);
+  color: var(--primary-color);
   font-weight: 600;
   transition: all var(--transition-base);
 }
@@ -163,7 +163,7 @@
 .copy-button {
   background: var(--primary-light, #eff6ff);
   border: 1px solid var(--primary-border, #bfdbfe);
-  color: var(--primary-color, #2563eb);
+  color: var(--primary-color);
 }
 
 .copy-button:hover {
@@ -171,7 +171,7 @@
 }
 
 .copy-button i {
-  color: var(--primary-color, #2563eb);
+  color: var(--primary-color);
   transition: color var(--transition-base);
 }
 
@@ -213,7 +213,7 @@
 
 .dark-theme .result-item.highlight {
   background-color: var(--primary-light-dark, rgba(107, 164, 255, 0.1));
-  color: var(--primary-color-dark, #6ba4ff);
+  color: var(--primary-dark);
 }
 
 .dark-theme .result-item i {
@@ -245,7 +245,7 @@
 .dark-theme .copy-button {
   background: var(--primary-light-dark, rgba(107, 164, 255, 0.1));
   border-color: var(--primary-border-dark, rgba(107, 164, 255, 0.2));
-  color: var(--primary-color-dark, #6ba4ff);
+  color: var(--primary-dark);
 }
 
 .dark-theme .copy-button:hover {
@@ -253,7 +253,7 @@
 }
 
 .dark-theme .copy-button i {
-  color: var(--primary-color-dark, #6ba4ff);
+  color: var(--primary-dark);
 }
 
 /* Scrollbar styling */
@@ -267,7 +267,7 @@
 }
 
 .dark-theme .share-menu-content::-webkit-scrollbar-thumb {
-  background-color: var(--primary-color-dark, #6ba4ff);
+  background-color: var(--primary-dark);
   border-radius: 6px;
   border: 3px solid var(--background-color-dark, #1a1a1a);
 }

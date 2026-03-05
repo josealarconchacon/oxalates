@@ -45,7 +45,7 @@
 }
 
 .dark-theme .share-icon {
-  color: var(--primary-color-dark, #6ba4ff);
+  color: var(--primary-dark);
 }
 
 .share-icon:hover {
@@ -119,8 +119,9 @@
 }
 
 .bar-chart {
-  width: 245px;
-  height: 10px;
+  width: 100%;
+  max-width: 15.3125rem;
+  height: 0.625rem;
   background-color: var(--disabled-background);
   border-radius: var(--radius-full);
   overflow: hidden;
@@ -211,11 +212,22 @@
 
   .bar-chart {
     width: 100%;
-    max-width: 345px;
+    max-width: 100%;
   }
 
   .indicator-label {
     font-size: var(--font-size-xs);
+  }
+}
+
+@media (max-width: 375px) {
+  .results-container {
+    padding: var(--spacing-3);
+  }
+
+  .share-icon {
+    min-width: 2.75rem;
+    min-height: 2.75rem;
   }
 }
 

@@ -120,7 +120,7 @@
   height: 4px;
   background: linear-gradient(
     90deg,
-    var(--primary-color, #2196f3),
+    var(--primary-color),
     var(--accent-color, #f44336)
   );
   opacity: 0.9;
@@ -166,7 +166,7 @@
   left: 0;
   width: 40%;
   height: 3px;
-  background: var(--primary-color, #2196f3);
+  background: var(--primary-color);
   border-radius: 2px;
   opacity: 0.8;
 }
@@ -262,7 +262,7 @@
 .date-icon {
   width: 40px;
   height: 40px;
-  background: var(--primary-color, #2196f3);
+  background: var(--primary-color);
   border-radius: 12px;
   display: flex;
   align-items: center;
@@ -347,8 +347,8 @@
 }
 
 .download-button.csv {
-  border: 2px solid var(--primary-color, #2196f3);
-  color: var(--primary-color, #2196f3);
+  border: 2px solid var(--primary-color);
+  color: var(--primary-color);
 }
 
 .download-button.pdf {

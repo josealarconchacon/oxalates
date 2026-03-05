@@ -135,7 +135,7 @@
   fill: none;
 }
 
-/* Mobile: collapse button to icon only */
+/* Mobile: collapse button to icon only, ensure touch target */
 @media (max-width: 600px) {
   .search-btn-text {
     display: none;
@@ -143,7 +143,18 @@
 
   .search-action-button {
     padding: 0.5rem;
-    min-width: 2.5rem;
+    min-width: 2.75rem;
+    min-height: 2.75rem;
+  }
+}
+
+@media (max-width: 375px) {
+  .search-input-container {
+    padding: 0.5rem 0.5rem 0.5rem 0.75rem;
+  }
+
+  .search-input {
+    font-size: 0.875rem;
   }
 }
 
