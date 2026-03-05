@@ -1,3 +1,32 @@
+/* Oxalate Search Design Tokens - Light & Dark Themes */
+[data-theme="light"],
+:root:not([data-theme="dark"]) {
+  --color-primary: #448ecc;
+  --color-primary-rgb: 68, 142, 204;
+  --color-text: #2d2d2d;
+  --color-surface: #ffffff;
+  --color-border: #e1e4e8;
+  --color-muted: #70757a;
+  --color-card: #ffffff;
+  --shadow-card: 0 2px 8px rgba(0, 0, 0, 0.07);
+  --radius-card: 12px;
+  --radius-input: 0.75rem;
+}
+
+[data-theme="dark"],
+.dark-theme {
+  --color-primary: #5fa8e6;
+  --color-primary-rgb: 95, 168, 230;
+  --color-text: #e1e1e1;
+  --color-surface: #2d2d2d;
+  --color-border: #404040;
+  --color-muted: #9ca3af;
+  --color-card: #2d2d2d;
+  --shadow-card: 0 2px 8px rgba(0, 0, 0, 0.3);
+  --radius-card: 12px;
+  --radius-input: 0.75rem;
+}
+
 /* Modern Design System - Bootstrap 5 Inspired */
 :root {
   /* Color System */

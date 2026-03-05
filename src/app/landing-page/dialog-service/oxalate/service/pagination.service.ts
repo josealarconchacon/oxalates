@@ -82,9 +82,11 @@ export class PaginationService {
   }
 
   changePage(page: number | string, totalItems: number): void {
-    if (typeof page === 'number' && page >= 1 && page <= this._totalPages) {
+    if (typeof page !== 'number') return;
+    const newTotalPages = Math.ceil(totalItems / this._itemsPerPage);
+    if (page >= 1 && (newTotalPages === 0 || page <= newTotalPages)) {
       this._currentPage = page;
-      this._totalPages = Math.ceil(totalItems / this._itemsPerPage);
+      this._totalPages = newTotalPages;
     }
   }
 }
