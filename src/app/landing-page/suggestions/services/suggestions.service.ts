@@ -1,5 +1,7 @@
 import { Injectable } from '@angular/core';
-import { Observable, of } from 'rxjs';
+import { Observable } from 'rxjs';
+import emailjs from '@emailjs/browser';
+import { environment } from 'src/environments/environment';
 
 export interface CustomerFeedback {
   name: string;
@@ -11,8 +13,25 @@ export interface CustomerFeedback {
   providedIn: 'root',
 })
 export class SuggestionsService {
-  submitFeedback(feedback: CustomerFeedback): Observable<boolean> {
-    console.log('Customer feedback submitted:', feedback);
-    return of(true);
+  submitFeedback(payload: CustomerFeedback): Observable<boolean> {
+    const { serviceId, templateId, publicKey } = environment.emailJs;
+
+    return new Observable<boolean>((subscriber) => {
+      emailjs
+        .send(serviceId, templateId, {
+          name: payload.name,
+          email: payload.email,
+          message: payload.feedback,
+        }, { publicKey })
+        .then(
+          () => {
+            subscriber.next(true);
+            subscriber.complete();
+          },
+          (error) => {
+            subscriber.error(error);
+          }
+        );
+    });
   }
 }

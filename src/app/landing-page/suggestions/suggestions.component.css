@@ -1,79 +1,235 @@
-/* Uses global design tokens from styles.css for consistency */
+/* Suggestions Form - Modern Health & Wellness Design */
+/* Uses DM Sans (imported in index.html) */
+
 :host {
-  --suggestions-surface: var(--surface-color, #f6f7fb);
-  --suggestions-text: var(--text-primary);
-  --suggestions-text-secondary: var(--text-secondary);
-  --suggestions-border: var(--border-color);
-  --suggestions-error: var(--text-error);
+  display: block;
+  font-family: 'DM Sans', system-ui, -apple-system, sans-serif;
 }
 
+/* ===== PAGE BACKGROUND ===== */
+.suggestions-page-wrapper {
+  background: linear-gradient(160deg, #eff6ff 0%, #f9fafb 100%);
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 40px 20px;
+}
+
+/* ===== CONTAINER & CARD ===== */
 .suggestions-container {
-  max-width: min(45rem, 100%);
-  margin: clamp(2rem, 5vw, 4rem) auto;
-  padding: clamp(1.5rem, 4vw, 2.5rem);
-  border-radius: var(--radius-2xl);
-  background: var(--card-background);
-  box-shadow: var(--shadow-lg);
-}
-
-.section-header {
-  text-align: center;
-  margin-bottom: 2rem;
-}
-
-.section-header .eyebrow {
-  font-size: 0.9rem;
-  letter-spacing: 0.3em;
-  text-transform: uppercase;
-  color: var(--text-secondary);
-  margin-bottom: 0.5rem;
-}
-
-.section-header h2 {
-  font-size: clamp(1.5rem, 4vw, 2rem);
-  margin-bottom: 0.5rem;
-}
-
-.section-description {
-  color: var(--text-secondary);
-  max-width: min(32.5rem, 100%);
-  margin: 0 auto;
-  line-height: var(--line-height-normal);
+  width: 100%;
+  max-width: 560px;
 }
 
 .form-card {
-  position: relative;
-  padding: var(--spacing-8);
-  border-radius: var(--radius-2xl);
-  background: var(--surface-color);
-  border: 1px solid var(--border-color);
+  background: white;
+  border-radius: 20px;
+  box-shadow: 0 8px 40px rgba(0, 0, 0, 0.08);
+  border: 1px solid rgba(0, 0, 0, 0.06);
+  padding: 48px 40px;
 }
 
-.form-card.loading {
-  opacity: 0.7;
+/* ===== TYPOGRAPHY HIERARCHY ===== */
+.section-header {
+  text-align: center;
+  margin-bottom: 32px;
 }
 
-.loading-overlay {
-  position: absolute;
-  inset: 0;
-  border-radius: var(--radius-2xl);
-  background: var(--surface-color);
-  opacity: 0.95;
+.eyebrow {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: #6b7280;
+  margin: 0 0 8px 0;
+}
+
+.section-header h2 {
+  font-size: 30px;
+  font-weight: 700;
+  line-height: 1.2;
+  color: #111827;
+  margin: 0 0 12px 0;
+}
+
+.section-description {
+  font-size: 16px;
+  color: #6b7280;
+  line-height: 1.6;
+  max-width: 400px;
+  margin: 0 auto;
+}
+
+/* ===== FORM LAYOUT ===== */
+.feedback-form {
   display: flex;
-  justify-content: center;
-  align-items: center;
-  gap: var(--spacing-3);
-  font-weight: var(--font-weight-semibold);
-  color: var(--text-primary);
+  flex-direction: column;
+  gap: 24px;
 }
 
-.spinner {
-  width: 24px;
-  height: 24px;
-  border: 3px solid var(--border-color);
-  border-top-color: var(--primary-color);
+.form-group {
+  display: flex;
+  flex-direction: column;
+}
+
+.form-group label {
+  font-size: 13px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: #374151;
+  margin-bottom: 8px;
+  transition: transform 0.2s ease;
+}
+
+.form-group:focus-within label {
+  transform: translateY(-1px);
+}
+
+.required-asterisk {
+  color: #ef4444;
+  margin-left: 2px;
+}
+
+/* ===== FORM FIELDS ===== */
+.form-input {
+  width: 100%;
+  background: #f9fafb;
+  border: 1.5px solid #e5e7eb;
+  border-radius: 12px;
+  padding: 14px 16px;
+  font-size: 15px;
+  font-family: inherit;
+  color: #111827;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
+}
+
+.form-input::placeholder {
+  color: #9ca3af;
+}
+
+.form-input:focus {
+  outline: none;
+  border-color: #2563eb;
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+  background: white;
+}
+
+.form-input.ng-touched.ng-invalid {
+  border-color: #ef4444;
+  box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.08);
+}
+
+.form-textarea {
+  min-height: 140px;
+  resize: vertical;
+}
+
+/* ===== VALIDATION MESSAGES ===== */
+.error-message {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: 8px;
+  font-size: 12px;
+  color: #ef4444;
+  animation: errorSlideIn 0.2s ease;
+}
+
+@keyframes errorSlideIn {
+  from {
+    opacity: 0;
+    transform: translateY(-4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.error-icon {
+  flex-shrink: 0;
+}
+
+.input-hint {
+  margin-top: 8px;
+  font-size: 13px;
+  color: #6b7280;
+}
+
+/* ===== ERROR BANNER ===== */
+.error-banner {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  background: #fef2f2;
+  border: 1px solid #fecaca;
+  border-radius: 10px;
+  padding: 12px 16px;
+  color: #b91c1c;
+  font-size: 14px;
+}
+
+.error-banner-icon {
+  flex-shrink: 0;
+}
+
+/* ===== SUBMIT BUTTON ===== */
+.submit-button {
+  width: 100%;
+  height: 52px;
+  border: none;
+  border-radius: 12px;
+  background: linear-gradient(135deg, #2563eb, #1d4ed8);
+  color: white;
+  font-size: 16px;
+  font-weight: 600;
+  letter-spacing: 0.3px;
+  font-family: inherit;
+  box-shadow: 0 4px 14px rgba(37, 99, 235, 0.35);
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+.submit-button:hover:not(:disabled) {
+  transform: translateY(-1px);
+  box-shadow: 0 6px 20px rgba(37, 99, 235, 0.45);
+}
+
+.submit-button:active:not(:disabled) {
+  transform: translateY(0);
+}
+
+.submit-button:focus-visible {
+  outline: 2px solid #2563eb;
+  outline-offset: 2px;
+}
+
+.submit-button:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.button-loading {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+.button-spinner {
+  width: 18px;
+  height: 18px;
+  border: 2px solid rgba(255, 255, 255, 0.4);
+  border-top-color: white;
   border-radius: 50%;
-  animation: spin 0.8s linear infinite;
+  animation: spin 0.7s linear infinite;
 }
 
 @keyframes spin {
@@ -82,145 +238,106 @@
   }
 }
 
-.feedback-form {
-  display: flex;
-  flex-direction: column;
-  gap: 1.5rem;
+/* ===== SUCCESS STATE ===== */
+.success-card {
+  text-align: center;
+  padding: 24px 0;
+  animation: successFadeIn 0.3s ease;
 }
 
-.form-group label {
-  display: block;
-  font-weight: 600;
-  margin-bottom: 0.5rem;
+@keyframes successFadeIn {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
 }
 
-.form-input {
-  width: 100%;
-  padding: 0.95rem 1rem;
-  border-radius: var(--radius-xl);
-  border: 2px solid var(--border-color);
-  font-size: var(--font-size-base);
-  background: var(--input-background);
-  color: var(--text-primary);
-  transition: border var(--transition-base), box-shadow var(--transition-base);
+.success-icon {
+  width: 64px;
+  height: 64px;
+  margin: 0 auto 20px;
+  background: linear-gradient(135deg, #10b981, #059669);
+  border-radius: 50%;
+  position: relative;
 }
 
-.form-input:focus {
-  border-color: var(--primary-color);
-  outline: none;
-  box-shadow: 0 0 0 3px rgba(29, 161, 242, 0.15);
-}
-
-.form-input.ng-touched.ng-invalid {
-  border-color: var(--text-error);
-}
-
-.error-message {
-  margin-top: var(--spacing-1);
-  font-size: var(--font-size-sm);
-  color: var(--text-error);
-}
-
-.input-hint {
-  margin-top: 0.25rem;
-  font-size: 0.85rem;
-  color: var(--text-secondary);
-}
-
-.submit-button {
-  border: none;
-  background: var(--primary-color);
-  color: var(--text-inverse);
-  font-size: var(--font-size-base);
-  font-weight: var(--font-weight-semibold);
-  padding: var(--spacing-4);
-  border-radius: var(--radius-xl);
-  cursor: pointer;
-  transition: background var(--transition-base), transform var(--transition-base);
-}
-
-.submit-button:hover:not(:disabled) {
-  background: var(--primary-dark);
-  transform: translateY(-1px);
-}
-
-.submit-button:focus-visible {
-  outline: 2px solid var(--primary-color);
-  outline-offset: 2px;
-}
-
-.submit-button:disabled {
-  opacity: 0.7;
-  cursor: not-allowed;
-}
-
-.form-message {
-  margin-top: var(--spacing-5);
-  padding: var(--spacing-4) var(--spacing-5);
-  border-radius: var(--radius-xl);
-  font-weight: var(--font-weight-semibold);
-}
-
-.form-message.success {
-  background: rgba(25, 135, 84, 0.1);
-  color: var(--text-success);
-}
-
-.form-message.error {
-  background: rgba(220, 38, 38, 0.1);
-  color: var(--text-error);
-}
-
-.required-asterisk {
-  color: var(--text-error);
-  margin-left: 0.2rem;
-}
-
-.sr-only {
+.success-icon::after {
+  content: '';
   position: absolute;
-  width: 1px;
-  height: 1px;
-  padding: 0;
-  margin: -1px;
-  overflow: hidden;
-  clip: rect(0, 0, 0, 0);
-  white-space: nowrap;
-  border: 0;
+  left: 50%;
+  top: 50%;
+  width: 16px;
+  height: 28px;
+  border: solid white;
+  border-width: 0 4px 4px 0;
+  transform: translate(-50%, -60%) rotate(45deg);
 }
 
-@media (max-width: 640px) {
-  .suggestions-container {
-    margin: var(--spacing-6) var(--spacing-4);
-    padding: var(--spacing-6);
+.success-heading {
+  font-size: 24px;
+  font-weight: 700;
+  color: #111827;
+  margin: 0 0 8px 0;
+}
+
+.success-subtext {
+  font-size: 15px;
+  color: #6b7280;
+  line-height: 1.5;
+  margin: 0;
+  max-width: 320px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+/* ===== RESPONSIVE: MOBILE (< 640px) ===== */
+@media (max-width: 639px) {
+  .suggestions-page-wrapper {
+    padding: 24px 20px;
+    align-items: flex-start;
+    padding-top: 40px;
   }
 
   .form-card {
-    padding: var(--spacing-6);
+    box-shadow: none;
+    border-radius: 0;
+    border-left: none;
+    border-right: none;
+    padding: 32px 20px;
+  }
+
+  .section-header h2 {
+    font-size: 22px;
   }
 
   .form-input {
-    min-height: 2.75rem;
+    font-size: 16px;
   }
 
   .submit-button {
-    min-height: 2.75rem;
+    height: 56px;
   }
 }
 
-@media (max-width: 480px) {
+/* ===== RESPONSIVE: TABLET & DESKTOP ===== */
+@media (min-width: 640px) {
   .suggestions-container {
-    margin: var(--spacing-4) var(--spacing-3);
-    padding: var(--spacing-4);
-  }
-
-  .form-card {
-    padding: var(--spacing-4);
+    margin: 0 auto;
   }
 }
 
-@media (max-width: 375px) {
-  .suggestions-container {
-    margin: var(--spacing-3);
-    padding: var(--spacing-3);
+/* ===== REDUCED MOTION ===== */
+@media (prefers-reduced-motion: reduce) {
+  .error-message,
+  .success-card,
+  .form-group label,
+  .form-input,
+  .submit-button {
+    animation: none;
+    transition: none;
   }
 }
