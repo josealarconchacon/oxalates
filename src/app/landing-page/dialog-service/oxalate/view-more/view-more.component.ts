@@ -131,12 +131,18 @@ export class ViewMoreComponent implements OnInit, OnDestroy {
   }
 
   private loadOxalateDataFromNavigation(): void {
-    const navigation = this.router.getCurrentNavigation();
-    if (
-      navigation?.extras.state &&
-      navigation.extras.state['selectedOxalate']
-    ) {
-      this.oxalateData = navigation.extras.state['selectedOxalate'] as Oxalate;
+    // Skip when data already provided via @Input or MAT_DIALOG_DATA
+    if (this.oxalateData) {
+      return;
+    }
+
+    // getCurrentNavigation() returns null in ngOnInit (navigation has completed).
+    // Use history.state as fallback - Angular router stores navigation state there.
+    const navState =
+      this.router.getCurrentNavigation()?.extras?.state ?? history?.state;
+
+    if (navState?.['selectedOxalate']) {
+      this.oxalateData = navState['selectedOxalate'] as Oxalate;
       console.log('Received oxalate data:', this.oxalateData);
     } else {
       console.warn('No state data found for selected oxalate.');
