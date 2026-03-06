@@ -102,37 +102,40 @@
               <p>Try a different search term or check spelling</p>
             </div>
 
-            <!-- Results List -->
+            <!-- Results List (matches Oxalate screen layout) -->
             <div
-              class="card-container list-view"
+              class="results-list"
               *ngIf="searchQuery && searchResults.length > 0"
             >
               <div
-                *ngFor="let result of searchResults"
-                class="search-result-card"
+                *ngFor="let result of searchResults; let last = last"
+                class="result-item"
+                [class.result-item-last]="last"
                 (click)="viewOxalateDetails(result)"
               >
-                <div class="card-content">
-                  <div class="result-main">
-                    <h3 class="result-title">{{ result.item }}</h3>
-                    <p class="result-snippet category">
-                      {{ result.category }}
-                    </p>
-                  </div>
-                  <div class="result-details">
-                    <p class="result-snippet" *ngIf="result.serving_size">
-                      <span class="detail-label">Serving Size:</span>
-                      {{ result.serving_size }}
-                    </p>
-                    <p class="result-snippet">
-                      <span class="detail-label">Oxalate Per Serving:</span>
-                      {{ result.calc_oxalate_per_serving }}
-                    </p>
-                  </div>
-                  <div class="view-more">
-                    <span class="view-more-text">View Details</span>
-                    <i class="fas fa-chevron-right"></i>
-                  </div>
+                <div class="result-left">
+                  <p class="result-category-breadcrumb">{{ result.category }}</p>
+                  <h3 class="result-title">{{ result.item }}</h3>
+                  <p class="result-meta-line">
+                    Oxalate per serving: {{ result.calc_oxalate_per_serving }}{{ result.calc_oxalate_per_serving !== 'n/a' ? ' mg' : '' }}
+                    <span class="meta-sep">·</span>
+                    Soluble: {{ result.calc_soluble_mg_oxalate_per_serving }}{{ result.calc_soluble_mg_oxalate_per_serving !== 'n/a' ? ' mg' : '' }}
+                    <span *ngIf="result.serving_size" class="meta-sep">·</span>
+                    <span *ngIf="result.serving_size">{{ result.serving_size }}</span>
+                    <span class="meta-sep level-badge-inline-sep" *ngIf="result.calc_level">·</span>
+                    <span
+                      *ngIf="result.calc_level"
+                      class="level-badge level-badge-inline"
+                      [class.badge-high]="result.calc_level === 'High' || result.calc_level === 'Very High' || result.calc_level === 'Extremely High'"
+                      [class.badge-medium]="result.calc_level === 'Medium'"
+                      [class.badge-low]="result.calc_level === 'Low'"
+                      [class.badge-very-low]="result.calc_level === 'Very Low'"
+                    >{{ result.calc_level }}</span>
+                  </p>
+                </div>
+                <div class="result-right">
+                  <span class="result-oxalate-value">{{ result.calc_oxalate_per_serving }}{{ result.calc_oxalate_per_serving !== 'n/a' ? ' mg' : '' }} per serving</span>
+                  <span class="result-soluble-value">Soluble: {{ result.calc_soluble_mg_oxalate_per_serving }}{{ result.calc_soluble_mg_oxalate_per_serving !== 'n/a' ? ' mg' : '' }}</span>
                 </div>
               </div>
             </div>

@@ -31,8 +31,12 @@
 }
 
 @keyframes spin {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
 }
 
 /* Results header */
@@ -130,7 +134,9 @@
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-  transition: color 0.15s ease, text-decoration 0.15s ease;
+  transition:
+    color 0.15s ease,
+    text-decoration 0.15s ease;
 }
 
 .preview-item-right {
@@ -280,7 +286,10 @@
 }
 
 .result-title {
-  transition: color 0.15s ease, text-decoration 0.15s ease, filter 0.15s ease;
+  transition:
+    color 0.15s ease,
+    text-decoration 0.15s ease,
+    filter 0.15s ease;
 }
 
 /* Desktop (>= 768px): two-column layout */
@@ -455,8 +464,13 @@
 }
 
 @keyframes pulse-subtle {
-  0%, 100% { opacity: 1; }
-  50% { opacity: 0.7; }
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.7;
+  }
 }
 
 .no-results-heading {
@@ -495,7 +509,10 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  transition: color 0.2s ease, background-color 0.2s ease, border-color 0.2s ease;
+  transition:
+    color 0.2s ease,
+    background-color 0.2s ease,
+    border-color 0.2s ease;
 }
 
 .pagination-page {
@@ -545,7 +562,7 @@
   cursor: not-allowed;
 }
 
-/* Modal overlay */
+/* Modal overlay - smooth open/close transition */
 .modal-overlay {
   position: fixed;
   inset: 0;
@@ -556,20 +573,49 @@
   background-color: transparent;
   backdrop-filter: none;
   z-index: 1200;
+  animation: modalOverlayFadeIn 0.25s ease-out;
+}
+
+@keyframes modalOverlayFadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
 }
 
 .modal-content {
   background-color: var(--color-card);
-  border-radius: 1rem;
-  padding: clamp(1.5rem, 4vw, 2rem);
-  width: min(92vw, 40rem);
+  border-radius: 16px;
+  padding: 0;
+  width: min(92vw, 560px);
   max-width: 100%;
-  max-height: 92vh;
-  max-height: 92dvh;
+  height: min(90vh, 90dvh);
+  max-height: min(90vh, 90dvh);
   position: relative;
-  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
-  transition: background-color 0.3s ease, transform 0.3s ease;
+  box-shadow:
+    0 24px 48px rgba(0, 0, 0, 0.12),
+    0 8px 16px rgba(0, 0, 0, 0.08);
+  transition:
+    background-color 0.3s ease,
+    transform 0.3s ease,
+    box-shadow 0.3s ease;
   overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  animation: modalContentSlideIn 0.3s ease-out;
+}
+
+@keyframes modalContentSlideIn {
+  from {
+    opacity: 0;
+    transform: translateY(16px) scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
 }
 
 .modal-content::after {
@@ -583,14 +629,17 @@
 
 [data-theme="light"] .modal-content::after,
 :root:not([data-theme="dark"]) .modal-content::after {
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.3);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.25);
 }
 
 .modal-content .content-wrapper {
   position: relative;
   z-index: 2;
-  max-height: 90vh;
-  overflow-y: auto;
+  flex: 1 1 0;
+  min-height: 0;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
 }
 
 /* Responsive */
@@ -612,13 +661,8 @@
   }
 }
 
-/* Bottom sheet modal on mobile */
-@media screen and (max-width: 768px) {
-  .modal-content {
-    padding: 24px;
-    border-radius: 16px;
-  }
-
+/* Bottom sheet modal on mobile (768px and below) */
+@media screen and (max-width: 767px) {
   .modal-overlay {
     padding: 0;
     align-items: flex-end;
@@ -628,19 +672,37 @@
   .modal-content {
     width: 100%;
     max-width: 100%;
-    border-radius: 16px 16px 0 0;
+    height: 90vh;
+    height: 90dvh;
     max-height: 90vh;
+    max-height: 90dvh;
+    border-radius: 20px 20px 0 0;
+    animation: modalContentSlideUp 0.35s cubic-bezier(0.32, 0.72, 0, 1);
   }
 }
 
-@media screen and (max-width: 480px) {
-  .modal-overlay {
-    padding: 16px;
+@keyframes modalContentSlideUp {
+  from {
+    opacity: 0;
+    transform: translateY(100%);
   }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
 
+/* Tablet: centered card with max-width */
+@media screen and (min-width: 768px) and (max-width: 1023px) {
   .modal-content {
-    padding: 24px;
-    border-radius: 16px 16px 0 0;
+    max-width: 560px;
+  }
+}
+
+/* Desktop: centered card */
+@media screen and (min-width: 1024px) {
+  .modal-content {
+    max-width: 560px;
   }
 }
 
@@ -662,6 +724,14 @@
   .pagination button,
   .no-results-icon {
     transition: none;
+    animation: none;
+  }
+
+  .modal-overlay {
+    animation: none;
+  }
+
+  .modal-content {
     animation: none;
   }
 }

@@ -57,7 +57,7 @@ export class ViewMoreComponent implements OnInit, OnDestroy {
     private themeService: ThemeService,
     private location: Location,
     @Optional() private dialogRef: MatDialogRef<ViewMoreComponent>,
-    @Optional() @Inject(MAT_DIALOG_DATA) public data: any
+    @Optional() @Inject(MAT_DIALOG_DATA) public data: any,
   ) {
     // If we have dialog data and no input data, use the dialog data
     if (data && data.oxalateData && !this.oxalateData) {
@@ -73,7 +73,7 @@ export class ViewMoreComponent implements OnInit, OnDestroy {
     this.themeSubscription = this.themeService.isDarkTheme$.subscribe(
       (isDark) => {
         this.isDarkTheme = isDark;
-      }
+      },
     );
   }
 
@@ -92,7 +92,7 @@ export class ViewMoreComponent implements OnInit, OnDestroy {
       return [];
     }
     return this.OXALATE_INFO_FIELDS.filter((field) =>
-      this.isFieldValid(this.oxalateData![field.field])
+      this.isFieldValid(this.oxalateData![field.field]),
     );
   }
 
@@ -131,12 +131,18 @@ export class ViewMoreComponent implements OnInit, OnDestroy {
   }
 
   private loadOxalateDataFromNavigation(): void {
-    const navigation = this.router.getCurrentNavigation();
-    if (
-      navigation?.extras.state &&
-      navigation.extras.state['selectedOxalate']
-    ) {
-      this.oxalateData = navigation.extras.state['selectedOxalate'] as Oxalate;
+    // Skip when data already provided via @Input or MAT_DIALOG_DATA
+    if (this.oxalateData) {
+      return;
+    }
+
+    // getCurrentNavigation() returns null in ngOnInit (navigation has completed).
+    // Use history.state as fallback - Angular router stores navigation state there.
+    const navState =
+      this.router.getCurrentNavigation()?.extras?.state ?? history?.state;
+
+    if (navState?.['selectedOxalate']) {
+      this.oxalateData = navState['selectedOxalate'] as Oxalate;
       console.log('Received oxalate data:', this.oxalateData);
     } else {
       console.warn('No state data found for selected oxalate.');
@@ -170,7 +176,8 @@ export class ViewMoreComponent implements OnInit, OnDestroy {
     }
 
     return this.savedItems.some(
-      (item) => item.item?.toLowerCase() === this.oxalateData?.item?.toLowerCase()
+      (item) =>
+        item.item?.toLowerCase() === this.oxalateData?.item?.toLowerCase(),
     );
   }
 
@@ -183,7 +190,7 @@ export class ViewMoreComponent implements OnInit, OnDestroy {
       this.notificationService.show(
         'Item already saved to favorites.',
         'Close',
-        ['info-snackbar']
+        ['info-snackbar'],
       );
       return;
     }
@@ -201,7 +208,7 @@ export class ViewMoreComponent implements OnInit, OnDestroy {
               this.notificationService.show(
                 'Item added to favorites successfully!',
                 'Close',
-                ['success-snackbar']
+                ['success-snackbar'],
               );
               this.loadSavedOxalatesForCurrentUser(); // Refresh the saved items
             })
@@ -211,7 +218,7 @@ export class ViewMoreComponent implements OnInit, OnDestroy {
               this.notificationService.show(
                 'Error adding item to favorites.',
                 'Close',
-                ['error-snackbar']
+                ['error-snackbar'],
               );
             });
         } else {
@@ -220,7 +227,7 @@ export class ViewMoreComponent implements OnInit, OnDestroy {
           this.notificationService.show(
             'You must be logged in to save favorites.',
             'Close',
-            ['error-snackbar']
+            ['error-snackbar'],
           );
         }
       })
