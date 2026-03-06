@@ -43,8 +43,14 @@ Thumbs.db
 
 # Ignore Firebase config and environment files
 
+# Environment variables and secrets
+.env
+.env.local
+.env*.local
+
 src/environments/environment.development.ts
 src/environments/environment.ts
+src/environments/environment.prod.ts
 
 # Ignore Firebase-related files and directories
 .firebase/
