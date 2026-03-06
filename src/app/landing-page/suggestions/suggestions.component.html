@@ -1,143 +1,156 @@
-<section class="suggestions-container">
-  <header class="section-header">
-    <p class="eyebrow">Help us improve</p>
-    <h2>Share feedback with the Oxalate team</h2>
-    <p class="section-description">
-      Tell us what you like, what we can improve, or how we can better support
-      your oxalate journey. Your message goes directly to the product team.
-    </p>
-  </header>
-
-  <div class="form-card" [class.loading]="isLoading">
-    <div class="loading-overlay" *ngIf="isLoading">
-      <span class="spinner" aria-hidden="true"></span>
-      <span class="sr-only">Submitting feedback...</span>
-    </div>
-
-    <form
-      [formGroup]="feedbackForm"
-      (ngSubmit)="submitFeedback()"
-      class="feedback-form"
-      aria-label="Customer feedback form"
-      novalidate
-    >
-      <div class="form-group">
-        <label for="name">
-          Name
-          <span class="required-asterisk" aria-hidden="true">*</span>
-        </label>
-        <input
-          id="name"
-          formControlName="name"
-          type="text"
-          placeholder="Your name"
-          class="form-input"
-          aria-required="true"
-          [attr.aria-invalid]="
-            feedbackForm.get('name')?.invalid &&
-            feedbackForm.get('name')?.touched
-          "
-        />
-        <p
-          class="error-message"
-          *ngIf="
-            feedbackForm.get('name')?.invalid &&
-            feedbackForm.get('name')?.touched
-          "
-          role="alert"
-        >
-          Please enter your name
-        </p>
-      </div>
-
-      <div class="form-group">
-        <label for="email">
-          Email
-          <span class="required-asterisk" aria-hidden="true">*</span>
-        </label>
-        <input
-          id="email"
-          formControlName="email"
-          type="email"
-          placeholder="you@example.com"
-          class="form-input"
-          aria-required="true"
-          [attr.aria-invalid]="
-            feedbackForm.get('email')?.invalid &&
-            feedbackForm.get('email')?.touched
-          "
-        />
-        <p
-          class="error-message"
-          *ngIf="
-            feedbackForm.get('email')?.invalid &&
-            feedbackForm.get('email')?.touched
-          "
-          role="alert"
-        >
-          Provide a valid email address
-        </p>
-      </div>
-
-      <div class="form-group">
-        <label for="feedback">
-          Feedback
-          <span class="required-asterisk" aria-hidden="true">*</span>
-        </label>
-        <textarea
-          id="feedback"
-          formControlName="feedback"
-          rows="5"
-          placeholder="Share your thoughts..."
-          class="form-input"
-          aria-required="true"
-          [attr.aria-invalid]="
-            feedbackForm.get('feedback')?.invalid &&
-            feedbackForm.get('feedback')?.touched
-          "
-        ></textarea>
-        <p
-          class="error-message"
-          *ngIf="
-            feedbackForm.get('feedback')?.invalid &&
-            feedbackForm.get('feedback')?.touched
-          "
-          role="alert"
-        >
-          Feedback must be at least 20 characters
-        </p>
-        <p class="input-hint">
-          Let us know what we did well and where we can do better.
-        </p>
-      </div>
-
-      <button
-        type="submit"
-        class="submit-button"
-        [disabled]="feedbackForm.invalid || isLoading"
-        [attr.aria-busy]="isLoading"
+<div class="suggestions-page-wrapper">
+  <div class="suggestions-container">
+    <div class="form-card">
+      <!-- Success state: replaces form content -->
+      <div
+        class="success-card"
+        *ngIf="submissionSuccess"
+        role="status"
+        aria-live="polite"
       >
-        <span *ngIf="!isLoading">Send Feedback</span>
-        <span *ngIf="isLoading">Sending...</span>
-      </button>
-    </form>
+        <div class="success-icon" aria-hidden="true"></div>
+        <h2 class="success-heading">Thank you!</h2>
+        <p class="success-subtext">
+          Your feedback has been received. We'll review it shortly.
+        </p>
+      </div>
 
-    <div
-      class="form-message success"
-      *ngIf="submissionSuccess"
-      role="status"
-      aria-live="polite"
-    >
-      Thank you! We received your message and will review it shortly.
-    </div>
+      <!-- Form state: shown when not success -->
+      <ng-container *ngIf="!submissionSuccess">
+        <header class="section-header">
+          <p class="eyebrow">HELP US IMPROVE</p>
+          <h2>Share feedback with us</h2>
+          <p class="section-description">
+            Tell us what you like, what we can improve, or how we can better
+            support your oxalate journey.
+          </p>
+        </header>
 
-    <div
-      class="form-message error"
-      *ngIf="submissionError"
-      role="alert"
-      aria-live="assertive"
-    >
-      {{ submissionError }}
+        <form
+          [formGroup]="feedbackForm"
+          (ngSubmit)="submitFeedback()"
+          class="feedback-form"
+          aria-label="Customer feedback form"
+          novalidate
+        >
+          <div class="form-group">
+            <label for="name">
+              Name
+              <span class="required-asterisk" aria-hidden="true">*</span>
+            </label>
+            <input
+              id="name"
+              formControlName="name"
+              type="text"
+              placeholder="Your name"
+              class="form-input"
+              aria-required="true"
+              [attr.aria-invalid]="
+                feedbackForm.get('name')?.invalid &&
+                feedbackForm.get('name')?.touched
+              "
+            />
+            <p
+              class="error-message"
+              *ngIf="
+                feedbackForm.get('name')?.invalid &&
+                feedbackForm.get('name')?.touched
+              "
+              role="alert"
+            >
+              <span class="error-icon" aria-hidden="true">⚠</span>
+              Please enter your name
+            </p>
+          </div>
+
+          <div class="form-group">
+            <label for="email">
+              Email
+              <span class="required-asterisk" aria-hidden="true">*</span>
+            </label>
+            <input
+              id="email"
+              formControlName="email"
+              type="email"
+              placeholder="you@example.com"
+              class="form-input"
+              aria-required="true"
+              [attr.aria-invalid]="
+                feedbackForm.get('email')?.invalid &&
+                feedbackForm.get('email')?.touched
+              "
+            />
+            <p
+              class="error-message"
+              *ngIf="
+                feedbackForm.get('email')?.invalid &&
+                feedbackForm.get('email')?.touched
+              "
+              role="alert"
+            >
+              <span class="error-icon" aria-hidden="true">⚠</span>
+              Provide a valid email address
+            </p>
+          </div>
+
+          <div class="form-group">
+            <label for="feedback">
+              Feedback
+              <span class="required-asterisk" aria-hidden="true">*</span>
+            </label>
+            <textarea
+              id="feedback"
+              formControlName="feedback"
+              rows="5"
+              placeholder="Share your thoughts..."
+              class="form-input form-textarea"
+              aria-required="true"
+              [attr.aria-invalid]="
+                feedbackForm.get('feedback')?.invalid &&
+                feedbackForm.get('feedback')?.touched
+              "
+            ></textarea>
+            <p
+              class="error-message"
+              *ngIf="
+                feedbackForm.get('feedback')?.invalid &&
+                feedbackForm.get('feedback')?.touched
+              "
+              role="alert"
+            >
+              <span class="error-icon" aria-hidden="true">⚠</span>
+              Feedback must be at least 20 characters
+            </p>
+            <p class="input-hint">
+              Let us know what we did well and where we can do better.
+            </p>
+          </div>
+
+          <!-- Error banner: above submit button -->
+          <div
+            class="error-banner"
+            *ngIf="submissionError"
+            role="alert"
+            aria-live="assertive"
+          >
+            <span class="error-banner-icon" aria-hidden="true">⚠</span>
+            {{ submissionError }}
+          </div>
+
+          <button
+            type="submit"
+            class="submit-button"
+            [disabled]="feedbackForm.invalid || isLoading"
+            [attr.aria-busy]="isLoading"
+          >
+            <span *ngIf="!isLoading">Send Feedback</span>
+            <span *ngIf="isLoading" class="button-loading">
+              <span class="button-spinner" aria-hidden="true"></span>
+              Sending...
+            </span>
+          </button>
+        </form>
+      </ng-container>
     </div>
   </div>
-</section>
+</div>
