@@ -5,8 +5,9 @@
   role="main"
 >
   <div class="oxalate-card" aria-labelledby="oxalate-title">
-    <div class="accent-bar"></div>
-    <div class="card-header sticky-header">
+    <div class="accent-bar" aria-hidden="true"></div>
+
+    <header class="card-header">
       <div class="header-content">
         <h2 class="item-name" id="oxalate-title">{{ oxalateData.item }}</h2>
       </div>
@@ -18,10 +19,10 @@
       >
         <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M18 6L6 18M6 6l12 12" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
       </button>
-    </div>
+    </header>
 
-    <div class="content-section" role="region" id="details-content">
-      <div class="section-label">Oxalate Information</div>
+    <div class="content-section" role="region" id="details-content" aria-label="Oxalate details">
+      <h3 class="section-label">Oxalate Information</h3>
 
       <div class="oxalate-table-container">
         <table class="oxalate-table" aria-label="Oxalate properties">
@@ -71,7 +72,7 @@
       </div>
     </div>
 
-    <div class="card-actions">
+    <footer class="card-actions">
       <button
         class="action-button save-button"
         [disabled]="isSaving"
@@ -89,6 +90,6 @@
           }}</span>
         </span>
       </button>
-    </div>
+    </footer>
   </div>
 </div>
