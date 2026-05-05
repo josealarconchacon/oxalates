@@ -570,8 +570,7 @@
   align-items: center;
   justify-content: center;
   padding: 24px 16px;
-  background-color: transparent;
-  backdrop-filter: none;
+  background-color: rgba(0, 0, 0, 0.5);
   z-index: 1200;
   animation: modalOverlayFadeIn 0.25s ease-out;
 }
@@ -591,7 +590,9 @@
   padding: 0;
   width: min(92vw, 560px);
   max-width: 100%;
+  height: 90vh;
   height: min(90vh, 90dvh);
+  max-height: 90vh;
   max-height: min(90vh, 90dvh);
   position: relative;
   box-shadow:
@@ -673,9 +674,9 @@
     width: 100%;
     max-width: 100%;
     height: 90vh;
-    height: 90dvh;
+    height: min(90vh, 90dvh);
     max-height: 90vh;
-    max-height: 90dvh;
+    max-height: min(90vh, 90dvh);
     border-radius: 20px 20px 0 0;
     animation: modalContentSlideUp 0.35s cubic-bezier(0.32, 0.72, 0, 1);
   }
@@ -733,5 +734,21 @@
 
   .modal-content {
     animation: none;
+  }
+}
+
+/* Landscape on short-viewport devices — keep modal within screen */
+@media screen and (max-height: 500px) and (orientation: landscape) {
+  .modal-overlay {
+    align-items: center;
+    padding: 8px 16px;
+  }
+
+  .modal-content {
+    width: min(92vw, 560px);
+    height: auto;
+    max-height: 92vh;
+    max-height: 92dvh;
+    border-radius: 12px;
   }
 }
