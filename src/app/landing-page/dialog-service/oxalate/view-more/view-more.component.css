@@ -129,6 +129,7 @@
   width: 100%;
   flex: 1;
   min-height: 0;
+  overflow: hidden;
   display: flex;
   flex-direction: column;
   font-family:
@@ -186,7 +187,7 @@
 }
 
 .item-name {
-  font-size: 1.5rem;
+  font-size: clamp(1.125rem, 3.5vw, 1.5rem);
   font-weight: 700;
   margin: 0;
   padding: 0;
@@ -609,11 +610,6 @@
     padding-bottom: calc(16px + env(safe-area-inset-bottom, 0px));
   }
 
-  .item-name {
-    font-size: 1.25rem;
-    line-height: 1.4;
-  }
-
   .property-cell,
   .value-cell {
     padding: 16px 12px 16px 0;
@@ -643,10 +639,6 @@
 
 /* Desktop (1024px+) */
 @media screen and (min-width: 1024px) {
-  .item-name {
-    font-size: 1.625rem;
-  }
-
   .table-row:hover {
     background-color: var(--surface-hover, rgba(0, 0, 0, 0.04));
   }
@@ -1144,10 +1136,10 @@
   background-color: transparent !important;
   color: white !important;
   fill: white !important;
-  font-size: 18px !important;
-  height: 18px !important;
-  width: 18px !important;
-  line-height: 18px !important;
+  font-size: 1.125rem !important;
+  height: 1.125rem !important;
+  width: 1.125rem !important;
+  line-height: 1.125rem !important;
   display: inline-flex !important;
   align-items: center !important;
   justify-content: center !important;
@@ -1165,7 +1157,7 @@
 }
 
 .action-button .close-icon {
-  font-size: 14px;
+  font-size: 0.875rem;
   font-weight: bold;
 }
 
