@@ -425,10 +425,43 @@ export class OxalateComponent implements OnInit, OnDestroy {
     );
   }
 
+  private readonly FOCUSABLE_SELECTORS =
+    'a[href]:not([disabled]), button:not([disabled]), textarea:not([disabled]), ' +
+    'input:not([disabled]), select:not([disabled]), [tabindex]:not([tabindex="-1"])';
+
   @HostListener('document:keydown.escape')
   onEscapeKey(): void {
     if (this.selectedOxalate) {
       this.closeDetail();
+    }
+  }
+
+  @HostListener('document:keydown', ['$event'])
+  onFocusTrapKeyDown(event: KeyboardEvent): void {
+    if (!this.selectedOxalate || event.key !== 'Tab') return;
+    const modal = this.modalContainer?.nativeElement;
+    if (!modal) return;
+
+    const focusable = Array.from(
+      modal.querySelectorAll<HTMLElement>(this.FOCUSABLE_SELECTORS),
+    ).filter((el) => !el.closest('[aria-hidden="true"]'));
+
+    if (!focusable.length) return;
+
+    const first = focusable[0];
+    const last = focusable[focusable.length - 1];
+    const active = document.activeElement;
+
+    if (event.shiftKey) {
+      if (active === first || active === modal) {
+        last.focus();
+        event.preventDefault();
+      }
+    } else {
+      if (active === last) {
+        first.focus();
+        event.preventDefault();
+      }
     }
   }
 
@@ -802,9 +835,12 @@ export class OxalateComponent implements OnInit, OnDestroy {
   }
 
   focusModalContainer(): void {
-    if (this.modalContainer?.nativeElement) {
-      this.modalContainer.nativeElement.focus();
-    }
+    const modal = this.modalContainer?.nativeElement;
+    if (!modal) return;
+    const firstFocusable = modal.querySelector<HTMLElement>(
+      this.FOCUSABLE_SELECTORS,
+    );
+    (firstFocusable ?? modal).focus();
   }
 
   closeDetail(): void {
