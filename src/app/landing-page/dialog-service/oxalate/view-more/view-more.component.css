@@ -110,10 +110,11 @@
 /* Modal font - modern, clean stack */
 @import url("https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700&display=swap");
 
-/* Host element - fill parent for flex layout */
+/* Host element - content-driven; bounded by parent max-height for scroll */
 :host {
   display: flex;
-  flex: 1;
+  flex: 0 1 auto;
+  max-height: 100%;
   min-height: 0;
   overflow: hidden;
 }
@@ -127,7 +128,8 @@
   --card-padding: 20px;
   --spacing: 16px;
   width: 100%;
-  flex: 1;
+  flex: 0 1 auto;
+  max-height: 100%;
   min-height: 0;
   overflow: hidden;
   display: flex;
@@ -146,7 +148,8 @@
   border-radius: var(--border-radius);
   overflow: hidden;
   width: 100%;
-  flex: 1 1 0;
+  flex: 0 1 auto;
+  max-height: 100%;
   min-height: 0;
   display: flex;
   flex-direction: column;
@@ -222,10 +225,10 @@
   display: none;
 }
 
-/* Content Section - scrollable, always shows save button in sticky footer */
+/* Content Section - content-driven height; shrinks and scrolls when content is tall */
 .content-section {
   padding: 24px 24px 32px;
-  flex: 1 1 0;
+  flex: 0 1 auto;
   min-height: 0;
   overflow-y: auto;
   overflow-x: hidden;
