@@ -185,34 +185,25 @@ export class OxalateComponent implements OnInit, OnDestroy {
       this.categoryService.changeCategory(params['category']);
       this.filterService.setCategory(params['category']);
       filtersUpdated = true;
-
-      // Force the dropdown to update by emitting the category again after a short delay
-      setTimeout(() => {
-        this.categoryService.changeCategory(params['category']);
-        this.cdr.detectChanges();
-      }, 100);
     }
 
-    // Apply filters if needed with a slight delay to ensure services have updated
+    // Apply filters if needed. Both currentFilter$ (a BehaviorSubject) and
+    // applyFilters()'s data source resolve synchronously, so there's no
+    // async gap to wait out here.
     if (filtersUpdated) {
       this.isFilterApplied = true;
 
-      // Update the filter service first
       this.filterService.updateFilter(filter);
+      this.applyFilters(filter);
+      this.cdr.detectChanges();
 
-      // Then apply filters with a short delay
-      setTimeout(() => {
-        this.applyFilters(filter);
-        this.cdr.detectChanges();
+      // Scroll to top after filters are applied
+      this.scrollToTop();
 
-        // Scroll to top after filters are applied
-        this.scrollToTop();
-
-        // Check if we should auto-open the details view for an item
-        if (params['autoOpenDetails'] === 'true' && params['itemId']) {
-          this.autoOpenItemDetails(params['itemId']);
-        }
-      }, 300);
+      // Check if we should auto-open the details view for an item
+      if (params['autoOpenDetails'] === 'true' && params['itemId']) {
+        this.autoOpenItemDetails(params['itemId']);
+      }
     } else if (this.searchQuery) {
       // If only search is provided with no filters
       this.searchSubject.next({
@@ -275,8 +266,12 @@ export class OxalateComponent implements OnInit, OnDestroy {
       this.viewMore(foundItem);
     }
 
-    setTimeout(() => {
-      // Try to find item in the filtered results first if we didn't find it immediately
+    // originalOxalates is already loaded by this point, so the lookup above
+    // should always succeed for a valid itemId. This fallback only matters
+    // for a stale/invalid itemId; deferring to a microtask (rather than an
+    // arbitrary multi-second timer) still lets the viewMore() call above
+    // finish first without an artificial, fixed-length wait.
+    Promise.resolve().then(() => {
       if (!this.selectedOxalate) {
         let delayedFoundItem = this.oxalates.find((item) => item.id === itemId);
 
@@ -327,7 +322,7 @@ export class OxalateComponent implements OnInit, OnDestroy {
           this.clearQueryParams(['itemId', 'autoOpenDetails']);
         }
       }
-    }, 2000); // Use a longer delay as a final fallback
+    });
   }
 
   private initializeWithRouteParams(): void {
@@ -799,22 +794,6 @@ export class OxalateComponent implements OnInit, OnDestroy {
       this.cdr.detectChanges();
       this.focusModalContainer();
     });
-  }
-
-  // Force modal to show as a last resort
-  private forceShowModal(oxalate: Oxalate): void {
-    // Try one more time with a longer delay
-    setTimeout(() => {
-      this.selectedOxalate = oxalate;
-      document.body.style.overflow = 'hidden';
-      this.cdr.detectChanges();
-
-      // Check if the modal element exists now
-      const modalElement = document.querySelector('.modal-overlay');
-      if (!modalElement) {
-        console.error('Modal still not showing after multiple attempts');
-      }
-    }, 500);
   }
 
   focusModalContainer(): void {
