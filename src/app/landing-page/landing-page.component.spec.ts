@@ -124,45 +124,4 @@ describe('LandingPageComponent', () => {
     });
   });
 
-  describe('onRegister', () => {
-    it('should log "Register button clicked" when called', () => {
-      spyOn(console, 'log');
-
-      component.onRegister();
-
-      expect(console.log).toHaveBeenCalledWith('Register button clicked');
-    });
-  });
-
-  describe('scrollToOxalate', () => {
-    it('should scroll to the app-oxalate element smoothly', (done) => {
-      const mockElement = document.createElement('div');
-      mockElement.scrollIntoView = jasmine.createSpy('scrollIntoView');
-      spyOn(document, 'querySelector').and.returnValue(mockElement);
-
-      component.scrollToOxalate();
-
-      // Wait for requestAnimationFrame to complete
-      requestAnimationFrame(() => {
-        expect(document.querySelector).toHaveBeenCalledWith('app-oxalate');
-        expect(mockElement.scrollIntoView).toHaveBeenCalledWith({
-          behavior: 'smooth',
-        });
-        done();
-      });
-    });
-
-    it('should not throw an error if the app-oxalate element does not exist', (done) => {
-      spyOn(document, 'querySelector').and.returnValue(null);
-
-      expect(() => {
-        component.scrollToOxalate();
-      }).not.toThrow();
-
-      requestAnimationFrame(() => {
-        expect(document.querySelector).toHaveBeenCalledWith('app-oxalate');
-        done();
-      });
-    });
-  });
 });

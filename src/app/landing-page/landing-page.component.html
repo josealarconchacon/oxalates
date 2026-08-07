@@ -27,6 +27,7 @@
             <div class="search-container" *ngIf="!showSearchResults">
               <div class="search-wrapper">
                 <app-search-input
+                  #mainSearchInput
                   [searchQuery]="searchQuery"
                   (searchQueryChange)="onSearchQueryChange($event)"
                   (clearSearch)="onClearSearch()"
@@ -43,10 +44,18 @@
           *ngIf="showSearchResults"
           (click)="closeSearchResults()"
         ></div>
-        <div *ngIf="showSearchResults" class="search-results-container">
+        <div
+          *ngIf="showSearchResults"
+          class="search-results-container"
+          #modalContainer
+          role="dialog"
+          aria-modal="true"
+          aria-labelledby="searchResultsHeading"
+          tabindex="-1"
+        >
           <!-- Modal Header -->
           <div class="modal-header">
-            <h2>Search Results</h2>
+            <h2 id="searchResultsHeading">Search Results</h2>
             <button
               class="close-button"
               (click)="closeSearchResults()"
