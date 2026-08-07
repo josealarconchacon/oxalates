@@ -65,16 +65,21 @@ describe('OxalateService', () => {
   });
 
   describe('getOxalateData', () => {
-    it('should fetch oxalate data', () => {
+    it('should return cached data without a new HTTP request once loaded', () => {
       service.getOxalateData().subscribe((data) => {
         expect(data).toEqual(mockData);
       });
+      // No HTTP request expected because data is already cached from preload
+    });
 
-      const req = httpMock.expectOne(
-        'assets/mock-oxalate/oxolateListData.json'
-      );
-      expect(req.request.method).toBe('GET');
-      req.flush(mockData);
+    it('should return a copy of the cache, not the same array reference', () => {
+      let firstResult!: Oxalate[];
+      let secondResult!: Oxalate[];
+      service.getOxalateData().subscribe((data) => (firstResult = data));
+      service.getOxalateData().subscribe((data) => (secondResult = data));
+
+      expect(firstResult).not.toBe(secondResult);
+      expect(firstResult).toEqual(secondResult);
     });
   });
 

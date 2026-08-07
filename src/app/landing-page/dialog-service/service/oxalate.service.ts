@@ -58,7 +58,23 @@ export class OxalateService {
   }
 
   getOxalateData(): Observable<Oxalate[]> {
-    return this.http.get<Oxalate[]>(this.dataUrl);
+    // Serve from the in-memory cache once loaded, same as searchOxalateData
+    // below, instead of re-fetching and re-parsing the whole dataset on
+    // every call (e.g. every query-param change in OxalateComponent).
+    if (this.dataLoaded) {
+      return of([...this.cachedData]);
+    }
+
+    return this.http.get<Oxalate[]>(this.dataUrl).pipe(
+      tap((data) => {
+        this.cachedData = data;
+        this.dataLoaded = true;
+      }),
+      catchError((error) => {
+        console.error('Error loading data:', error);
+        return of([]);
+      })
+    );
   }
 
   searchOxalateData(query: string): Observable<Oxalate[]> {
