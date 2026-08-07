@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
+import DOMPurify from 'dompurify';
 
 @Injectable({
   providedIn: 'root',
@@ -35,8 +36,22 @@ export class SvgService {
         );
       }
 
-      const sanitizedSvg =
-        this.sanitizer.bypassSecurityTrustHtml(normalizedSvg);
+      // Strip any executable content (script tags, event handler
+      // attributes, javascript: URIs, foreignObject) before trusting the
+      // markup. Angular's own sanitizer would strip valid SVG elements too,
+      // so we clean the string ourselves and only then bypass Angular's
+      // sanitizer on the already-safe result.
+      const cleanSvg = DOMPurify.sanitize(normalizedSvg, {
+        USE_PROFILES: { svg: true, svgFilters: true },
+        FORBID_TAGS: ['foreignObject', 'script'],
+      });
+
+      if (!this.isSvgValid(cleanSvg)) {
+        console.warn('SVG failed sanitization, using default:', svg);
+        return this.getDefaultSvg();
+      }
+
+      const sanitizedSvg = this.sanitizer.bypassSecurityTrustHtml(cleanSvg);
 
       // Cache the result
       this.svgCache.set(svg, sanitizedSvg);
@@ -46,6 +61,11 @@ export class SvgService {
       console.error('Error sanitizing SVG:', svg, error);
       return this.getDefaultSvg();
     }
+  }
+
+  private isSvgValid(svg: string): boolean {
+    const trimmed = svg.trim();
+    return trimmed.startsWith('<svg') && trimmed.endsWith('</svg>');
   }
 
   private getDefaultSvg(): SafeHtml {
