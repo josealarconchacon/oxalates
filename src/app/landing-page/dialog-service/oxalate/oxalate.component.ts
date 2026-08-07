@@ -240,36 +240,19 @@ export class OxalateComponent implements OnInit, OnDestroy {
       }
     }
 
-    // Guard: searchPreserved without matching localStorage - remove param
+    // Persist the current search state so closeDetail() can restore the
+    // exact same results after the auto-opened detail view (navigated here
+    // from a search result) is dismissed.
     if (isPreservedSearch) {
-      const hasStored =
-        localStorage.getItem('lastSearchQuery') !== null ||
-        localStorage.getItem('lastSearchCategory') !== null ||
-        localStorage.getItem('lastSearchLevel') !== null;
-      if (!hasStored) {
-        this.clearQueryParam('searchPreserved');
-      } else {
-        localStorage.setItem('lastSearchQuery', this.searchQuery || '');
-        localStorage.setItem('lastSearchCategory', filter.category || '');
-        localStorage.setItem('lastSearchLevel', filter.calc_level || '');
-      }
+      localStorage.setItem('lastSearchQuery', this.searchQuery || '');
+      localStorage.setItem('lastSearchCategory', filter.category || '');
+      localStorage.setItem('lastSearchLevel', filter.calc_level || '');
     }
 
     // Guard: autoOpenDetails=true but itemId missing - remove both params
     if (params['autoOpenDetails'] === 'true' && !params['itemId']) {
       this.clearQueryParams(['autoOpenDetails', 'itemId']);
     }
-  }
-
-  private clearQueryParam(param: string): void {
-    const queryParams = { ...this.route.snapshot.queryParams };
-    delete queryParams[param];
-    this.router.navigate([], {
-      relativeTo: this.route,
-      queryParams,
-      queryParamsHandling: '',
-      replaceUrl: true,
-    });
   }
 
   private clearQueryParams(params: string[]): void {
@@ -866,63 +849,50 @@ export class OxalateComponent implements OnInit, OnDestroy {
 
     // Determine which search state to use and apply it immediately
     if (storedSearchQuery) {
-      console.log('Restoring search from localStorage:', storedSearchQuery);
-
       // Update search query in the UI
       this.searchQuery = storedSearchQuery;
 
-      // Apply filters immediately without waiting for observable
-      let filteredOxalates = [...this.originalOxalates];
-
-      // First apply basic search filter
-      filteredOxalates = filteredOxalates.filter(
-        (oxalate) =>
-          oxalate &&
-          oxalate.item &&
-          oxalate.item.toLowerCase().includes(storedSearchQuery.toLowerCase()),
-      );
-
-      // Apply category filter if present
       if (storedCategory) {
         this.categoryService.changeCategory(storedCategory);
         this.filterService.setCategory(storedCategory);
-        filteredOxalates = filteredOxalates.filter(
-          (oxalate) =>
-            oxalate &&
-            oxalate.category &&
-            oxalate.category.toLowerCase() === storedCategory.toLowerCase(),
-        );
       }
-
-      // Apply level filter if present
       if (storedLevel) {
         this.filterService.updateFilter({ calc_level: storedLevel });
-        filteredOxalates = filteredOxalates.filter(
-          (oxalate) => oxalate && oxalate.calc_level === storedLevel,
-        );
       }
 
-      // Update displayed results immediately
-      this.oxalates = filteredOxalates;
-      this.isFilterApplied = storedCategory || storedLevel ? true : false;
-      this.updateDisplayedOxalates();
-      this.cdr.detectChanges();
+      // Reuse the same search (Fuse.js) used for live typing, so results
+      // restored after closing the detail view match what search actually
+      // returns instead of a separate, weaker substring match. Data is
+      // already loaded/cached at this point, so this resolves synchronously.
+      this.oxalateService
+        .searchOxalateData(storedSearchQuery)
+        .subscribe((searchResults) => {
+          let filteredOxalates = searchResults;
 
-      // Sort results by relevance (matching the search method behavior)
-      if (filteredOxalates.length > 0) {
-        this.oxalates = this.sortBySearchTerm(
-          filteredOxalates,
-          storedSearchQuery,
-        );
-        this.updateDisplayedOxalates();
-        this.cdr.detectChanges();
-      }
+          if (storedCategory) {
+            filteredOxalates = filteredOxalates.filter(
+              (oxalate) =>
+                oxalate &&
+                oxalate.category &&
+                oxalate.category.toLowerCase() ===
+                  storedCategory.toLowerCase(),
+            );
+          }
 
-      // Also trigger the real search to update with exact server results
-      this.searchSubject.next({
-        query: storedSearchQuery,
-        immediate: false,
-      });
+          if (storedLevel) {
+            filteredOxalates = filteredOxalates.filter(
+              (oxalate) => oxalate && oxalate.calc_level === storedLevel,
+            );
+          }
+
+          this.oxalates = this.sortBySearchTerm(
+            filteredOxalates,
+            storedSearchQuery,
+          );
+          this.isFilterApplied = !!(storedCategory || storedLevel);
+          this.updateDisplayedOxalates();
+          this.cdr.detectChanges();
+        });
 
       // Clear stored values
       localStorage.removeItem('lastSearchQuery');
