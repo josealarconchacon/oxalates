@@ -20,7 +20,7 @@ import {
   switchMap,
   take,
 } from 'rxjs/operators';
-import { combineLatest, Observable, of, Subject, Subscription } from 'rxjs';
+import { Observable, of, Subject, Subscription } from 'rxjs';
 import { PaginationService } from './service/pagination.service';
 import { CategoryService } from './service/category.service';
 
@@ -325,42 +325,6 @@ export class OxalateComponent implements OnInit, OnDestroy {
     });
   }
 
-  private initializeWithRouteParams(): void {
-    // Get initial data combine with route parameters
-    this.subscriptions.push(
-      combineLatest([
-        this.oxalateService.getOxalateData(),
-        this.categoryService.currentCategory$.pipe(take(1)),
-      ]).subscribe({
-        next: ([data, category]) => {
-          // console.log('Initial data fetched:', data);
-          // console.log('Initial category:', category);
-
-          this.oxalates = data;
-          this.originalOxalates = [...data];
-
-          // If there's a category from the route, apply it
-          if (category) {
-            // console.log('Applying initial category filter:', category);
-            this.filterService.setCategory(category);
-            this.isFilterApplied = true;
-            this.applyFilters({
-              category: category,
-              calc_level: '',
-            });
-          } else {
-            this.updateDisplayedOxalates();
-          }
-        },
-        error: (error) => {
-          console.error('Error initializing component:', error);
-        },
-      }),
-    );
-    this.categoryOnChange();
-    this.filterOnChange();
-  }
-
   // Handle subsequent category changes
   categoryOnChange() {
     this.subscriptions.push(
@@ -566,10 +530,6 @@ export class OxalateComponent implements OnInit, OnDestroy {
 
   getViewModeClass(): string {
     return `${this.viewMode}-view`;
-  }
-
-  updateData() {
-    this.cdr.detectChanges();
   }
 
   handleClearSearch(): void {
