@@ -13,6 +13,7 @@ import {
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { AuthService } from '../service/auth-service.service';
 import { AlertService } from 'src/app/shared/alert-service/alert.service';
+import { strongPasswordValidator } from 'src/app/shared/utils/password-validator';
 
 const FOCUSABLE_SELECTOR =
   'button, input, select, textarea, a[href], [tabindex]:not([tabindex="-1"])';
@@ -46,7 +47,7 @@ export class ChangePasswordComponent implements OnInit, OnChanges {
     this.passwordForm = this.fb.group(
       {
         currentPassword: ['', Validators.required],
-        newPassword: ['', [Validators.required, Validators.minLength(6)]],
+        newPassword: ['', [Validators.required, strongPasswordValidator]],
         confirmPassword: ['', Validators.required],
       },
       { validators: this.passwordMatchValidator }
