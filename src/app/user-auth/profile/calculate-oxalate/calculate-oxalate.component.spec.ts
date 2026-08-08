@@ -3,7 +3,6 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { CalculateOxalateService } from 'src/app/landing-page/dialog-service/service/calculate-oxalate.service';
 import { of } from 'rxjs';
 import { SimilarFood } from '../model/similar-food';
-import { SavedMeal } from '../model/saved-meal';
 
 describe('CalculateOxalateComponent', () => {
   let component: CalculateOxalateComponent;
@@ -32,26 +31,6 @@ describe('CalculateOxalateComponent', () => {
 
   it('should create', () => {
     expect(component).toBeTruthy();
-  });
-
-  describe('checkMobileView', () => {
-    it('should set isMobileView to true if window width is less than or equal to 768', () => {
-      Object.defineProperty(window, 'innerWidth', {
-        value: 768,
-        writable: true,
-      });
-      component.checkMobileView();
-      expect(component.isMobileView).toBe(true);
-    });
-
-    it('should set isMobileView to false if window width is greater than 768', () => {
-      Object.defineProperty(window, 'innerWidth', {
-        value: 769,
-        writable: true,
-      });
-      component.checkMobileView();
-      expect(component.isMobileView).toBe(false);
-    });
   });
 
   describe('onNumberOfServingsChange', () => {
@@ -145,53 +124,6 @@ describe('CalculateOxalateComponent', () => {
     });
   });
 
-  describe('saveMeal', () => {
-    it('should add a new meal to savedMeals and clear results', () => {
-      component.foodName = 'Carrot';
-      component.calculatedTotalOxalate = 20;
-      component.calculatedTotalSolubleOxalate = 10;
-      component.saveMeal();
-      expect(component.savedMeals.length).toBe(1);
-      expect(component.foodName).toBe('');
-      expect(component.calculatedTotalOxalate).toBe(0);
-      expect(component.calculatedTotalSolubleOxalate).toBe(0);
-    });
-  });
-
-  describe('toggleSavedMeals', () => {
-    it('should toggle isSavedMealsVisible and isMoved', () => {
-      component.toggleSavedMeals();
-      expect(component.isSavedMealsVisible).toBe(true);
-      expect(component.isMoved).toBe(true);
-      expect(document.body.style.overflow).toBe('hidden');
-      component.toggleSavedMeals();
-      expect(component.isSavedMealsVisible).toBe(false);
-      expect(component.isMoved).toBe(false);
-      expect(document.body.style.overflow).toBe('auto');
-    });
-  });
-
-  describe('resetView', () => {
-    it('should reset isMoved, isSavedMealsVisible, and document body overflow', () => {
-      component.isMoved = true;
-      component.isSavedMealsVisible = true;
-      document.body.style.overflow = 'hidden';
-      component.resetView();
-      expect(component.isMoved).toBe(false);
-      expect(component.isSavedMealsVisible).toBe(false);
-      expect(document.body.style.overflow).toBe('auto');
-    });
-  });
-
-  describe('onDeleteMeal', () => {
-    it('should delete the meal at the specified index', () => {
-      component.savedMeals = [meal1, meal2];
-      component.onDeleteMeal({ date: '2023-10-01', index: 0 });
-      expect(component.savedMeals.length).toBe(1);
-      expect(component.savedMeals[0]).toBe(meal2);
-    });
-  });
-
   describe('logMeal', () => {
     it('should emit mealLogged event with the correct meal data', () => {
       const mockResult = { totalOxalate: 10, solubleOxalate: 5 };
@@ -231,17 +163,4 @@ const mockFood: SimilarFood = {
   solubleOxalate: 5,
   confidenceLevel: 'High',
   similarity: 0,
-};
-
-const meal1: SavedMeal = {
-  foodName: 'Carrot',
-  oxalatePerServing: 20,
-  solubleOxalatePerServing: 10,
-  date: '2023-10-01',
-};
-const meal2: SavedMeal = {
-  foodName: 'Broccoli',
-  oxalatePerServing: 15,
-  solubleOxalatePerServing: 8,
-  date: '2023-10-01',
 };

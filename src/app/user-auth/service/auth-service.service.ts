@@ -12,7 +12,6 @@ import { isStrongPassword } from 'src/app/shared/utils/password-validator';
   providedIn: 'root',
 })
 export class AuthService {
-  [x: string]: any;
   private userProfileSubject = new BehaviorSubject<any>(null);
   userProfile$: Observable<any> = this.userProfileSubject.asObservable();
 

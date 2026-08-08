@@ -21,7 +21,6 @@ import { ThemeService } from '../../shared/services/theme.service';
 export class ProfileComponent implements OnInit {
   @ViewChild('changePasswordTrigger') changePasswordTrigger!: ElementRef<HTMLElement>;
 
-  activeSection: string = 'profile';
   userProfile: any;
   isChangePasswordVisible: boolean = false;
   selectedFile: File | null = null;
@@ -88,11 +87,6 @@ export class ProfileComponent implements OnInit {
       this.firstName = 'First Name';
       this.lastName = 'Last Name';
     }
-  }
-
-  showSection(section: string): void {
-    this.activeSection = section;
-    console.log('Active Section:', this.activeSection);
   }
 
   toggleChangePassword(): void {

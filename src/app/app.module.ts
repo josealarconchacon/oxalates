@@ -48,7 +48,6 @@ import { ColorSketchModule } from 'ngx-color/sketch';
 import { CalculateOxalateComponent } from './user-auth/profile/calculate-oxalate/calculate-oxalate.component';
 import { FoodByCategoryComponent } from './landing-page/dialog-service/food-by-category/food-by-category.component';
 import { SearchInputComponent } from './landing-page/dialog-service/oxalate/search-input/search-input.component';
-import { SavedMealsComponent } from './user-auth/profile/calculate-oxalate/saved-meals/saved-meals.component';
 import { FoodEntryComponent } from './user-auth/profile/food-entry/food-entry.component';
 import { ThemeService } from './shared/services/theme.service';
 import { BeCautiousComponent } from './landing-page/be-cautious/be-cautious.component';
@@ -112,7 +111,6 @@ export function initializeApp(configService: ConfigService) {
     CalculateOxalateComponent,
     FoodByCategoryComponent,
     SearchInputComponent,
-    SavedMealsComponent,
     FoodEntryComponent,
     ContributionComponent,
     HeaderComponent,

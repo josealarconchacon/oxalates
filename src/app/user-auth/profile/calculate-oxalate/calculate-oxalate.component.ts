@@ -12,9 +12,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { SearchSectionComponent } from './search-section/search-section.component';
 import { ServingPanelComponent } from './serving-panel/serving-panel.component';
-import { SavedMealsComponent } from './saved-meals/saved-meals.component';
 import { SimilarFood } from '../model/similar-food';
-import { SavedMeal } from '../model/saved-meal';
 import {
   BehaviorSubject,
   Subscription,
@@ -31,7 +29,6 @@ import { ThemeService } from 'src/app/shared/services/theme.service';
     FormsModule,
     SearchSectionComponent,
     ServingPanelComponent,
-    SavedMealsComponent,
   ],
   templateUrl: './calculate-oxalate.component.html',
   styleUrls: ['./calculate-oxalate.component.css'],
@@ -47,10 +44,6 @@ export class CalculateOxalateComponent implements OnInit, OnDestroy {
   isCalculating: boolean = false;
   similarFoods: SimilarFood[] = [];
   showSuggestions: boolean = false;
-  savedMeals: SavedMeal[] = [];
-  isMoved: boolean = false;
-  isSavedMealsVisible: boolean = false;
-  isMobileView: boolean = false;
   showResults: boolean = false;
   isDarkTheme: boolean = false;
 
@@ -59,16 +52,12 @@ export class CalculateOxalateComponent implements OnInit, OnDestroy {
 
   private foodInputSubject = new BehaviorSubject<string>('');
   private themeSubscription: Subscription | null = null;
-  private readonly resizeListener = () => this.checkMobileView();
 
   constructor(
     private oxalateService: CalculateOxalateService,
     private cdr: ChangeDetectorRef,
     private themeService: ThemeService
-  ) {
-    this.checkMobileView();
-    window.addEventListener('resize', this.resizeListener);
-  }
+  ) {}
 
   ngOnInit() {
     this.foodInputSubject
@@ -91,14 +80,9 @@ export class CalculateOxalateComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
-    window.removeEventListener('resize', this.resizeListener);
     if (this.themeSubscription) {
       this.themeSubscription.unsubscribe();
     }
-  }
-
-  checkMobileView() {
-    this.isMobileView = window.innerWidth <= 768;
   }
 
   onFoodNameChange(foodName: string): void {
@@ -209,57 +193,6 @@ export class CalculateOxalateComponent implements OnInit, OnDestroy {
 
   getConfidenceLevel(similarity: number): string {
     return this.oxalateService.getConfidenceLevel(similarity);
-  }
-
-  saveMeal(): void {
-    const currentDate = new Date().toISOString().split('T')[0];
-    const savedMeal: SavedMeal = {
-      foodName: this.foodName,
-      oxalatePerServing: this.calculatedTotalOxalate,
-      solubleOxalatePerServing: this.calculatedTotalSolubleOxalate,
-      date: currentDate,
-    };
-    this.savedMeals = [...this.savedMeals, savedMeal];
-    console.log('Meal saved successfully!');
-    this.cdr.detectChanges();
-    this.clearResults();
-  }
-
-  toggleSavedMeals(): void {
-    console.log('Toggle Saved Meals:', this.isSavedMealsVisible);
-    this.isSavedMealsVisible = !this.isSavedMealsVisible;
-    console.log('New State:', this.isSavedMealsVisible);
-    this.isMoved = this.isSavedMealsVisible;
-    if (this.isSavedMealsVisible) {
-      document.body.style.overflow = 'hidden';
-    } else {
-      document.body.style.overflow = 'auto';
-    }
-  }
-
-  resetView(): void {
-    this.isMoved = false;
-    this.isSavedMealsVisible = false;
-    document.body.style.overflow = 'auto';
-  }
-
-  onDeleteMeal(event: { date: string; index: number }): void {
-    const { date, index } = event;
-    const mealsOnDate = this.savedMeals.filter((meal) => meal.date === date);
-
-    if (index >= 0 && index < mealsOnDate.length) {
-      const mealToDelete = mealsOnDate[index];
-      const mealIndexInSavedMeals = this.savedMeals.indexOf(mealToDelete);
-
-      if (mealIndexInSavedMeals !== -1) {
-        this.savedMeals.splice(mealIndexInSavedMeals, 1);
-      }
-    }
-  }
-
-  onEditMeal(event: { meal: SavedMeal; date: string; index: number }): void {
-    // logic to handle meal editing
-    console.log('Edit meal:', event);
   }
 
   logMeal(): void {

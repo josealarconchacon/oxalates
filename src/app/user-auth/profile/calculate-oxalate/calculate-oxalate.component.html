@@ -1,8 +1,4 @@
-<div
-  class="app-container"
-  [class.dark-theme]="isDarkTheme"
-  [class.overlay-active]="isSavedMealsVisible && isMobileView"
->
+<div class="app-container" [class.dark-theme]="isDarkTheme">
   <div class="content-wrapper">
     <header class="app-header">
       <div class="header-content">
@@ -10,19 +6,11 @@
           <h1>Oxalate</h1>
           <p class="subtitle">Log your daily intake</p>
         </div>
-        <div
-          class="notification"
-          *ngIf="savedMeals.length > 0 && !isSavedMealsVisible"
-          (click)="toggleSavedMeals()"
-        >
-          <i class="material-icons">notifications</i>
-          See saved items ({{ savedMeals.length }})
-        </div>
       </div>
     </header>
 
     <div class="main-content">
-      <div class="left-column" [class.moved]="isMoved">
+      <div class="left-column">
         <app-search-section
           [foodName]="foodName"
           (foodNameChange)="onFoodNameChange($event)"
@@ -65,44 +53,7 @@
             <i class="material-icons">refresh</i>
             New Calculation
           </button>
-
-          <button
-            *ngIf="showResults"
-            class="action-button save"
-            (click)="saveMeal()"
-          >
-            <i class="material-icons">save</i>
-            Save for Later
-          </button>
         </div>
-      </div>
-
-      <div
-        *ngIf="!isMobileView"
-        class="right-column desktop-saved-meals"
-        [class.visible]="isSavedMealsVisible"
-      >
-        <app-saved-meals
-          [savedMeals]="savedMeals"
-          (close)="resetView()"
-          [isDarkTheme]="isDarkTheme"
-        ></app-saved-meals>
-      </div>
-
-      <div
-        *ngIf="isMobileView"
-        class="right-column mobile-saved-meals"
-        [class.visible]="isSavedMealsVisible"
-      >
-        <div class="drag-indicator"></div>
-        <app-serving-panel
-          [servingSize]="servingSize"
-          [totalOxalatePerServing]="totalOxalatePerServing"
-          [totalSolubleOxalatePerServing]="totalSolubleOxalatePerServing"
-          [numberOfServings]="(numberOfServings || 0).toString()"
-          (numberOfServingsChange)="onNumberOfServingsChange($event)"
-          [isDarkTheme]="isDarkTheme"
-        ></app-serving-panel>
       </div>
     </div>
   </div>
