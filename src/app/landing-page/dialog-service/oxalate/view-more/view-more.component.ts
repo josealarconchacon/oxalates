@@ -250,14 +250,6 @@ export class ViewMoreComponent implements OnInit, OnDestroy {
     return match && match[2] ? match[2] : '';
   }
 
-  // Methods to support enhanced UI
-
-  getLevelPercentage(level: number): string {
-    // This method is still needed for any other components that might reference it
-    // but we'll return 0% since we're not showing the level bar
-    return '0%';
-  }
-
   getFieldClass(field: string): string {
     if (this.highlightFields.includes(field)) {
       return 'highlight-row';

@@ -21,7 +21,6 @@ export class HeaderComponent implements OnInit {
   isNavOpen = false;
   isLoggedIn = false;
   userProfile: any;
-  currentRoute: string = '';
   isScrolled = false;
   isMobileMenuOpen = false;
   userImage: string | null = null;
@@ -66,11 +65,6 @@ export class HeaderComponent implements OnInit {
       this.isLoggedIn = !!user;
       this.userProfile = user;
     });
-
-    // Get the current route
-    // this.router.events.subscribe(() => {
-    //   this.currentRoute = this.router.url;
-    // });
 
     // Initialize user data from your auth service
     this.initializeUserData();
@@ -147,10 +141,6 @@ export class HeaderComponent implements OnInit {
   closeMobileMenu() {
     this.isMobileMenuOpen = false;
     document.body.style.overflow = '';
-  }
-
-  toggleProfileMenu() {
-    // Implement profile menu toggle logic
   }
 
   private initializeUserData() {

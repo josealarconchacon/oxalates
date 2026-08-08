@@ -1,29 +1,17 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable, Subject, from, of, BehaviorSubject } from 'rxjs';
+import { Observable, from, of } from 'rxjs';
 import Fuse from 'fuse.js';
-import {
-  map,
-  debounceTime,
-  distinctUntilChanged,
-  switchMap,
-  catchError,
-  tap,
-} from 'rxjs/operators';
+import { map, catchError, tap } from 'rxjs/operators';
 import { Oxalate } from '../../model/oxalate';
 import { AuthService } from 'src/app/user-auth/service/auth-service.service';
-import {
-  AngularFirestore,
-  DocumentData,
-  DocumentReference,
-} from '@angular/fire/compat/firestore';
+import { AngularFirestore } from '@angular/fire/compat/firestore';
 
 @Injectable({
   providedIn: 'root',
 })
 export class OxalateService {
   private dataUrl = 'assets/mock-oxalate/oxolateListData.json';
-  private searchTerms = new Subject<string>();
   private collectionName = 'savedOxalates';
   private cachedData: Oxalate[] = [];
   private dataLoaded = false;
@@ -58,7 +46,23 @@ export class OxalateService {
   }
 
   getOxalateData(): Observable<Oxalate[]> {
-    return this.http.get<Oxalate[]>(this.dataUrl);
+    // Serve from the in-memory cache once loaded, same as searchOxalateData
+    // below, instead of re-fetching and re-parsing the whole dataset on
+    // every call (e.g. every query-param change in OxalateComponent).
+    if (this.dataLoaded) {
+      return of([...this.cachedData]);
+    }
+
+    return this.http.get<Oxalate[]>(this.dataUrl).pipe(
+      tap((data) => {
+        this.cachedData = data;
+        this.dataLoaded = true;
+      }),
+      catchError((error) => {
+        console.error('Error loading data:', error);
+        return of([]);
+      })
+    );
   }
 
   searchOxalateData(query: string): Observable<Oxalate[]> {
@@ -140,20 +144,6 @@ export class OxalateService {
       }
     }
     this.searchCache.set(key, results);
-  }
-
-  initiateDynamicSearch(): void {
-    this.searchTerms
-      .pipe(
-        debounceTime(300),
-        distinctUntilChanged(),
-        switchMap((query: string) => this.searchOxalateData(query))
-      )
-      .subscribe((data) => {});
-  }
-
-  updateSearchQuery(query: string): void {
-    this.searchTerms.next(query);
   }
 
   getOxalateById(id: string): Observable<Oxalate | undefined> {

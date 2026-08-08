@@ -5,6 +5,7 @@ import {
   ViewChild,
   ElementRef,
   AfterViewChecked,
+  HostListener,
 } from '@angular/core';
 import { ThemeService } from '../shared/services/theme.service';
 import { OxalateService } from './dialog-service/service/oxalate.service';
@@ -28,6 +29,8 @@ export class LandingPageComponent
   implements OnInit, OnDestroy, AfterViewChecked
 {
   @ViewChild('modalSearchInput') modalSearchInput!: SearchInputComponent;
+  @ViewChild('mainSearchInput') mainSearchInput?: SearchInputComponent;
+  @ViewChild('modalContainer') modalContainer?: ElementRef<HTMLElement>;
 
   isDarkTheme$ = this.themeService.isDarkTheme$;
   searchQuery: string = '';
@@ -39,6 +42,10 @@ export class LandingPageComponent
   private subscriptions: Subscription[] = [];
   private lastQuery: string = '';
   private pendingFocus: boolean = false;
+
+  private readonly FOCUSABLE_SELECTORS =
+    'a[href]:not([disabled]), button:not([disabled]), textarea:not([disabled]), ' +
+    'input:not([disabled]), select:not([disabled]), [tabindex]:not([tabindex="-1"])';
 
   constructor(
     private themeService: ThemeService,
@@ -67,6 +74,57 @@ export class LandingPageComponent
 
   ngOnDestroy() {
     this.subscriptions.forEach((sub) => sub.unsubscribe());
+    document.body.style.overflow = '';
+  }
+
+  @HostListener('document:keydown.escape')
+  onEscapeKey(): void {
+    if (this.showSearchResults) {
+      this.closeSearchResults();
+    }
+  }
+
+  @HostListener('document:keydown', ['$event'])
+  onFocusTrapKeyDown(event: KeyboardEvent): void {
+    if (!this.showSearchResults || event.key !== 'Tab') return;
+    const modal = this.modalContainer?.nativeElement;
+    if (!modal) return;
+
+    const focusable = Array.from(
+      modal.querySelectorAll<HTMLElement>(this.FOCUSABLE_SELECTORS)
+    ).filter((el) => !el.closest('[aria-hidden="true"]'));
+
+    if (!focusable.length) return;
+
+    const first = focusable[0];
+    const last = focusable[focusable.length - 1];
+    const active = document.activeElement;
+
+    if (event.shiftKey) {
+      if (active === first || active === modal) {
+        last.focus();
+        event.preventDefault();
+      }
+    } else {
+      if (active === last) {
+        first.focus();
+        event.preventDefault();
+      }
+    }
+  }
+
+  private setSearchResultsVisible(visible: boolean): void {
+    this.showSearchResults = visible;
+    document.body.style.overflow = visible ? 'hidden' : '';
+  }
+
+  // Used when the modal is deliberately dismissed (Escape, backdrop click,
+  // close button, Clear) so focus doesn't get dropped onto <body> once the
+  // modal's own search input is removed from the DOM. Not used for the
+  // auto-hide-while-typing case, where stealing focus would be disruptive.
+  private closeAndRestoreFocus(): void {
+    this.setSearchResultsVisible(false);
+    setTimeout(() => this.mainSearchInput?.focusInput(), 0);
   }
 
   private focusModalSearchInput() {
@@ -116,28 +174,15 @@ export class LandingPageComponent
     );
   }
 
-  onRegister() {
-    console.log('Register button clicked');
-  }
-
-  scrollToOxalate() {
-    requestAnimationFrame(() => {
-      const element = document.querySelector('app-oxalate');
-      if (element) {
-        element.scrollIntoView({ behavior: 'smooth' });
-      }
-    });
-  }
-
   onSearchQueryChange(query: string) {
     this.searchQuery = query;
 
     // Same behavior for mobile and desktop: only show modal after 6 characters
     if (query.length >= 6 && !this.showSearchResults) {
-      this.showSearchResults = true;
+      this.setSearchResultsVisible(true);
       this.pendingFocus = true;
     } else if (query.length < 6) {
-      this.showSearchResults = false;
+      this.setSearchResultsVisible(false);
     }
 
     if (!query.trim()) {
@@ -163,12 +208,12 @@ export class LandingPageComponent
     this.searchResults = [];
     this.isLoading = false;
     this.lastQuery = '';
-    this.showSearchResults = false;
+    this.closeAndRestoreFocus();
     this.searchSubject.next('');
   }
 
   closeSearchResults() {
-    this.showSearchResults = false;
+    this.closeAndRestoreFocus();
   }
 
   viewOxalateDetails(oxalate: Oxalate) {

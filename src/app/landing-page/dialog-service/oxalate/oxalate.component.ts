@@ -20,7 +20,7 @@ import {
   switchMap,
   take,
 } from 'rxjs/operators';
-import { combineLatest, Observable, of, Subject, Subscription } from 'rxjs';
+import { Observable, of, Subject, Subscription } from 'rxjs';
 import { PaginationService } from './service/pagination.service';
 import { CategoryService } from './service/category.service';
 
@@ -185,34 +185,25 @@ export class OxalateComponent implements OnInit, OnDestroy {
       this.categoryService.changeCategory(params['category']);
       this.filterService.setCategory(params['category']);
       filtersUpdated = true;
-
-      // Force the dropdown to update by emitting the category again after a short delay
-      setTimeout(() => {
-        this.categoryService.changeCategory(params['category']);
-        this.cdr.detectChanges();
-      }, 100);
     }
 
-    // Apply filters if needed with a slight delay to ensure services have updated
+    // Apply filters if needed. Both currentFilter$ (a BehaviorSubject) and
+    // applyFilters()'s data source resolve synchronously, so there's no
+    // async gap to wait out here.
     if (filtersUpdated) {
       this.isFilterApplied = true;
 
-      // Update the filter service first
       this.filterService.updateFilter(filter);
+      this.applyFilters(filter);
+      this.cdr.detectChanges();
 
-      // Then apply filters with a short delay
-      setTimeout(() => {
-        this.applyFilters(filter);
-        this.cdr.detectChanges();
+      // Scroll to top after filters are applied
+      this.scrollToTop();
 
-        // Scroll to top after filters are applied
-        this.scrollToTop();
-
-        // Check if we should auto-open the details view for an item
-        if (params['autoOpenDetails'] === 'true' && params['itemId']) {
-          this.autoOpenItemDetails(params['itemId']);
-        }
-      }, 300);
+      // Check if we should auto-open the details view for an item
+      if (params['autoOpenDetails'] === 'true' && params['itemId']) {
+        this.autoOpenItemDetails(params['itemId']);
+      }
     } else if (this.searchQuery) {
       // If only search is provided with no filters
       this.searchSubject.next({
@@ -240,36 +231,19 @@ export class OxalateComponent implements OnInit, OnDestroy {
       }
     }
 
-    // Guard: searchPreserved without matching localStorage - remove param
+    // Persist the current search state so closeDetail() can restore the
+    // exact same results after the auto-opened detail view (navigated here
+    // from a search result) is dismissed.
     if (isPreservedSearch) {
-      const hasStored =
-        localStorage.getItem('lastSearchQuery') !== null ||
-        localStorage.getItem('lastSearchCategory') !== null ||
-        localStorage.getItem('lastSearchLevel') !== null;
-      if (!hasStored) {
-        this.clearQueryParam('searchPreserved');
-      } else {
-        localStorage.setItem('lastSearchQuery', this.searchQuery || '');
-        localStorage.setItem('lastSearchCategory', filter.category || '');
-        localStorage.setItem('lastSearchLevel', filter.calc_level || '');
-      }
+      localStorage.setItem('lastSearchQuery', this.searchQuery || '');
+      localStorage.setItem('lastSearchCategory', filter.category || '');
+      localStorage.setItem('lastSearchLevel', filter.calc_level || '');
     }
 
     // Guard: autoOpenDetails=true but itemId missing - remove both params
     if (params['autoOpenDetails'] === 'true' && !params['itemId']) {
       this.clearQueryParams(['autoOpenDetails', 'itemId']);
     }
-  }
-
-  private clearQueryParam(param: string): void {
-    const queryParams = { ...this.route.snapshot.queryParams };
-    delete queryParams[param];
-    this.router.navigate([], {
-      relativeTo: this.route,
-      queryParams,
-      queryParamsHandling: '',
-      replaceUrl: true,
-    });
   }
 
   private clearQueryParams(params: string[]): void {
@@ -292,8 +266,12 @@ export class OxalateComponent implements OnInit, OnDestroy {
       this.viewMore(foundItem);
     }
 
-    setTimeout(() => {
-      // Try to find item in the filtered results first if we didn't find it immediately
+    // originalOxalates is already loaded by this point, so the lookup above
+    // should always succeed for a valid itemId. This fallback only matters
+    // for a stale/invalid itemId; deferring to a microtask (rather than an
+    // arbitrary multi-second timer) still lets the viewMore() call above
+    // finish first without an artificial, fixed-length wait.
+    Promise.resolve().then(() => {
       if (!this.selectedOxalate) {
         let delayedFoundItem = this.oxalates.find((item) => item.id === itemId);
 
@@ -344,43 +322,7 @@ export class OxalateComponent implements OnInit, OnDestroy {
           this.clearQueryParams(['itemId', 'autoOpenDetails']);
         }
       }
-    }, 2000); // Use a longer delay as a final fallback
-  }
-
-  private initializeWithRouteParams(): void {
-    // Get initial data combine with route parameters
-    this.subscriptions.push(
-      combineLatest([
-        this.oxalateService.getOxalateData(),
-        this.categoryService.currentCategory$.pipe(take(1)),
-      ]).subscribe({
-        next: ([data, category]) => {
-          // console.log('Initial data fetched:', data);
-          // console.log('Initial category:', category);
-
-          this.oxalates = data;
-          this.originalOxalates = [...data];
-
-          // If there's a category from the route, apply it
-          if (category) {
-            // console.log('Applying initial category filter:', category);
-            this.filterService.setCategory(category);
-            this.isFilterApplied = true;
-            this.applyFilters({
-              category: category,
-              calc_level: '',
-            });
-          } else {
-            this.updateDisplayedOxalates();
-          }
-        },
-        error: (error) => {
-          console.error('Error initializing component:', error);
-        },
-      }),
-    );
-    this.categoryOnChange();
-    this.filterOnChange();
+    });
   }
 
   // Handle subsequent category changes
@@ -588,10 +530,6 @@ export class OxalateComponent implements OnInit, OnDestroy {
 
   getViewModeClass(): string {
     return `${this.viewMode}-view`;
-  }
-
-  updateData() {
-    this.cdr.detectChanges();
   }
 
   handleClearSearch(): void {
@@ -818,22 +756,6 @@ export class OxalateComponent implements OnInit, OnDestroy {
     });
   }
 
-  // Force modal to show as a last resort
-  private forceShowModal(oxalate: Oxalate): void {
-    // Try one more time with a longer delay
-    setTimeout(() => {
-      this.selectedOxalate = oxalate;
-      document.body.style.overflow = 'hidden';
-      this.cdr.detectChanges();
-
-      // Check if the modal element exists now
-      const modalElement = document.querySelector('.modal-overlay');
-      if (!modalElement) {
-        console.error('Modal still not showing after multiple attempts');
-      }
-    }, 500);
-  }
-
   focusModalContainer(): void {
     const modal = this.modalContainer?.nativeElement;
     if (!modal) return;
@@ -866,63 +788,50 @@ export class OxalateComponent implements OnInit, OnDestroy {
 
     // Determine which search state to use and apply it immediately
     if (storedSearchQuery) {
-      console.log('Restoring search from localStorage:', storedSearchQuery);
-
       // Update search query in the UI
       this.searchQuery = storedSearchQuery;
 
-      // Apply filters immediately without waiting for observable
-      let filteredOxalates = [...this.originalOxalates];
-
-      // First apply basic search filter
-      filteredOxalates = filteredOxalates.filter(
-        (oxalate) =>
-          oxalate &&
-          oxalate.item &&
-          oxalate.item.toLowerCase().includes(storedSearchQuery.toLowerCase()),
-      );
-
-      // Apply category filter if present
       if (storedCategory) {
         this.categoryService.changeCategory(storedCategory);
         this.filterService.setCategory(storedCategory);
-        filteredOxalates = filteredOxalates.filter(
-          (oxalate) =>
-            oxalate &&
-            oxalate.category &&
-            oxalate.category.toLowerCase() === storedCategory.toLowerCase(),
-        );
       }
-
-      // Apply level filter if present
       if (storedLevel) {
         this.filterService.updateFilter({ calc_level: storedLevel });
-        filteredOxalates = filteredOxalates.filter(
-          (oxalate) => oxalate && oxalate.calc_level === storedLevel,
-        );
       }
 
-      // Update displayed results immediately
-      this.oxalates = filteredOxalates;
-      this.isFilterApplied = storedCategory || storedLevel ? true : false;
-      this.updateDisplayedOxalates();
-      this.cdr.detectChanges();
+      // Reuse the same search (Fuse.js) used for live typing, so results
+      // restored after closing the detail view match what search actually
+      // returns instead of a separate, weaker substring match. Data is
+      // already loaded/cached at this point, so this resolves synchronously.
+      this.oxalateService
+        .searchOxalateData(storedSearchQuery)
+        .subscribe((searchResults) => {
+          let filteredOxalates = searchResults;
 
-      // Sort results by relevance (matching the search method behavior)
-      if (filteredOxalates.length > 0) {
-        this.oxalates = this.sortBySearchTerm(
-          filteredOxalates,
-          storedSearchQuery,
-        );
-        this.updateDisplayedOxalates();
-        this.cdr.detectChanges();
-      }
+          if (storedCategory) {
+            filteredOxalates = filteredOxalates.filter(
+              (oxalate) =>
+                oxalate &&
+                oxalate.category &&
+                oxalate.category.toLowerCase() ===
+                  storedCategory.toLowerCase(),
+            );
+          }
 
-      // Also trigger the real search to update with exact server results
-      this.searchSubject.next({
-        query: storedSearchQuery,
-        immediate: false,
-      });
+          if (storedLevel) {
+            filteredOxalates = filteredOxalates.filter(
+              (oxalate) => oxalate && oxalate.calc_level === storedLevel,
+            );
+          }
+
+          this.oxalates = this.sortBySearchTerm(
+            filteredOxalates,
+            storedSearchQuery,
+          );
+          this.isFilterApplied = !!(storedCategory || storedLevel);
+          this.updateDisplayedOxalates();
+          this.cdr.detectChanges();
+        });
 
       // Clear stored values
       localStorage.removeItem('lastSearchQuery');
