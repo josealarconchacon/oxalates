@@ -12,6 +12,7 @@ import {
   slideAnimation,
   contentAnimation,
   indicatorPulse,
+  pulseAnimation,
 } from '../../animations/auth-message.animations';
 
 @Component({
@@ -19,7 +20,13 @@ import {
   standalone: true,
   imports: [CommonModule],
   templateUrl: './auth-message.component.html',
-  animations: [fadeInOut, slideAnimation, contentAnimation, indicatorPulse],
+  animations: [
+    fadeInOut,
+    slideAnimation,
+    contentAnimation,
+    indicatorPulse,
+    pulseAnimation,
+  ],
   styleUrls: ['./auth-message.component.css'],
 })
 export class AuthMessageComponent implements OnInit, OnDestroy {
@@ -28,7 +35,7 @@ export class AuthMessageComponent implements OnInit, OnDestroy {
   private touchStartX = 0;
   private touchEndX = 0;
   private readonly SWIPE_THRESHOLD = 50;
-  private keyboardListener: any;
+  private keyboardListener: ((event: KeyboardEvent) => void) | null = null;
   private autoPlayInterval: any;
   private readonly SLIDE_INTERVAL = 5000; // 5 seconds between slides
   private isPaused = false;
@@ -49,34 +56,35 @@ export class AuthMessageComponent implements OnInit, OnDestroy {
   }
 
   private setupKeyboardNavigation() {
-    this.keyboardListener = this.elementRef.nativeElement.addEventListener(
-      'keydown',
-      (event: KeyboardEvent) => {
-        switch (event.key) {
-          case 'ArrowRight':
-          case 'ArrowDown':
-            event.preventDefault();
-            this.nextSlide();
-            break;
-          case 'ArrowLeft':
-          case 'ArrowUp':
-            event.preventDefault();
-            this.previousSlide();
-            break;
-          case 'Home':
-            event.preventDefault();
-            this.goToSlide(0);
-            break;
-          case 'End':
-            event.preventDefault();
-            this.goToSlide(this.slides.length - 1);
-            break;
-          case 'Escape':
-            event.preventDefault();
-            this.onContinue();
-            break;
-        }
+    this.keyboardListener = (event: KeyboardEvent) => {
+      switch (event.key) {
+        case 'ArrowRight':
+        case 'ArrowDown':
+          event.preventDefault();
+          this.nextSlide();
+          break;
+        case 'ArrowLeft':
+        case 'ArrowUp':
+          event.preventDefault();
+          this.previousSlide();
+          break;
+        case 'Home':
+          event.preventDefault();
+          this.goToSlide(0);
+          break;
+        case 'End':
+          event.preventDefault();
+          this.goToSlide(this.slides.length - 1);
+          break;
+        case 'Escape':
+          event.preventDefault();
+          this.onContinue();
+          break;
       }
+    };
+    this.elementRef.nativeElement.addEventListener(
+      'keydown',
+      this.keyboardListener
     );
   }
 
@@ -86,6 +94,7 @@ export class AuthMessageComponent implements OnInit, OnDestroy {
         'keydown',
         this.keyboardListener
       );
+      this.keyboardListener = null;
     }
   }
 
