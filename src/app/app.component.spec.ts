@@ -9,12 +9,6 @@ import { Component } from '@angular/core';
 })
 class MockAppHeaderComponent {}
 
-@Component({
-  selector: 'app-toast',
-  template: '<div>Mock Toast</div>',
-})
-class MockToastComponent {}
-
 describe('AppComponent', () => {
   let fixture: ComponentFixture<AppComponent>;
   let component: AppComponent;
@@ -22,7 +16,7 @@ describe('AppComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [RouterTestingModule.withRoutes([])],
-      declarations: [AppComponent, MockAppHeaderComponent, MockToastComponent],
+      declarations: [AppComponent, MockAppHeaderComponent],
     }).compileComponents();
 
     fixture = TestBed.createComponent(AppComponent);
