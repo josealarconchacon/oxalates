@@ -3,6 +3,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { AuthService } from '../service/auth-service.service';
 import { AlertService } from 'src/app/shared/alert-service/alert.service';
 import { Subscription } from 'rxjs';
+import { strongPasswordValidator } from 'src/app/shared/utils/password-validator';
 
 @Component({
   selector: 'app-auth',
@@ -49,11 +50,19 @@ export class AuthComponent implements OnInit, OnDestroy {
       this.authForm.controls['confirmPassword'].setValidators(
         Validators.required
       );
+      // Only enforce strength on sign-up; sign-in must accept existing
+      // (possibly weaker, pre-existing) account passwords as-is.
+      this.authForm.controls['password'].setValidators([
+        Validators.required,
+        strongPasswordValidator,
+      ]);
     } else {
       this.authForm.controls['confirmPassword'].clearValidators();
+      this.authForm.controls['password'].setValidators(Validators.required);
     }
 
     this.authForm.controls['confirmPassword'].updateValueAndValidity();
+    this.authForm.controls['password'].updateValueAndValidity();
   }
 
   passwordMatchValidator(formGroup: FormGroup) {

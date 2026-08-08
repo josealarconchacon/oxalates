@@ -119,10 +119,13 @@
                   authForm.get('password')?.touched
                 "
                 [attr.aria-describedby]="
-                  authForm.get('password')?.invalid &&
+                  authForm.get('password')?.hasError('weakPassword') &&
                   authForm.get('password')?.touched
-                    ? 'password-error'
-                    : null
+                    ? 'password-weak-error'
+                    : authForm.get('password')?.invalid &&
+                        authForm.get('password')?.touched
+                      ? 'password-required-error'
+                      : null
                 "
                 [class.error]="
                   authForm.get('password')?.touched &&
@@ -153,14 +156,26 @@
             </div>
             <div
               *ngIf="
-                authForm.get('password')?.touched &&
-                authForm.get('password')?.invalid
+                authForm.get('password')?.hasError('required') &&
+                authForm.get('password')?.touched
               "
               class="error-message"
-              id="password-error"
+              id="password-required-error"
               aria-live="polite"
             >
               Password is required
+            </div>
+            <div
+              *ngIf="
+                authForm.get('password')?.hasError('weakPassword') &&
+                authForm.get('password')?.touched
+              "
+              class="error-message"
+              id="password-weak-error"
+              aria-live="polite"
+            >
+              Password must be at least 12 characters and include uppercase,
+              lowercase, a number, and a special character
             </div>
           </div>
 
