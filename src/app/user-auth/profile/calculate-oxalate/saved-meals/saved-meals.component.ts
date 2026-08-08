@@ -60,6 +60,13 @@ export class SavedMealsComponent implements OnInit {
     this.cdr.detectChanges();
   }
 
+  // ShareMenuComponent expects { title, items }[] (matching how
+  // ResultsSectionComponent groups meals by type). SavedMeal has no meal-type
+  // field, so wrap the flat list in a single group with that shape.
+  getShareableMealGroups(meals: SavedMeal[]): { title: string; items: SavedMeal[] }[] {
+    return [{ title: 'Meals', items: meals }];
+  }
+
   getDailyTotal(meals: SavedMeal[]): DailyTotal {
     return {
       totalOxalate: meals.reduce(

@@ -32,7 +32,7 @@
     </button>
     <app-share-menu
       *ngIf="activeShareMenuDate === day.key"
-      [dailyMeals]="getDailyTotal(day.value).meals"
+      [dailyMeals]="getShareableMealGroups(day.value)"
       [dailyTotal]="getDailyTotal(day.value)"
       (close)="activeShareMenuDate = null"
     >
