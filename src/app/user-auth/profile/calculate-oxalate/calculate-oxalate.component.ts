@@ -59,6 +59,7 @@ export class CalculateOxalateComponent implements OnInit, OnDestroy {
 
   private foodInputSubject = new BehaviorSubject<string>('');
   private themeSubscription: Subscription | null = null;
+  private readonly resizeListener = () => this.checkMobileView();
 
   constructor(
     private oxalateService: CalculateOxalateService,
@@ -66,7 +67,7 @@ export class CalculateOxalateComponent implements OnInit, OnDestroy {
     private themeService: ThemeService
   ) {
     this.checkMobileView();
-    window.addEventListener('resize', () => this.checkMobileView());
+    window.addEventListener('resize', this.resizeListener);
   }
 
   ngOnInit() {
@@ -90,7 +91,7 @@ export class CalculateOxalateComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
-    window.removeEventListener('resize', () => this.checkMobileView());
+    window.removeEventListener('resize', this.resizeListener);
     if (this.themeSubscription) {
       this.themeSubscription.unsubscribe();
     }
