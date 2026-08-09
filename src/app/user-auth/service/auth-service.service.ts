@@ -3,7 +3,7 @@ import { AngularFireAuth } from '@angular/fire/compat/auth';
 import { AngularFirestore } from '@angular/fire/compat/firestore';
 import { Router } from '@angular/router';
 import firebase from 'firebase/compat/app';
-import { BehaviorSubject, Observable, take } from 'rxjs';
+import { BehaviorSubject, Observable, map, take } from 'rxjs';
 import { UserProfile } from '../profile/model/user-profile';
 import { AlertService } from 'src/app/shared/alert-service/alert.service';
 import { isStrongPassword } from 'src/app/shared/utils/password-validator';
@@ -12,7 +12,6 @@ import { isStrongPassword } from 'src/app/shared/utils/password-validator';
   providedIn: 'root',
 })
 export class AuthService {
-  [x: string]: any;
   private userProfileSubject = new BehaviorSubject<any>(null);
   userProfile$: Observable<any> = this.userProfileSubject.asObservable();
 
@@ -115,12 +114,14 @@ export class AuthService {
 
       switch (error.code) {
         case 'auth/user-not-found':
-          this.alertService.showAlert(
-            'No account found for this email. Please sign up first.'
-          );
-          break;
         case 'auth/wrong-password':
-          this.alertService.showAlert('Incorrect password. Please try again.');
+        case 'auth/invalid-credential':
+          // Deliberately generic: surfacing "no account found" vs "wrong
+          // password" separately would let an attacker enumerate which
+          // emails have accounts.
+          this.alertService.showAlert(
+            'Invalid email or password. Please try again.'
+          );
           break;
         case 'auth/invalid-email':
           this.alertService.showAlert('The email address is badly formatted.');
@@ -133,11 +134,6 @@ export class AuthService {
         case 'auth/too-many-requests':
           this.alertService.showAlert(
             'Too many unsuccessful login attempts. Please try again later.'
-          );
-          break;
-        case 'auth/invalid-credential':
-          this.alertService.showAlert(
-            'Invalid credentials. Please try logging in again or contact support.'
           );
           break;
         default:
@@ -178,6 +174,18 @@ export class AuthService {
   isAuthenticated(): boolean {
     const user = JSON.parse(localStorage.getItem('user') || 'null');
     return user !== null;
+  }
+
+  // Prefer this for route guards or anything else that's actually gating
+  // access: it waits for Firebase's own rehydrated session state instead of
+  // trusting the locally cached profile blob isAuthenticated() reads, which
+  // stays present until the *next* authState emission even if the
+  // underlying session has already expired or been revoked elsewhere.
+  isAuthenticatedAsync(): Observable<boolean> {
+    return this.afAuth.authState.pipe(
+      take(1),
+      map((user) => !!user)
+    );
   }
 
   async signOut(): Promise<void> {

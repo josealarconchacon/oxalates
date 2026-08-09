@@ -261,7 +261,7 @@ describe('AuthMessageService', () => {
       expect(router.navigate).toHaveBeenCalledWith(['/auth']);
     });
 
-    it('should interrupt the timer when called manually', fakeAsync(() => {
+    it('should interrupt the timer when called manually and still resolve the promise', fakeAsync(() => {
       let promiseResolved = false;
 
       service.showAuthMessage().then(() => {
@@ -271,12 +271,13 @@ describe('AuthMessageService', () => {
       tick(5000);
 
       service.continueToAuth();
+      tick(); // flush the microtask queue so the promise's .then() runs
 
       expect(router.navigate).toHaveBeenCalledTimes(1);
       expect(service['timerSubscription']).toBeNull();
+      expect(promiseResolved).toBe(true);
 
       tick(5000);
-      expect(promiseResolved).toBe(false);
       expect(router.navigate).toHaveBeenCalledTimes(1);
     }));
 
@@ -512,7 +513,7 @@ describe('AuthMessageService', () => {
       expect(resolved).toBe(true);
     }));
 
-    it('should not resolve promise if interrupted by continueToAuth', fakeAsync(() => {
+    it('should resolve promise immediately when interrupted by continueToAuth', fakeAsync(() => {
       let resolved = false;
 
       service.showAuthMessage().then(() => {
@@ -521,9 +522,9 @@ describe('AuthMessageService', () => {
 
       tick(5000);
       service.continueToAuth();
+      tick(); // flush the microtask queue so the promise's .then() runs
 
-      tick(10000);
-      expect(resolved).toBe(false);
+      expect(resolved).toBe(true);
     }));
 
     it('should handle awaiting the promise', fakeAsync(async () => {

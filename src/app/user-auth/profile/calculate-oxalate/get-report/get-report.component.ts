@@ -90,7 +90,9 @@ export class GetReportComponent implements OnInit {
           totalSolubleOxalate.toFixed(2),
         ]);
 
-        const csvContent = csvRows.map((row) => row.join(',')).join('\n');
+        const csvContent = csvRows
+          .map((row) => row.map((field) => this.escapeCsvField(field)).join(','))
+          .join('\n');
         const blob = new Blob([csvContent], {
           type: 'text/csv;charset=utf-8;',
         });
@@ -155,6 +157,18 @@ export class GetReportComponent implements OnInit {
         alert('Error downloading report. Please try again.');
       },
     });
+  }
+
+  // Per RFC 4180: quote any field containing a comma, quote, or newline,
+  // and double up any quotes inside it. Food names in the real dataset
+  // routinely contain commas (e.g. "Grains, Oats, Quick, dry"), which
+  // would otherwise shift columns in the exported file.
+  private escapeCsvField(value: string | number): string {
+    const stringValue = String(value);
+    if (/[",\n]/.test(stringValue)) {
+      return `"${stringValue.replace(/"/g, '""')}"`;
+    }
+    return stringValue;
   }
 
   private isEmpty(entry: any): boolean {
