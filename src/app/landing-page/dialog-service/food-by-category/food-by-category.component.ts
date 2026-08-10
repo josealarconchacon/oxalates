@@ -9,11 +9,12 @@ import { HttpClient } from '@angular/common/http';
 import { SvgService } from './service/svg.service';
 import { ThemeService } from '../../../shared/services/theme.service';
 import { Subscription } from 'rxjs';
+import { ClickableDirective } from '../../../shared/directives/clickable.directive';
 
 @Component({
   selector: 'app-food-by-category',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, ClickableDirective],
   templateUrl: './food-by-category.component.html',
   styleUrl: './food-by-category.component.css',
 })
