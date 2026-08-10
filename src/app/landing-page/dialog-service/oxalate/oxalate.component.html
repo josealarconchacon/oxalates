@@ -39,6 +39,7 @@
         *ngFor="let oxalate of randomItems; let last = last"
         class="result-item"
         [class.result-item-last]="last"
+        appClickable
         (click)="viewMore(oxalate, $event)"
       >
         <div class="result-left">
@@ -95,6 +96,7 @@
         *ngFor="let oxalate of displayedOxalates; let last = last"
         class="result-item"
         [class.result-item-last]="last"
+        appClickable
         (click)="viewMore(oxalate, $event)"
       >
         <div class="result-left">
