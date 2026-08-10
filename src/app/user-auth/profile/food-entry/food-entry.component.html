@@ -67,7 +67,8 @@
                   class="food-row"
                 >
                   <td class="food-name-col">
-                    <span
+                    <button
+                      type="button"
                       class="food-name-btn"
                       (click)="food.isExpanded = !food.isExpanded"
                     >
@@ -76,7 +77,7 @@
                       <span class="expand-icon">
                         {{ food.isExpanded ? "−" : "+" }}</span
                       >
-                    </span>
+                    </button>
                     <div class="mobile-details" *ngIf="food.isExpanded">
                       <div class="detail-row">
                         <span class="detail-label">Serving:</span>
