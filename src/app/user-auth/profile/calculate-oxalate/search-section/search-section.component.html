@@ -17,6 +17,7 @@
     <div
       *ngFor="let food of similarFoods"
       class="food-card"
+      appClickable
       (click)="onSelectFood(food)"
     >
       <div class="food-header">
