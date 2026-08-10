@@ -51,6 +51,7 @@ import { SearchInputComponent } from './landing-page/dialog-service/oxalate/sear
 import { FoodEntryComponent } from './user-auth/profile/food-entry/food-entry.component';
 import { ThemeService } from './shared/services/theme.service';
 import { BeCautiousComponent } from './landing-page/be-cautious/be-cautious.component';
+import { ClickableDirective } from './shared/directives/clickable.directive';
 
 export function initializeApp(configService: ConfigService) {
   return (): Promise<void> => {
@@ -117,6 +118,7 @@ export function initializeApp(configService: ConfigService) {
     FooterComponent,
     AuthMessageComponent,
     BeCautiousComponent,
+    ClickableDirective,
   ],
   providers: [
     ConfigService,
