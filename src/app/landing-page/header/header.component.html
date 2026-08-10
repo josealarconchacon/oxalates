@@ -83,6 +83,7 @@
           <ng-container *ngIf="userProfile; else mobileLoggedOut">
             <div
               class="profile-info-container"
+              appClickable
               (click)="setActiveSection('profile'); goToProfile()"
             >
               <img

@@ -9,13 +9,20 @@ import { CommonModule } from '@angular/common';
 import { ThemeService } from '../../shared/services/theme.service';
 import { AuthMessageService } from '../../shared/services/auth-message.service';
 import { AuthMessageComponent } from '../../shared/components/auth-message/auth-message.component';
+import { ClickableDirective } from '../../shared/directives/clickable.directive';
 
 @Component({
   selector: 'app-header',
   templateUrl: './header.component.html',
   styleUrls: ['./header.component.css'],
   standalone: true,
-  imports: [CommonModule, MatIconModule, AuthMessageComponent, RouterLink],
+  imports: [
+    CommonModule,
+    MatIconModule,
+    AuthMessageComponent,
+    RouterLink,
+    ClickableDirective,
+  ],
 })
 export class HeaderComponent implements OnInit {
   isNavOpen = false;
