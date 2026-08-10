@@ -120,6 +120,7 @@
                 *ngFor="let result of searchResults; let last = last"
                 class="result-item"
                 [class.result-item-last]="last"
+                appClickable
                 (click)="viewOxalateDetails(result)"
               >
                 <div class="result-left">
