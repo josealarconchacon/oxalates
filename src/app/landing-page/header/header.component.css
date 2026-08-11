@@ -1,130 +1,116 @@
-.dark-theme .header {
+:host-context(.dark-theme) .header {
   background-color: transparent;
   backdrop-filter: none;
 }
 
-.dark-theme .header.scrolled {
-  background-color: var(--header-bg-scrolled-dark);
-  box-shadow: var(--header-shadow-dark);
-  backdrop-filter: var(--header-backdrop);
+:host-context(.dark-theme) .header.scrolled {
+  background-color: rgba(18, 18, 18, 0.95);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+  backdrop-filter: blur(8px);
   border-bottom: 1px solid var(--border-color);
 }
 
-.dark-theme .logo-container {
+:host-context(.dark-theme) .logo-container {
   color: var(--text-primary);
 }
 
-.dark-theme .hamburger {
+:host-context(.dark-theme) .hamburger {
   background-color: transparent;
   border: 1px solid var(--border-color);
   border-radius: var(--radius-base);
 }
 
-.dark-theme .hamburger:hover {
+:host-context(.dark-theme) .hamburger:hover {
   background-color: var(--hover-background);
   border-color: var(--primary-color);
 }
 
-.dark-theme .hamburger .bar {
+:host-context(.dark-theme) .hamburger .bar {
   background-color: var(--text-primary);
 }
 
-.dark-theme .nav-close::before,
-.dark-theme .nav-close::after {
+:host-context(.dark-theme) .nav-close::before,
+:host-context(.dark-theme) .nav-close::after {
   background-color: var(--text-primary);
 }
 
-.dark-theme .nav-close:hover {
+:host-context(.dark-theme) .nav-close:hover {
   background-color: var(--hover-background);
   border-color: var(--primary-color);
 }
 
-.dark-theme .nav-link {
+:host-context(.dark-theme) .nav-link {
   color: var(--text-secondary);
   border: 1px solid transparent;
   border-radius: var(--radius-base);
 }
 
-.dark-theme .nav-link:hover {
+:host-context(.dark-theme) .nav-link:hover {
   color: var(--text-primary);
   background-color: var(--hover-background);
   border-color: var(--primary-color);
 }
 
-.dark-theme .nav-link.active {
+:host-context(.dark-theme) .nav-link.active {
   color: var(--primary-color);
   background-color: var(--nav-active);
   border-color: var(--primary-color);
 }
 
-.dark-theme .search-btn,
-.dark-theme .profile-btn,
-.dark-theme .user-icon-btn,
-.dark-theme .calculate-btn,
-.dark-theme .theme-toggle-btn {
+:host-context(.dark-theme) .search-btn,
+:host-context(.dark-theme) .profile-btn,
+:host-context(.dark-theme) .user-icon-btn,
+:host-context(.dark-theme) .calculate-btn,
+:host-context(.dark-theme) .theme-toggle-btn {
   color: var(--text-primary);
   background-color: transparent;
   border: 1px solid var(--border-color);
   border-radius: var(--radius-base);
 }
 
-.dark-theme .search-btn:hover,
-.dark-theme .profile-btn:hover,
-.dark-theme .user-icon-btn:hover,
-.dark-theme .calculate-btn:hover,
-.dark-theme .theme-toggle-btn:hover {
+:host-context(.dark-theme) .search-btn:hover,
+:host-context(.dark-theme) .profile-btn:hover,
+:host-context(.dark-theme) .user-icon-btn:hover,
+:host-context(.dark-theme) .calculate-btn:hover,
+:host-context(.dark-theme) .theme-toggle-btn:hover {
   background-color: var(--hover-background);
   border-color: var(--primary-color);
   color: var(--primary-color);
 }
 
-.dark-theme .mobile-sidebar-nav {
+:host-context(.dark-theme) .mobile-sidebar-nav {
   background-color: var(--background-color);
   border-left: 1px solid var(--border-color);
 }
 
-.dark-theme .mobile-sidebar-nav .nav-link {
+:host-context(.dark-theme) .mobile-sidebar-nav .nav-link {
   color: var(--text-primary);
   border: 1px solid transparent;
   border-radius: var(--radius-base);
 }
 
-.dark-theme .mobile-sidebar-nav .nav-link:hover,
-.dark-theme .mobile-sidebar-nav .nav-link.active {
+:host-context(.dark-theme) .mobile-sidebar-nav .nav-link:hover,
+:host-context(.dark-theme) .mobile-sidebar-nav .nav-link.active {
   background-color: var(--nav-active);
   color: var(--primary-color);
   border-color: var(--primary-color);
 }
 
-.dark-theme .profile-info-container:hover {
+:host-context(.dark-theme) .profile-info-container:hover {
   background-color: var(--gray-700);
 }
 
-.dark-theme .profile-info-container .default-user-icon {
+:host-context(.dark-theme) .profile-info-container .default-user-icon {
   background-color: var(--gray-700);
   border-color: var(--border-color);
 }
 
-.dark-theme .profile-image-upload-label:hover {
+:host-context(.dark-theme) .profile-image-upload-label:hover {
   background-color: var(--gray-700);
 }
 
-.dark-theme .profile-image-upload-label mat-icon {
+:host-context(.dark-theme) .profile-image-upload-label mat-icon {
   color: var(--text-color);
-}
-
-:root {
-  --header-bg: var(--background-color, #ffffff);
-  --header-border: var(--border-color, #e5e7eb);
-  --header-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-  --header-backdrop: blur(8px);
-  --header-bg-scrolled: rgba(255, 255, 255, 0.95);
-  --header-bg-scrolled-dark: rgba(18, 18, 18, 0.95);
-  --header-shadow-light: 0 2px 8px rgba(0, 0, 0, 0.1);
-  --header-shadow-dark: 0 2px 8px rgba(0, 0, 0, 0.3);
-  --header-transform-duration: 0.3s;
-  --header-transform-timing: cubic-bezier(0.4, 0, 0.2, 1);
-  --header-height: 64px; /* Standardized header height */
 }
 
 .header {
@@ -142,22 +128,26 @@
   /* Optimize for better scroll performance */
   will-change: transform, background-color;
   transform: translateZ(0);
-  min-height: var(--header-height);
+  /* .header sits inside HeaderComponent's emulated view encapsulation, so a
+     :root token block here can never reach the real document root (Angular
+     scopes :root to [_ngcontent-x]:root, which no element can match) —
+     values are inlined instead of routed through custom properties. */
+  min-height: 64px;
 }
 
 .header.scrolled {
-  background-color: var(--header-bg-scrolled);
-  box-shadow: var(--header-shadow-light);
+  background-color: rgba(255, 255, 255, 0.95);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
   backdrop-filter: blur(8px);
 }
 
-.dark-theme .header {
+:host-context(.dark-theme) .header {
   background-color: transparent;
 }
 
-.dark-theme .header.scrolled {
-  background-color: var(--header-bg-scrolled-dark);
-  box-shadow: var(--header-shadow-dark);
+:host-context(.dark-theme) .header.scrolled {
+  background-color: rgba(18, 18, 18, 0.95);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
   backdrop-filter: blur(8px);
 }
 
@@ -173,17 +163,13 @@
   transform: translate3d(0, 0, 0);
 }
 
-body {
-  padding-top: var(--header-height);
-}
-
 .header-content {
   display: flex;
   justify-content: space-between;
   align-items: center;
   max-width: var(--container-xl);
   margin: 0 auto;
-  min-height: var(--header-height);
+  min-height: 64px;
 }
 
 .logo-container {
@@ -439,7 +425,7 @@ body {
     transition: right var(--transition-base);
   }
 
-  .dark-theme .nav {
+  :host-context(.dark-theme) .nav {
     background-color: var(--background-color);
     box-shadow: var(--shadow-lg);
   }
@@ -475,7 +461,7 @@ body {
     background-color: var(--gray-100);
   }
 
-  .dark-theme .profile-info-container:hover {
+  :host-context(.dark-theme) .profile-info-container:hover {
     background-color: var(--gray-700);
   }
 
@@ -499,7 +485,7 @@ body {
     border: 1px solid var(--border-color);
   }
 
-  .dark-theme .profile-info-container .default-user-icon {
+  :host-context(.dark-theme) .profile-info-container .default-user-icon {
     background-color: var(--gray-700);
     border-color: var(--border-color);
   }
@@ -521,7 +507,7 @@ body {
     background-color: var(--gray-100);
   }
 
-  .dark-theme .profile-image-upload-label:hover {
+  :host-context(.dark-theme) .profile-image-upload-label:hover {
     background-color: var(--gray-700);
   }
 
@@ -548,8 +534,8 @@ body {
     background-color: var(--gray-100);
   }
 
-  .dark-theme .mobile-sidebar-nav .nav-link:hover,
-  .dark-theme .mobile-sidebar-nav .nav-link.active {
+  :host-context(.dark-theme) .mobile-sidebar-nav .nav-link:hover,
+  :host-context(.dark-theme) .mobile-sidebar-nav .nav-link.active {
     background-color: var(--gray-700);
     color: var(--text-color);
   }
@@ -560,7 +546,7 @@ body {
     color: var(--text-secondary);
   }
 
-  .dark-theme .mobile-sidebar-nav .nav-link i {
+  :host-context(.dark-theme) .mobile-sidebar-nav .nav-link i {
     color: var(--text-secondary);
   }
 
@@ -569,11 +555,11 @@ body {
     color: var(--danger-color);
   }
 
-  .dark-theme .mobile-sidebar-nav .logout {
+  :host-context(.dark-theme) .mobile-sidebar-nav .logout {
     color: var(--danger-color);
   }
 
-  .dark-theme .mobile-sidebar-nav .logout:hover {
+  :host-context(.dark-theme) .mobile-sidebar-nav .logout:hover {
     background-color: var(--danger-50);
   }
 
@@ -597,7 +583,7 @@ body {
     border: 1px solid var(--border-color);
   }
 
-  .dark-theme .user-image {
+  :host-context(.dark-theme) .user-image {
     border-color: var(--border-color);
   }
 
@@ -643,7 +629,7 @@ body {
 
 @media screen and (max-width: 375px) {
   .header-content {
-    min-height: var(--header-height);
+    min-height: 64px;
   }
 
   .logo-text {
