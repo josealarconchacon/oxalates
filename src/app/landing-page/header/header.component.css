@@ -60,7 +60,8 @@
 .dark-theme .search-btn,
 .dark-theme .profile-btn,
 .dark-theme .user-icon-btn,
-.dark-theme .calculate-btn {
+.dark-theme .calculate-btn,
+.dark-theme .theme-toggle-btn {
   color: var(--text-primary);
   background-color: transparent;
   border: 1px solid var(--border-color);
@@ -70,7 +71,8 @@
 .dark-theme .search-btn:hover,
 .dark-theme .profile-btn:hover,
 .dark-theme .user-icon-btn:hover,
-.dark-theme .calculate-btn:hover {
+.dark-theme .calculate-btn:hover,
+.dark-theme .theme-toggle-btn:hover {
   background-color: var(--hover-background);
   border-color: var(--primary-color);
   color: var(--primary-color);
@@ -350,7 +352,8 @@ body {
 .search-btn,
 .profile-btn,
 .user-icon-btn,
-.calculate-btn {
+.calculate-btn,
+.theme-toggle-btn {
   display: flex;
   align-items: center;
   gap: 8px;
@@ -369,9 +372,14 @@ body {
 .search-btn:hover,
 .profile-btn:hover,
 .user-icon-btn:hover,
-.calculate-btn:hover {
+.calculate-btn:hover,
+.theme-toggle-btn:hover {
   background-color: var(--gray-100);
   color: var(--text-primary);
+}
+
+.theme-toggle-btn {
+  justify-content: center;
 }
 
 .search-btn span,

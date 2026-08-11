@@ -50,6 +50,20 @@
         </button>
 
         <button
+          class="theme-toggle-btn"
+          (click)="toggleTheme()"
+          [attr.aria-label]="
+            (isDarkTheme$ | async) ? 'Switch to light mode' : 'Switch to dark mode'
+          "
+        >
+          <i
+            class="fas"
+            [class.fa-sun]="isDarkTheme$ | async"
+            [class.fa-moon]="!(isDarkTheme$ | async)"
+          ></i>
+        </button>
+
+        <button
           *ngIf="userProfile"
           class="profile-btn"
           (click)="goToProfile(); closeNav()"
@@ -154,6 +168,22 @@
           <a class="nav-link" (click)="goToSupport()">
             <i class="fas fa-life-ring"></i>
             <span>Support The Project</span>
+          </a>
+
+          <a
+            class="nav-link"
+            appClickable
+            (click)="toggleTheme()"
+            [attr.aria-label]="
+              (isDarkTheme$ | async) ? 'Switch to light mode' : 'Switch to dark mode'
+            "
+          >
+            <i
+              class="fas"
+              [class.fa-sun]="isDarkTheme$ | async"
+              [class.fa-moon]="!(isDarkTheme$ | async)"
+            ></i>
+            <span>{{ (isDarkTheme$ | async) ? "Light Mode" : "Dark Mode" }}</span>
           </a>
 
           <a
