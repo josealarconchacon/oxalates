@@ -47,17 +47,19 @@
         <nav class="sidebar-nav">
           <a
             [class.active]="(activeSection$ | async) === 'profile'"
+            appClickable
             (click)="setActiveSection('profile')"
           >
             <i class="fas fa-user"></i> Profile Info
           </a>
           <a
             [class.active]="(activeSection$ | async) === 'saveItem'"
+            appClickable
             (click)="setActiveSection('saveItem')"
           >
             <i class="fas fa-bookmark"></i> Saved Items
           </a>
-          <a (click)="onLogout()" class="logout">
+          <a appClickable (click)="onLogout()" class="logout">
             <i class="fas fa-sign-out-alt"></i> Logout
           </a>
         </nav>

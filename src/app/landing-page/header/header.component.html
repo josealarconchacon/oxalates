@@ -50,6 +50,20 @@
         </button>
 
         <button
+          class="theme-toggle-btn"
+          (click)="toggleTheme()"
+          [attr.aria-label]="
+            (isDarkTheme$ | async) ? 'Switch to light mode' : 'Switch to dark mode'
+          "
+        >
+          <i
+            class="fas"
+            [class.fa-sun]="isDarkTheme$ | async"
+            [class.fa-moon]="!(isDarkTheme$ | async)"
+          ></i>
+        </button>
+
+        <button
           *ngIf="userProfile"
           class="profile-btn"
           (click)="goToProfile(); closeNav()"
@@ -80,54 +94,61 @@
 
       <ng-container *ngIf="isMobile$ | async">
         <div class="mobile-sidebar-nav">
-          <div
-            class="profile-info-container"
-            (click)="setActiveSection('profile'); goToProfile()"
-          >
-            <img
-              *ngIf="userProfile"
-              [src]="
-                userProfile.photoURL ||
-                '../../../assets/images/default-profile.jpg'
-              "
-              alt="User Image"
-              class="user-image"
-              loading="lazy"
-              width="32"
-              height="32"
-            />
-            <mat-icon *ngIf="!userProfile" class="default-user-icon"
-              >person_outline</mat-icon
+          <ng-container *ngIf="userProfile; else mobileLoggedOut">
+            <div
+              class="profile-info-container"
+              appClickable
+              (click)="setActiveSection('profile'); goToProfile()"
             >
+              <img
+                [src]="
+                  userProfile.photoURL ||
+                  '../../../assets/images/default-profile.jpg'
+                "
+                alt="User Image"
+                class="user-image"
+                loading="lazy"
+                width="32"
+                height="32"
+              />
+              <a
+                class="nav-link profile-link"
+                [class.active]="(activeSection$ | async) === 'profile'"
+              >
+                <span>Profile Info</span>
+              </a>
+              <input
+                type="file"
+                id="profile-image-upload"
+                class="profile-image-upload"
+                (change)="onProfileImageChange($event)"
+                accept="image/*"
+                style="display: none"
+              />
+              <label
+                for="profile-image-upload"
+                class="profile-image-upload-label"
+              >
+                <mat-icon>edit</mat-icon>
+              </label>
+            </div>
             <a
-              class="nav-link profile-link"
-              [class.active]="(activeSection$ | async) === 'profile'"
+              class="nav-link"
+              [class.active]="(activeSection$ | async) === 'saveItem'"
+              (click)="setActiveSection('saveItem'); navigateToSavedItems()"
             >
-              <span>Profile Info</span>
+              <i class="fas fa-bookmark"></i>
+              <span>Saved Items</span>
             </a>
-            <input
-              type="file"
-              id="profile-image-upload"
-              class="profile-image-upload"
-              (change)="onProfileImageChange($event)"
-              accept="image/*"
-              style="display: none"
-            />
-            <label
-              for="profile-image-upload"
-              class="profile-image-upload-label"
-            >
-              <mat-icon>edit</mat-icon>
-            </label>
-          </div>
-          <a
-            class="nav-link"
-            [class.active]="(activeSection$ | async) === 'saveItem'"
-            (click)="setActiveSection('saveItem'); navigateToSavedItems()"
-          >
-            <i class="fas fa-bookmark"></i>
-            <span>Saved Items</span>
-          </a>
+          </ng-container>
+
+          <ng-template #mobileLoggedOut>
+            <a class="nav-link" (click)="goToLoginPage(); closeNav()">
+              <mat-icon class="default-user-icon">person_outline</mat-icon>
+              <span>Login or Sign Up</span>
+            </a>
+          </ng-template>
+
           <a class="nav-link" (click)="search(); closeNav()">
             <i class="fas fa-search"></i>
             <span>Search For Foods</span>
@@ -149,7 +170,27 @@
             <span>Support The Project</span>
           </a>
 
-          <a (click)="onLogout()" class="nav-link logout">
+          <a
+            class="nav-link"
+            appClickable
+            (click)="toggleTheme()"
+            [attr.aria-label]="
+              (isDarkTheme$ | async) ? 'Switch to light mode' : 'Switch to dark mode'
+            "
+          >
+            <i
+              class="fas"
+              [class.fa-sun]="isDarkTheme$ | async"
+              [class.fa-moon]="!(isDarkTheme$ | async)"
+            ></i>
+            <span>{{ (isDarkTheme$ | async) ? "Light Mode" : "Dark Mode" }}</span>
+          </a>
+
+          <a
+            *ngIf="userProfile"
+            (click)="onLogout()"
+            class="nav-link logout"
+          >
             <i class="fas fa-sign-out-alt"></i>
             <span>Logout</span>
           </a>

@@ -1,9 +1,19 @@
-import { Component, Input, Output, EventEmitter, OnInit } from '@angular/core';
+import {
+  Component,
+  Input,
+  Output,
+  EventEmitter,
+  OnInit,
+  OnDestroy,
+} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { jsPDF } from 'jspdf';
 import autoTable from 'jspdf-autotable';
+import { Subscription } from 'rxjs';
 import { FoodEntryService } from '../../food-entry/service/food-entry.service';
+import { AlertService } from 'src/app/shared/alert-service/alert.service';
+import { AlertComponent } from 'src/app/landing-page/dialog-service/oxalate/shared/alert/alert.component';
 
 interface FoodItem {
   foodName: string;
@@ -25,24 +35,41 @@ type TableRow = [string, string, string, string | number, string, string];
 @Component({
   selector: 'app-get-report',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, AlertComponent],
   templateUrl: './get-report.component.html',
   styleUrl: './get-report.component.css',
 })
-export class GetReportComponent implements OnInit {
+export class GetReportComponent implements OnInit, OnDestroy {
   @Input() mealItems: any[] = [];
   @Input() totalOxalate: number = 0;
   @Input() totalSolubleOxalate: number = 0;
   @Input() selectedDate: Date = new Date();
   @Output() close = new EventEmitter<void>();
   maxDate: string;
+  showAlert: boolean = false;
+  alertMessage: string = '';
+  private alertSubscription!: Subscription;
 
-  constructor(private foodEntryService: FoodEntryService) {
+  constructor(
+    private foodEntryService: FoodEntryService,
+    private alertService: AlertService
+  ) {
     this.maxDate = new Date().toISOString().split('T')[0];
   }
 
   ngOnInit(): void {
-    // No need to initialize selectedDate as it's now an input
+    this.alertSubscription = this.alertService
+      .getAlertObservable()
+      .subscribe((alert) => {
+        this.alertMessage = alert.message;
+        this.showAlert = alert.show;
+      });
+  }
+
+  ngOnDestroy(): void {
+    if (this.alertSubscription) {
+      this.alertSubscription.unsubscribe();
+    }
   }
 
   // Download as CSV
@@ -54,7 +81,7 @@ export class GetReportComponent implements OnInit {
     this.foodEntryService.getDailyEntry(date).subscribe({
       next: (entry) => {
         if (!entry || this.isEmpty(entry)) {
-          alert('No data available for selected date!');
+          this.alertService.showAlert('No data available for selected date!');
           return;
         }
 
@@ -105,7 +132,9 @@ export class GetReportComponent implements OnInit {
       },
       error: (error) => {
         console.error('Error fetching data:', error);
-        alert('Error downloading report. Please try again.');
+        this.alertService.showAlert(
+          'Error downloading report. Please try again.'
+        );
       },
     });
   }
@@ -119,7 +148,7 @@ export class GetReportComponent implements OnInit {
     this.foodEntryService.getDailyEntry(date).subscribe({
       next: (entry) => {
         if (!entry || this.isEmpty(entry)) {
-          alert('No data available for selected date!');
+          this.alertService.showAlert('No data available for selected date!');
           return;
         }
 
@@ -154,7 +183,9 @@ export class GetReportComponent implements OnInit {
       },
       error: (error) => {
         console.error('Error fetching data:', error);
-        alert('Error downloading report. Please try again.');
+        this.alertService.showAlert(
+          'Error downloading report. Please try again.'
+        );
       },
     });
   }

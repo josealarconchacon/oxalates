@@ -2,11 +2,12 @@ import { CommonModule } from '@angular/common';
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { SimilarFood } from '../../model/similar-food';
+import { ClickableDirective } from '../../../../shared/directives/clickable.directive';
 
 @Component({
   selector: 'app-search-section',
   standalone: true,
-  imports: [FormsModule, CommonModule],
+  imports: [FormsModule, CommonModule, ClickableDirective],
   templateUrl: './search-section.component.html',
   styleUrl: './search-section.component.css',
 })
