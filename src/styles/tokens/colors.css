@@ -1,0 +1,172 @@
+/* ==========================================================================
+   Color tokens — every color used across the app lives here.
+   Non-color tokens (spacing, type, radius, shadows-as-elevation, z-index,
+   breakpoints) stay in styles.css; this file is colors only.
+
+   Two theme-switch mechanisms coexist below (pre-existing, not introduced
+   here): the oxalate search UI toggles via [data-theme="dark"], everything
+   else toggles via the .dark-theme class. Consolidating those is a separate,
+   bigger change — this file just gives both a single home for now.
+   ========================================================================== */
+
+/* --- Oxalate Search Design Tokens (--color-*, driven by [data-theme]) --- */
+[data-theme="light"],
+:root:not([data-theme="dark"]) {
+  --color-primary: #448ecc;
+  --color-primary-rgb: 68, 142, 204;
+  --color-text: #2d2d2d;
+  --color-surface: #ffffff;
+  --color-border: #e1e4e8;
+  --color-muted: #70757a;
+  --color-card: #ffffff;
+  --shadow-card: 0 2px 8px rgba(0, 0, 0, 0.07);
+  --radius-card: 12px;
+  --radius-input: 0.75rem;
+}
+
+[data-theme="dark"],
+.dark-theme {
+  --color-primary: #5fa8e6;
+  --color-primary-rgb: 95, 168, 230;
+  --color-text: #e1e1e1;
+  --color-surface: #2d2d2d;
+  --color-border: #404040;
+  --color-muted: #9ca3af;
+  --color-card: #2d2d2d;
+  --shadow-card: 0 2px 8px rgba(0, 0, 0, 0.3);
+  --radius-card: 12px;
+  --radius-input: 0.75rem;
+}
+
+/* --- App-wide design system colors (driven by .dark-theme) --- */
+:root {
+  /* Color System */
+  --primary-color: #1da1f2;
+  --primary-dark: #0a58ca;
+  /* --primary-light: #6ea8fe; */
+  --secondary-color: #6c757d;
+  --success-color: #198754;
+  --info-color: #0dcaf0;
+  --warning-color: #ffc107;
+  --danger-color: #dc3545;
+  --light-color: #f8f9fa;
+  --dark-color: #212529;
+  --dotting-color: #4cc9b7;
+
+  /* Neutral Colors */
+  --gray-100: #f8f9fa;
+  --gray-200: #e9ecef;
+  --gray-300: #dee2e6;
+  --gray-400: #ced4da;
+  --gray-500: #adb5bd;
+  --gray-600: #6c757d;
+  --gray-700: #495057;
+  --gray-800: #343a40;
+  --gray-900: #212529;
+
+  /* Text Colors */
+  --text-primary: var(--gray-900);
+  --text-secondary: var(--gray-700);
+  --text-tertiary: var(--gray-600);
+  --text-muted: var(--gray-500);
+  --text-disabled: var(--gray-400);
+  --text-inverse: var(--gray-100);
+  --text-link: var(--primary-color);
+  --text-link-hover: var(--primary-dark);
+  --text-error: var(--danger-color);
+  --text-success: var(--success-color);
+  --text-warning: var(--warning-color);
+  --text-info: var(--info-color);
+
+  /* Background Colors */
+  --background-color: #ffffff;
+  --surface-color: #f6f7fb;
+  --border-color: #e1e4e8;
+
+  /* Light theme variables */
+  --secondary-background: #f8f9fa;
+  --text-color: #333333;
+  --secondary-text-color: #666666;
+  --card-background: #ffffff;
+  --hover-background: #f5f5f5;
+  --shadow-color: rgba(0, 0, 0, 0.1);
+  --dialog-background: #ffffff;
+  --input-background: #ffffff;
+  --sidebar-background: #f8f9fa;
+  --header-background: #ffffff;
+  --footer-background: #f8f9fa;
+  --link-color: #1da1f2;
+  --button-text: #333333;
+  --button-background: #ffffff;
+  --nav-active: #e3f2fd;
+  --nav-hover: #f5f5f5;
+  --dropdown-background: #ffffff;
+  --tooltip-background: #333333;
+  --tooltip-text: #ffffff;
+  --scrollbar-track: #f1f1f1;
+  --scrollbar-thumb: #c1c1c1;
+}
+
+/* Dark theme variables */
+.dark-theme {
+  --primary-color: #1a91da;
+  --primary-dark: #1577b5;
+  --primary-light: #4ba9e1;
+  --primary-color-rgb: 26, 145, 218;
+
+  /* Theme Colors */
+  --background-color: #1a1a1a;
+  --secondary-background: #2d2d2d;
+  --surface-color: #2d2d2d;
+
+  /* Text Colors for Dark Theme */
+  --text-primary: #ffffff;
+  --text-secondary: #e0e0e0;
+  --text-tertiary: #b0b0b0;
+  --text-muted: #808080;
+  --text-disabled: #666666;
+  --text-inverse: #1a1a1a;
+  --text-link: #4ba9e1;
+  --text-link-hover: #1a91da;
+  --text-error: #ff6b6b;
+  --text-success: #69db7c;
+  --text-warning: #ffd43b;
+  --text-info: #4dabf7;
+
+  /* Rest of dark theme variables */
+  --border-color: #404040;
+  --card-background: #2d2d2d;
+  --hover-background: #3a3a3a;
+  --shadow-color: rgba(0, 0, 0, 0.3);
+  --dialog-background: #2d2d2d;
+  --input-background: #333333;
+  --sidebar-background: #2d2d2d;
+  --header-background: #1a1a1a;
+  --footer-background: #2d2d2d;
+  --link-color: #4ba9e1;
+  --button-text: #ffffff;
+  --button-background: #3a3a3a;
+  --nav-active: #1a91da33;
+  --nav-hover: #3a3a3a;
+  --dropdown-background: #3a3a3a;
+  --tooltip-background: #3a3a3a;
+  --tooltip-text: #ffffff;
+  --scrollbar-track: #2d2d2d;
+  --scrollbar-thumb: #3a3a3a;
+
+  /* Override specific component colors */
+  --gray-100: #2d2d2d;
+  --gray-200: #333333;
+  --gray-300: #3a3a3a;
+  --gray-400: #3a3a3a;
+  --gray-500: #666666;
+  --gray-600: #808080;
+  --gray-700: #b0b0b0;
+  --gray-800: #d0d0d0;
+  --gray-900: #ffffff;
+
+  /* Form elements */
+  --input-placeholder: #666666;
+  --input-border-focus: #4ba9e1;
+  --input-shadow-focus: rgba(75, 169, 225, 0.2);
+}
