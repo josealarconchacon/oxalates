@@ -20,6 +20,8 @@ import {
   distinctUntilChanged,
 } from 'rxjs';
 import { ThemeService } from 'src/app/shared/services/theme.service';
+import { AlertService } from 'src/app/shared/alert-service/alert.service';
+import { AlertComponent } from 'src/app/landing-page/dialog-service/oxalate/shared/alert/alert.component';
 
 @Component({
   selector: 'app-calculate-oxalate',
@@ -29,6 +31,7 @@ import { ThemeService } from 'src/app/shared/services/theme.service';
     FormsModule,
     SearchSectionComponent,
     ServingPanelComponent,
+    AlertComponent,
   ],
   templateUrl: './calculate-oxalate.component.html',
   styleUrls: ['./calculate-oxalate.component.css'],
@@ -46,17 +49,21 @@ export class CalculateOxalateComponent implements OnInit, OnDestroy {
   showSuggestions: boolean = false;
   showResults: boolean = false;
   isDarkTheme: boolean = false;
+  showAlert: boolean = false;
+  alertMessage: string = '';
 
   @Input() mealType: string = '';
   @Output() mealLogged = new EventEmitter<any>();
 
   private foodInputSubject = new BehaviorSubject<string>('');
   private themeSubscription: Subscription | null = null;
+  private alertSubscription!: Subscription;
 
   constructor(
     private oxalateService: CalculateOxalateService,
     private cdr: ChangeDetectorRef,
-    private themeService: ThemeService
+    private themeService: ThemeService,
+    private alertService: AlertService
   ) {}
 
   ngOnInit() {
@@ -77,11 +84,21 @@ export class CalculateOxalateComponent implements OnInit, OnDestroy {
         this.cdr.detectChanges();
       }
     );
+
+    this.alertSubscription = this.alertService
+      .getAlertObservable()
+      .subscribe((alert) => {
+        this.alertMessage = alert.message;
+        this.showAlert = alert.show;
+      });
   }
 
   ngOnDestroy() {
     if (this.themeSubscription) {
       this.themeSubscription.unsubscribe();
+    }
+    if (this.alertSubscription) {
+      this.alertSubscription.unsubscribe();
     }
   }
 
@@ -98,7 +115,9 @@ export class CalculateOxalateComponent implements OnInit, OnDestroy {
     this.isCalculating = true;
     const servingSizeValue = this.parseServingSize(this.servingSize);
     if (servingSizeValue === null) {
-      alert('Food can not be logged as serving size is not available.');
+      this.alertService.showAlert(
+        'Food can not be logged as serving size is not available.'
+      );
       this.isCalculating = false;
       return;
     }
@@ -107,7 +126,9 @@ export class CalculateOxalateComponent implements OnInit, OnDestroy {
       this.numberOfServings.toString()
     );
     if (numberOfServingsValue === null) {
-      alert('Food can not be logged as serving size is not available.');
+      this.alertService.showAlert(
+        'Food can not be logged as serving size is not available.'
+      );
       this.isCalculating = false;
       return;
     }

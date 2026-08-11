@@ -1,6 +1,7 @@
 import { CalculateOxalateComponent } from './calculate-oxalate.component';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { CalculateOxalateService } from 'src/app/landing-page/dialog-service/service/calculate-oxalate.service';
+import { AlertService } from 'src/app/shared/alert-service/alert.service';
 import { of } from 'rxjs';
 import { SimilarFood } from '../model/similar-food';
 
@@ -8,6 +9,7 @@ describe('CalculateOxalateComponent', () => {
   let component: CalculateOxalateComponent;
   let fixture: ComponentFixture<CalculateOxalateComponent>;
   let calculateOxalateService: jasmine.SpyObj<CalculateOxalateService>;
+  let alertService: AlertService;
 
   beforeEach(async () => {
     const spy = jasmine.createSpyObj('CalculateOxalateService', [
@@ -26,6 +28,7 @@ describe('CalculateOxalateComponent', () => {
     calculateOxalateService = TestBed.inject(
       CalculateOxalateService
     ) as jasmine.SpyObj<CalculateOxalateService>;
+    alertService = TestBed.inject(AlertService);
     fixture.detectChanges();
   });
 
@@ -47,21 +50,21 @@ describe('CalculateOxalateComponent', () => {
 
   describe('calculateOxalate', () => {
     it('should alert and not calculate if serving size is invalid', () => {
-      spyOn(window, 'alert');
+      spyOn(alertService, 'showAlert');
       component.servingSize = 'invalid';
       component.calculateOxalate();
-      expect(window.alert).toHaveBeenCalledWith(
-        'Please enter a valid serving size.'
+      expect(alertService.showAlert).toHaveBeenCalledWith(
+        'Food can not be logged as serving size is not available.'
       );
     });
 
     it('should alert and not calculate if number of servings is invalid', () => {
-      spyOn(window, 'alert');
+      spyOn(alertService, 'showAlert');
       component.servingSize = '100';
       component.numberOfServings = NaN;
       component.calculateOxalate();
-      expect(window.alert).toHaveBeenCalledWith(
-        'Please enter a valid number of servings.'
+      expect(alertService.showAlert).toHaveBeenCalledWith(
+        'Food can not be logged as serving size is not available.'
       );
     });
 

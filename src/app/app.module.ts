@@ -78,7 +78,6 @@ export function initializeApp(configService: ConfigService) {
     BenefitsComponent,
     ManagingOxalateComponent,
     ViewMoreComponent,
-    AlertComponent,
     AuthComponent,
     ProfileComponent,
     ChangePasswordComponent,
@@ -119,6 +118,7 @@ export function initializeApp(configService: ConfigService) {
     AuthMessageComponent,
     BeCautiousComponent,
     ClickableDirective,
+    AlertComponent,
   ],
   providers: [
     ConfigService,
