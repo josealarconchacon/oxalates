@@ -738,7 +738,7 @@
 }
 
 /* ===== DARK MODE ===== */
-.dark-theme .auth-container::before {
+:host-context(.dark-theme) .auth-container::before {
   background: radial-gradient(
       circle at 20% 80%,
       rgba(71, 85, 105, 0.2) 0%,
@@ -751,66 +751,66 @@
     );
 }
 
-.dark-theme .auth-card {
+:host-context(.dark-theme) .auth-card {
   background: rgba(45, 45, 45, 0.75);
   box-shadow: 0 25px 80px rgba(0, 0, 0, 0.4), 0 8px 24px rgba(0, 0, 0, 0.2);
 }
 
-.dark-theme .auth-brand-panel {
+:host-context(.dark-theme) .auth-brand-panel {
   background: linear-gradient(135deg, #5568d3 0%, #6941c6 50%, #4a2d8a 100%);
   background-size: 200% 200%;
 }
 
-.dark-theme .auth-form-panel {
+:host-context(.dark-theme) .auth-form-panel {
   background: rgba(45, 45, 45, 0.85);
 }
 
-.dark-theme .form-input {
+:host-context(.dark-theme) .form-input {
   background: rgba(55, 55, 55, 0.6);
   border-color: rgba(75, 85, 99, 0.6);
 }
 
-.dark-theme .form-input:focus {
+:host-context(.dark-theme) .form-input:focus {
   box-shadow: 0 0 0 4px rgba(29, 161, 242, 0.25);
 }
 
-.dark-theme .form-input.error {
+:host-context(.dark-theme) .form-input.error {
   background: rgba(239, 68, 68, 0.12);
 }
 
-.dark-theme .form-input.error:focus {
+:host-context(.dark-theme) .form-input.error:focus {
   box-shadow: 0 0 0 4px rgba(229, 115, 115, 0.25);
 }
 
-.dark-theme .divider-text {
+:host-context(.dark-theme) .divider-text {
   background: rgba(45, 45, 45, 0.9);
   border-color: rgba(75, 85, 99, 0.5);
 }
 
-.dark-theme .google-button {
+:host-context(.dark-theme) .google-button {
   background: rgba(55, 55, 55, 0.6);
   border-color: rgba(75, 85, 99, 0.6);
 }
 
-.dark-theme .google-button:hover {
+:host-context(.dark-theme) .google-button:hover {
   border-color: rgba(100, 116, 139, 0.6);
   box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
 }
 
 /* Tablet dark mode */
 @media (max-width: 1023px) {
-  .dark-theme .auth-form-panel {
+  :host-context(.dark-theme) .auth-form-panel {
     background: var(--card-background);
   }
 }
 
 /* Mobile dark mode */
 @media (max-width: 767px) {
-  .dark-theme .auth-card {
+  :host-context(.dark-theme) .auth-card {
     background: var(--card-background);
   }
 
-  .dark-theme .auth-form-panel {
+  :host-context(.dark-theme) .auth-form-panel {
     background: transparent;
   }
 }

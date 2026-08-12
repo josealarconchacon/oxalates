@@ -356,19 +356,19 @@
 }
 
 /* Dark Theme Enhancements */
-.dark-theme .tip-card {
+:host-context(.dark-theme) .tip-card {
   border-color: var(--border-color);
 }
 
-.dark-theme .tip-card:hover {
+:host-context(.dark-theme) .tip-card:hover {
   background: var(--surface-color);
 }
 
-.dark-theme .tip-icon {
+:host-context(.dark-theme) .tip-icon {
   background: var(--surface-color);
   border-color: var(--border-color);
 }
 
-.dark-theme .tip-card:hover .tip-icon {
+:host-context(.dark-theme) .tip-card:hover .tip-icon {
   border-color: var(--primary-color);
 }
