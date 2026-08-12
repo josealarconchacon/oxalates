@@ -176,103 +176,103 @@
 }
 
 /* Dark theme overrides */
-.dark-theme .share-menu-overlay {
+:host-context(.dark-theme) .share-menu-overlay {
   background: var(--overlay-background-dark, rgba(0, 0, 0, 0.6));
 }
 
-.dark-theme .share-menu-content {
+:host-context(.dark-theme) .share-menu-content {
   background: var(--background-color-dark, #1a1a1a);
   box-shadow: var(--shadow-lg-dark, 0 20px 40px rgba(0, 0, 0, 0.4));
   border-color: var(--border-color-dark, #2a2a2a);
 }
 
-.dark-theme .preview-title {
+:host-context(.dark-theme) .preview-title {
   color: var(--text-color-dark, #ffffff);
 }
 
-.dark-theme .result-card {
+:host-context(.dark-theme) .result-card {
   background: var(--card-background-dark, #1a1a1a);
   box-shadow: var(--shadow-sm-dark, 0 4px 8px rgba(0, 0, 0, 0.25));
   border-color: var(--border-color-dark, #2a2a2a);
 }
 
-.dark-theme .result-header {
+:host-context(.dark-theme) .result-header {
   background: var(--background-color-dark, #1a1a1a);
   color: var(--text-color-dark, #ffffff);
   border-color: var(--border-color-dark, #2a2a2a);
 }
 
-.dark-theme .result-header i {
+:host-context(.dark-theme) .result-header i {
   color: var(--text-color-dark, #ffffff);
 }
 
-.dark-theme .result-item {
+:host-context(.dark-theme) .result-item {
   border-color: var(--border-color-dark, #2a2a2a);
   color: var(--text-color-dark, #ffffff);
 }
 
-.dark-theme .result-item.highlight {
+:host-context(.dark-theme) .result-item.highlight {
   background-color: var(--primary-light-dark, rgba(107, 164, 255, 0.1));
   color: var(--primary-dark);
 }
 
-.dark-theme .result-item i {
+:host-context(.dark-theme) .result-item i {
   color: var(--text-secondary-dark, #9ca3af);
 }
 
-.dark-theme .meal-info,
-.dark-theme .meal-info strong,
-.dark-theme .meal-items,
-.dark-theme .food-item,
-.dark-theme .food-item span {
+:host-context(.dark-theme) .meal-info,
+:host-context(.dark-theme) .meal-info strong,
+:host-context(.dark-theme) .meal-items,
+:host-context(.dark-theme) .food-item,
+:host-context(.dark-theme) .food-item span {
   color: var(--text-color-dark, #ffffff);
 }
 
-.dark-theme .food-item i {
+:host-context(.dark-theme) .food-item i {
   color: var(--text-secondary-dark, #9ca3af);
 }
 
-.dark-theme .share-button {
+:host-context(.dark-theme) .share-button {
   background: var(--background-color-dark, #1a1a1a);
   color: var(--text-color-dark, #ffffff);
   border-color: var(--border-color-dark, #2a2a2a);
 }
 
-.dark-theme .share-button:hover {
+:host-context(.dark-theme) .share-button:hover {
   background: var(--hover-background-dark, rgba(107, 164, 255, 0.1));
 }
 
-.dark-theme .copy-button {
+:host-context(.dark-theme) .copy-button {
   background: var(--primary-light-dark, rgba(107, 164, 255, 0.1));
   border-color: var(--primary-border-dark, rgba(107, 164, 255, 0.2));
   color: var(--primary-dark);
 }
 
-.dark-theme .copy-button:hover {
+:host-context(.dark-theme) .copy-button:hover {
   background: var(--primary-light-hover-dark, rgba(107, 164, 255, 0.15));
 }
 
-.dark-theme .copy-button i {
+:host-context(.dark-theme) .copy-button i {
   color: var(--primary-dark);
 }
 
 /* Scrollbar styling */
-.dark-theme .share-menu-content::-webkit-scrollbar {
+:host-context(.dark-theme) .share-menu-content::-webkit-scrollbar {
   width: 12px;
 }
 
-.dark-theme .share-menu-content::-webkit-scrollbar-track {
+:host-context(.dark-theme) .share-menu-content::-webkit-scrollbar-track {
   background: var(--background-color-dark, #1a1a1a);
   border-radius: 6px;
 }
 
-.dark-theme .share-menu-content::-webkit-scrollbar-thumb {
+:host-context(.dark-theme) .share-menu-content::-webkit-scrollbar-thumb {
   background-color: var(--primary-dark);
   border-radius: 6px;
   border: 3px solid var(--background-color-dark, #1a1a1a);
 }
 
-.dark-theme .share-menu-content::-webkit-scrollbar-thumb:hover {
+:host-context(.dark-theme) .share-menu-content::-webkit-scrollbar-thumb:hover {
   background-color: var(--primary-dark-color, #5186db);
 }
 
@@ -281,8 +281,8 @@
     animation: none;
   }
 
-  .dark-theme .share-button,
-  .dark-theme .copy-button {
+  :host-context(.dark-theme) .share-button,
+  :host-context(.dark-theme) .copy-button {
     transition: none;
   }
 }

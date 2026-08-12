@@ -1,13 +1,9 @@
-:root {
-  --container-bg-light: rgba(255, 255, 255, 0.7);
-  --container-bg-dark: rgba(255, 255, 255, 0.05);
-  --container-border-light: rgba(80, 70, 229, 0.1);
-  --container-border-dark: rgba(255, 255, 255, 0.1);
-  --shadow-light: rgba(0, 0, 0, 0.1);
-  --shadow-dark: rgba(255, 255, 255, 0.05);
-  --highlight-bg-light: rgba(0, 150, 136, 0.1);
-  --highlight-bg-dark: rgba(0, 150, 136, 0.2);
-}
+/* This file used to carry its own :root token block. It was dead — Angular's
+   emulated view encapsulation scopes :root to [_ngcontent-x]:root, which no
+   real element can match — so every consumer below (including the base
+   light-mode rules, which had no fallback) was silently resolving to
+   nothing. Values are inlined directly instead; none had a global
+   equivalent to fall back to. */
 
 body {
   font-family: var(--font-family-sans);
@@ -22,14 +18,14 @@ body {
   margin-left: min(-2rem, -5vw);
   width: calc(100% + min(2rem, 5vw));
   max-width: none;
-  background: var(--container-bg-light);
+  background: rgba(255, 255, 255, 0.7);
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
   border-radius: clamp(16px, 2vw, 24px);
   padding: clamp(1.25rem, 3vw, 2rem);
   padding-left: min(2rem, 5vw);
-  border: 1px solid var(--container-border-light);
-  box-shadow: 0 10px 30px -5px var(--shadow-light);
+  border: 1px solid rgba(80, 70, 229, 0.1);
+  box-shadow: 0 10px 30px -5px rgba(0, 0, 0, 0.1);
   transition: background 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
   -webkit-mask-image: linear-gradient(
     to right,
@@ -77,7 +73,7 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
-  filter: drop-shadow(0 2px 4px var(--shadow-light));
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.1));
   transform-origin: center;
   position: relative;
   z-index: 2;
@@ -131,8 +127,8 @@ h6 {
 }
 
 .highlight {
-  background-color: var(--highlight-bg-light);
-  color: var(--accent-color, #009688);
+  background-color: rgba(0, 150, 136, 0.1);
+  color: #009688;
   font-weight: 500;
   padding: 0.2em 0.4em;
   border-radius: 0.25rem;
@@ -141,7 +137,7 @@ h6 {
 }
 
 .highlight:hover {
-  background-color: var(--highlight-bg-dark);
+  background-color: rgba(0, 150, 136, 0.2);
   transform: translateY(-1px);
 }
 
@@ -245,9 +241,9 @@ h6 {
 /* Dark Mode */
 @media (prefers-color-scheme: dark) {
   .container {
-    background: var(--container-bg-dark);
-    border-color: var(--container-border-dark);
-    box-shadow: 0 10px 30px -5px var(--shadow-dark);
+    background: rgba(255, 255, 255, 0.05);
+    border-color: rgba(255, 255, 255, 0.1);
+    box-shadow: 0 10px 30px -5px rgba(255, 255, 255, 0.05);
     -webkit-mask-image: linear-gradient(
       to right,
       transparent,
@@ -269,17 +265,17 @@ h6 {
   }
 
   .warning-icon {
-    filter: drop-shadow(0 2px 4px var(--shadow-dark));
+    filter: drop-shadow(0 2px 4px rgba(255, 255, 255, 0.05));
   }
 
   .highlight {
-    background-color: var(--highlight-bg-dark);
+    background-color: rgba(0, 150, 136, 0.2);
     opacity: 0.9;
   }
 
   .highlight:hover {
     opacity: 1;
-    background-color: var(--highlight-bg-light);
+    background-color: rgba(0, 150, 136, 0.1);
   }
 }
 
@@ -314,18 +310,18 @@ h6 {
 
 /* Dark theme styles */
 :host-context(.dark-theme) .container {
-  background: var(--container-bg-dark, rgba(30, 30, 40, 0.7));
-  border-color: var(--container-border-dark, rgba(110, 102, 255, 0.15));
-  box-shadow: 0 10px 30px -5px var(--shadow-dark, rgba(0, 0, 0, 0.2));
+  background: rgba(30, 30, 40, 0.7);
+  border-color: rgba(110, 102, 255, 0.15);
+  box-shadow: 0 10px 30px -5px rgba(0, 0, 0, 0.2);
 }
 
 :host-context(.dark-theme) .header-text h2 {
-  color: var(--dark-text-color, #e1e1e1);
+  color: #e1e1e1;
   text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
 }
 
 :host-context(.dark-theme) h6 {
-  color: var(--dark-text-color, #e1e1e1);
+  color: #e1e1e1;
 }
 
 :host-context(.dark-theme) .warning-icon {
@@ -338,8 +334,8 @@ h6 {
 }
 
 :host-context(.dark-theme) .highlight {
-  background-color: var(--highlight-bg-dark, rgba(0, 150, 136, 0.2));
-  color: var(--accent-color-dark, #4db6ac);
+  background-color: rgba(0, 150, 136, 0.2);
+  color: #4db6ac;
 }
 
 :host-context(.dark-theme) .highlight:hover {

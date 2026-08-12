@@ -4,12 +4,12 @@
   position: relative;
 }
 
-.dark-theme .footer {
+:host-context(.dark-theme) .footer {
   background-color: var(--footer-background);
   border-top: 1px solid var(--border-color);
 }
 
-.dark-theme .footer-text {
+:host-context(.dark-theme) .footer-text {
   color: var(--text-muted);
   border-top-color: var(--border-color);
 }

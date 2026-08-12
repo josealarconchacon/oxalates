@@ -1,11 +1,14 @@
-:root {
-  --mdc-theme-primary: var(--primary-color);
-  --mdc-theme-surface: var(--background-color);
-  --mdc-theme-on-surface: var(--text-color);
-  --mdc-elevation-1: var(--shadow-sm);
-  --mdc-elevation-2: var(--shadow-md);
-  --spacing-unit: var(--spacing-2);
-}
+/* This file used to carry its own :root token block plus a bare .dark-theme
+   block, both aliasing "--mdc-theme-*"/"--mdc-elevation-*" names to the
+   app's real tokens. Both were dead — Angular's emulated view encapsulation
+   scopes them to [_ngcontent-x]:root / .dark-theme[_ngcontent-x], neither of
+   which any real element can match — so every consumer below was already
+   silently using whichever global token has that literal name (few do), or
+   nothing. Replaced with direct references to the working global tokens:
+   --mdc-theme-surface -> --card-background, --mdc-theme-on-surface ->
+   --text-primary (not --text-color, which has no dark override),
+   --mdc-theme-primary -> --primary-color, --mdc-elevation-1/2 ->
+   --shadow-sm/--shadow-md. */
 
 .app-container {
   display: flex;
@@ -31,14 +34,6 @@
   border-radius: 1rem;
 }
 
-.dark-theme {
-  --mdc-theme-surface: #2d2d2d;
-  --mdc-theme-on-surface: #e0e0e0;
-  --mdc-theme-primary: var(--primary-color);
-  --mdc-elevation-1: 0 2px 4px rgba(0, 0, 0, 0.2);
-  --mdc-elevation-2: 0 4px 8px rgba(0, 0, 0, 0.3);
-}
-
 .daily-food-log {
   max-width: 1000px;
   margin: 0 auto;
@@ -60,21 +55,21 @@
 .food-table {
   width: 100%;
   border-collapse: collapse;
-  background: var(--mdc-theme-surface);
+  background: var(--card-background);
   border-radius: 0.75rem;
   overflow: hidden;
-  box-shadow: var(--mdc-elevation-1);
+  box-shadow: var(--shadow-sm);
   transition: all 0.3s ease;
 }
 
-.dark-theme .food-table {
+:host-context(.dark-theme) .food-table {
   background: #3a3a3a;
   border: 1px solid var(--border-color);
-  box-shadow: var(--mdc-elevation-1);
+  box-shadow: var(--shadow-sm);
 }
 
 thead .header-detail th {
-  color: var(--mdc-theme-on-surface);
+  color: var(--text-primary);
   font-weight: 600;
   transition: color 0.3s ease;
 }
@@ -84,7 +79,7 @@ thead .header-detail th {
   transition: background-color 0.3s ease;
 }
 
-.dark-theme .food-table thead {
+:host-context(.dark-theme) .food-table thead {
   background: rgba(255, 255, 255, 0.05);
 }
 
@@ -92,13 +87,13 @@ thead .header-detail th {
   padding: 1rem;
   text-align: left;
   font-weight: 600;
-  color: var(--mdc-theme-primary);
+  color: var(--primary-color);
   border-bottom: 1px solid rgba(0, 0, 0, 0.1);
   white-space: nowrap;
   transition: all 0.3s ease;
 }
 
-.dark-theme .food-table th {
+:host-context(.dark-theme) .food-table th {
   border-bottom-color: rgba(255, 255, 255, 0.1);
 }
 
@@ -107,7 +102,7 @@ thead .header-detail th {
   transition: all 0.3s ease;
 }
 
-.dark-theme .food-row {
+:host-context(.dark-theme) .food-row {
   border-bottom-color: rgba(255, 255, 255, 0.1);
 }
 
@@ -115,19 +110,19 @@ thead .header-detail th {
   background-color: rgba(0, 0, 0, 0.02);
 }
 
-.dark-theme .food-row:hover {
+:host-context(.dark-theme) .food-row:hover {
   background-color: #3a3a3a;
 }
 
 .food-row td {
   padding: 1rem;
   vertical-align: top;
-  color: var(--mdc-theme-on-surface);
+  color: var(--text-primary);
   transition: color 0.3s ease;
 }
 
-.dark-theme .food-row td {
-  color: var(--mdc-theme-on-surface);
+:host-context(.dark-theme) .food-row td {
+  color: var(--text-primary);
 }
 
 .food-name-btn {
@@ -138,7 +133,7 @@ thead .header-detail th {
   padding: 0.5rem;
   font-size: var(--font-size-sm);
   font-weight: 500;
-  color: var(--mdc-theme-on-surface);
+  color: var(--text-primary);
   cursor: pointer;
   display: flex;
   justify-content: space-between;
@@ -147,11 +142,11 @@ thead .header-detail th {
   transition: all 0.2s ease;
 }
 
-.dark-theme .food-name-btn {
-  color: var(--mdc-theme-on-surface);
+:host-context(.dark-theme) .food-name-btn {
+  color: var(--text-primary);
 }
 
-.dark-theme .food-name-btn:hover {
+:host-context(.dark-theme) .food-name-btn:hover {
   background-color: rgba(255, 255, 255, 0.05);
   color: var(--primary-color);
 }
@@ -160,7 +155,7 @@ thead .header-detail th {
   display: none;
   margin-left: 0.5rem;
   font-size: 1.25rem;
-  color: var(--mdc-theme-primary);
+  color: var(--primary-color);
   transition: color 0.3s ease;
 }
 
@@ -174,7 +169,7 @@ thead .header-detail th {
   transition: all 0.3s ease;
 }
 
-.dark-theme .mobile-details {
+:host-context(.dark-theme) .mobile-details {
   background: rgba(255, 255, 255, 0.02);
   border-color: rgba(255, 255, 255, 0.1);
 }
@@ -182,37 +177,37 @@ thead .header-detail th {
 .detail-label {
   font-size: var(--font-size-xs);
   font-weight: 500;
-  color: var(--mdc-theme-primary);
+  color: var(--primary-color);
   transition: color 0.3s ease;
 }
 
 .meal-section {
-  background: var(--mdc-theme-surface);
+  background: var(--card-background);
   border-radius: 1rem;
   padding: 1.5rem;
-  box-shadow: var(--mdc-elevation-1);
+  box-shadow: var(--shadow-sm);
   border: 1px solid rgba(0, 0, 0, 0.1);
   position: relative;
   transition: all 0.3s ease;
 }
 
-.dark-theme .meal-section {
-  background: var(--mdc-theme-surface);
+:host-context(.dark-theme) .meal-section {
+  background: var(--card-background);
   border-color: rgba(255, 255, 255, 0.1);
-  box-shadow: var(--mdc-elevation-1);
+  box-shadow: var(--shadow-sm);
 }
 
 .meal-title {
   font-size: var(--font-size-lg);
   font-weight: 600;
-  color: var(--mdc-theme-primary);
+  color: var(--primary-color);
   margin-bottom: 1rem;
   letter-spacing: -0.02em;
   transition: color 0.3s ease;
 }
 
-.dark-theme .meal-title {
-  color: var(--mdc-theme-on-surface);
+:host-context(.dark-theme) .meal-title {
+  color: var(--text-primary);
 }
 
 .empty-state {
@@ -225,7 +220,7 @@ thead .header-detail th {
   transition: all 0.3s ease;
 }
 
-.dark-theme .empty-state {
+:host-context(.dark-theme) .empty-state {
   color: rgba(255, 255, 255, 0.6);
   background: rgba(255, 255, 255, 0.02);
   border-color: rgba(255, 255, 255, 0.1);
@@ -241,19 +236,19 @@ thead .header-detail th {
   background: rgba(90, 172, 132, 0.1);
   border: 1px solid rgba(90, 172, 132, 0.2);
   border-radius: 0.5rem;
-  color: var(--mdc-theme-primary);
+  color: var(--primary-color);
   font-weight: 500;
   cursor: pointer;
   transition: all 0.2s ease;
 }
 
-.dark-theme .add-button {
+:host-context(.dark-theme) .add-button {
   background: rgba(90, 172, 132, 0.1);
   border-color: rgba(90, 172, 132, 0.2);
   color: var(--primary-color);
 }
 
-.dark-theme .add-button:hover {
+:host-context(.dark-theme) .add-button:hover {
   background: rgba(90, 172, 132, 0.15);
   border-color: rgba(90, 172, 132, 0.3);
 }
@@ -275,17 +270,17 @@ thead .header-detail th {
   justify-content: center;
 }
 
-.dark-theme .delete-btn {
+:host-context(.dark-theme) .delete-btn {
   color: var(--danger-color);
   background: transparent;
 }
 
-.dark-theme .delete-btn:hover {
+:host-context(.dark-theme) .delete-btn:hover {
   background: #3a3a3a;
   color: var(--danger-color);
 }
 
-.dark-theme .delete-btn:focus {
+:host-context(.dark-theme) .delete-btn:focus {
   background: #3a3a3a;
   color: var(--danger-color);
   outline: none;
@@ -308,25 +303,25 @@ thead .header-detail th {
   transition: all 0.3s ease;
 }
 
-.dark-theme .dialog-overlay {
+:host-context(.dark-theme) .dialog-overlay {
   background: rgba(0, 0, 0, 0.5);
   backdrop-filter: blur(4px);
 }
 
 .dialog-content {
   position: relative;
-  background: var(--mdc-theme-surface);
+  background: var(--card-background);
   border-radius: 1rem;
   padding: 2rem;
   width: 90%;
   max-width: 600px;
   z-index: 1;
-  box-shadow: var(--mdc-elevation-2);
+  box-shadow: var(--shadow-md);
   border: 1px solid rgba(0, 0, 0, 0.1);
   transition: all 0.3s ease;
 }
 
-.dark-theme .dialog-content {
+:host-context(.dark-theme) .dialog-content {
   background: #3a3a3a;
   border-color: var(--border-color);
   box-shadow: var(--shadow-lg);
@@ -338,17 +333,17 @@ thead .header-detail th {
   padding: 1rem;
   background: rgba(0, 0, 0, 0.02);
   border-top: 2px solid rgba(0, 0, 0, 0.1);
-  color: var(--mdc-theme-on-surface);
+  color: var(--text-primary);
   transition: all 0.3s ease;
 }
 
-.dark-theme .total-row {
+:host-context(.dark-theme) .total-row {
   background-color: #3a3a3a;
   border-color: var(--border-color);
 }
 
-.dark-theme .total-row td {
-  color: var(--mdc-theme-on-surface);
+:host-context(.dark-theme) .total-row td {
+  color: var(--text-primary);
   font-weight: 600;
 }
 
@@ -356,7 +351,7 @@ thead .header-detail th {
 .soluble-mobile {
   display: none;
   font-size: var(--font-size-xs);
-  color: var(--mdc-theme-primary);
+  color: var(--primary-color);
   margin-left: 0.5rem;
   transition: color 0.3s ease;
 }
@@ -407,12 +402,12 @@ thead .header-detail th {
     padding: 0.5rem 1rem;
   }
 
-  .dark-theme .mobile-details {
+  :host-context(.dark-theme) .mobile-details {
     background: #3a3a3a;
     border-color: var(--border-color);
   }
 
-  .dark-theme .detail-row {
+  :host-context(.dark-theme) .detail-row {
     border-color: var(--border-color);
   }
 

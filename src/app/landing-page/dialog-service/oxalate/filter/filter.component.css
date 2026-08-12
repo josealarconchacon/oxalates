@@ -75,12 +75,12 @@
 
 /* Dark theme: override SVG stroke for chevron */
 [data-theme="dark"] .filter-inline-select,
-.dark-theme .filter-inline-select {
+:host-context(.dark-theme) .filter-inline-select {
   background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="%239ca3af" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg>');
 }
 
 [data-theme="dark"] .filter-inline-select.active,
-.dark-theme .filter-inline-select.active {
+:host-context(.dark-theme) .filter-inline-select.active {
   background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="%235fa8e6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg>');
 }
 

@@ -183,12 +183,12 @@
   flex-shrink: 0;
 }
 
-.dark-theme .profile-name {
+:host-context(.dark-theme) .profile-name {
   color: var(--text-color);
   text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
 }
 
-.dark-theme .profile-email {
+:host-context(.dark-theme) .profile-email {
   color: var(--text-secondary);
 }
 
@@ -707,7 +707,7 @@
 }
 
 /* Dark theme styles */
-.dark-theme {
+:host-context(.dark-theme) {
   --background-color: #2d2d2d;
   --card-background: #3d3d3d;
   --text-color: #e1e1e1;
@@ -726,61 +726,61 @@
   --danger-50: #2d1a1a;
 }
 
-.dark-theme .color-picker-toggle {
+:host-context(.dark-theme) .color-picker-toggle {
   background-color: var(--card-background);
   color: var(--text-color);
   box-shadow: var(--shadow-sm);
 }
 
-.dark-theme .theme-toggle {
+:host-context(.dark-theme) .theme-toggle {
   background-color: var(--card-background);
   color: var(--text-color);
   border-color: var(--border-color);
 }
 
-.dark-theme .theme-toggle:hover {
+:host-context(.dark-theme) .theme-toggle:hover {
   background-color: var(--hover-background);
 }
 
-.dark-theme .theme-toggle i {
+:host-context(.dark-theme) .theme-toggle i {
   color: var(--text-color);
 }
 
-.dark-theme .theme-toggle:hover i {
+:host-context(.dark-theme) .theme-toggle:hover i {
   color: var(--primary-color);
 }
 
-.dark-theme .color-picker-content {
+:host-context(.dark-theme) .color-picker-content {
   background-color: var(--dialog-background);
   border-color: var(--border-color);
 }
 
-.dark-theme .color-picker-title {
+:host-context(.dark-theme) .color-picker-title {
   color: var(--text-color);
 }
 
-.dark-theme .close-button {
+:host-context(.dark-theme) .close-button {
   color: var(--text-secondary);
 }
 
-.dark-theme .close-button:hover {
+:host-context(.dark-theme) .close-button:hover {
   background-color: var(--hover-background);
   color: var(--text-color);
 }
 
-.dark-theme .color-value {
+:host-context(.dark-theme) .color-value {
   background-color: var(--input-background);
   border-color: var(--border-color);
   color: var(--text-color);
 }
 
-.dark-theme .color-actions .btn-secondary {
+:host-context(.dark-theme) .color-actions .btn-secondary {
   background-color: var(--button-background);
   color: var(--button-text);
   border-color: var(--border-color);
 }
 
-.dark-theme .color-actions .btn-secondary:hover {
+:host-context(.dark-theme) .color-actions .btn-secondary:hover {
   background-color: var(--hover-background);
 }
 
@@ -878,34 +878,34 @@
   background-color: var(--hover-background);
 }
 
-.dark-theme .color-picker-backdrop {
+:host-context(.dark-theme) .color-picker-backdrop {
   background-color: rgba(0, 0, 0, 0.75);
 }
 
-.dark-theme .color-preset {
+:host-context(.dark-theme) .color-preset {
   border-color: var(--dark-border);
 }
 
-.dark-theme .color-preset:hover {
+:host-context(.dark-theme) .color-preset:hover {
   border-color: var(--dark-text);
 }
 
-.dark-theme .color-actions .btn-secondary {
+:host-context(.dark-theme) .color-actions .btn-secondary {
   background-color: var(--dark-card-bg);
   border-color: var(--dark-border);
   color: var(--dark-text);
 }
 
-.dark-theme .color-actions .btn-secondary:hover {
+:host-context(.dark-theme) .color-actions .btn-secondary:hover {
   background-color: var(--dark-hover-bg);
 }
 
-.dark-theme .edit-avatar {
+:host-context(.dark-theme) .edit-avatar {
   background-color: var(--dark-card-bg);
   border-color: var(--dark-border);
 }
 
-.dark-theme .edit-avatar:hover {
+:host-context(.dark-theme) .edit-avatar:hover {
   background-color: var(--dark-hover-bg);
   border-color: var(--active-background);
 }

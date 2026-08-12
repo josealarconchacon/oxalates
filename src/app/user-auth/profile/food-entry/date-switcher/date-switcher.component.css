@@ -21,7 +21,7 @@
   overflow: hidden;
 }
 
-.dark-theme .date-display {
+:host-context(.dark-theme) .date-display {
   background: var(--card-background);
 }
 
@@ -98,7 +98,7 @@
   box-shadow: var(--shadow-lg) !important;
 }
 
-.dark-theme ::ng-deep .mat-datepicker-content {
+:host-context(.dark-theme) ::ng-deep .mat-datepicker-content {
   background: var(--card-background);
 }
 

@@ -192,37 +192,37 @@
 [data-theme="dark"] .preview-badge.level-high,
 [data-theme="dark"] .preview-badge.level-very-high,
 [data-theme="dark"] .preview-badge.level-extremely-high,
-.dark-theme .preview-badge.level-high,
-.dark-theme .preview-badge.level-very-high,
-.dark-theme .preview-badge.level-extremely-high {
+:host-context(.dark-theme) .preview-badge.level-high,
+:host-context(.dark-theme) .preview-badge.level-very-high,
+:host-context(.dark-theme) .preview-badge.level-extremely-high {
   background: rgba(254, 242, 242, 0.15);
   color: #f87171;
   border-color: rgba(254, 202, 202, 0.3);
 }
 
 [data-theme="dark"] .preview-badge.level-medium,
-.dark-theme .preview-badge.level-medium {
+:host-context(.dark-theme) .preview-badge.level-medium {
   background: rgba(255, 251, 235, 0.15);
   color: #fbbf24;
   border-color: rgba(253, 230, 138, 0.3);
 }
 
 [data-theme="dark"] .preview-badge.level-low,
-.dark-theme .preview-badge.level-low {
+:host-context(.dark-theme) .preview-badge.level-low {
   background: rgba(240, 253, 244, 0.15);
   color: #4ade80;
   border-color: rgba(187, 247, 208, 0.3);
 }
 
 [data-theme="dark"] .preview-badge.level-very-low,
-.dark-theme .preview-badge.level-very-low {
+:host-context(.dark-theme) .preview-badge.level-very-low {
   background: rgba(240, 249, 255, 0.15);
   color: #38bdf8;
   border-color: rgba(186, 230, 253, 0.3);
 }
 
 [data-theme="dark"] .preview-badge.level-trace,
-.dark-theme .preview-badge.level-trace {
+:host-context(.dark-theme) .preview-badge.level-trace {
   background: rgba(245, 243, 255, 0.15);
   color: #a78bfa;
   border-color: rgba(221, 214, 254, 0.3);
@@ -417,28 +417,28 @@
 
 /* Dark theme level badges */
 [data-theme="dark"] .level-badge.badge-high,
-.dark-theme .level-badge.badge-high {
+:host-context(.dark-theme) .level-badge.badge-high {
   background: rgba(254, 242, 242, 0.15);
   color: #f87171;
   border-color: rgba(254, 202, 202, 0.3);
 }
 
 [data-theme="dark"] .level-badge.badge-medium,
-.dark-theme .level-badge.badge-medium {
+:host-context(.dark-theme) .level-badge.badge-medium {
   background: rgba(255, 251, 235, 0.15);
   color: #fbbf24;
   border-color: rgba(253, 230, 138, 0.3);
 }
 
 [data-theme="dark"] .level-badge.badge-low,
-.dark-theme .level-badge.badge-low {
+:host-context(.dark-theme) .level-badge.badge-low {
   background: rgba(240, 253, 244, 0.15);
   color: #4ade80;
   border-color: rgba(187, 247, 208, 0.3);
 }
 
 [data-theme="dark"] .level-badge.badge-very-low,
-.dark-theme .level-badge.badge-very-low {
+:host-context(.dark-theme) .level-badge.badge-very-low {
   background: rgba(240, 249, 255, 0.15);
   color: #38bdf8;
   border-color: rgba(186, 230, 253, 0.3);
@@ -705,15 +705,15 @@
 }
 
 /* Dark theme overrides */
-.dark-theme .search-container {
+:host-context(.dark-theme) .search-container {
   background-color: transparent;
 }
 
-.dark-theme .loading-container {
+:host-context(.dark-theme) .loading-container {
   color: var(--color-text);
 }
 
-.dark-theme .modal-overlay {
+:host-context(.dark-theme) .modal-overlay {
   background-color: rgba(0, 0, 0, 0.7);
 }
 

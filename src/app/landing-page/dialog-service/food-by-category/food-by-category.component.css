@@ -22,7 +22,7 @@
   }
 }
 
-.dark-theme .by-category {
+:host-context(.dark-theme) .by-category {
   color: var(--dark-text-color, #e1e1e1);
   text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
 
@@ -152,7 +152,7 @@
   }
 }
 
-.dark-theme .category-card {
+:host-context(.dark-theme) .category-card {
   background: var(--dark-card-background, #1a1a1a);
   border: 1px solid rgba(110, 102, 255, 0.15);
   box-shadow: 0 15px 30px -10px rgba(0, 0, 0, 0.2);
@@ -202,7 +202,7 @@
   letter-spacing: 0.5px;
 }
 
-.dark-theme .category-badge {
+:host-context(.dark-theme) .category-badge {
   background: rgba(110, 102, 255, 0.1);
   color: var(--dark-text-color, #e1e1e1);
   border: 1px solid rgba(110, 102, 255, 0.15);
@@ -236,7 +236,7 @@
   transform: translateZ(0);
 }
 
-.dark-theme .category-title {
+:host-context(.dark-theme) .category-title {
   color: var(--dark-text-color, #e1e1e1);
   text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
 }
@@ -279,7 +279,7 @@
   }
 }
 
-.dark-theme .category-icon {
+:host-context(.dark-theme) .category-icon {
   filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.3));
   color: var(--dark-text-color, #e1e1e1);
 
@@ -309,13 +309,13 @@
   will-change: height;
 }
 
-.dark-theme .category-overlay {
+:host-context(.dark-theme) .category-overlay {
   background: rgba(30, 30, 40, 0.8);
   backdrop-filter: blur(5px);
   -webkit-backdrop-filter: blur(5px);
 }
 
-.dark-theme .category-card:hover .category-overlay {
+:host-context(.dark-theme) .category-card:hover .category-overlay {
   background: rgba(30, 30, 40, 0.9);
 }
 
@@ -332,19 +332,19 @@
   padding: 0 clamp(0.5rem, 2vw, 1rem);
 }
 
-.dark-theme .overlay-text {
+:host-context(.dark-theme) .overlay-text {
   color: var(--dark-text-color, #e1e1e1);
   text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
 }
 
 @media (max-width: 992px) {
-  .dark-theme .category-card {
+  :host-context(.dark-theme) .category-card {
     background: var(--dark-card-background, #1a1a1a);
   }
 }
 
 @media (max-width: 768px) {
-  .dark-theme .category-card {
+  :host-context(.dark-theme) .category-card {
     background: var(--dark-card-background, #1a1a1a);
   }
 }
