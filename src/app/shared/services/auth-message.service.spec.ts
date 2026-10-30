@@ -554,4 +554,44 @@ describe('AuthMessageService', () => {
       expect(secondThenCalled).toBe(true);
     }));
   });
+
+  describe('cancelAutoContinue', () => {
+    it('should stop the 10 second redirect', fakeAsync(() => {
+      service.showAuthMessage();
+      tick(5000);
+      service.cancelAutoContinue();
+      tick(10000);
+
+      expect(router.navigate).not.toHaveBeenCalled();
+      flush();
+    }));
+
+    it('should keep the message visible', fakeAsync(() => {
+      let visible = false;
+      service.showMessage$.subscribe((v) => (visible = v));
+
+      service.showAuthMessage();
+      service.cancelAutoContinue();
+      tick(20000);
+
+      expect(visible).toBeTrue();
+      flush();
+    }));
+
+    it('should still let the visitor continue manually afterwards', fakeAsync(() => {
+      let resolved = false;
+      service.showAuthMessage().then(() => (resolved = true));
+      service.cancelAutoContinue();
+
+      service.continueToAuth();
+      tick();
+
+      expect(router.navigate).toHaveBeenCalledWith(['/auth']);
+      expect(resolved).toBeTrue();
+    }));
+
+    it('should be safe to call when no timer is running', () => {
+      expect(() => service.cancelAutoContinue()).not.toThrow();
+    });
+  });
 });

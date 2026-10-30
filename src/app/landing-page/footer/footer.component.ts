@@ -4,14 +4,13 @@ import { Subscription } from 'rxjs';
 import { AuthService } from '../../user-auth/service/auth-service.service';
 import { CommonModule } from '@angular/common';
 import { AuthMessageService } from '../../shared/services/auth-message.service';
-import { AuthMessageComponent } from '../../shared/components/auth-message/auth-message.component';
 
 @Component({
   selector: 'app-footer',
   templateUrl: './footer.component.html',
   styleUrls: ['./footer.component.css'],
   standalone: true,
-  imports: [CommonModule, AuthMessageComponent, RouterLink],
+  imports: [CommonModule, RouterLink],
   providers: [AuthService],
 })
 export class FooterComponent implements OnInit, OnDestroy {

@@ -23,6 +23,18 @@ export class AuthMessageService {
     });
   }
 
+  /**
+   * Stop the automatic redirect once the visitor is interacting with the
+   * tour, so it never leaves while they are still reading (WCAG 2.2.1).
+   * They can still leave with "Get Started Now" or Escape.
+   */
+  cancelAutoContinue(): void {
+    if (this.timerSubscription) {
+      this.timerSubscription.unsubscribe();
+      this.timerSubscription = null;
+    }
+  }
+
   continueToAuth(): void {
     if (this.timerSubscription) {
       this.timerSubscription.unsubscribe();

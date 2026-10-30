@@ -14,6 +14,7 @@ import { Subscription } from 'rxjs';
 import { FoodEntryService } from '../../food-entry/service/food-entry.service';
 import { AlertService } from 'src/app/shared/alert-service/alert.service';
 import { AlertComponent } from 'src/app/landing-page/dialog-service/oxalate/shared/alert/alert.component';
+import { DialogDirective } from 'src/app/shared/directives/dialog.directive';
 
 interface FoodItem {
   foodName: string;
@@ -35,7 +36,7 @@ type TableRow = [string, string, string, string | number, string, string];
 @Component({
   selector: 'app-get-report',
   standalone: true,
-  imports: [CommonModule, FormsModule, AlertComponent],
+  imports: [CommonModule, FormsModule, AlertComponent, DialogDirective],
   templateUrl: './get-report.component.html',
   styleUrl: './get-report.component.css',
 })

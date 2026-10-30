@@ -385,3 +385,35 @@
 :host-context(.dark-theme) .no-items i {
   color: var(--text-muted);
 }
+
+/* Inline delete confirmation (replaces an instant, unlabelled delete) */
+.delete-confirm {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: var(--spacing-2);
+}
+
+.delete-confirm-text {
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-medium);
+  color: var(--text-primary);
+}
+
+.confirm-button {
+  min-height: 36px;
+  padding: 0 var(--spacing-4);
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--border-color);
+  background: var(--background-color);
+  color: var(--text-primary);
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-medium);
+  cursor: pointer;
+}
+
+.confirm-button.confirm-delete-button {
+  background: var(--danger-color);
+  border-color: var(--danger-color);
+  color: #fff;
+}

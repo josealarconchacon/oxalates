@@ -1,11 +1,17 @@
 <div class="modal-overlay" (click)="close.emit()">
-  <div class="modal-content" (click)="$event.stopPropagation()">
+  <div
+    class="modal-content"
+    appDialog
+    aria-labelledby="report-title"
+    (dialogClose)="close.emit()"
+    (click)="$event.stopPropagation()"
+  >
     <app-alert *ngIf="showAlert" [message]="alertMessage"></app-alert>
     <div class="modal-header">
       <div class="header-content">
         <div class="title-section">
           <div class="title-wrapper">
-            <h2>Download Report</h2>
+            <h2 id="report-title">Download Report</h2>
             <div class="title-decoration"></div>
           </div>
           <p class="subtitle">Export your daily oxalate intake data</p>

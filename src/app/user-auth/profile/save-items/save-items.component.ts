@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, ElementRef, OnInit } from '@angular/core';
 import { Observable, of, from } from 'rxjs';
 import { catchError, map, switchMap, tap } from 'rxjs/operators';
 import { Oxalate } from 'src/app/landing-page/model/oxalate';
@@ -13,10 +13,12 @@ import { AuthService } from '../../service/auth-service.service';
 export class SaveItemsComponent implements OnInit {
   savedOxalates$: Observable<Omit<Oxalate, 'notes' | 'reference'>[]> = of([]);
   expandedCardId: string | null = null;
+  pendingDeleteId: string | null = null;
 
   constructor(
     private oxalateService: OxalateService,
-    private authService: AuthService
+    private authService: AuthService,
+    private host: ElementRef<HTMLElement>
   ) {}
 
   ngOnInit(): void {
@@ -75,6 +77,33 @@ export class SaveItemsComponent implements OnInit {
       .replace(/\b\w/g, (char) => char.toUpperCase());
   }
 
+  askDelete(id: string): void {
+    this.pendingDeleteId = id;
+    // Land on Cancel, the safe choice, so a stray Enter doesn't delete.
+    this.focusVisible('.cancel-delete-button');
+  }
+
+  cancelDelete(): void {
+    const id = this.pendingDeleteId;
+    this.pendingDeleteId = null;
+    this.focusVisible('.delete-button', (el) => el.dataset['deleteId'] === id);
+  }
+
+  // The list dropdown and the detail view both render the controls, and CSS
+  // hides one of them, so focus the copy that is actually on screen.
+  private focusVisible(
+    selector: string,
+    match: (el: HTMLElement) => boolean = () => true
+  ): void {
+    setTimeout(() => {
+      Array.from(
+        this.host.nativeElement.querySelectorAll<HTMLElement>(selector)
+      )
+        .find((el) => el.getClientRects().length > 0 && match(el))
+        ?.focus();
+    });
+  }
+
   deleteOxalate(id: string): void {
     console.log('Attempting to delete oxalate with ID:', '...');
     from(this.authService.getCurrentUser()).subscribe((user) => {
@@ -82,6 +111,10 @@ export class SaveItemsComponent implements OnInit {
         this.oxalateService
           .deleteOxalate(user.uid, id)
           .then(() => {
+            this.pendingDeleteId = null;
+            if (this.expandedCardId === id) {
+              this.expandedCardId = null;
+            }
             this.loadSavedOxalates();
           })
           .catch((error) => {

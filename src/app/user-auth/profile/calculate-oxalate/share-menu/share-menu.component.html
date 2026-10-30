@@ -5,11 +5,14 @@
 >
   <div
     class="share-menu-content"
+    appDialog
+    aria-labelledby="share-menu-title"
+    (dialogClose)="close.emit()"
     [@menuAnimation]="'show'"
     (click)="$event.stopPropagation()"
   >
     <div class="share-preview">
-      <h3 class="preview-title">Share Your Results</h3>
+      <h3 class="preview-title" id="share-menu-title">Share Your Results</h3>
       <div class="result-card">
         <div class="result-header">
           <i class="material-icons">analytics</i>

@@ -14,14 +14,26 @@
     [matRippleColor]="isDarkTheme ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.1)'"
   >
     <mat-datepicker #picker (opened)="openDatePicker()"></mat-datepicker>
-    <button class="date-button" (click)="picker.open()">
+    <button
+      type="button"
+      class="date-button"
+      aria-haspopup="dialog"
+      [attr.aria-label]="
+        'Change date, currently ' + (selectedDate | date : 'fullDate')
+      "
+      (click)="picker.open()"
+    >
       <div class="formatted-date">
         <span class="day">{{ selectedDate | date : "EEEE" }}</span>
         <span class="date">{{ selectedDate | date : "MMM d, y" }}</span>
       </div>
       <mat-icon class="calendar-icon">calendar_today</mat-icon>
     </button>
+    <!-- Hidden anchor the picker attaches to. The button above is the real
+         control, so keep this out of the Tab order and the accessibility tree. -->
     <input
+      tabindex="-1"
+      aria-hidden="true"
       [matDatepicker]="picker"
       [ngModel]="selectedDate"
       (ngModelChange)="onDateChange($event)"

@@ -1,54 +1,63 @@
 <div class="serving-panel">
+  <!-- The first three are results, not inputs: readonly (not disabled) keeps
+       them readable by screen readers; tabindex -1 keeps them out of the Tab
+       order, as before. -->
   <div class="serving-input">
-    <label>
-      <i class="material-icons">balance</i>
+    <label for="serving-size">
+      <i class="material-icons" aria-hidden="true">balance</i>
       Serving Size
     </label>
     <input
+      id="serving-size"
       type="text"
       [ngModel]="servingSize"
-      [disabled]="true"
       readonly
+      tabindex="-1"
       placeholder="0"
       class="input-field"
     />
   </div>
 
   <div class="serving-input">
-    <label>
-      <i class="material-icons">balance</i>
+    <label for="oxalate-per-serving">
+      <i class="material-icons" aria-hidden="true">balance</i>
       Total Oxalate Per Serving
     </label>
     <input
+      id="oxalate-per-serving"
       type="text"
       [ngModel]="totalOxalatePerServing"
-      [disabled]="true"
       readonly
+      tabindex="-1"
       class="input-field"
     />
   </div>
 
   <div class="serving-input">
-    <label>
-      <i class="material-icons">balance</i>
+    <label for="soluble-oxalate-per-serving">
+      <i class="material-icons" aria-hidden="true">balance</i>
       Total Soluble Oxalate Per Serving
     </label>
     <input
+      id="soluble-oxalate-per-serving"
       type="text"
       [ngModel]="totalSolubleOxalatePerServing"
-      [disabled]="true"
       readonly
+      tabindex="-1"
       class="input-field"
     />
   </div>
 
   <div class="serving-input">
-    <label>
-      <i class="material-icons">balance</i>
+    <label for="number-of-servings">
+      <i class="material-icons" aria-hidden="true">balance</i>
       Number of Servings
     </label>
     <input
+      id="number-of-servings"
       type="text"
+      inputmode="decimal"
+      autocomplete="off"
       [ngModel]="numberOfServings"
       (ngModelChange)="onNumberOfServingsChange($event)"
       placeholder="Enter number of servings"

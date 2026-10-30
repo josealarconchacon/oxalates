@@ -13,12 +13,13 @@ import {
   OnDestroy,
 } from '@angular/core';
 import { ThemeService } from 'src/app/shared/services/theme.service';
+import { DialogDirective } from 'src/app/shared/directives/dialog.directive';
 import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-share-menu',
   standalone: true,
-  imports: [DecimalPipe, CommonModule],
+  imports: [DecimalPipe, CommonModule, DialogDirective],
   templateUrl: './share-menu.component.html',
   styleUrls: ['./share-menu.component.css'],
   animations: [menuAnimation, slideIn],

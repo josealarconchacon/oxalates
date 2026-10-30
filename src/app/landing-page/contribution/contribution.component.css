@@ -56,6 +56,13 @@
   cursor: pointer;
   align-items: center;
   padding: var(--spacing-2) 0;
+  /* now a <button>: keep the old look */
+  background: none;
+  border: 0;
+  border-radius: 0;
+  font: inherit;
+  color: inherit;
+  text-align: left;
 }
 
 .step-item:focus-visible {
