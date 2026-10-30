@@ -865,8 +865,8 @@ section:nth-child(even) {
 
 :host-context(.dark-theme) .modal-header,
 :host-context(.dark-theme) .modal-search-wrapper {
-  background-color: var(--dark-background-color);
-  border-color: var(--dark-border-color);
+  background-color: var(--dialog-background);
+  border-color: var(--border-color);
 }
 
 :host-context(.dark-theme) .modal-header h2 {

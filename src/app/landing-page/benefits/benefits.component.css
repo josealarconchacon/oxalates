@@ -495,7 +495,7 @@ body {
 
 /* Dark theme styles */
 :host-context(.dark-theme) .container {
-  background: linear-gradient(to bottom, var(--dark-background), #1a1a2e);
+  background: linear-gradient(to bottom, var(--background-color), #1a1a2e);
   color: var(--dark-text-color, #e1e1e1);
 }
 

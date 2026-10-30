@@ -53,38 +53,6 @@
   color: var(--text-color);
 }
 
-.button-group {
-  display: flex;
-  gap: 1rem;
-  justify-content: flex-end;
-}
-
-.button-group button {
-  padding: 0.5rem 1rem;
-  border: none;
-  border-radius: 4px;
-  background: var(--primary-color);
-  color: white;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  transition: background-color 0.3s ease;
-}
-
-.button-group button:hover {
-  background: var(--primary-color-dark);
-}
-
-.button-group button:disabled {
-  background: var(--disabled-color);
-  cursor: not-allowed;
-}
-
-.button-group button i {
-  font-size: 1rem;
-}
-
 .modal-overlay {
   position: fixed;
   top: 0;
