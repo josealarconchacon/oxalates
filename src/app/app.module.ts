@@ -43,7 +43,9 @@ import { CommonModule } from '@angular/common';
 import { ChangePasswordComponent } from './user-auth/change-password/change-password.component';
 import { SaveItemsComponent } from './user-auth/profile/save-items/save-items.component';
 import { AlertService } from './shared/alert-service/alert.service';
-import { RouterModule } from '@angular/router';
+import { RouterModule, TitleStrategy } from '@angular/router';
+import { PageTitleStrategy } from './shared/services/page-title.strategy';
+import { prefersReducedMotion } from './shared/utils/reduced-motion';
 import { ColorSketchModule } from 'ngx-color/sketch';
 import { CalculateOxalateComponent } from './user-auth/profile/calculate-oxalate/calculate-oxalate.component';
 import { FoodByCategoryComponent } from './landing-page/dialog-service/food-by-category/food-by-category.component';
@@ -90,7 +92,11 @@ export function initializeApp(configService: ConfigService) {
     FormsModule,
     BrowserModule,
     AppRoutingModule,
-    BrowserAnimationsModule,
+    // Angular's own animations ignore the prefers-reduced-motion CSS rule, so
+    // switch the engine off when the visitor has asked for less motion.
+    BrowserAnimationsModule.withConfig({
+      disableAnimations: prefersReducedMotion(),
+    }),
     MatSnackBarModule,
     MatSidenavModule,
     MatToolbarModule,
@@ -123,6 +129,7 @@ export function initializeApp(configService: ConfigService) {
   providers: [
     ConfigService,
     AlertService,
+    { provide: TitleStrategy, useClass: PageTitleStrategy },
     {
       provide: APP_INITIALIZER,
       useFactory: initializeApp,

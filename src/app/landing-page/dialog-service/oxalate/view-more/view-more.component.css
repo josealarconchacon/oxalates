@@ -127,7 +127,7 @@
 
 .section-label,
 .section-title {
-  font-size: 0.6875rem;
+  font-size: 0.75rem;
   font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.12em;
@@ -263,11 +263,13 @@
 }
 
 :host-context(.dark-theme) .value-high {
-  color: #ff3b30;
+  color: #ff7a70;
 }
 
 .value-medium {
-  color: var(--warning-color, #ff9800);
+  /* The amber warning color is 1.63:1 on white, and this is data people rely
+     on. A dark amber reads at 5.9:1. */
+  color: #8a5a00;
   font-weight: 600;
 }
 
@@ -391,7 +393,6 @@
   transition:
     background-color 0.2s ease,
     transform 0.05s ease;
-  outline: none;
   border: none;
 }
 

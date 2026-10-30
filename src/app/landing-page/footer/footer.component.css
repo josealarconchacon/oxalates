@@ -73,7 +73,7 @@
 }
 
 .footer-link:focus-visible {
-  outline: 2px solid var(--primary-color);
+  outline: var(--focus-ring);
   outline-offset: 2px;
 }
 
@@ -113,7 +113,7 @@
 .search-button:focus-visible,
 .calculate-button:focus-visible,
 .suggestions-button:focus-visible {
-  outline: 2px solid var(--primary-color);
+  outline: var(--focus-ring);
   outline-offset: 2px;
 }
 
@@ -156,7 +156,7 @@
 }
 
 .contribution-link:focus-visible {
-  outline: 2px solid var(--primary-color);
+  outline: var(--focus-ring);
   outline-offset: 2px;
 }
 

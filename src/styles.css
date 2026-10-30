@@ -17,7 +17,9 @@
     "Liberation Mono", "Courier New", monospace;
 
   /* Font Sizes - Further reduced scale */
-  --font-size-xs: clamp(0.625rem, 0.6rem + 0.125vw, 0.6875rem); /* 10-11px */
+  /* Was clamp(0.625rem..0.6875rem), 10-11px. Nothing in the app should be
+     smaller than 12px, so this is now a fixed 12px. */
+  --font-size-xs: 0.75rem; /* 12px */
   --font-size-sm: clamp(0.75rem, 0.725rem + 0.125vw, 0.8125rem); /* 12-13px */
   --font-size-base: clamp(0.875rem, 0.85rem + 0.125vw, 0.9375rem); /* 14-15px */
   --font-size-lg: clamp(1rem, 0.975rem + 0.125vw, 1.0625rem); /* 16-17px */
@@ -242,8 +244,21 @@ textarea {
 
 /* Cross-browser focus styles */
 :focus-visible {
-  outline: 3px solid var(--primary-color);
-  outline-offset: 2px;
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+}
+
+/* Bootstrap (loaded from the CDN in index.html) swaps the outline for a 25%
+   blue shadow on these, which is about 1.4:1. Put the app's ring back. */
+.nav-link:focus-visible,
+.btn:focus-visible,
+.btn-check:focus-visible + .btn,
+.page-link:focus,
+.form-control:focus,
+.form-select:focus {
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: none;
 }
 
 /* Improved link styles */
@@ -523,8 +538,9 @@ p {
 }
 
 .btn:focus {
-  outline: 0;
-  box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25);
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: none;
 }
 
 .btn-primary {
@@ -783,8 +799,9 @@ p {
 }
 
 .focus-ring {
-  outline: 0;
-  box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25);
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: none;
 }
 
 /* Responsive Images */
@@ -1022,4 +1039,44 @@ td {
 [data-tooltip] {
   background-color: var(--tooltip-background);
   color: var(--tooltip-text);
+}
+
+
+/* ===== Accessibility utilities ===== */
+
+/* Visually hidden, still read by screen readers */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* Skip link: off-screen until it receives keyboard focus */
+.skip-link {
+  position: absolute;
+  top: 0.5rem;
+  left: 0.5rem;
+  z-index: 3000;
+  padding: 0.75rem 1rem;
+  border-radius: var(--radius-base, 0.375rem);
+  background: var(--action-color);
+  color: var(--on-action);
+  font-weight: 600;
+  text-decoration: none;
+  transform: translateY(-200%);
+}
+
+.skip-link:focus {
+  transform: translateY(0);
+}
+
+/* <main> only takes focus from the skip link, so it doesn't need a ring */
+main:focus {
+  outline: none;
 }

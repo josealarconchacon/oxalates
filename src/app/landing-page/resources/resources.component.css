@@ -67,7 +67,7 @@
   border: 1px solid var(--border-color);
 }
 
-.resource-info h4 {
+.resource-info h3 {
   font-size: var(--font-size-lg);
   color: var(--text-secondary);
   margin: 0;
@@ -86,7 +86,7 @@
     font-size: var(--font-size-xl);
   }
 
-  .resource-info h4 {
+  .resource-info h3 {
     font-size: var(--font-size-base);
   }
 
@@ -100,7 +100,7 @@
     font-size: var(--font-size-lg);
   }
 
-  .resource-info h4 {
+  .resource-info h3 {
     font-size: var(--font-size-base);
   }
 
@@ -114,7 +114,7 @@
     font-size: var(--font-size-lg);
   }
 
-  .resource-info h4 {
+  .resource-info h3 {
     font-size: var(--font-size-base);
   }
 

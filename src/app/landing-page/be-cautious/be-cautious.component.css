@@ -117,7 +117,7 @@ body {
   display: inline-block;
 }
 
-h6 {
+.caution-text {
   font-size: 1.19rem;
   line-height: 1.7;
   color: var(--text-color);
@@ -128,7 +128,7 @@ h6 {
 
 .highlight {
   background-color: rgba(0, 150, 136, 0.1);
-  color: #009688;
+  color: #00695c;
   font-weight: 500;
   padding: 0.2em 0.4em;
   border-radius: 0.25rem;
@@ -209,7 +209,7 @@ h6 {
     font-size: 1.75rem;
   }
 
-  h6 {
+  .caution-text {
     font-size: 1rem;
     line-height: 1.6;
   }
@@ -217,7 +217,7 @@ h6 {
 
 /* Small Mobile Styles */
 @media (max-width: 360px) {
-  h6 {
+  .caution-text {
     font-size: 0.875rem;
     width: 100%;
     opacity: none;
@@ -320,7 +320,7 @@ h6 {
   text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
 }
 
-:host-context(.dark-theme) h6 {
+:host-context(.dark-theme) .caution-text {
   color: #e1e1e1;
 }
 
@@ -335,7 +335,7 @@ h6 {
 
 :host-context(.dark-theme) .highlight {
   background-color: rgba(0, 150, 136, 0.2);
-  color: #4db6ac;
+  color: #6fc2b8;
 }
 
 :host-context(.dark-theme) .highlight:hover {

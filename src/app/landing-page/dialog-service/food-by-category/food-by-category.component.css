@@ -68,7 +68,7 @@
   }
 
   .category-badge {
-    font-size: 0.7rem;
+    font-size: 0.75rem;
     padding: 0.3rem 0.6rem;
   }
 }
@@ -196,7 +196,7 @@
   padding: clamp(0.3rem, 1vw, 0.5rem) clamp(0.6rem, 2vw, 1rem);
   border-radius: 2rem;
   border: 0.01px solid #474747;
-  font-size: clamp(0.7rem, 1.5vw, 0.8rem);
+  font-size: clamp(0.75rem, 1.5vw, 0.8rem);
   font-weight: 600;
   z-index: 2;
   letter-spacing: 0.5px;
@@ -221,7 +221,9 @@
 }
 
 .category-title {
-  font-size: clamp(0.5rem, 2.5vw, 1.25rem);
+  /* Floor was 0.5rem (8px): on a phone this rule also overrides the 1.1rem set
+     in the max-width: 480px query above, because it comes later. */
+  font-size: clamp(1rem, 2.5vw, 1.25rem);
   font-weight: 700;
   color: #2d3436;
   margin: clamp(0.5rem, 2vw, 1rem) 0;

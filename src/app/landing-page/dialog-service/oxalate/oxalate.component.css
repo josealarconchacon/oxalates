@@ -105,7 +105,7 @@
 }
 
 .preview-item:hover .preview-name {
-  color: var(--color-primary);
+  color: var(--action-color);
   text-decoration: underline;
 }
 
@@ -130,7 +130,7 @@
 .preview-name {
   font-size: 1rem;
   font-weight: 600;
-  color: var(--color-primary);
+  color: var(--action-color);
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -149,7 +149,7 @@
 }
 
 .preview-badge {
-  font-size: 0.7rem;
+  font-size: 0.75rem;
   font-weight: 600;
   padding: 3px 10px;
   border-radius: 999px;
@@ -161,19 +161,19 @@
 .preview-badge.level-very-high,
 .preview-badge.level-extremely-high {
   background: #fef2f2;
-  color: #dc2626;
+  color: #b91c1c;
   border-color: #fecaca;
 }
 
 .preview-badge.level-medium {
   background: #fffbeb;
-  color: #d97706;
+  color: #92400e;
   border-color: #fde68a;
 }
 
 .preview-badge.level-low {
   background: #f0fdf4;
-  color: #16a34a;
+  color: #15803d;
   border-color: #bbf7d0;
 }
 
@@ -196,7 +196,7 @@
 :host-context(.dark-theme) .preview-badge.level-very-high,
 :host-context(.dark-theme) .preview-badge.level-extremely-high {
   background: rgba(254, 242, 242, 0.15);
-  color: #f87171;
+  color: #fca5a5;
   border-color: rgba(254, 202, 202, 0.3);
 }
 
@@ -239,7 +239,7 @@
   }
 
   .preview-category {
-    font-size: 0.72rem;
+    font-size: 0.75rem;
   }
 }
 
@@ -346,10 +346,16 @@
   margin: 0 0 4px 0;
 }
 
+/* #0d7a4e is 2.56:1 on the dark card; this green is 5.55:1 */
+[data-theme="dark"] .result-category-breadcrumb,
+:host-context(.dark-theme) .result-category-breadcrumb {
+  color: #3fb97f;
+}
+
 .result-title {
   font-size: 1rem;
   font-weight: 600;
-  color: var(--color-primary);
+  color: var(--action-color);
   margin: 0 0 2px 0;
   cursor: pointer;
   text-decoration: none;
@@ -370,7 +376,7 @@
 /* Inline badge (mobile) */
 .level-badge {
   display: inline;
-  font-size: 0.7rem;
+  font-size: 0.75rem;
   padding: 2px 8px;
   border-radius: 999px;
   font-weight: 600;
@@ -393,19 +399,19 @@
 
 .level-badge.badge-high {
   background: #fef2f2;
-  color: #dc2626;
+  color: #b91c1c;
   border: 1px solid #fecaca;
 }
 
 .level-badge.badge-medium {
   background: #fffbeb;
-  color: #d97706;
+  color: #92400e;
   border: 1px solid #fde68a;
 }
 
 .level-badge.badge-low {
   background: #f0fdf4;
-  color: #16a34a;
+  color: #15803d;
   border: 1px solid #bbf7d0;
 }
 
@@ -419,7 +425,7 @@
 [data-theme="dark"] .level-badge.badge-high,
 :host-context(.dark-theme) .level-badge.badge-high {
   background: rgba(254, 242, 242, 0.15);
-  color: #f87171;
+  color: #fca5a5;
   border-color: rgba(254, 202, 202, 0.3);
 }
 
@@ -524,9 +530,12 @@
   color: var(--color-text);
 }
 
-.pagination-page.active {
-  background: var(--color-primary);
-  color: #ffffff;
+/* Needs the extra .pagination button: with Angular's scoping attributes,
+   ".pagination button" (above) outranks ".pagination-page.active", so the
+   current page was never highlighted. */
+.pagination button.pagination-page.active {
+  background: var(--action-color);
+  color: var(--on-action);
 }
 
 .pagination-nav {
@@ -554,7 +563,7 @@
 }
 
 .pagination button:hover:not(:disabled) {
-  color: var(--color-primary);
+  color: var(--action-color);
 }
 
 .pagination button:disabled {

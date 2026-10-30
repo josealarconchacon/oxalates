@@ -20,6 +20,9 @@
 .search-input-container:focus-within {
   border-color: var(--color-primary);
   box-shadow: 0 2px 12px rgba(var(--color-primary-rgb, 68, 142, 204), 0.15);
+  /* The input inside has outline: none, so the ring goes on the pill */
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
 }
 
 .search-prefix-icon {
@@ -85,8 +88,8 @@
   gap: 0.5rem;
   padding: 0.5rem 1rem;
   border: none;
-  background: var(--color-primary);
-  color: #ffffff;
+  background: var(--action-color);
+  color: var(--on-action);
   border-radius: 2rem;
   font-size: 0.875rem;
   font-weight: 500;
@@ -116,7 +119,7 @@
 }
 
 .search-action-button:focus-visible {
-  outline: 2px solid var(--color-primary);
+  outline: var(--focus-ring);
   outline-offset: 2px;
 }
 

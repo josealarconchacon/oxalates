@@ -371,7 +371,7 @@
 .nav-button:focus-visible,
 .indicator:focus-visible,
 .continue-button:focus-visible {
-  outline: 2px solid var(--primary-color);
+  outline: var(--focus-ring);
   outline-offset: 2px;
 }
 

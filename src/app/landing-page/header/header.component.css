@@ -75,7 +75,8 @@
 :host-context(.dark-theme) .theme-toggle-btn:hover {
   background-color: var(--hover-background);
   border-color: var(--primary-color);
-  color: var(--primary-color);
+  /* --primary-color text on the hover surface was 3.31:1 */
+  color: var(--action-color);
 }
 
 :host-context(.dark-theme) .mobile-sidebar-nav {

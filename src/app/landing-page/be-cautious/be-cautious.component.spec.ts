@@ -25,9 +25,16 @@ describe('BeCautiousComponent', () => {
   });
 
   it('should render description paragraph', () => {
-    const h6 = fixture.nativeElement.querySelector('h6');
-    expect(h6.textContent).toContain('lowering dietary oxalate');
-    expect(h6.textContent).toContain('reduce the risks of');
+    const description = fixture.nativeElement.querySelector('.caution-text');
+    expect(description.textContent).toContain('lowering dietary oxalate');
+    expect(description.textContent).toContain('reduce the risks of');
+  });
+
+  it('should mark the description up as a paragraph, not a heading', () => {
+    // It used to be an <h6>, which put a heading level-skip under the h2
+    const description = fixture.nativeElement.querySelector('.caution-text');
+    expect(description.tagName).toBe('P');
+    expect(fixture.nativeElement.querySelector('h6')).toBeNull();
   });
 
   it('should highlight the word "dumping"', () => {

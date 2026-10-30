@@ -1,5 +1,6 @@
 <div class="app-container">
-  <main class="app-main">
+  <div class="app-main">
+    <h1 class="sr-only">Your profile</h1>
     <ng-container *ngIf="(isMobile$ | async) === false">
       <aside class="sidebar">
         <div class="profile-card">
@@ -110,7 +111,7 @@
         <app-save-items *ngSwitchCase="'saveItem'"></app-save-items>
       </ng-container>
     </section>
-  </main>
+  </div>
   <div
     *ngIf="isColorPickerVisible"
     class="color-picker-backdrop"

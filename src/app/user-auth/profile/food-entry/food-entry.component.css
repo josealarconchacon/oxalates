@@ -146,9 +146,13 @@ thead .header-detail th {
   color: var(--text-primary);
 }
 
-:host-context(.dark-theme) .food-name-btn:hover {
+:host-context(.dark-theme) button.food-name-btn:hover {
   background-color: rgba(255, 255, 255, 0.05);
   color: var(--primary-color);
+}
+
+.food-name-static {
+  cursor: default;
 }
 
 .expand-icon {
@@ -283,7 +287,6 @@ thead .header-detail th {
 :host-context(.dark-theme) .delete-btn:focus {
   background: #3a3a3a;
   color: var(--danger-color);
-  outline: none;
 }
 
 .calculator-dialog {
@@ -354,7 +357,7 @@ thead .header-detail th {
 }
 
 .dialog-close:focus-visible {
-  outline: 2px solid var(--primary-color);
+  outline: var(--focus-ring);
   outline-offset: 2px;
 }
 

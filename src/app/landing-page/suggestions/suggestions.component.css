@@ -4,6 +4,10 @@
 :host {
   display: block;
   font-family: 'DM Sans', system-ui, -apple-system, sans-serif;
+  /* This page keeps its light surfaces in dark mode, so it needs the light
+     theme's ring (6.44:1 here); the dark theme's light blue is 2.3:1 on white.
+     Overrides --focus-ring itself because var() inside it resolves at :root. */
+  --focus-ring: 3px solid #0a58ca;
 }
 
 /* ===== PAGE BACKGROUND ===== */
@@ -37,7 +41,7 @@
 }
 
 .eyebrow {
-  font-size: 11px;
+  font-size: 0.75rem;
   font-weight: 600;
   letter-spacing: 0.15em;
   text-transform: uppercase;
@@ -45,7 +49,7 @@
   margin: 0 0 8px 0;
 }
 
-.section-header h2 {
+.section-header h1 {
   font-size: 30px;
   font-weight: 700;
   line-height: 1.2;
@@ -106,11 +110,10 @@
 }
 
 .form-input::placeholder {
-  color: #9ca3af;
+  color: #6b7280; /* was #9ca3af, 2.43:1 on this field */
 }
 
 .form-input:focus {
-  outline: none;
   border-color: #2563eb;
   box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
   background: white;
@@ -206,7 +209,7 @@
 }
 
 .submit-button:focus-visible {
-  outline: 2px solid #2563eb;
+  outline: var(--focus-ring);
   outline-offset: 2px;
 }
 
@@ -310,7 +313,7 @@
     padding: 32px 20px;
   }
 
-  .section-header h2 {
+  .section-header h1 {
     font-size: 22px;
   }
 

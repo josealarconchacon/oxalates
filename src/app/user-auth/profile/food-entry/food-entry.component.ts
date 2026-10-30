@@ -1,3 +1,4 @@
+import { BreakpointObserver } from '@angular/cdk/layout';
 import { CommonModule } from '@angular/common';
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { FormsModule } from '@angular/forms';
@@ -54,15 +55,29 @@ export class FoodEntryComponent implements OnInit, OnDestroy {
   selectedMealType: 'breakfast' | 'lunch' | 'dinner' | 'snacks' = 'breakfast';
   isDarkTheme: boolean = false;
   isLoading: boolean = true;
+  /**
+   * True at the same width where the CSS swaps the table columns for the
+   * expandable per-row details (max-width: 768px). Only then is a food's name
+   * a real expand/collapse control.
+   */
+  isCompact = false;
+  private layoutSubscription: Subscription | null = null;
 
   constructor(
     private foodEntryService: FoodEntryService,
     private themeService: ThemeService,
     private authService: AuthService,
-    private afAuth: AngularFireAuth
+    private afAuth: AngularFireAuth,
+    private breakpointObserver: BreakpointObserver
   ) {}
 
   ngOnInit() {
+    this.layoutSubscription = this.breakpointObserver
+      .observe('(max-width: 768px)')
+      .subscribe((state) => {
+        this.isCompact = state.matches;
+      });
+
     // Subscribe to theme changes
     this.themeService.isDarkTheme$.subscribe((isDark) => {
       this.isDarkTheme = isDark;
@@ -92,6 +107,7 @@ export class FoodEntryComponent implements OnInit, OnDestroy {
     if (this.authSubscription) {
       this.authSubscription.unsubscribe();
     }
+    this.layoutSubscription?.unsubscribe();
   }
 
   fetchFoodEntries() {

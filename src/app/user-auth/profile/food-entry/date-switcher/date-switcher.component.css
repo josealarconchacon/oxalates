@@ -91,6 +91,12 @@
   transform: scale(1.1);
 }
 
+/* Material's icon button only shows a faint state layer on focus */
+.nav-button:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+}
+
 /* Material Date Picker Customization */
 ::ng-deep .mat-datepicker-content {
   background: var(--background-color);
