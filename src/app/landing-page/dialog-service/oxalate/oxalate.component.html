@@ -4,6 +4,7 @@
   [attr.data-theme]="isDarkTheme ? 'dark' : 'light'"
 >
   <h1 class="search-title">Search for a food</h1>
+  <p class="sr-only" role="status" aria-atomic="true">{{ resultsStatus }}</p>
   <div class="search-wrapper">
     <app-search-input
       type="text"
@@ -29,7 +30,7 @@
   </div>
 
   <div *ngIf="isLoading" class="loading-container">
-    <div class="loading-spinner"></div>
+    <div class="loading-spinner" aria-hidden="true"></div>
     <p>Loading results...</p>
   </div>
 

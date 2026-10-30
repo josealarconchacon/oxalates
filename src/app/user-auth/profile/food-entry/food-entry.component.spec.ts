@@ -42,6 +42,25 @@ describe('FoodEntryComponent', () => {
     expect(component).toBeTruthy();
   });
 
+  describe('loading announcement', () => {
+    const status = () =>
+      (
+        fixture.nativeElement.querySelector('[role="status"]') as HTMLElement
+      ).textContent!.trim();
+
+    it('keeps one status region in the page and updates its text', () => {
+      component.isLoading = true;
+      fixture.detectChanges();
+      const region = fixture.nativeElement.querySelector('[role="status"]');
+      expect(status()).toBe('Loading your food entries.');
+
+      component.isLoading = false;
+      fixture.detectChanges();
+      expect(fixture.nativeElement.querySelector('[role="status"]')).toBe(region);
+      expect(status()).toBe('Food entries loaded.');
+    });
+  });
+
   describe('expandable food rows', () => {
     const el = (selector: string) =>
       fixture.nativeElement.querySelector(selector) as HTMLElement | null;

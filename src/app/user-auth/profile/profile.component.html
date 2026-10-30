@@ -9,9 +9,10 @@
             [style.backgroundColor]="currentHeaderColor"
           >
             <img
-              [src]="userProfile?.photoURL || 'assets/default-avatar.png'"
+              [src]="userProfile?.photoURL || 'assets/images/default-avatar.svg'"
               alt="Profile Picture"
               class="profile-picture"
+              (error)="onAvatarError($event)"
               loading="lazy"
               width="88"
               height="88"
@@ -20,7 +21,7 @@
               id="file-upload"
               type="file"
               (change)="onFileSelected($event)"
-              accept="image/*"
+              accept="image/jpeg,image/png,image/webp,image/gif"
               hidden
             />
             <label for="file-upload" class="edit-avatar">

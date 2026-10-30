@@ -1,0 +1,63 @@
+:host {
+  display: block;
+}
+
+.not-found {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 70vh;
+  min-height: 70dvh;
+  padding: clamp(5rem, 14vw, 8rem) clamp(1rem, 4vw, 1.5rem) 3rem;
+  text-align: center;
+}
+
+.not-found-title {
+  margin: 0 0 var(--spacing-3, 0.75rem);
+  font-size: clamp(1.75rem, 5vw, 2.5rem);
+  color: var(--text-primary);
+}
+
+.not-found-text {
+  max-width: 32rem;
+  margin: 0 0 var(--spacing-6, 1.5rem);
+  font-size: var(--font-size-lg, 1rem);
+  line-height: 1.6;
+  color: var(--text-secondary);
+}
+
+.not-found-actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: var(--spacing-3, 0.75rem);
+}
+
+.not-found-link {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 2.75rem;
+  padding: 0 var(--spacing-6, 1.5rem);
+  border: 1px solid var(--action-color);
+  border-radius: var(--radius-lg, 0.75rem);
+  color: var(--action-color);
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.not-found-link:hover {
+  color: var(--action-color-hover);
+  border-color: var(--action-color-hover);
+}
+
+.not-found-link.primary {
+  background: var(--action-color);
+  color: var(--on-action);
+}
+
+.not-found-link.primary:hover {
+  background: var(--action-color-hover);
+  color: var(--on-action);
+}

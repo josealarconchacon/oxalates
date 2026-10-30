@@ -76,9 +76,14 @@
             ></app-search-input>
           </div>
 
+          <!-- Announces the search progress and the result count -->
+          <p class="sr-only" role="status" aria-atomic="true">
+            {{ searchStatus }}
+          </p>
+
           <!-- Loading State -->
           <div *ngIf="isLoading" class="loading-container">
-            <div class="loading-spinner"></div>
+            <div class="loading-spinner" aria-hidden="true"></div>
             <p>Searching...</p>
           </div>
 

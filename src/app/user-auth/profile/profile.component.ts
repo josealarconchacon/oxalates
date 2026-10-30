@@ -12,6 +12,8 @@ import { NavigationService } from '../service/navigation.service';
 import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
 import { ThemeService } from '../../shared/services/theme.service';
 
+import { showDefaultAvatar } from 'src/app/shared/utils/avatar';
+
 @Component({
   selector: 'app-profile',
   templateUrl: './profile.component.html',
@@ -92,6 +94,9 @@ export class ProfileComponent implements OnInit {
   toggleChangePassword(): void {
     this.isChangePasswordVisible = !this.isChangePasswordVisible;
   }
+
+  /** Falls back to the default avatar when the stored photo can't be shown. */
+  onAvatarError = showDefaultAvatar;
 
   onFileSelected(event: any): void {
     this.selectedFile = event.target.files[0] as File;
