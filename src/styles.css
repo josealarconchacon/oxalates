@@ -188,6 +188,12 @@ svg {
   vertical-align: middle;
 }
 
+/* Snackbars stay a dark surface in both themes, so their action needs a light
+   color: Material's default pink is 3.8:1 on it. */
+.app-snackbar {
+  --mat-snack-bar-button-color: #ffffff;
+}
+
 /* Material Icons are the app's only icon font. Add .icon-inline to an
    <i class="material-icons"> that should size itself from the surrounding
    text (Material's own class pins it at 24px). Icons are decorative: give them
