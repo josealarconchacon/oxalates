@@ -65,6 +65,11 @@ firebase.json
 # Ignore build-related or temporary folders (e.g., 'y' if it's not needed)
 y/
 
+#Agent-related files 
+.agents/
+skills-lock.json
+
+
 
 .qodo
 .claude/

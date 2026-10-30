@@ -18,6 +18,13 @@
       <span class="bar"></span>
     </button>
 
+    <div
+      class="nav-overlay"
+      [class.open]="isNavOpen"
+      (click)="closeNav()"
+      aria-hidden="true"
+    ></div>
+
     <nav
       class="nav"
       id="nav-bar"
@@ -128,6 +135,8 @@
               <label
                 for="profile-image-upload"
                 class="profile-image-upload-label"
+                appClickable
+                aria-label="Change profile picture"
               >
                 <mat-icon>edit</mat-icon>
               </label>

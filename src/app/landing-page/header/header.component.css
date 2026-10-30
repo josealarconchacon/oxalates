@@ -290,8 +290,7 @@
   right: 0;
 }
 
-.nav::before {
-  content: "";
+.nav-overlay {
   position: fixed;
   top: 0;
   left: 0;
@@ -303,12 +302,16 @@
   visibility: hidden;
   transition: opacity 0.3s ease;
   pointer-events: none;
-  z-index: -1;
+  z-index: 1050;
+  cursor: default;
+  border: none;
+  padding: 0;
 }
 
-.nav.open::before {
+.nav-overlay.open {
   opacity: 1;
   visibility: visible;
+  pointer-events: auto;
 }
 
 .nav-link {
