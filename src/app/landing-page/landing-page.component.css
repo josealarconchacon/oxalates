@@ -564,7 +564,7 @@ section:nth-child(even) {
 
 .results-count {
   font-weight: 600;
-  color: var(--primary-color);
+  color: var(--action-color);
 }
 
 .search-term {

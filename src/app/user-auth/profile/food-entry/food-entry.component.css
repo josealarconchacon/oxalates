@@ -87,7 +87,7 @@ thead .header-detail th {
   padding: 1rem;
   text-align: left;
   font-weight: 600;
-  color: var(--primary-color);
+  color: var(--action-color);
   border-bottom: 1px solid rgba(0, 0, 0, 0.1);
   white-space: nowrap;
   transition: all 0.3s ease;
@@ -148,7 +148,7 @@ thead .header-detail th {
 
 :host-context(.dark-theme) button.food-name-btn:hover {
   background-color: rgba(255, 255, 255, 0.05);
-  color: var(--primary-color);
+  color: var(--action-color);
 }
 
 .food-name-static {
@@ -159,7 +159,7 @@ thead .header-detail th {
   display: none;
   margin-left: 0.5rem;
   font-size: 1.25rem;
-  color: var(--primary-color);
+  color: var(--action-color);
   transition: color 0.3s ease;
 }
 
@@ -181,7 +181,7 @@ thead .header-detail th {
 .detail-label {
   font-size: var(--font-size-xs);
   font-weight: 500;
-  color: var(--primary-color);
+  color: var(--action-color);
   transition: color 0.3s ease;
 }
 
@@ -204,7 +204,7 @@ thead .header-detail th {
 .meal-title {
   font-size: var(--font-size-lg);
   font-weight: 600;
-  color: var(--primary-color);
+  color: var(--action-color);
   margin-bottom: 1rem;
   letter-spacing: -0.02em;
   transition: color 0.3s ease;
@@ -215,7 +215,7 @@ thead .header-detail th {
 }
 
 .empty-state {
-  color: rgba(0, 0, 0, 0.5);
+  color: var(--text-muted);
   text-align: center;
   padding: 2rem;
   background: rgba(0, 0, 0, 0.02);
@@ -240,7 +240,7 @@ thead .header-detail th {
   background: rgba(90, 172, 132, 0.1);
   border: 1px solid rgba(90, 172, 132, 0.2);
   border-radius: 0.5rem;
-  color: var(--primary-color);
+  color: var(--action-color);
   font-weight: 500;
   cursor: pointer;
   transition: all 0.2s ease;
@@ -249,7 +249,7 @@ thead .header-detail th {
 :host-context(.dark-theme) .add-button {
   background: rgba(90, 172, 132, 0.1);
   border-color: rgba(90, 172, 132, 0.2);
-  color: var(--primary-color);
+  color: var(--action-color);
 }
 
 :host-context(.dark-theme) .add-button:hover {
@@ -275,18 +275,18 @@ thead .header-detail th {
 }
 
 :host-context(.dark-theme) .delete-btn {
-  color: var(--danger-color);
+  color: var(--text-error);
   background: transparent;
 }
 
 :host-context(.dark-theme) .delete-btn:hover {
   background: #3a3a3a;
-  color: var(--danger-color);
+  color: var(--text-error);
 }
 
 :host-context(.dark-theme) .delete-btn:focus {
   background: #3a3a3a;
-  color: var(--danger-color);
+  color: var(--text-error);
 }
 
 .calculator-dialog {
@@ -395,7 +395,7 @@ thead .header-detail th {
 .soluble-mobile {
   display: none;
   font-size: var(--font-size-xs);
-  color: var(--primary-color);
+  color: var(--action-color);
   margin-left: 0.5rem;
   transition: color 0.3s ease;
 }

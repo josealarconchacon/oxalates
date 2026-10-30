@@ -493,30 +493,6 @@ body {
   }
 }
 
-/* Dark Mode Support */
-@media (prefers-color-scheme: dark) {
-  .container {
-    background: linear-gradient(
-      to bottom,
-      var(--background-color),
-      rgba(247, 247, 254, 0.02)
-    );
-  }
-
-  .benefits-container,
-  .step {
-    background: rgba(255, 255, 255, 0.03);
-    border-color: rgba(255, 255, 255, 0.1);
-  }
-
-  .header-text h2 {
-    background: linear-gradient(135deg, #ffffff 0%, var(--primary-color) 100%);
-    -webkit-background-clip: text;
-
-    background-clip: text;
-  }
-}
-
 /* Dark theme styles */
 :host-context(.dark-theme) .container {
   background: linear-gradient(to bottom, var(--dark-background), #1a1a2e);

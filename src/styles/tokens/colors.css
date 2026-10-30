@@ -3,42 +3,16 @@
    Non-color tokens (spacing, type, radius, shadows-as-elevation, z-index,
    breakpoints) stay in styles.css; this file is colors only.
 
-   Two theme-switch mechanisms coexist below (pre-existing, not introduced
-   here): the oxalate search UI toggles via [data-theme="dark"], everything
-   else toggles via the .dark-theme class. Consolidating those is a separate,
-   bigger change — this file just gives both a single home for now.
+   One theme switch: ThemeService puts .dark-theme on <html>, and the tokens
+   below are redefined under .dark-theme. Nothing else toggles dark mode, so
+   component CSS reads it with :host-context(.dark-theme).
+
+   One token family: --action-color, --text-*, --card-background and friends.
+   The --color-* names further down are aliases of that family, kept so the
+   oxalate search styles keep working; prefer the main names in new code.
    ========================================================================== */
 
-/* --- Oxalate Search Design Tokens (--color-*, driven by [data-theme]) --- */
-[data-theme="light"],
-:root:not([data-theme="dark"]) {
-  --color-primary: #448ecc;
-  --color-primary-rgb: 68, 142, 204;
-  --color-text: #2d2d2d;
-  --color-surface: #ffffff;
-  --color-border: #e1e4e8;
-  --color-muted: #70757a;
-  --color-card: #ffffff;
-  --shadow-card: 0 2px 8px rgba(0, 0, 0, 0.07);
-  --radius-card: 12px;
-  --radius-input: 0.75rem;
-}
-
-[data-theme="dark"],
-.dark-theme {
-  --color-primary: #5fa8e6;
-  --color-primary-rgb: 95, 168, 230;
-  --color-text: #e1e1e1;
-  --color-surface: #2d2d2d;
-  --color-border: #404040;
-  --color-muted: #9ca3af;
-  --color-card: #2d2d2d;
-  --shadow-card: 0 2px 8px rgba(0, 0, 0, 0.3);
-  --radius-card: 12px;
-  --radius-input: 0.75rem;
-}
-
-/* --- App-wide design system colors (driven by .dark-theme) --- */
+/* --- Design system colors (redefined under .dark-theme below) --- */
 :root {
   /* Color System */
   --primary-color: #1da1f2;
@@ -100,6 +74,12 @@
   --text-warning: var(--warning-color);
   --text-info: var(--info-color);
 
+  /* Error banner: a tinted surface, its border, and text that stays readable
+     on it (--text-error is only about 4.2:1 on the tint). */
+  --error-surface: #fef2f2;
+  --error-border: #fecaca;
+  --error-on-surface: #b91c1c; /* 6.5:1 on --error-surface */
+
   /* Background Colors */
   --background-color: #ffffff;
   --surface-color: #f6f7fb;
@@ -127,19 +107,31 @@
   --tooltip-text: #ffffff;
   --scrollbar-track: #f1f1f1;
   --scrollbar-thumb: #c1c1c1;
+
+  /* Oxalate search UI names. Aliases of the tokens above, so the search pages
+     follow the same palette, contrast fixes and theme switch as the rest. */
+  --color-primary: var(--action-color);
+  --color-primary-rgb: 10, 88, 202; /* --action-color as r, g, b */
+  --color-text: var(--text-color);
+  --color-surface: var(--card-background);
+  --color-card: var(--card-background);
+  --color-border: var(--border-color);
+  --color-muted: var(--text-muted);
+  --shadow-card: 0 2px 8px rgba(0, 0, 0, 0.07);
+  --radius-card: 12px;
+  --radius-input: 0.75rem;
 }
 
 /* Dark theme variables */
-.dark-theme,
-[data-theme="dark"] {
+.dark-theme {
   /* Lighter blue that reads on dark surfaces (4.9:1 even on the #3a3a3a
      dialog); fills take dark text, since white on it is only 2.4:1. */
   --action-color: #6db1ea;
   --action-color-hover: #8bc0ee;
   --on-action: #1a1a1a;
-}
+  --color-primary-rgb: 109, 177, 234; /* --action-color as r, g, b */
+  --shadow-card: 0 2px 8px rgba(0, 0, 0, 0.3);
 
-.dark-theme {
   --primary-color: #1a91da;
   --primary-dark: #1577b5;
   --primary-light: #4ba9e1;
@@ -164,6 +156,9 @@
   --text-success: #69db7c;
   --text-warning: #ffd43b;
   --text-info: #4dabf7;
+  --error-surface: rgba(255, 107, 107, 0.12);
+  --error-border: rgba(255, 107, 107, 0.4);
+  --error-on-surface: #ffb3b3; /* 7:1 on --error-surface over the dark card */
 
   /* Rest of dark theme variables */
   --border-color: #404040;

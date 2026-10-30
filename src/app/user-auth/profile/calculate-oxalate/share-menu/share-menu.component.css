@@ -85,7 +85,7 @@
   background-color: var(--primary-light, #eff6ff);
   border-radius: var(--radius-md, 0.6rem);
   padding: 1rem;
-  color: var(--primary-color);
+  color: var(--action-color);
   font-weight: 600;
   transition: all var(--transition-base);
 }
@@ -163,7 +163,7 @@
 .copy-button {
   background: var(--primary-light, #eff6ff);
   border: 1px solid var(--primary-border, #bfdbfe);
-  color: var(--primary-color);
+  color: var(--action-color);
 }
 
 .copy-button:hover {
@@ -171,7 +171,7 @@
 }
 
 .copy-button i {
-  color: var(--primary-color);
+  color: var(--action-color);
   transition: color var(--transition-base);
 }
 

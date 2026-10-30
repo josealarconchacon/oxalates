@@ -189,9 +189,6 @@
   border-color: #ddd6fe;
 }
 
-[data-theme="dark"] .preview-badge.level-high,
-[data-theme="dark"] .preview-badge.level-very-high,
-[data-theme="dark"] .preview-badge.level-extremely-high,
 :host-context(.dark-theme) .preview-badge.level-high,
 :host-context(.dark-theme) .preview-badge.level-very-high,
 :host-context(.dark-theme) .preview-badge.level-extremely-high {
@@ -200,28 +197,24 @@
   border-color: rgba(254, 202, 202, 0.3);
 }
 
-[data-theme="dark"] .preview-badge.level-medium,
 :host-context(.dark-theme) .preview-badge.level-medium {
   background: rgba(255, 251, 235, 0.15);
   color: #fbbf24;
   border-color: rgba(253, 230, 138, 0.3);
 }
 
-[data-theme="dark"] .preview-badge.level-low,
 :host-context(.dark-theme) .preview-badge.level-low {
   background: rgba(240, 253, 244, 0.15);
   color: #4ade80;
   border-color: rgba(187, 247, 208, 0.3);
 }
 
-[data-theme="dark"] .preview-badge.level-very-low,
 :host-context(.dark-theme) .preview-badge.level-very-low {
   background: rgba(240, 249, 255, 0.15);
   color: #38bdf8;
   border-color: rgba(186, 230, 253, 0.3);
 }
 
-[data-theme="dark"] .preview-badge.level-trace,
 :host-context(.dark-theme) .preview-badge.level-trace {
   background: rgba(245, 243, 255, 0.15);
   color: #a78bfa;
@@ -347,7 +340,6 @@
 }
 
 /* #0d7a4e is 2.56:1 on the dark card; this green is 5.55:1 */
-[data-theme="dark"] .result-category-breadcrumb,
 :host-context(.dark-theme) .result-category-breadcrumb {
   color: #3fb97f;
 }
@@ -422,28 +414,24 @@
 }
 
 /* Dark theme level badges */
-[data-theme="dark"] .level-badge.badge-high,
 :host-context(.dark-theme) .level-badge.badge-high {
   background: rgba(254, 242, 242, 0.15);
   color: #fca5a5;
   border-color: rgba(254, 202, 202, 0.3);
 }
 
-[data-theme="dark"] .level-badge.badge-medium,
 :host-context(.dark-theme) .level-badge.badge-medium {
   background: rgba(255, 251, 235, 0.15);
   color: #fbbf24;
   border-color: rgba(253, 230, 138, 0.3);
 }
 
-[data-theme="dark"] .level-badge.badge-low,
 :host-context(.dark-theme) .level-badge.badge-low {
   background: rgba(240, 253, 244, 0.15);
   color: #4ade80;
   border-color: rgba(187, 247, 208, 0.3);
 }
 
-[data-theme="dark"] .level-badge.badge-very-low,
 :host-context(.dark-theme) .level-badge.badge-very-low {
   background: rgba(240, 249, 255, 0.15);
   color: #38bdf8;
@@ -632,12 +620,11 @@
   inset: 0;
   border-radius: inherit;
   pointer-events: none;
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.05);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.25);
 }
 
-[data-theme="light"] .modal-content::after,
-:root:not([data-theme="dark"]) .modal-content::after {
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.25);
+:host-context(.dark-theme) .modal-content::after {
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.05);
 }
 
 .modal-content .content-wrapper {
