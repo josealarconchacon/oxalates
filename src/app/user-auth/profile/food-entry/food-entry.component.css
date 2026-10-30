@@ -230,31 +230,9 @@ thead .header-detail th {
   border-color: rgba(255, 255, 255, 0.1);
 }
 
+/* The look comes from .ui-btn--tonal. */
 .add-button {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 0.5rem;
-  padding: 0.75rem 1.25rem;
   margin: 0.25rem;
-  background: rgba(90, 172, 132, 0.1);
-  border: 1px solid rgba(90, 172, 132, 0.2);
-  border-radius: 0.5rem;
-  color: var(--action-color);
-  font-weight: 500;
-  cursor: pointer;
-  transition: all 0.2s ease;
-}
-
-:host-context(.dark-theme) .add-button {
-  background: rgba(90, 172, 132, 0.1);
-  border-color: rgba(90, 172, 132, 0.2);
-  color: var(--action-color);
-}
-
-:host-context(.dark-theme) .add-button:hover {
-  background: rgba(90, 172, 132, 0.15);
-  border-color: rgba(90, 172, 132, 0.3);
 }
 
 .delete-btn {
@@ -440,10 +418,6 @@ thead .header-detail th {
 
   .food-name-btn {
     padding: 0.375rem;
-  }
-
-  .add-button {
-    padding: 0.5rem 1rem;
   }
 
   :host-context(.dark-theme) .mobile-details {

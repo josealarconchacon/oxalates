@@ -273,7 +273,7 @@
           </div>
 
           <!-- Submit Button -->
-          <button type="submit" class="submit-button" [class.loading]="isSubmitting" [disabled]="isSubmitting">
+          <button type="submit" class="submit-button ui-btn ui-btn--primary ui-btn--block" [class.loading]="isSubmitting" [disabled]="isSubmitting">
             <span class="button-text">{{
               isSignInMode ? "Sign In" : "Create Account"
             }}</span>
@@ -300,7 +300,7 @@
           <!-- Google Sign In -->
           <button
             type="button"
-            class="google-button"
+            class="google-button ui-btn ui-btn--secondary ui-btn--block"
             (click)="onGoogleSignIn()"
           >
             <div class="google-icon">
@@ -338,7 +338,7 @@
             <button
               type="button"
               (click)="toggleAuthMode()"
-              class="toggle-link"
+              class="toggle-link ui-btn ui-btn--text"
             >
               {{ isSignInMode ? "Sign up" : "Sign in" }}
             </button>

@@ -3,7 +3,7 @@
     <h1 class="sr-only">Your profile</h1>
     <ng-container *ngIf="(isMobile$ | async) === false">
       <aside class="sidebar">
-        <div class="profile-card">
+        <div class="profile-card ui-card">
           <div
             class="profile-header"
             [style.backgroundColor]="currentHeaderColor"
@@ -88,7 +88,7 @@
               }}</i>
             </button>
           </div>
-          <div class="info-card">
+          <div class="info-card ui-card ui-card--padded">
             <div class="info-item">
               <label>Name</label>
               <p>{{ userProfile?.displayName || "Username" }}</p>
@@ -97,7 +97,7 @@
               <label>Email</label>
               <p>{{ userProfile?.email || "username@example.com" }}</p>
             </div>
-            <button #changePasswordTrigger (click)="toggleChangePassword()" class="edit-button">
+            <button #changePasswordTrigger (click)="toggleChangePassword()" class="edit-button ui-btn ui-btn--secondary">
               <i class="material-icons icon-inline" aria-hidden="true">vpn_key</i> Change Password
             </button>
           </div>
@@ -168,8 +168,8 @@
       </div>
 
       <div class="color-actions">
-        <button class="btn btn-primary" (click)="saveColor()">Save</button>
-        <button class="btn btn-secondary" (click)="cancelColor()">
+        <button class="ui-btn ui-btn--primary" (click)="saveColor()">Save</button>
+        <button class="ui-btn ui-btn--secondary" (click)="cancelColor()">
           Cancel
         </button>
       </div>

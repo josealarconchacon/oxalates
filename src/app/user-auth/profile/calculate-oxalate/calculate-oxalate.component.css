@@ -86,60 +86,9 @@
   margin-top: var(--spacing-6);
 }
 
-.action-button {
-  display: flex;
-  min-height: 2.75rem;
-  align-items: center;
-  justify-content: center;
-  gap: var(--spacing-2);
-  padding: var(--spacing-4) var(--spacing-8);
-  border-radius: 0.5rem;
-  font-size: 1rem;
-  font-weight: 500;
-  transition: all 0.2s ease;
-  cursor: pointer;
-  border: 1px solid var(--border-color);
-  background-color: var(--surface-color);
-  color: var(--text-primary);
-}
-
+/* The look comes from .ui-btn--primary / .ui-btn--secondary. */
 .action-button i {
   font-size: 1.125rem;
-}
-
-.action-button.calculate {
-  background-color: var(--primary-color);
-  color: white;
-  border-color: transparent;
-}
-
-.action-button.calculate:hover {
-  background-color: var(--primary-dark);
-  transform: translateY(-1px);
-  box-shadow: var(--shadow-md);
-}
-
-.action-button.clear {
-  background-color: var(--surface-color);
-  color: var(--text-primary);
-  border: 1px solid var(--border-color);
-}
-
-:host-context(.dark-theme) .action-button.clear:hover {
-  background-color: rgba(255, 255, 255, 0.05);
-  transform: translateY(-1px);
-}
-
-.action-button:disabled {
-  opacity: 0.6;
-  cursor: not-allowed;
-  transform: none !important;
-}
-
-:host-context(.dark-theme) .action-button:disabled {
-  opacity: 0.4;
-  cursor: not-allowed;
-  transform: none !important;
 }
 
 @media (max-width: 768px) {

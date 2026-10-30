@@ -1,0 +1,126 @@
+/* ==========================================================================
+   Shared components: buttons and cards.
+
+   Buttons are native <button>/<a> elements with a base class and one variant:
+     <button class="ui-btn ui-btn--primary">Save</button>
+   Variants: --primary (the one main action), --secondary (outlined),
+   --tonal (soft fill), --text (link-like). Modifiers: --block (full width),
+   --icon (a square, icon-only button; needs an aria-label).
+
+   Colors come from the tokens in tokens/colors.css only, so contrast and dark
+   mode are handled there: --action-color with --on-action is 6.4:1 in light
+   and about 7.5:1 in dark.
+
+   Specificity: the global button reset in styles.css matches [type="button"]
+   and [type="submit"] at class-level strength and comes later, so the base is
+   written as button.ui-btn and the variants as .ui-btn.ui-btn--x to outrank it.
+   Component CSS is scoped and outranks these too, so a component can still
+   lay out its own button (width, margin); it should not restyle the look.
+   Keep the original class names for layout hooks.
+   ========================================================================== */
+
+button.ui-btn,
+a.ui-btn,
+label.ui-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  min-height: 2.75rem; /* 44px: the touch-target minimum */
+  padding: 0 1.25rem;
+  border: 1px solid transparent;
+  border-radius: var(--radius-lg);
+  background: transparent;
+  color: var(--text-primary);
+  font-family: inherit;
+  font-size: 1rem;
+  font-weight: 600;
+  line-height: 1.2;
+  text-align: center;
+  text-decoration: none;
+  cursor: pointer;
+  transition: background-color 0.2s ease, border-color 0.2s ease,
+    color 0.2s ease;
+}
+
+.ui-btn.ui-btn:disabled,
+.ui-btn.ui-btn[aria-disabled="true"] {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+.ui-btn.ui-btn--primary {
+  background: var(--action-color);
+  color: var(--on-action);
+}
+
+.ui-btn.ui-btn--primary:hover:not(:disabled) {
+  background: var(--action-color-hover);
+}
+
+/* The field-edge grey keeps the outline at 3:1 against the surface. */
+.ui-btn.ui-btn--secondary {
+  border-color: var(--gray-600);
+  color: var(--text-primary);
+}
+
+.ui-btn.ui-btn--secondary:hover:not(:disabled) {
+  background: var(--hover-background);
+}
+
+.ui-btn.ui-btn--tonal {
+  background: rgba(var(--color-primary-rgb), 0.1);
+  color: var(--action-color);
+}
+
+.ui-btn.ui-btn--tonal:hover:not(:disabled) {
+  background: rgba(var(--color-primary-rgb), 0.18);
+}
+
+.ui-btn.ui-btn--text {
+  min-height: 2.75rem;
+  padding: 0 0.5rem;
+  color: var(--action-color);
+}
+
+.ui-btn.ui-btn--text:hover:not(:disabled) {
+  color: var(--action-color-hover);
+  text-decoration: underline;
+}
+
+.ui-btn.ui-btn--block {
+  width: 100%;
+}
+
+.ui-btn.ui-btn--icon {
+  width: 2.75rem;
+  padding: 0;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  button.ui-btn,
+  a.ui-btn,
+  label.ui-btn {
+    transition: none;
+  }
+}
+
+/* --------------------------------------------------------------------------
+   Card: the surface for grouped content (profile, forms, the feedback form).
+     <section class="ui-card ui-card--padded ui-card--raised">
+   The base is the flat surface. --padded adds the standard inner padding (use
+   it unless the card lays out its own header/body), --raised adds a shadow.
+   -------------------------------------------------------------------------- */
+.ui-card {
+  background: var(--card-background);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-xl);
+}
+
+.ui-card--padded {
+  padding: var(--spacing-6);
+}
+
+.ui-card--raised {
+  box-shadow: var(--shadow-sm);
+}
