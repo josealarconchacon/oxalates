@@ -8,6 +8,7 @@ import {
 import { CalculateOxalateComponent } from '../calculate-oxalate/calculate-oxalate.component';
 import { ResultsSectionComponent } from '../calculate-oxalate/results-section/results-section.component';
 import { DateSwitcherComponent } from './date-switcher/date-switcher.component';
+import { DialogDirective } from 'src/app/shared/directives/dialog.directive';
 import { FoodEntryService } from './service/food-entry.service';
 import { Subscription, from, of } from 'rxjs';
 import { ThemeService } from 'src/app/shared/services/theme.service';
@@ -33,6 +34,7 @@ export interface FoodItem {
     CalculateOxalateComponent,
     ResultsSectionComponent,
     DateSwitcherComponent,
+    DialogDirective,
   ],
   templateUrl: './food-entry.component.html',
   styleUrls: ['./food-entry.component.css'],

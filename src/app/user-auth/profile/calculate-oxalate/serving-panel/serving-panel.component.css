@@ -3,10 +3,7 @@
   flex-wrap: wrap;
   justify-content: space-between;
   gap: var(--spacing-4);
-  margin-bottom: var(--spacing-8);
-  max-width: 1200px;
-  margin-left: auto;
-  margin-right: auto;
+  margin-bottom: 0;
 }
 
 .serving-input {
@@ -22,16 +19,24 @@
   transition: all var(--transition-base);
 }
 
+/* No fixed height: labels such as "Total Soluble Oxalate Per Serving" wrap to
+   two lines, and a fixed 1rem box let them spill over the input below. The
+   label grows to fill the card so the four inputs line up along the bottom. */
 .serving-input label {
   display: flex;
-  align-items: center;
+  flex: 1;
+  align-items: flex-start;
   gap: var(--spacing-2);
   color: var(--text-secondary);
   margin-bottom: var(--spacing-2);
   font-size: var(--font-size-sm);
-  height: var(--spacing-4);
   line-height: var(--line-height-normal);
   transition: color var(--transition-base);
+}
+
+.serving-input label .material-icons {
+  flex-shrink: 0;
+  font-size: 1.25rem;
 }
 
 .input-field {
@@ -50,12 +55,18 @@
 .input-field[disabled] {
   background-color: #f5f5f5;
   border: 1px solid #e0e0e0;
-  color: #9e9e9e;
-  cursor: not-allowed;
+  /* These are results people need to read, not disabled controls: keep the
+     text at full contrast (the old #9e9e9e on #f5f5f5 was about 2.5:1). */
+  color: var(--text-primary);
+  cursor: default;
   pointer-events: none;
   user-select: none;
-  opacity: 0.9;
+  opacity: 1;
   box-shadow: none;
+}
+
+.input-field[readonly]::placeholder {
+  color: var(--text-secondary);
 }
 
 /* Dark theme styles for read-only inputs */
@@ -63,8 +74,8 @@
 :host-context(.dark-theme) .input-field[disabled] {
   background-color: #333333;
   border: 1px solid #404040;
-  color: #808080;
-  opacity: 0.85;
+  color: var(--text-primary);
+  opacity: 1;
   box-shadow: none;
 }
 
@@ -200,7 +211,7 @@
 :host-context(.dark-theme) .input-field[readonly] {
   background-color: var(--disabled-background);
   border-color: var(--border-color);
-  color: var(--text-muted);
+  color: var(--text-primary);
   cursor: default;
   pointer-events: none;
   user-select: none;
@@ -217,6 +228,26 @@
 }
 
 @media (max-width: 480px) {
+  /* Compact rows (label left, value right) so the four fields don't turn into
+     a screen and a half of scrolling on a phone. */
+  .serving-input {
+    min-width: 0;
+    flex-direction: row;
+    align-items: center;
+    gap: var(--spacing-3);
+  }
+
+  .serving-input label {
+    margin-bottom: 0;
+    align-items: center;
+  }
+
+  .serving-input .input-field {
+    flex: 0 0 38%;
+    width: 38%;
+    min-width: 0;
+  }
+
   .serving-panel {
     gap: var(--spacing-3);
   }

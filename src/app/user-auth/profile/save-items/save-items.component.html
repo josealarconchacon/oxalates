@@ -31,12 +31,9 @@
                 <div class="item-header">
                   <h3>{{ oxalate.item }}</h3>
                   <div class="item-actions">
-                    <button
-                      (click)="deleteOxalate(oxalate.id)"
-                      class="action-button delete-button"
-                    >
-                      <i class="fas fa-trash-alt"></i>
-                    </button>
+                    <ng-container
+                      *ngTemplateOutlet="deleteControls; context: { $implicit: oxalate }"
+                    ></ng-container>
                   </div>
                 </div>
                 <div *ngFor="let detail of oxalate | keyvalue">
@@ -68,12 +65,9 @@
               <div class="item-header">
                 <h3>{{ oxalate.item }}</h3>
                 <div class="item-actions">
-                  <button
-                    (click)="deleteOxalate(oxalate.id)"
-                    class="action-button delete-button"
-                  >
-                    <i class="fas fa-trash-alt"></i>
-                  </button>
+                  <ng-container
+                    *ngTemplateOutlet="deleteControls; context: { $implicit: oxalate }"
+                  ></ng-container>
                 </div>
               </div>
               <div *ngFor="let detail of oxalate | keyvalue">
@@ -102,4 +96,42 @@
     <h3>No saved items yet</h3>
     <p>Items you save will appear here</p>
   </div>
+</ng-template>
+
+<!-- Delete control shared by the list dropdown and the detail view: a labelled
+     trash button that asks for confirmation inline before deleting. -->
+<ng-template #deleteControls let-oxalate>
+  <div
+    *ngIf="pendingDeleteId === oxalate.id; else deleteTrigger"
+    class="delete-confirm"
+    role="group"
+    [attr.aria-label]="'Confirm deleting ' + oxalate.item"
+  >
+    <span class="delete-confirm-text">Delete this food?</span>
+    <button
+      type="button"
+      class="confirm-button confirm-delete-button"
+      (click)="deleteOxalate(oxalate.id)"
+    >
+      Delete
+    </button>
+    <button
+      type="button"
+      class="confirm-button cancel-delete-button"
+      (click)="cancelDelete()"
+    >
+      Cancel
+    </button>
+  </div>
+  <ng-template #deleteTrigger>
+    <button
+      type="button"
+      class="action-button delete-button"
+      [attr.data-delete-id]="oxalate.id"
+      [attr.aria-label]="'Delete ' + oxalate.item"
+      (click)="askDelete(oxalate.id)"
+    >
+      <i class="fas fa-trash-alt" aria-hidden="true"></i>
+    </button>
+  </ng-template>
 </ng-template>

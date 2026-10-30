@@ -626,11 +626,26 @@
 
       <div class="calculator-dialog" *ngIf="showCalculator" [@dialogAnimation]>
         <div class="dialog-overlay" (click)="closeCalculator()"></div>
-        <div class="dialog-content">
+        <div
+          class="dialog-content"
+          appDialog
+          [attr.aria-label]="'Add food to ' + selectedMealType"
+          (dialogClose)="closeCalculator()"
+        >
           <app-calculate-oxalate
             [mealType]="selectedMealType"
             (mealLogged)="onMealLogged($event)"
           ></app-calculate-oxalate>
+          <!-- After the form in the DOM so the dialog still opens with focus
+               on the search box, not on Close. -->
+          <button
+            type="button"
+            class="dialog-close"
+            aria-label="Close"
+            (click)="closeCalculator()"
+          >
+            <i class="material-icons" aria-hidden="true">close</i>
+          </button>
         </div>
       </div>
     </section>

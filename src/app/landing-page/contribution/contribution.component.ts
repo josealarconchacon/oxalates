@@ -1,11 +1,12 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { DialogDirective } from '../../shared/directives/dialog.directive';
 
 @Component({
   selector: 'app-contribution',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, DialogDirective],
   templateUrl: './contribution.component.html',
   styleUrls: ['./contribution.component.css'],
 })

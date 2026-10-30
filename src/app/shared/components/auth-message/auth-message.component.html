@@ -2,20 +2,30 @@
   class="auth-message-overlay"
   *ngIf="authMessageService.showMessage$ | async"
   [@fadeInOut]
-  role="dialog"
-  aria-label="Welcome Tour"
   (touchstart)="onTouchStart($event)"
   (touchmove)="onTouchMove($event)"
   (touchend)="onTouchEnd()"
-  tabindex="0"
 >
-  <div class="auth-message-content" role="document">
+  <div
+    class="auth-message-content"
+    appDialog
+    aria-label="Welcome tour"
+    (dialogClose)="onContinue()"
+  >
+    <!-- Slide changes the visitor asks for are announced here -->
+    <div class="sr-only" role="status" aria-live="polite">
+      {{ announcement }}
+    </div>
+
     <div
       class="demo-deck"
       (mouseenter)="pauseAutoPlay()"
       (mouseleave)="resumeAutoPlay()"
+      (focusin)="onDeckFocusIn($event)"
+      (focusout)="onDeckFocusOut($event)"
     >
-      <!-- Progress indicators -->
+      <!-- Progress indicators and the pause/play control -->
+      <div class="deck-controls">
       <div
         class="progress-indicators"
         role="tablist"
@@ -32,7 +42,22 @@
           [attr.aria-label]="'Slide ' + (i + 1) + ' of ' + slides.length"
           [attr.tabindex]="currentSlide === i ? 0 : -1"
           (keydown.enter)="goToSlide(i)"
+          (keydown.space)="goToSlide(i); $event.preventDefault()"
         ></div>
+      </div>
+      <button
+        type="button"
+        class="autoplay-toggle"
+        (click)="toggleAutoPlay()"
+        [attr.aria-label]="autoPlaying ? 'Pause slideshow' : 'Play slideshow'"
+      >
+        <i
+          class="fas"
+          [class.fa-pause]="autoPlaying"
+          [class.fa-play]="!autoPlaying"
+          aria-hidden="true"
+        ></i>
+      </button>
       </div>
 
       <!-- Slide content -->
@@ -116,7 +141,7 @@
       class="continue-button"
       (click)="onContinue()"
       [@pulseAnimation]
-      aria-label="Get Started"
+      data-autofocus
     >
       Get Started Now
     </button>

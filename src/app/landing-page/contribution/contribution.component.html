@@ -3,26 +3,30 @@
     <div class="card-header">
       <h1 class="title">Support the Project</h1>
 
-      <nav class="steps-container">
-        <div
+      <nav class="steps-container" aria-label="Contribution steps">
+        <button
+          type="button"
           class="step-item"
           [class.active]="currentStep === 1"
+          [attr.aria-current]="currentStep === 1 ? 'step' : null"
           (click)="setStep(1)"
         >
-          <div class="step-number">1</div>
-          <div class="step-text">Why Contribute?</div>
-        </div>
+          <span class="step-number">1</span>
+          <span class="step-text">Why Contribute?</span>
+        </button>
 
-        <div class="step-divider"></div>
+        <div class="step-divider" aria-hidden="true"></div>
 
-        <div
+        <button
+          type="button"
           class="step-item"
           [class.active]="currentStep === 2"
+          [attr.aria-current]="currentStep === 2 ? 'step' : null"
           (click)="setStep(2)"
         >
-          <div class="step-number">2</div>
-          <div class="step-text">Choose Payment</div>
-        </div>
+          <span class="step-number">2</span>
+          <span class="step-text">Choose Payment</span>
+        </button>
       </nav>
     </div>
 
@@ -121,8 +125,19 @@
 </div>
 
 <div class="modal-backdrop" *ngIf="showModal" (click)="closeModal()">
-  <div class="modal-box" (click)="$event.stopPropagation()">
-    <button class="modal-close-button" (click)="closeModal()">
+  <div
+    class="modal-box"
+    appDialog
+    aria-labelledby="qr-modal-title"
+    (dialogClose)="closeModal()"
+    (click)="$event.stopPropagation()"
+  >
+    <button
+      type="button"
+      class="modal-close-button"
+      aria-label="Close"
+      (click)="closeModal()"
+    >
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
         <path
           d="M18 6L6 18M6 6l12 12"
@@ -132,7 +147,7 @@
       </svg>
     </button>
 
-    <h2 class="modal-title">
+    <h2 class="modal-title" id="qr-modal-title">
       Scan {{ selectedPaymentMethod | titlecase }} QR Code
     </h2>
 

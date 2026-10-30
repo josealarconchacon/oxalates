@@ -1,8 +1,10 @@
 <div class="search-section" [ngClass]="{ 'dark-theme': isDarkTheme }">
   <div class="search-wrapper">
-    <i class="material-icons">search</i>
+    <i class="material-icons" aria-hidden="true">search</i>
     <input
       type="text"
+      aria-label="Search foods"
+      autocomplete="off"
       [ngModel]="foodName"
       (ngModelChange)="onFoodNameChange($event)"
       placeholder="Search foods..."

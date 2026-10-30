@@ -8,7 +8,6 @@ import { MatIconModule } from '@angular/material/icon';
 import { CommonModule } from '@angular/common';
 import { ThemeService } from '../../shared/services/theme.service';
 import { AuthMessageService } from '../../shared/services/auth-message.service';
-import { AuthMessageComponent } from '../../shared/components/auth-message/auth-message.component';
 import { ClickableDirective } from '../../shared/directives/clickable.directive';
 
 @Component({
@@ -19,7 +18,6 @@ import { ClickableDirective } from '../../shared/directives/clickable.directive'
   imports: [
     CommonModule,
     MatIconModule,
-    AuthMessageComponent,
     RouterLink,
     ClickableDirective,
   ],

@@ -46,7 +46,7 @@
   box-shadow: var(--shadow-lg);
   z-index: 10;
   border: 1px solid var(--border-color);
-  max-height: 400px;
+  max-height: min(17rem, 40vh);
   overflow-y: auto;
   scrollbar-width: thin;
   scrollbar-color: var(--primary-color) var(--background-color);
