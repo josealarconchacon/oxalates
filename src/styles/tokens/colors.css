@@ -80,6 +80,52 @@
   --error-border: #fecaca;
   --error-on-surface: #b91c1c; /* 6.5:1 on --error-surface */
 
+  /* Decorative accents: the category icons in the landing page's tips section. */
+  --icon-green: #2e7d32;
+  --icon-amber: #b45309;
+  --icon-purple: #9c27b0;
+  --icon-red: #d32f2f;
+  --icon-pink: #c2185b;
+
+  /* Third-party brand colors. The shared action blue is also Venmo's, so PayPal
+     keeps its own navy to stay distinct (white on it is 12:1). */
+  --brand-paypal: #003087;
+
+  /* Oxalate level badges (very low to high, plus trace): one surface, border
+     and text color per level. Each text color is 4.5:1 or better on its own
+     surface. */
+  --level-high-surface: #fef2f2;
+  --level-high-border: #fecaca;
+  --level-high-text: #b91c1c;
+  --level-medium-surface: #fffbeb;
+  --level-medium-border: #fde68a;
+  --level-medium-text: #92400e;
+  --level-low-surface: #f0fdf4;
+  --level-low-border: #bbf7d0;
+  --level-low-text: #15803d;
+  --level-very-low-surface: #f0f9ff;
+  --level-very-low-border: #bae6fd;
+  --level-very-low-text: #0369a1;
+  --level-trace-surface: #f5f3ff;
+  --level-trace-border: #ddd6fe;
+  --level-trace-text: #7c3aed;
+
+  /* Food category label above a result's name. */
+  --category-text: #0d7a4e;
+
+  /* Highlighted word in the "oxalate dumping" note. */
+  --highlight-teal: #00695c;
+
+  /* Where a section's soft top-to-bottom wash ends. */
+  --section-fade-end: #f7f7fe;
+
+  /* White that stays white in both themes: on the brand-blue panels and as
+     the halo around a focused color swatch. */
+  --white: #ffffff;
+
+  /* The scrim behind modal dialogs and menus. */
+  --overlay-background: rgba(0, 0, 0, 0.4);
+
   /* Faint tints for hover and selected states. They follow the theme because
      they are built from tokens that do. */
   --gray-50: var(--gray-100);
@@ -170,6 +216,30 @@
   --error-border: rgba(255, 107, 107, 0.4);
   --error-on-surface: #ffb3b3; /* 7:1 on --error-surface over the dark card */
   --disabled-background: #262626;
+  --overlay-background: rgba(0, 0, 0, 0.6);
+  --level-high-surface: rgba(254, 242, 242, 0.15);
+  --level-high-border: rgba(254, 202, 202, 0.3);
+  --level-high-text: #fca5a5;
+  --level-medium-surface: rgba(255, 251, 235, 0.15);
+  --level-medium-border: rgba(253, 230, 138, 0.3);
+  --level-medium-text: #fbbf24;
+  --level-low-surface: rgba(240, 253, 244, 0.15);
+  --level-low-border: rgba(187, 247, 208, 0.3);
+  --level-low-text: #4ade80;
+  --level-very-low-surface: rgba(240, 249, 255, 0.15);
+  --level-very-low-border: rgba(186, 230, 253, 0.3);
+  --level-very-low-text: #38bdf8;
+  --level-trace-surface: rgba(245, 243, 255, 0.15);
+  --level-trace-border: rgba(221, 214, 254, 0.3);
+  --level-trace-text: #a78bfa;
+  --category-text: #3fb97f;
+  --highlight-teal: #6fc2b8;
+  --section-fade-end: #1a1a2e;
+  --icon-green: #4caf50;
+  --icon-amber: #ff9800;
+  --icon-purple: #ce93d8;
+  --icon-red: #f44336;
+  --icon-pink: #e91e63;
 
   /* Rest of dark theme variables */
   --border-color: #404040;

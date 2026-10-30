@@ -179,7 +179,7 @@
 /* PayPal's own navy keeps it distinct from the Venmo button now that the
    shared blue is the darker action color (white on it is 12:1). */
 .paypal-button {
-  background-color: #003087;
+  background-color: var(--brand-paypal);
   color: white;
 }
 

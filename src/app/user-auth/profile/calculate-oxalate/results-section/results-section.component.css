@@ -10,9 +10,9 @@
 }
 
 :host-context(.dark-theme) .results-container {
-  background: var(--card-background-dark, #1a1a1a);
-  box-shadow: var(--shadow-md-dark, 0 4px 6px rgba(0, 0, 0, 0.3));
-  border-color: var(--border-color-dark, #2a2a2a);
+  background: var(--background-color);
+  box-shadow: var(--shadow-md);
+  border-color: var(--border-color);
 }
 
 .title-container {
@@ -31,7 +31,7 @@
 }
 
 :host-context(.dark-theme) .title {
-  color: var(--text-color-dark, #ffffff);
+  color: var(--text-primary);
 }
 
 .share-icon {
@@ -53,7 +53,7 @@
 }
 
 :host-context(.dark-theme) .share-icon:hover {
-  background: var(--hover-background-dark, rgba(107, 164, 255, 0.1));
+  background: var(--primary-50);
 }
 
 .share-icon:disabled {
@@ -64,7 +64,7 @@
 
 :host-context(.dark-theme) .share-icon:disabled {
   opacity: 0.5;
-  color: var(--text-muted-dark, #666666);
+  color: var(--text-muted);
 }
 
 .share-icon i {
@@ -90,8 +90,8 @@
 }
 
 :host-context(.dark-theme) .total-oxalates {
-  background: var(--card-background-dark, #1a1a1a);
-  border-color: var(--border-color-dark, #2a2a2a);
+  background: var(--background-color);
+  border-color: var(--border-color);
 }
 
 .total-oxalates span {
@@ -102,7 +102,7 @@
 }
 
 :host-context(.dark-theme) .total-oxalates span {
-  color: var(--text-color-dark, #ffffff);
+  color: var(--text-primary);
 }
 
 @media (max-width: 768px) {

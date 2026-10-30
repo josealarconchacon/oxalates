@@ -54,7 +54,7 @@
   /* Fixed blue: it always sits on the white halo, in both themes */
   outline: 3px solid #0a58ca;
   outline-offset: var(--focus-ring-offset);
-  box-shadow: 0 0 0 8px #ffffff;
+  box-shadow: 0 0 0 8px var(--white);
 }
 
 .picker-icon {

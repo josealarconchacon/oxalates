@@ -60,8 +60,8 @@
 }
 
 .btn-clear-inline:hover {
-  border-color: #e53e3e;
-  color: #e53e3e;
+  border-color: var(--text-error);
+  color: var(--text-error);
   background: rgba(229, 62, 62, 0.05);
 }
 
