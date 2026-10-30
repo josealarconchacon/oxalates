@@ -78,7 +78,7 @@
     </div>
 
     <div *ngIf="displayedOxalates.length === 0" class="no-results">
-      <i class="fas fa-search no-results-icon" aria-hidden="true"></i>
+      <i class="material-icons icon-inline no-results-icon" aria-hidden="true">search</i>
       <h2 class="no-results-heading">No results found</h2>
       <p *ngIf="filterService.getCurrentFilter().category" class="no-results-text">
         No items found in {{ filterService.getCurrentFilter().category }}
@@ -126,11 +126,11 @@
 
   <div class="pagination" *ngIf="displayedOxalates.length > 0 || (randomItems.length > 0 && !hasSearched)">
     <button class="pagination-nav" (click)="changePage(1)" [disabled]="currentPage === 1" title="First page">
-      <i class="fas fa-angle-double-left pagination-icon"></i>
+      <i class="material-icons icon-inline pagination-icon" aria-hidden="true">first_page</i>
       <span class="pagination-nav-text">First</span>
     </button>
     <button class="pagination-nav" (click)="changePage(currentPage - 1)" [disabled]="currentPage === 1" title="Previous">
-      <i class="fas fa-angle-left pagination-icon"></i>
+      <i class="material-icons icon-inline pagination-icon" aria-hidden="true">chevron_left</i>
       <span class="pagination-nav-text">Previous</span>
     </button>
     <ng-container *ngFor="let page of getPages()">
@@ -145,11 +145,11 @@
       </button>
     </ng-container>
     <button class="pagination-nav" (click)="changePage(currentPage + 1)" [disabled]="currentPage === totalPages" title="Next">
-      <i class="fas fa-angle-right pagination-icon"></i>
+      <i class="material-icons icon-inline pagination-icon" aria-hidden="true">chevron_right</i>
       <span class="pagination-nav-text">Next</span>
     </button>
     <button class="pagination-nav" (click)="changePage(totalPages)" [disabled]="currentPage === totalPages" title="Last page">
-      <i class="fas fa-angle-double-right pagination-icon"></i>
+      <i class="material-icons icon-inline pagination-icon" aria-hidden="true">last_page</i>
       <span class="pagination-nav-text">Last</span>
     </button>
   </div>

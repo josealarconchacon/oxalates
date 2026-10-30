@@ -219,8 +219,11 @@
 }
 
 .input-group {
+  position: relative;
   display: flex;
   flex-direction: column;
+  flex-wrap: wrap;
+  align-items: stretch;
   gap: 0.5rem;
 }
 

@@ -15,17 +15,17 @@
       <h3 class="preview-title" id="share-menu-title">Share Your Results</h3>
       <div class="result-card">
         <div class="result-header">
-          <i class="material-icons">analytics</i>
+          <i class="material-icons" aria-hidden="true">analytics</i>
           <span>Your Oxalate Results</span>
         </div>
         <div class="result-content">
           <div *ngFor="let meal of dailyMeals" class="result-item">
-            <i class="material-icons">restaurant_menu</i>
+            <i class="material-icons" aria-hidden="true">restaurant_menu</i>
             <div class="meal-info">
               <strong>{{ meal.title }}</strong>
               <div class="meal-items">
                 <div *ngFor="let food of meal.items" class="food-item">
-                  <i class="material-icons">local_dining</i>
+                  <i class="material-icons" aria-hidden="true">local_dining</i>
                   <span>
                     {{ food.foodName }}: <br />{{ food.oxalatePerServing }} mg
                     of oxalate, {{ food.solubleOxalatePerServing }} mg of
@@ -36,7 +36,7 @@
             </div>
           </div>
           <div class="result-item highlight">
-            <i class="material-icons">timeline</i>
+            <i class="material-icons" aria-hidden="true">timeline</i>
             <div>
               <span>Total Oxalate: </span>
               <strong>
@@ -86,7 +86,7 @@
           params: { delay: shareOptions.length * 50 }
         }"
       >
-        <i class="material-icons">content_copy</i>
+        <i class="material-icons" aria-hidden="true">content_copy</i>
         <span>{{ copySuccess ? "Copied!" : "Copy to clipboard" }}</span>
       </button>
     </div>

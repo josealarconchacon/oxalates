@@ -101,7 +101,7 @@
 
             <!-- Initial State -->
             <div *ngIf="!searchQuery" class="search-initial-state">
-              <i class="fas fa-search"></i>
+              <i class="material-icons icon-inline" aria-hidden="true">search</i>
               <h3>Start typing to search</h3>
               <p>Search for foods to see their oxalate levels</p>
             </div>
@@ -111,7 +111,7 @@
               *ngIf="searchQuery && searchResults.length === 0"
               class="no-results"
             >
-              <i class="fas fa-search"></i>
+              <i class="material-icons icon-inline" aria-hidden="true">search</i>
               <h3>No results found</h3>
               <p>Try a different search term or check spelling</p>
             </div>

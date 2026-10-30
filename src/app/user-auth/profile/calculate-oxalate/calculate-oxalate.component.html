@@ -43,7 +43,7 @@
             [disabled]="isCalculating || !foodName || !servingSize"
             (click)="mealType ? logMeal() : calculateOxalate()"
           >
-            <i class="material-icons">{{ mealType ? "add" : "calculate" }}</i>
+            <i class="material-icons" aria-hidden="true">{{ mealType ? "add" : "calculate" }}</i>
             {{
               isCalculating
                 ? "Calculating..."
@@ -58,7 +58,7 @@
             class="action-button clear"
             (click)="clearResults()"
           >
-            <i class="material-icons">refresh</i>
+            <i class="material-icons" aria-hidden="true">refresh</i>
             New Calculation
           </button>
         </div>
