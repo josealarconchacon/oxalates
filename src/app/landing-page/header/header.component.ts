@@ -37,16 +37,6 @@ export class HeaderComponent implements OnInit {
   isMobile$: Observable<boolean>;
   isDarkTheme$ = this.themeService.isDarkTheme$;
 
-  navItems = [
-    { title: 'Profile Info', section: 'profile' },
-    { title: 'Saved Items', section: 'saveItem', icon: 'fas fa-bookmark' },
-    {
-      title: 'Calculate Daily Intake',
-      section: 'calculate-oxalate',
-      icon: 'fa fa-i-cursor',
-    },
-  ];
-
   private scrollThreshold = 50;
   private lastScrollPosition = 0;
   private scrollTimer: any;
