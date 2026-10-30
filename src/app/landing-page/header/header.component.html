@@ -64,11 +64,9 @@
             (isDarkTheme$ | async) ? 'Switch to light mode' : 'Switch to dark mode'
           "
         >
-          <i
-            class="fas"
-            [class.fa-sun]="isDarkTheme$ | async"
-            [class.fa-moon]="!(isDarkTheme$ | async)"
-          ></i>
+          <i class="material-icons icon-inline" aria-hidden="true">{{
+            (isDarkTheme$ | async) ? "light_mode" : "dark_mode"
+          }}</i>
         </button>
 
         <button
@@ -151,7 +149,7 @@
               [class.active]="(activeSection$ | async) === 'saveItem'"
               (click)="setActiveSection('saveItem'); closeNav()"
             >
-              <i class="fas fa-bookmark" aria-hidden="true"></i>
+              <i class="material-icons icon-inline" aria-hidden="true">bookmark</i>
               <span>Saved Items</span>
             </a>
           </ng-container>
@@ -164,7 +162,7 @@
           </ng-template>
 
           <a class="nav-link" routerLink="/oxalate" (click)="closeNav()">
-            <i class="fas fa-search" aria-hidden="true"></i>
+            <i class="material-icons icon-inline" aria-hidden="true">search</i>
             <span>Search For Foods</span>
           </a>
 
@@ -178,11 +176,11 @@
               navigateToCalculateDailyIntake()
             "
           >
-            <i class="fa fa-calculator" aria-hidden="true"></i>
+            <i class="material-icons icon-inline" aria-hidden="true">calculate</i>
             <span>Calculate Daily Intake</span>
           </a>
           <a class="nav-link" routerLink="/contribution" (click)="closeNav()">
-            <i class="fas fa-life-ring" aria-hidden="true"></i>
+            <i class="material-icons icon-inline" aria-hidden="true">support</i>
             <span>Support The Project</span>
           </a>
 
@@ -194,11 +192,9 @@
               (isDarkTheme$ | async) ? 'Switch to light mode' : 'Switch to dark mode'
             "
           >
-            <i
-              class="fas"
-              [class.fa-sun]="isDarkTheme$ | async"
-              [class.fa-moon]="!(isDarkTheme$ | async)"
-            ></i>
+            <i class="material-icons icon-inline" aria-hidden="true">{{
+              (isDarkTheme$ | async) ? "light_mode" : "dark_mode"
+            }}</i>
             <span>{{ (isDarkTheme$ | async) ? "Light Mode" : "Dark Mode" }}</span>
           </a>
 
@@ -208,7 +204,7 @@
             (click)="onLogout()"
             class="nav-link logout"
           >
-            <i class="fas fa-sign-out-alt" aria-hidden="true"></i>
+            <i class="material-icons icon-inline" aria-hidden="true">logout</i>
             <span>Logout</span>
           </a>
         </div>

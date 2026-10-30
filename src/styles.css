@@ -175,6 +175,27 @@ html {
   -moz-osx-font-smoothing: grayscale;
 }
 
+/* The app's own versions of the two rules it used to get from Bootstrap's
+   reboot: elements the app makes clickable (appClickable sets role="button")
+   show the pointer, and inline icons sit on the text's middle line. */
+[role="button"] {
+  cursor: pointer;
+}
+
+img,
+svg {
+  vertical-align: middle;
+}
+
+/* Material Icons are the app's only icon font. Add .icon-inline to an
+   <i class="material-icons"> that should size itself from the surrounding
+   text (Material's own class pins it at 24px). Icons are decorative: give them
+   aria-hidden="true" so a screen reader doesn't read the ligature's name. */
+.icon-inline {
+  font-size: 1em;
+  vertical-align: -0.125em;
+}
+
 /* Improved body base styles */
 body {
   font-family: var(--font-family-sans);
