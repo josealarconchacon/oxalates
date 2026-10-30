@@ -1,4 +1,11 @@
-import { Component, EventEmitter, Output, OnInit } from '@angular/core';
+import {
+  Component,
+  ElementRef,
+  EventEmitter,
+  Output,
+  OnInit,
+  ViewChild,
+} from '@angular/core';
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { ThemeService } from './shared/services/theme.service';
@@ -12,6 +19,8 @@ export class AppComponent implements OnInit {
   title = 'oxalates';
   isDarkTheme = false;
 
+  @ViewChild('main', { static: true }) main!: ElementRef<HTMLElement>;
+
   searchTerm: string = '';
   @Output() searchEvent = new EventEmitter<string>();
 
@@ -22,6 +31,15 @@ export class AppComponent implements OnInit {
       this.isDarkTheme = isDark;
       document.body.classList.toggle('dark-theme', isDark);
     });
+  }
+
+  /**
+   * A plain href="#main" would make the router navigate to the same URL with
+   * a fragment, and nothing would move. Focus <main> directly instead.
+   */
+  skipToMain(event: Event): void {
+    event.preventDefault();
+    this.main.nativeElement.focus();
   }
 
   search() {

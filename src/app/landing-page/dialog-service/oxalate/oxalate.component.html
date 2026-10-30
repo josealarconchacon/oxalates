@@ -3,7 +3,7 @@
   [ngClass]="{ 'dark-theme': isDarkTheme }"
   [attr.data-theme]="isDarkTheme ? 'dark' : 'light'"
 >
-  <h2 class="search-title">Search for a food</h2>
+  <h1 class="search-title">Search for a food</h1>
   <div class="search-wrapper">
     <app-search-input
       type="text"
@@ -44,7 +44,7 @@
       >
         <div class="result-left">
           <p class="result-category-breadcrumb">{{ oxalate.category }}</p>
-          <h3 class="result-title">{{ oxalate.item }}</h3>
+          <h2 class="result-title">{{ oxalate.item }}</h2>
           <p class="result-meta-line">
             Oxalate per serving: {{ oxalate.calc_oxalate_per_serving }}{{ oxalate.calc_oxalate_per_serving !== 'n/a' ? ' mg' : '' }}
             <span class="meta-sep">·</span>
@@ -82,7 +82,7 @@
 
     <div *ngIf="displayedOxalates.length === 0" class="no-results">
       <i class="fas fa-search no-results-icon" aria-hidden="true"></i>
-      <h3 class="no-results-heading">No results found</h3>
+      <h2 class="no-results-heading">No results found</h2>
       <p *ngIf="filterService.getCurrentFilter().category" class="no-results-text">
         No items found in {{ filterService.getCurrentFilter().category }}
       </p>
@@ -101,7 +101,7 @@
       >
         <div class="result-left">
           <p class="result-category-breadcrumb">{{ oxalate.category }}</p>
-          <h3 class="result-title">{{ oxalate.item }}</h3>
+          <h2 class="result-title">{{ oxalate.item }}</h2>
           <p class="result-meta-line">
             Oxalate per serving: {{ oxalate.calc_oxalate_per_serving }}{{ oxalate.calc_oxalate_per_serving !== 'n/a' ? ' mg' : '' }}
             <span class="meta-sep">·</span>

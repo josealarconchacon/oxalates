@@ -11,17 +11,43 @@ import { FoodEntryComponent } from './user-auth/profile/food-entry/food-entry.co
 import { SuggestionsComponent } from './landing-page/suggestions/suggestions.component';
 
 const routes: Routes = [
-  { path: 'auth', component: AuthComponent },
-  { path: '', component: LandingPageComponent },
-  { path: 'oxalate', component: OxalateComponent },
-  { path: 'view-more', component: ViewMoreComponent },
-  { path: 'contribution', component: ContributionComponent },
-  { path: 'suggestions', component: SuggestionsComponent },
-  { path: 'profile', component: ProfileComponent, canActivate: [AuthGuard] },
+  {
+    path: 'auth',
+    component: AuthComponent,
+    title: 'Sign in or create an account',
+  },
+  {
+    path: '',
+    component: LandingPageComponent,
+    title: 'Oxalate levels in common foods',
+  },
+  {
+    path: 'oxalate',
+    component: OxalateComponent,
+    title: 'Search foods by oxalate level',
+  },
+  { path: 'view-more', component: ViewMoreComponent, title: 'Food details' },
+  {
+    path: 'contribution',
+    component: ContributionComponent,
+    title: 'Support the project',
+  },
+  {
+    path: 'suggestions',
+    component: SuggestionsComponent,
+    title: 'Share feedback',
+  },
+  {
+    path: 'profile',
+    component: ProfileComponent,
+    canActivate: [AuthGuard],
+    title: 'Your profile',
+  },
   {
     path: 'food-entry',
     component: FoodEntryComponent,
     canActivate: [AuthGuard],
+    title: 'Daily oxalate log',
   },
   { path: '', redirectTo: '/auth', pathMatch: 'full' },
   { path: '**', redirectTo: '/auth' },

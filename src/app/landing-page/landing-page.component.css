@@ -32,7 +32,8 @@ body {
   touch-action: manipulation;
 }
 
-main {
+/* was `main`; the app shell owns the <main> landmark now */
+.main-container {
   display: block;
   width: 100%;
   overflow-x: hidden;
