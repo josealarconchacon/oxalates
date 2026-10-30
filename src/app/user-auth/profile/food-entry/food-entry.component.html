@@ -69,16 +69,22 @@
                 >
                   <td class="food-name-col">
                     <button
+                      *ngIf="isCompact; else plainFoodName"
                       type="button"
                       class="food-name-btn"
+                      [attr.aria-expanded]="!!food.isExpanded"
                       (click)="food.isExpanded = !food.isExpanded"
                     >
                       {{ food.foodName }}
-
-                      <span class="expand-icon">
-                        {{ food.isExpanded ? "−" : "+" }}</span
-                      >
+                      <span class="expand-icon" aria-hidden="true">{{
+                        food.isExpanded ? "−" : "+"
+                      }}</span>
                     </button>
+                    <!-- Wider than 768px the details are already table columns, so there is
+                         nothing to expand: show the name as text, not a button that does nothing. -->
+                    <ng-template #plainFoodName>
+                      <span class="food-name-btn food-name-static">{{ food.foodName }}</span>
+                    </ng-template>
                     <div class="mobile-details" *ngIf="food.isExpanded">
                       <div class="detail-row">
                         <span class="detail-label">Serving:</span>
@@ -222,14 +228,22 @@
                 >
                   <td class="food-name-col">
                     <button
+                      *ngIf="isCompact; else plainFoodName"
+                      type="button"
                       class="food-name-btn"
+                      [attr.aria-expanded]="!!food.isExpanded"
                       (click)="food.isExpanded = !food.isExpanded"
                     >
                       {{ food.foodName }}
-                      <span class="expand-icon">{{
+                      <span class="expand-icon" aria-hidden="true">{{
                         food.isExpanded ? "−" : "+"
                       }}</span>
                     </button>
+                    <!-- Wider than 768px the details are already table columns, so there is
+                         nothing to expand: show the name as text, not a button that does nothing. -->
+                    <ng-template #plainFoodName>
+                      <span class="food-name-btn food-name-static">{{ food.foodName }}</span>
+                    </ng-template>
                     <div class="mobile-details" *ngIf="food.isExpanded">
                       <div class="detail-row">
                         <span class="detail-label">Serving:</span>
@@ -369,14 +383,22 @@
                 >
                   <td class="food-name-col">
                     <button
+                      *ngIf="isCompact; else plainFoodName"
+                      type="button"
                       class="food-name-btn"
+                      [attr.aria-expanded]="!!food.isExpanded"
                       (click)="food.isExpanded = !food.isExpanded"
                     >
                       {{ food.foodName }}
-                      <span class="expand-icon">{{
+                      <span class="expand-icon" aria-hidden="true">{{
                         food.isExpanded ? "−" : "+"
                       }}</span>
                     </button>
+                    <!-- Wider than 768px the details are already table columns, so there is
+                         nothing to expand: show the name as text, not a button that does nothing. -->
+                    <ng-template #plainFoodName>
+                      <span class="food-name-btn food-name-static">{{ food.foodName }}</span>
+                    </ng-template>
                     <div class="mobile-details" *ngIf="food.isExpanded">
                       <div class="detail-row">
                         <span class="detail-label">Serving:</span>
@@ -518,14 +540,22 @@
                 >
                   <td class="food-name-col">
                     <button
+                      *ngIf="isCompact; else plainFoodName"
+                      type="button"
                       class="food-name-btn"
+                      [attr.aria-expanded]="!!food.isExpanded"
                       (click)="food.isExpanded = !food.isExpanded"
                     >
                       {{ food.foodName }}
-                      <span class="expand-icon">{{
+                      <span class="expand-icon" aria-hidden="true">{{
                         food.isExpanded ? "−" : "+"
                       }}</span>
                     </button>
+                    <!-- Wider than 768px the details are already table columns, so there is
+                         nothing to expand: show the name as text, not a button that does nothing. -->
+                    <ng-template #plainFoodName>
+                      <span class="food-name-btn food-name-static">{{ food.foodName }}</span>
+                    </ng-template>
                     <div class="mobile-details" *ngIf="food.isExpanded">
                       <div class="detail-row">
                         <span class="detail-label">Serving:</span>

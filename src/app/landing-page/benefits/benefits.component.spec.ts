@@ -30,7 +30,7 @@ describe('BeCautiousComponent', () => {
 
   it('should render the descriptive text', () => {
     const descriptionDe: DebugElement = fixture.debugElement.query(
-      By.css('h6')
+      By.css('.caution-text')
     );
 
     expect(descriptionDe).toBeTruthy();

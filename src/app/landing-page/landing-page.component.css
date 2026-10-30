@@ -711,7 +711,7 @@ section:nth-child(even) {
 
 .search-results-container .level-badge {
   display: inline;
-  font-size: 0.7rem;
+  font-size: 0.75rem;
   padding: 2px 8px;
   border-radius: 999px;
   font-weight: 600;

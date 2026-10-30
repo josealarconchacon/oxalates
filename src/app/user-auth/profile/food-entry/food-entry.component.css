@@ -146,9 +146,13 @@ thead .header-detail th {
   color: var(--text-primary);
 }
 
-:host-context(.dark-theme) .food-name-btn:hover {
+:host-context(.dark-theme) button.food-name-btn:hover {
   background-color: rgba(255, 255, 255, 0.05);
   color: var(--primary-color);
+}
+
+.food-name-static {
+  cursor: default;
 }
 
 .expand-icon {

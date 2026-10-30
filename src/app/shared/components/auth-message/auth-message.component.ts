@@ -9,6 +9,7 @@ import { CommonModule } from '@angular/common';
 import { Subscription } from 'rxjs';
 import { AuthMessageService } from '../../services/auth-message.service';
 import { DialogDirective } from '../../directives/dialog.directive';
+import { prefersReducedMotion } from '../../utils/reduced-motion';
 import {
   fadeInOut,
   slideAnimation,
@@ -68,7 +69,7 @@ export class AuthMessageComponent implements OnInit, OnDestroy {
           this.announcement = '';
           this.pointerPaused = false;
           this.focusPaused = false;
-          if (!this.prefersReducedMotion()) {
+          if (!prefersReducedMotion()) {
             this.startAutoPlay();
           }
         }
@@ -80,14 +81,6 @@ export class AuthMessageComponent implements OnInit, OnDestroy {
     this.removeKeyboardNavigation();
     this.stopAutoPlay();
     this.visibilitySub?.unsubscribe();
-  }
-
-  private prefersReducedMotion(): boolean {
-    return (
-      typeof window !== 'undefined' &&
-      typeof window.matchMedia === 'function' &&
-      window.matchMedia('(prefers-reduced-motion: reduce)').matches
-    );
   }
 
   private setupKeyboardNavigation() {
