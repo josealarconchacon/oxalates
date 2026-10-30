@@ -101,12 +101,9 @@
 }
 
 .profile-card {
-  background-color: var(--card-background);
-  border-radius: var(--radius-xl);
   overflow: hidden;
   margin-bottom: var(--spacing-6);
   transition: all var(--transition-base);
-  border: 1px solid var(--border-color);
 }
 
 .profile-header {
@@ -149,8 +146,8 @@
 }
 
 .edit-avatar:hover {
-  color: var(--active-background);
-  border-color: var(--active-background);
+  color: var(--action-color);
+  border-color: var(--action-color);
   transform: scale(1.1);
 }
 
@@ -277,10 +274,6 @@
 }
 
 .info-card {
-  background-color: var(--card-background);
-  border-radius: var(--radius-xl);
-  padding: var(--spacing-6);
-  border: 1px solid var(--border-color);
   transition: all 0.3s ease;
 }
 
@@ -319,31 +312,9 @@
   margin: 0;
 }
 
+/* The look comes from .ui-btn--secondary. */
 .edit-button {
-  display: inline-flex;
-  align-items: center;
-  gap: var(--spacing-2);
   margin-top: var(--spacing-6);
-  padding: var(--spacing-2) var(--spacing-4);
-  border-radius: var(--radius-lg);
-  font-size: var(--font-size-sm);
-  font-weight: var(--font-weight-medium);
-  color: var(--button-text);
-  background-color: var(--button-background);
-  border: 1px solid var(--border-color);
-  transition: all var(--transition-base);
-}
-
-.edit-button:hover {
-  background-color: var(--primary-color);
-  border-color: var(--primary-color);
-  color: white;
-}
-
-.edit-button:focus-visible {
-  outline: var(--focus-ring);
-  outline-offset: var(--focus-ring-offset);
-  box-shadow: none;
 }
 
 .edit-button i {
@@ -497,39 +468,6 @@
   margin-top: 1.5rem;
   padding-top: 1.5rem;
   border-top: 1px solid var(--border-color);
-}
-
-.color-actions button {
-  padding: 0.75rem 1.5rem;
-  border-radius: 0.75rem;
-  font-weight: 500;
-  font-size: 0.875rem;
-  transition: all 0.2s ease;
-  min-width: 100px;
-}
-
-.color-actions .btn-primary {
-  background-color: var(--primary-color);
-  color: white;
-  border: none;
-}
-
-.color-actions .btn-primary:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-  filter: brightness(110%);
-}
-
-.color-actions .btn-secondary {
-  background-color: white;
-  color: var(--gray-700);
-  border: 1px solid var(--gray-200);
-}
-
-.color-actions .btn-secondary:hover {
-  background-color: var(--gray-50);
-  border-color: var(--gray-300);
-  transform: translateY(-2px);
 }
 
 @keyframes fadeIn {
@@ -788,16 +726,6 @@
   color: var(--text-color);
 }
 
-:host-context(.dark-theme) .color-actions .btn-secondary {
-  background-color: var(--button-background);
-  color: var(--button-text);
-  border-color: var(--border-color);
-}
-
-:host-context(.dark-theme) .color-actions .btn-secondary:hover {
-  background-color: var(--hover-background);
-}
-
 .color-picker-content {
   background-color: var(--card-background);
   border: 1px solid var(--border-color);
@@ -862,34 +790,10 @@
   border-top: 1px solid var(--border-color);
 }
 
+/* The look comes from .ui-btn--primary / .ui-btn--secondary. */
 .color-actions button {
   flex: 1;
-  padding: 0.75rem 1.5rem;
-  border-radius: var(--radius-lg);
-  font-weight: 500;
-  transition: all var(--transition-base);
-  cursor: pointer;
-}
-
-.color-actions .btn-primary {
-  background-color: var(--active-background);
-  color: white;
-  border: none;
-}
-
-.color-actions .btn-primary:hover {
-  opacity: 0.9;
-  transform: translateY(-1px);
-}
-
-.color-actions .btn-secondary {
-  background-color: var(--card-background);
-  color: var(--text-color);
-  border: 1px solid var(--border-color);
-}
-
-.color-actions .btn-secondary:hover {
-  background-color: var(--hover-background);
+  min-width: 100px;
 }
 
 :host-context(.dark-theme) .color-picker-backdrop {
@@ -897,29 +801,19 @@
 }
 
 :host-context(.dark-theme) .color-preset {
-  border-color: var(--dark-border);
+  border-color: var(--border-color);
 }
 
 :host-context(.dark-theme) .color-preset:hover {
-  border-color: var(--dark-text);
-}
-
-:host-context(.dark-theme) .color-actions .btn-secondary {
-  background-color: var(--dark-card-bg);
-  border-color: var(--dark-border);
-  color: var(--dark-text);
-}
-
-:host-context(.dark-theme) .color-actions .btn-secondary:hover {
-  background-color: var(--dark-hover-bg);
+  border-color: var(--text-primary);
 }
 
 :host-context(.dark-theme) .edit-avatar {
-  background-color: var(--dark-card-bg);
-  border-color: var(--dark-border);
+  background-color: var(--card-background);
+  border-color: var(--border-color);
 }
 
 :host-context(.dark-theme) .edit-avatar:hover {
-  background-color: var(--dark-hover-bg);
-  border-color: var(--active-background);
+  background-color: var(--hover-background);
+  border-color: var(--action-color);
 }

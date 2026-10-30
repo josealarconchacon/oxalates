@@ -1,6 +1,6 @@
 <div class="suggestions-page-wrapper">
   <div class="suggestions-container">
-    <div class="form-card">
+    <div class="form-card ui-card ui-card--raised">
       <!-- Success state: replaces form content -->
       <div
         class="success-card"
@@ -139,7 +139,7 @@
 
           <button
             type="submit"
-            class="submit-button"
+            class="submit-button ui-btn ui-btn--primary ui-btn--block"
             [disabled]="feedbackForm.invalid || isLoading"
             [attr.aria-busy]="isLoading"
           >
