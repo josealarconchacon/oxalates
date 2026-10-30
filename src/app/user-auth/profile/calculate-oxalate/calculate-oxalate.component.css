@@ -8,26 +8,29 @@
    reintroducing a second brand color. Sizing tokens that had no global
    equivalent (spacing/radius/font-size/transition) are inlined below. */
 
+/* This component only ever renders inside the Add Food dialog, which already
+   supplies the padding and background. It used to add its own three more
+   layers (about 7.5rem a side in all), squeezing the form into the middle. */
 .app-container {
-  padding: 1.5rem;
+  padding: 0;
   width: 100%;
-  border-radius: 0.75rem;
   box-sizing: border-box;
   position: relative;
-  background-color: var(--background-color);
-  transition: background-color 0.3s ease;
+  /* src/styles.css gives every .app-container the page background. Inside the
+     dialog that painted a darker box over the dialog's own surface in dark
+     mode (#1a1a1a on #3a3a3a), so let the dialog show through. */
+  background-color: transparent;
 }
 
 .content-wrapper {
-  max-width: 1200px;
-  margin: 0 auto;
   position: relative;
-  padding: 0 var(--spacing-8);
 }
 
 .app-header {
   text-align: left;
-  margin-bottom: var(--spacing-8);
+  margin-bottom: var(--spacing-6);
+  /* leave room for the dialog's close button */
+  padding-right: 2.5rem;
 }
 
 .header-content {
@@ -43,7 +46,7 @@
   min-width: 200px;
 }
 
-.app-header h1 {
+.app-header h2 {
   font-size: clamp(1.25rem, 3vw, 1.5rem);
   font-weight: var(--font-weight-semibold);
   color: var(--text-primary);
@@ -69,18 +72,18 @@
 
 .left-column {
   flex: 1;
+  min-width: 0;
   max-width: 100%;
   transition: all 0.3s ease;
   position: relative;
   z-index: 1;
-  padding: var(--spacing-8);
 }
 
 .button-container {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(min(100%, 12.5rem), 1fr));
   gap: var(--spacing-4);
-  margin-top: var(--spacing-8);
+  margin-top: var(--spacing-6);
 }
 
 .action-button {
@@ -140,10 +143,6 @@
 }
 
 @media (max-width: 768px) {
-  .content-wrapper {
-    padding: 0;
-  }
-
   .header-content {
     flex-direction: column;
     align-items: flex-start;

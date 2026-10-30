@@ -5,8 +5,14 @@
     <header class="app-header">
       <div class="header-content">
         <div class="header-title">
-          <h1>Oxalate</h1>
-          <p class="subtitle">Log your daily intake</p>
+          <h2>{{ mealType ? "Add to " + (mealType | titlecase) : "Oxalate" }}</h2>
+          <p class="subtitle">
+            {{
+              mealType
+                ? "Search for a food, then set how many servings you had."
+                : "Log your daily intake"
+            }}
+          </p>
         </div>
       </div>
     </header>
