@@ -128,7 +128,7 @@ body {
 
 .highlight {
   background-color: rgba(0, 150, 136, 0.1);
-  color: #00695c;
+  color: var(--highlight-teal);
   font-weight: 500;
   padding: 0.2em 0.4em;
   border-radius: 0.25rem;
@@ -275,17 +275,17 @@ body {
 }
 
 :host-context(.dark-theme) .header-text h2 {
-  color: #e1e1e1;
+  color: var(--text-color);
   text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
 }
 
 :host-context(.dark-theme) .caution-text {
-  color: #e1e1e1;
+  color: var(--text-color);
 }
 
 :host-context(.dark-theme) .warning-icon {
   filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.3));
-  color: var(--warning-color, #ffa726);
+  color: var(--warning-color);
 }
 
 :host-context(.dark-theme) .warning-pulse {
@@ -294,7 +294,7 @@ body {
 
 :host-context(.dark-theme) .highlight {
   background-color: rgba(0, 150, 136, 0.2);
-  color: #6fc2b8;
+  color: var(--highlight-teal);
 }
 
 :host-context(.dark-theme) .highlight:hover {
@@ -323,7 +323,7 @@ body {
 
   :host-context(.dark-theme) .highlight {
     background-color: rgba(0, 150, 136, 0.4);
-    color: #ffffff;
+    color: var(--text-primary);
   }
 }
 

@@ -94,6 +94,11 @@
   --bp-tablet: 768px;
   --bp-desktop: 1024px;
   --bp-wide: 1440px;
+
+  /* Page chrome the auth and landing layouts offset against (they used to
+     carry these numbers as fallbacks on undefined variables). */
+  --header-height: 64px;
+  --navbar-height: 72px;
 }
 
 /* Dark theme variables (colors live in src/styles/tokens/colors.css) */
@@ -569,28 +574,6 @@ p {
   outline: var(--focus-ring);
   outline-offset: var(--focus-ring-offset);
   box-shadow: none;
-}
-
-.btn-primary {
-  color: #fff;
-  background-color: var(--primary-color);
-  border-color: var(--primary-color);
-}
-
-.btn-primary:hover {
-  background-color: var(--primary-dark);
-  border-color: var(--primary-dark);
-}
-
-.btn-secondary {
-  color: #fff;
-  background-color: var(--secondary-color);
-  border-color: var(--secondary-color);
-}
-
-.btn-secondary:hover {
-  background-color: #5c636a;
-  border-color: #565e64;
 }
 
 /* Utility Classes */

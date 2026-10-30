@@ -71,7 +71,7 @@
 .modal-content {
   display: flex;
   flex-direction: column;
-  background: var(--background-color, #ffffff);
+  background: var(--background-color);
   border-radius: 20px;
   box-shadow: 0 20px 60px rgba(0, 0, 0, 0.35);
   width: 90%;
@@ -91,7 +91,7 @@
   background: linear-gradient(
     90deg,
     var(--primary-color),
-    var(--accent-color, #f44336)
+    var(--error-on-surface)
   );
   opacity: 0.9;
 }
@@ -102,8 +102,8 @@
   align-items: center;
   justify-content: space-between;
   padding: 1.75rem;
-  border-bottom: 1px solid var(--border-color, #eaeaea);
-  background: var(--background-color, #ffffff);
+  border-bottom: 1px solid var(--border-color);
+  background: var(--background-color);
   position: relative;
 }
 
@@ -127,7 +127,7 @@
   margin: 0;
   font-size: 1.75rem;
   font-weight: 800;
-  color: var(--text-color, #333333);
+  color: var(--text-color);
   letter-spacing: -0.5px;
   line-height: 1.2;
   position: relative;
@@ -148,7 +148,7 @@
 .subtitle {
   margin: 0.5rem 0 0;
   font-size: 0.875rem;
-  color: var(--text-muted, #666666);
+  color: var(--text-muted);
   font-weight: 400;
   line-height: 1.4;
 }
@@ -156,7 +156,7 @@
 .close-button {
   background: transparent;
   border: none;
-  color: var(--text-muted, #666666);
+  color: var(--text-muted);
   font-size: 1.125rem;
   cursor: pointer;
   padding: 0.5rem;
@@ -172,8 +172,8 @@
 }
 
 .close-button:hover {
-  background: var(--hover-background, #f5f5f5);
-  color: var(--text-color, #333333);
+  background: var(--hover-background);
+  color: var(--text-color);
   transform: rotate(90deg) scale(1.1);
 }
 
@@ -199,7 +199,7 @@
   display: flex;
   align-items: center;
   padding: 1rem;
-  background: var(--input-background, #f8f9fa);
+  background: var(--input-background);
   border-radius: 16px;
   margin-top: 0.75rem;
   transition: all 0.3s ease;
@@ -208,7 +208,7 @@
 }
 
 .date-display:hover {
-  background: var(--hover-background, #f0f0f0);
+  background: var(--hover-background);
   transform: translateY(-2px);
   box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08);
 }
@@ -270,7 +270,7 @@
 
 .date-label {
   font-size: 0.75rem;
-  color: var(--text-muted, #666666);
+  color: var(--text-muted);
   margin-bottom: 0.25rem;
   font-weight: 500;
   text-transform: uppercase;
@@ -279,7 +279,7 @@
 
 .selected-date {
   font-size: 1.125rem;
-  color: var(--text-color, #333333);
+  color: var(--text-color);
   font-weight: 600;
   line-height: 1.4;
 }
@@ -313,7 +313,7 @@
   min-height: 140px;
   position: relative;
   overflow: hidden;
-  background: var(--background-color, #ffffff);
+  background: var(--background-color);
   box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08);
 }
 
@@ -328,8 +328,8 @@
 }
 
 .download-button.pdf {
-  border: 2px solid var(--accent-color, #f44336);
-  color: var(--accent-color, #f44336);
+  border: 2px solid var(--error-on-surface);
+  color: var(--error-on-surface);
 }
 
 .button-content {
@@ -418,50 +418,50 @@
 /* Dark theme support */
 :host-context(.dark-theme) {
   .modal-content {
-    background: var(--background-color-dark, #1a1a1a);
+    background: var(--background-color);
   }
 
   .modal-header {
-    background: var(--background-color-dark, #1a1a1a);
-    border-color: var(--border-color-dark, #333333);
+    background: var(--background-color);
+    border-color: var(--border-color);
   }
 
   .modal-header h2 {
-    color: var(--text-color-dark, #ffffff);
+    color: var(--text-primary);
   }
 
   .subtitle {
-    color: var(--text-muted-dark, #888888);
+    color: var(--text-muted);
   }
 
   .close-button {
-    color: var(--text-muted-dark, #888888);
+    color: var(--text-muted);
   }
 
   .close-button:hover {
-    background: var(--hover-background-dark, #333333);
-    color: var(--text-color-dark, #ffffff);
+    background: var(--hover-background);
+    color: var(--text-primary);
   }
 
   .date-display {
-    background: var(--input-background-dark, #2a2a2a);
+    background: var(--input-background);
   }
 
   .date-display:hover {
-    background: var(--hover-background-dark, #333333);
+    background: var(--hover-background);
     box-shadow: 0 6px 20px rgba(0, 0, 0, 0.2);
   }
 
   .date-label {
-    color: var(--text-muted-dark, #888888);
+    color: var(--text-muted);
   }
 
   .selected-date {
-    color: var(--text-color-dark, #ffffff);
+    color: var(--text-primary);
   }
 
   .download-button {
-    background: var(--background-color-dark, #1a1a1a);
+    background: var(--background-color);
     box-shadow: 0 6px 20px rgba(0, 0, 0, 0.2);
   }
 

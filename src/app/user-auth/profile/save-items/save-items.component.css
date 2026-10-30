@@ -417,5 +417,5 @@
 .confirm-button.confirm-delete-button {
   background: var(--danger-color);
   border-color: var(--danger-color);
-  color: #fff;
+  color: var(--white);
 }

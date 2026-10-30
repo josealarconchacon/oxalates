@@ -264,7 +264,7 @@
   position: absolute;
   width: 20px;
   height: 2px;
-  background-color: #262626;
+  background-color: var(--text-primary);
   border-radius: 1px;
   transition: background-color 0.2s ease;
 }
@@ -278,7 +278,7 @@
 }
 
 .nav-close:hover {
-  background-color: #f8f8f8;
+  background-color: var(--hover-background);
 }
 
 .nav {

@@ -63,7 +63,7 @@
 }
 
 :host-context(.dark-theme) .food-table {
-  background: #3a3a3a;
+  background: var(--hover-background);
   border: 1px solid var(--border-color);
   box-shadow: var(--shadow-sm);
 }
@@ -111,7 +111,7 @@ thead .header-detail th {
 }
 
 :host-context(.dark-theme) .food-row:hover {
-  background-color: #3a3a3a;
+  background-color: var(--hover-background);
 }
 
 .food-row td {
@@ -238,7 +238,7 @@ thead .header-detail th {
 .delete-btn {
   background: transparent;
   border: none;
-  color: #dc2626;
+  color: var(--text-error);
   padding: 0.5rem;
   cursor: pointer;
   transition: all 0.2s ease;
@@ -258,12 +258,12 @@ thead .header-detail th {
 }
 
 :host-context(.dark-theme) .delete-btn:hover {
-  background: #3a3a3a;
+  background: var(--hover-background);
   color: var(--text-error);
 }
 
 :host-context(.dark-theme) .delete-btn:focus {
-  background: #3a3a3a;
+  background: var(--hover-background);
   color: var(--text-error);
 }
 
@@ -344,7 +344,7 @@ thead .header-detail th {
 }
 
 :host-context(.dark-theme) .dialog-content {
-  background: #3a3a3a;
+  background: var(--hover-background);
   border-color: var(--border-color);
   box-shadow: var(--shadow-lg);
 }
@@ -360,7 +360,7 @@ thead .header-detail th {
 }
 
 :host-context(.dark-theme) .total-row {
-  background-color: #3a3a3a;
+  background-color: var(--hover-background);
   border-color: var(--border-color);
 }
 
@@ -421,7 +421,7 @@ thead .header-detail th {
   }
 
   :host-context(.dark-theme) .mobile-details {
-    background: #3a3a3a;
+    background: var(--hover-background);
     border-color: var(--border-color);
   }
 
