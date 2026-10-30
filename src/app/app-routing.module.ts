@@ -9,8 +9,9 @@ import { AuthGuard } from './user-auth/service/auth.guard';
 import { ContributionComponent } from './landing-page/contribution/contribution.component';
 import { FoodEntryComponent } from './user-auth/profile/food-entry/food-entry.component';
 import { SuggestionsComponent } from './landing-page/suggestions/suggestions.component';
+import { NotFoundComponent } from './landing-page/not-found/not-found.component';
 
-const routes: Routes = [
+export const routes: Routes = [
   {
     path: 'auth',
     component: AuthComponent,
@@ -49,8 +50,7 @@ const routes: Routes = [
     canActivate: [AuthGuard],
     title: 'Daily oxalate log',
   },
-  { path: '', redirectTo: '/auth', pathMatch: 'full' },
-  { path: '**', redirectTo: '/auth' },
+  { path: '**', component: NotFoundComponent, title: 'Page not found' },
 ];
 
 @NgModule({

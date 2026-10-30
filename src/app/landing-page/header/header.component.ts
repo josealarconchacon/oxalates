@@ -9,6 +9,7 @@ import { CommonModule } from '@angular/common';
 import { ThemeService } from '../../shared/services/theme.service';
 import { AuthMessageService } from '../../shared/services/auth-message.service';
 import { ClickableDirective } from '../../shared/directives/clickable.directive';
+import { showDefaultAvatar } from '../../shared/utils/avatar';
 
 @Component({
   selector: 'app-header',
@@ -182,6 +183,9 @@ export class HeaderComponent implements OnInit {
       this.closeNav();
     });
   }
+
+  /** Falls back to the default avatar when the stored photo can't be shown. */
+  onAvatarError = showDefaultAvatar;
 
   onProfileImageChange(event: Event): void {
     const input = event.target as HTMLInputElement;

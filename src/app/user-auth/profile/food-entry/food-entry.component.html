@@ -11,8 +11,14 @@
           (dateChange)="onDateChange($event)"
         ></app-date-switcher>
 
+        <!-- Always in the page, so the change from "Loading" to "loaded" is
+             announced; a status element added together with its text often isn't. -->
+        <p class="sr-only" role="status">
+          {{ isLoading ? "Loading your food entries." : "Food entries loaded." }}
+        </p>
+
         <div *ngIf="isLoading" class="loading-container">
-          <div class="loading-spinner"></div>
+          <div class="loading-spinner" aria-hidden="true"></div>
           <p>Loading your food entries...</p>
         </div>
 

@@ -38,6 +38,22 @@ export class LandingPageComponent
   searchResults: Oxalate[] = [];
   isLoading: boolean = false;
   showOxalateComponent: boolean = false;
+
+  /** What the screen-reader live region says about the search. */
+  get searchStatus(): string {
+    const query = this.searchQuery.trim();
+    if (this.isLoading) {
+      return 'Searching.';
+    }
+    if (!query) {
+      return '';
+    }
+    const count = this.searchResults.length;
+    if (count === 0) {
+      return `No results found for ${query}.`;
+    }
+    return `${count} ${count === 1 ? 'result' : 'results'} found for ${query}.`;
+  }
   private searchSubject: Subject<string> = new Subject<string>();
   private subscriptions: Subscription[] = [];
   private lastQuery: string = '';

@@ -500,6 +500,23 @@ export class OxalateComponent implements OnInit, OnDestroy {
       });
   }
 
+  /** What the screen-reader live region says about the list. */
+  get resultsStatus(): string {
+    if (this.isLoading) {
+      return 'Loading results.';
+    }
+    if (this.showSearchPrompt()) {
+      return '';
+    }
+    const count = this.oxalates.length;
+    const category = this.filterService.getCurrentFilter()?.category;
+    const where = category ? ` in ${category}` : '';
+    if (count === 0) {
+      return `No results found${where}.`;
+    }
+    return `${count} ${count === 1 ? 'result' : 'results'} found${where}.`;
+  }
+
   showSearchPrompt(): boolean {
     const filter = this.filterService.getCurrentFilter();
     const hasActiveFilter = !!(filter?.category || filter?.calc_level);

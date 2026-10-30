@@ -15,6 +15,8 @@ import { AuthMessageService } from '../../shared/services/auth-message.service';
 })
 export class FooterComponent implements OnInit, OnDestroy {
   showBackToHome: boolean = false;
+  /** Read when the footer is created, so the year never goes stale. */
+  readonly currentYear = new Date().getFullYear();
   private routerSubscription!: Subscription;
 
   constructor(

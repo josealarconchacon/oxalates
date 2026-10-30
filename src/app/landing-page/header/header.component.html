@@ -80,10 +80,11 @@
           <img
             [src]="
               userProfile.photoURL ||
-              '../../../assets/images/default-profile.jpg'
+              'assets/images/default-avatar.svg'
             "
             alt="User Profile Picture"
             class="user-image"
+            (error)="onAvatarError($event)"
             loading="lazy"
             width="32"
             height="32"
@@ -111,10 +112,11 @@
               <img
                 [src]="
                   userProfile.photoURL ||
-                  '../../../assets/images/default-profile.jpg'
+                  'assets/images/default-avatar.svg'
                 "
                 alt="User Image"
                 class="user-image"
+            (error)="onAvatarError($event)"
                 loading="lazy"
                 width="32"
                 height="32"
@@ -130,7 +132,7 @@
                 id="profile-image-upload"
                 class="profile-image-upload"
                 (change)="onProfileImageChange($event)"
-                accept="image/*"
+                accept="image/jpeg,image/png,image/webp,image/gif"
                 style="display: none"
               />
               <label
