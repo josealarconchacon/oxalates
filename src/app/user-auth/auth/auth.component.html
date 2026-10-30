@@ -57,11 +57,14 @@
         <form [formGroup]="authForm" (ngSubmit)="onSubmit()" class="auth-form">
           <!-- Email Field -->
           <div class="input-group">
-            <label class="input-label">Email Address</label>
+            <label class="input-label" for="auth-email">Email Address</label>
             <div class="input-wrapper">
               <input
+                id="auth-email"
                 type="email"
                 formControlName="email"
+                [attr.autocomplete]="isSignInMode ? 'username' : 'email'"
+                aria-required="true"
                 placeholder="Enter your email"
                 class="form-input"
                 [attr.aria-invalid]="
@@ -107,11 +110,16 @@
 
           <!-- Password Field -->
             <div class="input-group">
-            <label class="input-label">Password</label>
+            <label class="input-label" for="auth-password">Password</label>
             <div class="input-wrapper">
               <input
+                id="auth-password"
                 type="password"
                 formControlName="password"
+                [attr.autocomplete]="
+                  isSignInMode ? 'current-password' : 'new-password'
+                "
+                aria-required="true"
                 placeholder="Enter your password"
                 class="form-input"
                 [attr.aria-invalid]="
@@ -181,11 +189,16 @@
 
           <!-- Confirm Password Field (Sign Up only) -->
           <div *ngIf="!isSignInMode" class="input-group">
-            <label class="input-label">Confirm Password</label>
+            <label class="input-label" for="auth-confirm-password"
+              >Confirm Password</label
+            >
             <div class="input-wrapper">
               <input
+                id="auth-confirm-password"
                 type="password"
                 formControlName="confirmPassword"
+                autocomplete="new-password"
+                aria-required="true"
                 placeholder="Confirm your password"
                 class="form-input"
                 [attr.aria-invalid]="

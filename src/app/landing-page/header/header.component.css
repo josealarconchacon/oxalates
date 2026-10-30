@@ -425,7 +425,11 @@
     box-shadow: var(--shadow-lg);
     gap: var(--spacing-6);
     z-index: 1100;
-    transition: right var(--transition-base);
+    /* Off-screen alone isn't enough: hidden also removes the closed drawer's
+       links from the tab order and the accessibility tree. The delay lets the
+       slide-out finish before it disappears. */
+    visibility: hidden;
+    transition: right var(--transition-base), visibility 0s linear 0.2s;
   }
 
   :host-context(.dark-theme) .nav {
@@ -435,6 +439,8 @@
 
   .nav.open {
     right: 0;
+    visibility: visible;
+    transition: right var(--transition-base), visibility 0s;
   }
 
   .nav-link {

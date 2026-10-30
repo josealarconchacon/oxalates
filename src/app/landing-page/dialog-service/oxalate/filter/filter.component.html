@@ -1,43 +1,9 @@
-<!-- <div class="dropdown-container">
-  <div class="dropdown filter-group">
-    <select
-      id="time"
-      name="time"
-      [(ngModel)]="filters.category"
-      (ngModelChange)="applyFilters()"
-    >
-      <option [ngValue]="''">Any Category</option>
-      <option *ngFor="let category of categories" [ngValue]="category">
-        {{ category }}
-      </option>
-    </select>
-  </div>
-
-  <div class="dropdown filter-group">
-    <select
-      id="results"
-      name="results"
-      [(ngModel)]="filters.calc_level"
-      (ngModelChange)="applyFilters()"
-    >
-      <option value="" disabled selected>All Level</option>
-      <option *ngFor="let level of calcLevels" [value]="level">
-        {{ level }}
-      </option>
-    </select>
-  </div>
-
-  <div class="filter-actions">
-    <button type="button" class="btn" (click)="clearFilters()">
-      Clear Filters
-    </button>
-  </div>
-</div> -->
 <div class="filter-inline-container" [ngClass]="{ 'dark-theme': isDarkTheme }">
   <!-- Category Dropdown -->
   <select
     id="time"
     name="time"
+    aria-label="Filter by category"
     [(ngModel)]="filters.category"
     (ngModelChange)="applyFilters()"
     class="filter-inline-select"
@@ -53,6 +19,7 @@
   <select
     id="results"
     name="results"
+    aria-label="Filter by oxalate level"
     [(ngModel)]="filters.calc_level"
     (ngModelChange)="applyFilters()"
     class="filter-inline-select"

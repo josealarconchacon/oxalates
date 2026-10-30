@@ -8,6 +8,7 @@
       class="hamburger"
       (click)="toggleNav()"
       [class.open]="isNavOpen"
+      aria-controls="nav-bar"
       [attr.aria-expanded]="isNavOpen"
       [attr.aria-label]="
         isNavOpen ? 'Close navigation menu' : 'Open navigation menu'
@@ -143,39 +144,43 @@
             </div>
             <a
               class="nav-link"
+              routerLink="/profile"
+              [queryParams]="{ section: 'saveItem' }"
               [class.active]="(activeSection$ | async) === 'saveItem'"
-              (click)="setActiveSection('saveItem'); navigateToSavedItems()"
+              (click)="setActiveSection('saveItem'); closeNav()"
             >
-              <i class="fas fa-bookmark"></i>
+              <i class="fas fa-bookmark" aria-hidden="true"></i>
               <span>Saved Items</span>
             </a>
           </ng-container>
 
           <ng-template #mobileLoggedOut>
-            <a class="nav-link" (click)="goToLoginPage(); closeNav()">
+            <a class="nav-link" routerLink="/auth" (click)="closeNav()">
               <mat-icon class="default-user-icon">person_outline</mat-icon>
               <span>Login or Sign Up</span>
             </a>
           </ng-template>
 
-          <a class="nav-link" (click)="search(); closeNav()">
-            <i class="fas fa-search"></i>
+          <a class="nav-link" routerLink="/oxalate" (click)="closeNav()">
+            <i class="fas fa-search" aria-hidden="true"></i>
             <span>Search For Foods</span>
           </a>
 
+          <!-- Auth-gated, so a button-style action rather than a plain link -->
           <a
             class="nav-link"
+            appClickable
             [class.active]="(activeSection$ | async) === 'calculate-oxalate'"
             (click)="
               setActiveSection('calculate-oxalate');
               navigateToCalculateDailyIntake()
             "
           >
-            <i class="fa fa-calculator"></i>
+            <i class="fa fa-calculator" aria-hidden="true"></i>
             <span>Calculate Daily Intake</span>
           </a>
-          <a class="nav-link" (click)="goToSupport()">
-            <i class="fas fa-life-ring"></i>
+          <a class="nav-link" routerLink="/contribution" (click)="closeNav()">
+            <i class="fas fa-life-ring" aria-hidden="true"></i>
             <span>Support The Project</span>
           </a>
 
@@ -197,10 +202,11 @@
 
           <a
             *ngIf="userProfile"
+            appClickable
             (click)="onLogout()"
             class="nav-link logout"
           >
-            <i class="fas fa-sign-out-alt"></i>
+            <i class="fas fa-sign-out-alt" aria-hidden="true"></i>
             <span>Logout</span>
           </a>
         </div>
