@@ -241,7 +241,7 @@
 
 .sidebar-nav a.active {
   background-color: var(--primary-50);
-  color: var(--primary-color);
+  color: var(--action-color);
 }
 
 .sidebar-nav a:hover i,
@@ -724,12 +724,13 @@
   --background-color: #2d2d2d;
   --card-background: #3d3d3d;
   --text-color: #e1e1e1;
-  --text-secondary: #a1a1a1;
+  /* Secondary text sits on the #3d3d3d cards: #a1a1a1 was 4.2:1 there. */
+  --text-secondary: #b0b0b0;
   --border-color: #3d3d3d;
   --gray-100: #3d3d3d;
   --gray-50: #2d2d2d;
-  --gray-500: #a1a1a1;
-  --gray-600: #a1a1a1;
+  --gray-500: #b0b0b0;
+  --gray-600: #b0b0b0;
   --gray-700: #e1e1e1;
   --gray-900: #e1e1e1;
   --primary-50: #1a365d;
@@ -760,7 +761,7 @@
 }
 
 :host-context(.dark-theme) .theme-toggle:hover i {
-  color: var(--primary-color);
+  color: var(--action-color);
 }
 
 :host-context(.dark-theme) .color-picker-content {

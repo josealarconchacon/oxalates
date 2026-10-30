@@ -421,12 +421,12 @@
 }
 
 :host-context(.dark-theme) .save-button {
-  background-color: var(--color-primary);
-  color: #fff;
+  background-color: var(--action-color);
+  color: var(--on-action);
 }
 
 :host-context(.dark-theme) .save-button:hover:not(:disabled) {
-  background-color: var(--primary-dark);
+  background-color: var(--action-color-hover);
 }
 
 :host-context(.dark-theme) .save-button:active:not(:disabled) {
@@ -434,19 +434,19 @@
 }
 
 :host-context(.dark-theme) .action-button {
-  background-color: var(--color-primary);
-  color: #ffffff;
+  background-color: var(--action-color);
+  color: var(--on-action);
   font-weight: 600;
   border-radius: 6px;
 }
 
 :host-context(.dark-theme) .action-button:hover:not(:disabled) {
-  background-color: var(--primary-dark);
+  background-color: var(--action-color-hover);
 }
 
 .secondary-button {
   background-color: transparent;
-  color: var(--primary-color, #6200ee);
+  color: var(--action-color);
   border: 1px solid var(--primary-color, #6200ee);
 }
 

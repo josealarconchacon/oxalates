@@ -67,7 +67,7 @@
 
 .footer-link:hover,
 .footer-link:focus {
-  color: var(--primary-color);
+  color: var(--action-color);
   background-color: var(--nav-active);
   transform: translateY(-1px);
 }

@@ -32,7 +32,7 @@
 }
 
 .close-button:hover {
-  color: var(--primary-color);
+  color: var(--action-color);
 }
 
 .form-group {
@@ -348,7 +348,7 @@
 
 .download-button.csv {
   border: 2px solid var(--primary-color);
-  color: var(--primary-color);
+  color: var(--action-color);
 }
 
 .download-button.pdf {

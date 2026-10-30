@@ -1002,7 +1002,7 @@ textarea {
 
 .sidebar-nav a.active {
   background-color: var(--nav-active);
-  color: var(--primary-color);
+  color: var(--action-color);
 }
 
 /* Tables */

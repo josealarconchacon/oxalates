@@ -52,7 +52,7 @@
 }
 
 :host-context(.dark-theme) .nav-link.active {
-  color: var(--primary-color);
+  color: var(--action-color);
   background-color: var(--nav-active);
   border-color: var(--primary-color);
 }
@@ -93,7 +93,7 @@
 :host-context(.dark-theme) .mobile-sidebar-nav .nav-link:hover,
 :host-context(.dark-theme) .mobile-sidebar-nav .nav-link.active {
   background-color: var(--nav-active);
-  color: var(--primary-color);
+  color: var(--action-color);
   border-color: var(--primary-color);
 }
 
@@ -335,7 +335,7 @@
 }
 
 .nav-link.active {
-  color: var(--primary-color);
+  color: var(--action-color);
   background-color: var(--gray-100);
 }
 

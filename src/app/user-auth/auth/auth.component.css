@@ -294,7 +294,7 @@
 
 .form-input:focus ~ .input-icon,
 .input-wrapper:hover .input-icon {
-  color: var(--primary-color);
+  color: var(--action-color);
   opacity: 1;
 }
 

@@ -8,8 +8,25 @@ describe('ThemeService', () => {
   let getItemSpy: jasmine.Spy;
   let setItemSpy: jasmine.Spy;
   let removeItemSpy: jasmine.Spy;
+  let osPrefersDark: boolean;
+  let osChangeListener: ((event: { matches: boolean }) => void) | null;
 
   beforeEach(() => {
+    osPrefersDark = false;
+    osChangeListener = null;
+    spyOn(window, 'matchMedia').and.callFake(
+      () =>
+        ({
+          get matches() {
+            return osPrefersDark;
+          },
+          addEventListener: (_: string, listener: any) => {
+            osChangeListener = listener;
+          },
+          removeEventListener: () => {},
+        } as any)
+    );
+
     const store: { [key: string]: string } = {};
 
     getItemSpy = jasmine.createSpy('getItem').and.callFake((key: string) => {
@@ -99,13 +116,13 @@ describe('ThemeService', () => {
       );
     });
 
-    it('should save light theme to localStorage when no saved theme exists', () => {
+    it('should not save a theme until the visitor chooses one', () => {
       getItemSpy.and.returnValue(null);
 
       TestBed.configureTestingModule({});
       service = TestBed.inject(ThemeService);
 
-      expect(setItemSpy).toHaveBeenCalledWith('theme', 'light');
+      expect(setItemSpy).not.toHaveBeenCalled();
     });
 
     it('should emit false from isDarkTheme$ observable when no saved theme exists', (done) => {
@@ -133,14 +150,14 @@ describe('ThemeService', () => {
       );
     });
 
-    it('should save light theme when saved theme is empty string', () => {
+    it('should treat an empty saved theme as no choice', () => {
       getItemSpy.and.returnValue('');
 
       TestBed.configureTestingModule({});
       service = TestBed.inject(ThemeService);
 
       expect(service['isDarkTheme'].value).toBe(false);
-      expect(setItemSpy).toHaveBeenCalledWith('theme', 'light');
+      expect(setItemSpy).not.toHaveBeenCalled();
     });
 
     it('should default to light theme for any non-"dark" value', () => {
@@ -154,6 +171,88 @@ describe('ThemeService', () => {
         'dark-theme',
         false
       );
+    });
+  });
+
+  describe('Constructor - OS preference', () => {
+    it('should start dark on a first visit when the OS prefers dark', () => {
+      getItemSpy.and.returnValue(null);
+      osPrefersDark = true;
+
+      TestBed.configureTestingModule({});
+      service = TestBed.inject(ThemeService);
+
+      expect(service['isDarkTheme'].value).toBe(true);
+      expect(document.documentElement.classList.toggle).toHaveBeenCalledWith(
+        'dark-theme',
+        true
+      );
+      expect(setItemSpy).not.toHaveBeenCalled();
+    });
+
+    it('should keep a saved "light" choice even when the OS prefers dark', () => {
+      getItemSpy.and.returnValue('light');
+      osPrefersDark = true;
+
+      TestBed.configureTestingModule({});
+      service = TestBed.inject(ThemeService);
+
+      expect(service['isDarkTheme'].value).toBe(false);
+    });
+
+    it('should keep a saved "dark" choice even when the OS prefers light', () => {
+      getItemSpy.and.returnValue('dark');
+      osPrefersDark = false;
+
+      TestBed.configureTestingModule({});
+      service = TestBed.inject(ThemeService);
+
+      expect(service['isDarkTheme'].value).toBe(true);
+    });
+
+    it('should follow the OS for an unrecognised saved value', () => {
+      getItemSpy.and.returnValue('Dark');
+      osPrefersDark = true;
+
+      TestBed.configureTestingModule({});
+      service = TestBed.inject(ThemeService);
+
+      expect(service['isDarkTheme'].value).toBe(true);
+    });
+
+    it('should follow a live OS change until the visitor chooses', () => {
+      getItemSpy.and.returnValue(null);
+
+      TestBed.configureTestingModule({});
+      service = TestBed.inject(ThemeService);
+      expect(service['isDarkTheme'].value).toBe(false);
+
+      osChangeListener!({ matches: true });
+      expect(service['isDarkTheme'].value).toBe(true);
+
+      osChangeListener!({ matches: false });
+      expect(service['isDarkTheme'].value).toBe(false);
+    });
+
+    it('should stop following the OS after the visitor toggles', () => {
+      getItemSpy.and.returnValue(null);
+
+      TestBed.configureTestingModule({});
+      service = TestBed.inject(ThemeService);
+
+      service.toggleTheme(); // visitor picks dark
+      osChangeListener!({ matches: false });
+
+      expect(service['isDarkTheme'].value).toBe(true);
+    });
+
+    it('should not listen for OS changes when a theme was saved', () => {
+      getItemSpy.and.returnValue('light');
+
+      TestBed.configureTestingModule({});
+      service = TestBed.inject(ThemeService);
+
+      expect(osChangeListener).toBeNull();
     });
   });
 
@@ -474,7 +573,6 @@ describe('ThemeService', () => {
       service = TestBed.inject(ThemeService);
 
       expect(service['isDarkTheme'].value).toBe(false);
-      expect(setItemSpy).toHaveBeenCalledWith('theme', 'light');
     });
 
     it('should handle localStorage.getItem returning undefined', () => {
@@ -486,13 +584,25 @@ describe('ThemeService', () => {
       expect(service['isDarkTheme'].value).toBe(false);
     });
 
-    it('should handle localStorage.getItem throwing error', () => {
+    it('should fall back to the OS setting when localStorage.getItem throws', () => {
       getItemSpy.and.throwError('localStorage not available');
+      osPrefersDark = true;
 
-      expect(() => {
-        TestBed.configureTestingModule({});
-        service = TestBed.inject(ThemeService);
-      }).toThrow();
+      TestBed.configureTestingModule({});
+      service = TestBed.inject(ThemeService);
+
+      expect(service['isDarkTheme'].value).toBe(true);
+    });
+
+    it('should still switch themes when localStorage.setItem throws', () => {
+      getItemSpy.and.returnValue(null);
+      setItemSpy.and.throwError('quota exceeded');
+
+      TestBed.configureTestingModule({});
+      service = TestBed.inject(ThemeService);
+
+      expect(() => service.toggleTheme()).not.toThrow();
+      expect(service['isDarkTheme'].value).toBe(true);
     });
 
     it('should handle localStorage.setItem being called successfully', () => {

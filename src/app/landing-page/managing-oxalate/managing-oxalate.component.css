@@ -198,9 +198,12 @@
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
+/* A white badge on the brand-gradient card: its number takes the gradient's own
+   end color, which stays dark in both themes (--action-color turns light blue
+   in dark mode, and that was 1.9:1 on this white). */
 .tip-card.community-card .tip-number {
   background: rgba(255, 255, 255, 0.9);
-  color: var(--action-color);
+  color: var(--brand-gradient-end);
 }
 
 /* Tip Content */

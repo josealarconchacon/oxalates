@@ -37,7 +37,7 @@
 .share-icon {
   background: transparent;
   border: none;
-  color: var(--primary-color);
+  color: var(--action-color);
   padding: var(--spacing-2);
   cursor: pointer;
   border-radius: var(--radius-lg);
@@ -265,7 +265,7 @@
 }
 
 .download-icon:hover {
-  color: var(--primary-color);
+  color: var(--action-color);
 }
 
 .download-icon:disabled {
