@@ -10,6 +10,7 @@ import { ThemeService } from '../../shared/services/theme.service';
 import { AuthMessageService } from '../../shared/services/auth-message.service';
 import { ClickableDirective } from '../../shared/directives/clickable.directive';
 import { showDefaultAvatar } from '../../shared/utils/avatar';
+import { ProfileImageService } from '../../user-auth/service/profile-image.service';
 
 @Component({
   selector: 'app-header',
@@ -58,7 +59,8 @@ export class HeaderComponent implements OnInit {
     private navigationService: NavigationService,
     private breakpointObserver: BreakpointObserver,
     private themeService: ThemeService,
-    private authMessageService: AuthMessageService
+    private authMessageService: AuthMessageService,
+    private profileImageService: ProfileImageService
   ) {
     this.activeSection$ = this.navigationService.activeSection$;
     this.isMobile$ = this.breakpointObserver
@@ -187,23 +189,13 @@ export class HeaderComponent implements OnInit {
   /** Falls back to the default avatar when the stored photo can't be shown. */
   onAvatarError = showDefaultAvatar;
 
-  onProfileImageChange(event: Event): void {
+  async onProfileImageChange(event: Event): Promise<void> {
     const input = event.target as HTMLInputElement;
-    if (input.files && input.files[0]) {
-      const file = input.files[0];
-      const reader = new FileReader();
-      reader.onload = (e: any) => {
-        this.userProfile.photoURL = e.target.result;
-        this.authService
-          .updateProfileImage(e.target.result)
-          .then(() => {
-            console.log('Profile image updated successfully');
-          })
-          .catch((error) => {
-            console.error('Error updating profile image:', error);
-          });
-      };
-      reader.readAsDataURL(file);
+    const file = input.files?.[0];
+    // Clear the input so choosing the same file again still fires a change.
+    input.value = '';
+    if (file) {
+      await this.profileImageService.upload(file);
     }
   }
 
