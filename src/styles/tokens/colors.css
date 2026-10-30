@@ -80,6 +80,16 @@
   --error-border: #fecaca;
   --error-on-surface: #b91c1c; /* 6.5:1 on --error-surface */
 
+  /* Faint tints for hover and selected states. They follow the theme because
+     they are built from tokens that do. */
+  --gray-50: var(--gray-100);
+  --primary-50: rgba(var(--color-primary-rgb), 0.08);
+  --danger-50: var(--error-surface);
+
+  /* Read-only and disabled fields: a step down from the editable surface, with
+     --text-muted (4.9:1 here, 6.6:1 in dark) still readable on top. */
+  --disabled-background: var(--gray-200);
+
   /* Background Colors */
   --background-color: #ffffff;
   --surface-color: #f6f7fb;
@@ -159,6 +169,7 @@
   --error-surface: rgba(255, 107, 107, 0.12);
   --error-border: rgba(255, 107, 107, 0.4);
   --error-on-surface: #ffb3b3; /* 7:1 on --error-surface over the dark card */
+  --disabled-background: #262626;
 
   /* Rest of dark theme variables */
   --border-color: #404040;
