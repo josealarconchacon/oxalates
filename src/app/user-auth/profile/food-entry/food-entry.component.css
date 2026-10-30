@@ -283,7 +283,6 @@ thead .header-detail th {
 :host-context(.dark-theme) .delete-btn:focus {
   background: #3a3a3a;
   color: var(--danger-color);
-  outline: none;
 }
 
 .calculator-dialog {
@@ -354,7 +353,7 @@ thead .header-detail th {
 }
 
 .dialog-close:focus-visible {
-  outline: 2px solid var(--primary-color);
+  outline: var(--focus-ring);
   outline-offset: 2px;
 }
 

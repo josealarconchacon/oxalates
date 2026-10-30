@@ -46,6 +46,17 @@
   transform: scale(1.1);
 }
 
+/* This button sits on whatever banner color the user picked, so a single ring
+   color can't be 3:1 against all of them. The white halo (under the ring and
+   just outside it) gives the blue ring something to contrast with. */
+.color-picker-toggle:focus-visible,
+:host-context(.dark-theme) .color-picker-toggle:focus-visible {
+  /* Fixed blue: it always sits on the white halo, in both themes */
+  outline: 3px solid #0a58ca;
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: 0 0 0 8px #ffffff;
+}
+
 .picker-icon {
   font-size: 1.25rem;
 }
@@ -144,8 +155,9 @@
 }
 
 .edit-avatar:focus-visible {
-  outline: none;
-  box-shadow: 0 0 0 2px var(--primary-light);
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: none;
 }
 
 .profile-info {
@@ -329,8 +341,9 @@
 }
 
 .edit-button:focus-visible {
-  outline: none;
-  box-shadow: 0 0 0 2px var(--primary-light);
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: none;
 }
 
 .edit-button i {

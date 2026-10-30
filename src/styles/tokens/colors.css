@@ -53,6 +53,26 @@
   --dark-color: #212529;
   --dotting-color: #4cc9b7;
 
+  /* Action blue: the brand blue (#1da1f2) is only 2.83:1 on white, so it can't
+     carry text or sit behind white text. Use these for anything people have to
+     read (link text, button labels, badges) and keep --primary-color for
+     decoration. --on-action is the text color that goes on top of a fill. */
+  --action-color: #0a58ca; /* 6.44:1 on white */
+  --action-color-hover: #084298; /* 9.36:1 on white */
+  --on-action: #ffffff;
+  /* Branded gradient behind white text (sign-in panel, submit button): both
+     stops stay at 5.7:1 or better with white, in either theme. */
+  --brand-gradient-start: #1565c0;
+  --brand-gradient-end: #0a58ca;
+
+  /* One focus ring for the whole app. It follows --action-color, so it is
+     6.44:1 on white in light mode and 6:1 or better on the dark surfaces,
+     where the old per-component rings were 1.2 to 2.8:1. Use
+     outline: var(--focus-ring); outline-offset: var(--focus-ring-offset); */
+  --focus-ring-color: var(--action-color);
+  --focus-ring: 3px solid var(--focus-ring-color);
+  --focus-ring-offset: 2px;
+
   /* Neutral Colors */
   --gray-100: #f8f9fa;
   --gray-200: #e9ecef;
@@ -68,11 +88,13 @@
   --text-primary: var(--gray-900);
   --text-secondary: var(--gray-700);
   --text-tertiary: var(--gray-600);
-  --text-muted: var(--gray-500);
+  /* Was --gray-500 (#adb5bd), 2.07:1 on white. Muted text still has to be
+     readable: 5.8:1 on white, 5.4:1 on the lightest surfaces. */
+  --text-muted: #5f6670;
   --text-disabled: var(--gray-400);
   --text-inverse: var(--gray-100);
-  --text-link: var(--primary-color);
-  --text-link-hover: var(--primary-dark);
+  --text-link: var(--action-color);
+  --text-link-hover: var(--action-color-hover);
   --text-error: var(--danger-color);
   --text-success: var(--success-color);
   --text-warning: var(--warning-color);
@@ -95,7 +117,7 @@
   --sidebar-background: #f8f9fa;
   --header-background: #ffffff;
   --footer-background: #f8f9fa;
-  --link-color: #1da1f2;
+  --link-color: var(--action-color);
   --button-text: #333333;
   --button-background: #ffffff;
   --nav-active: #e3f2fd;
@@ -108,6 +130,15 @@
 }
 
 /* Dark theme variables */
+.dark-theme,
+[data-theme="dark"] {
+  /* Lighter blue that reads on dark surfaces (4.9:1 even on the #3a3a3a
+     dialog); fills take dark text, since white on it is only 2.4:1. */
+  --action-color: #6db1ea;
+  --action-color-hover: #8bc0ee;
+  --on-action: #1a1a1a;
+}
+
 .dark-theme {
   --primary-color: #1a91da;
   --primary-dark: #1577b5;
@@ -124,7 +155,7 @@
   --text-primary: #ffffff;
   --text-secondary: #e0e0e0;
   --text-tertiary: #b0b0b0;
-  --text-muted: #808080;
+  --text-muted: #a0a6ad; /* was #808080: 3.49:1 on #2d2d2d; this is 5.6:1 */
   --text-disabled: #666666;
   --text-inverse: #1a1a1a;
   --text-link: #4ba9e1;

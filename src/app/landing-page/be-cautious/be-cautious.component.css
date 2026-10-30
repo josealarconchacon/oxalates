@@ -128,7 +128,7 @@ h6 {
 
 .highlight {
   background-color: rgba(0, 150, 136, 0.1);
-  color: #009688;
+  color: #00695c;
   font-weight: 500;
   padding: 0.2em 0.4em;
   border-radius: 0.25rem;
@@ -335,7 +335,7 @@ h6 {
 
 :host-context(.dark-theme) .highlight {
   background-color: rgba(0, 150, 136, 0.2);
-  color: #4db6ac;
+  color: #6fc2b8;
 }
 
 :host-context(.dark-theme) .highlight:hover {

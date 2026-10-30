@@ -141,6 +141,7 @@
         class="pagination-page"
         (click)="changePage(page)"
         [class.active]="page === currentPage"
+        [attr.aria-current]="page === currentPage ? 'page' : null"
         [disabled]="page === '...'"
       >
         {{ page }}

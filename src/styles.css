@@ -242,8 +242,21 @@ textarea {
 
 /* Cross-browser focus styles */
 :focus-visible {
-  outline: 3px solid var(--primary-color);
-  outline-offset: 2px;
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+}
+
+/* Bootstrap (loaded from the CDN in index.html) swaps the outline for a 25%
+   blue shadow on these, which is about 1.4:1. Put the app's ring back. */
+.nav-link:focus-visible,
+.btn:focus-visible,
+.btn-check:focus-visible + .btn,
+.page-link:focus,
+.form-control:focus,
+.form-select:focus {
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: none;
 }
 
 /* Improved link styles */
@@ -523,8 +536,9 @@ p {
 }
 
 .btn:focus {
-  outline: 0;
-  box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25);
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: none;
 }
 
 .btn-primary {
@@ -783,8 +797,9 @@ p {
 }
 
 .focus-ring {
-  outline: 0;
-  box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25);
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: none;
 }
 
 /* Responsive Images */

@@ -87,8 +87,9 @@
 }
 
 .list-item:focus-visible {
-  outline: none;
-  box-shadow: 0 0 0 2px var(--primary-light);
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: none;
 }
 
 .list-item.selected {
@@ -190,8 +191,9 @@
 }
 
 .action-button:focus-visible {
-  outline: none;
-  box-shadow: 0 0 0 2px var(--primary-light);
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: none;
 }
 
 .action-button.delete-button:hover {

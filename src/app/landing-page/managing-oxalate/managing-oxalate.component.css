@@ -70,12 +70,14 @@
 }
 
 .tip-card.community-card {
+  /* White text sits on this, so use the gradient tokens that stay at 5.7:1
+     or better (the brand blue's light end was 2.83:1). */
   background: linear-gradient(
     135deg,
-    var(--primary-color),
-    var(--primary-dark)
+    var(--brand-gradient-start),
+    var(--brand-gradient-end)
   );
-  border-color: var(--primary-color);
+  border-color: var(--brand-gradient-end);
   color: white;
 }
 
@@ -128,16 +130,18 @@
 }
 
 /* Icon Colors */
+/* Icons need 3:1 against the card. The old light-theme colors were 2.2 to 3.9:1,
+   so light uses the darker shades and dark keeps the brighter ones. */
 .icon-water mat-icon {
-  color: var(--primary-color);
+  color: var(--action-color);
 }
 
 .icon-nutrition mat-icon {
-  color: #4caf50;
+  color: #2e7d32;
 }
 
 .icon-speed mat-icon {
-  color: #ff9800;
+  color: #b45309;
 }
 
 .icon-monitoring mat-icon {
@@ -145,15 +149,35 @@
 }
 
 .icon-consultation mat-icon {
-  color: #f44336;
+  color: #d32f2f;
 }
 
 .icon-community mat-icon {
-  color: #e91e63;
+  color: #c2185b;
 }
 
 .icon-default mat-icon {
-  color: var(--primary-color);
+  color: var(--action-color);
+}
+
+:host-context(.dark-theme) .icon-nutrition mat-icon {
+  color: #4caf50;
+}
+
+:host-context(.dark-theme) .icon-speed mat-icon {
+  color: #ff9800;
+}
+
+:host-context(.dark-theme) .icon-monitoring mat-icon {
+  color: #ce93d8;
+}
+
+:host-context(.dark-theme) .icon-consultation mat-icon {
+  color: #f44336;
+}
+
+:host-context(.dark-theme) .icon-community mat-icon {
+  color: #e91e63;
 }
 
 /* Tip Number */
@@ -163,8 +187,8 @@
   justify-content: center;
   width: 32px;
   height: 32px;
-  background: var(--primary-color);
-  color: white;
+  background: var(--action-color);
+  color: var(--on-action);
   border-radius: 50%;
   font-size: 0.875rem;
   font-weight: 600;
@@ -176,7 +200,7 @@
 
 .tip-card.community-card .tip-number {
   background: rgba(255, 255, 255, 0.9);
-  color: var(--primary-color);
+  color: var(--action-color);
 }
 
 /* Tip Content */
@@ -346,12 +370,12 @@
 
 /* Focus States */
 .tip-card:focus-within {
-  outline: 2px solid var(--primary-color);
+  outline: var(--focus-ring);
   outline-offset: 2px;
 }
 
 .community-link:focus-visible {
-  outline: 2px solid rgba(255, 255, 255, 0.8);
+  outline: 3px solid #ffffff;
   outline-offset: 2px;
 }
 
