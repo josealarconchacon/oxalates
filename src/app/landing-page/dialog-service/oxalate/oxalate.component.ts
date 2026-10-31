@@ -38,7 +38,7 @@ export class OxalateComponent implements OnInit, OnDestroy {
   originalOxalates: Oxalate[] = [];
   fullDatasetLength: number = 0;
   displayedOxalates: Oxalate[] = [];
-  randomItems: Oxalate[] = [];
+  browseItems: Oxalate[] = [];
   isDarkTheme: boolean = false;
 
   searchQuery: string = '';
@@ -84,7 +84,7 @@ export class OxalateComponent implements OnInit, OnDestroy {
       }),
     );
 
-    this.loadRandomItems();
+    this.loadFirstPage();
   }
 
   getPreviewBadgeClass(calcLevel: string): string {
@@ -92,26 +92,25 @@ export class OxalateComponent implements OnInit, OnDestroy {
     return 'level-' + calcLevel.toLowerCase().replace(/\s+/g, '-');
   }
 
-  loadRandomItems(): void {
+  /**
+   * The list shown before anyone searches or filters: page 1 of the full
+   * dataset, in the dataset's own order. It is the same on every visit, and the
+   * pager is told it is on page 1 so the two always agree.
+   */
+  loadFirstPage(): void {
     const fullDataset = this.originalOxalates?.length
       ? this.originalOxalates
       : this.oxalates?.length
         ? this.oxalates
         : [];
     if (fullDataset.length === 0) {
-      this.randomItems = [];
+      this.browseItems = [];
       return;
     }
     const pageSize = this.paginationService.itemsPerPage;
-    const maxStart = Math.max(0, fullDataset.length - pageSize);
-    const randomStart = maxStart === 0 ? 0 : Math.floor(Math.random() * (maxStart + 1));
-    const landingPage = Math.floor(randomStart / pageSize) + 1;
     this.fullDatasetLength = fullDataset.length;
-    this.paginationService.changePage(landingPage, fullDataset.length);
-    this.randomItems = fullDataset.slice(
-      (landingPage - 1) * pageSize,
-      landingPage * pageSize
-    );
+    this.paginationService.changePage(1, fullDataset.length);
+    this.browseItems = fullDataset.slice(0, pageSize);
   }
 
   private handleQueryParams(): void {
@@ -125,7 +124,7 @@ export class OxalateComponent implements OnInit, OnDestroy {
           this.oxalates = data;
           this.originalOxalates = [...data];
           this.fullDatasetLength = this.originalOxalates.length;
-          this.loadRandomItems();
+          this.loadFirstPage();
 
           // Process parameters in sequence
           this.processQueryParams(params);
@@ -562,7 +561,7 @@ export class OxalateComponent implements OnInit, OnDestroy {
     this.oxalates = [...this.originalOxalates];
     this.paginationService.changePage(1, this.fullDatasetLength);
     const pageSize = this.paginationService.itemsPerPage;
-    this.randomItems = this.originalOxalates.slice(0, pageSize);
+    this.browseItems = this.originalOxalates.slice(0, pageSize);
     this.updateDisplayedOxalates();
     this.cdr.detectChanges();
   }
@@ -594,7 +593,7 @@ export class OxalateComponent implements OnInit, OnDestroy {
         this.oxalates = [...this.originalOxalates];
         this.paginationService.changePage(1, this.fullDatasetLength);
         const pageSize = this.paginationService.itemsPerPage;
-        this.randomItems = this.originalOxalates.slice(0, pageSize);
+        this.browseItems = this.originalOxalates.slice(0, pageSize);
         this.updateDisplayedOxalates();
       }
     } else {
@@ -703,7 +702,7 @@ export class OxalateComponent implements OnInit, OnDestroy {
 
     this.paginationService.changePage(1, this.fullDatasetLength);
     const pageSize = this.paginationService.itemsPerPage;
-    this.randomItems = this.originalOxalates.slice(0, pageSize);
+    this.browseItems = this.originalOxalates.slice(0, pageSize);
     this.updateDisplayedOxalates();
   }
 
@@ -748,7 +747,7 @@ export class OxalateComponent implements OnInit, OnDestroy {
       const fullDataset = this.originalOxalates?.length
         ? this.originalOxalates
         : this.oxalates;
-      this.randomItems = fullDataset.slice(
+      this.browseItems = fullDataset.slice(
         (page - 1) * pageSize,
         page * pageSize
       );
