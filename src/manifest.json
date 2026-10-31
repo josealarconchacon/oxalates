@@ -1,7 +1,7 @@
 {
   "name": "Oxalates",
   "short_name": "Oxalates",
-  "theme_color": "#1da1f2",
+  "theme_color": "#0a58ca",
   "background_color": "#ffffff",
   "display": "standalone",
   "scope": "./",
