@@ -31,7 +31,7 @@
                   [searchQuery]="searchQuery"
                   (searchQueryChange)="onSearchQueryChange($event)"
                   (clearSearch)="onClearSearch()"
-                  (enterPressed)="onSearchEnterPressed()"
+                  (searchSubmitted)="onSearchSubmitted()"
                 ></app-search-input>
               </div>
             </div>
@@ -72,7 +72,7 @@
               [searchQuery]="searchQuery"
               (searchQueryChange)="onSearchQueryChange($event)"
               (clearSearch)="onClearSearch()"
-              (enterPressed)="onSearchEnterPressed()"
+              (searchSubmitted)="onSearchSubmitted()"
             ></app-search-input>
           </div>
 
