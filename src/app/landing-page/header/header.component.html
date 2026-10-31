@@ -61,7 +61,9 @@
           class="theme-toggle-btn"
           (click)="toggleTheme()"
           [attr.aria-label]="
-            (isDarkTheme$ | async) ? 'Switch to light mode' : 'Switch to dark mode'
+            (isDarkTheme$ | async)
+              ? 'Switch to light mode'
+              : 'Switch to dark mode'
           "
         >
           <i class="material-icons icon-inline" aria-hidden="true">{{
@@ -76,10 +78,7 @@
           aria-label="Go to Profile"
         >
           <img
-            [src]="
-              userProfile.photoURL ||
-              'assets/images/default-avatar.svg'
-            "
+            [src]="userProfile.photoURL || 'assets/images/default-avatar.svg'"
             alt="User Profile Picture"
             class="user-image"
             (error)="onAvatarError($event)"
@@ -109,12 +108,11 @@
             >
               <img
                 [src]="
-                  userProfile.photoURL ||
-                  'assets/images/default-avatar.svg'
+                  userProfile.photoURL || 'assets/images/default-avatar.svg'
                 "
                 alt="User Image"
                 class="user-image"
-            (error)="onAvatarError($event)"
+                (error)="onAvatarError($event)"
                 loading="lazy"
                 width="32"
                 height="32"
@@ -149,7 +147,9 @@
               [class.active]="(activeSection$ | async) === 'saveItem'"
               (click)="setActiveSection('saveItem'); closeNav()"
             >
-              <i class="material-icons icon-inline" aria-hidden="true">bookmark</i>
+              <i class="material-icons icon-inline" aria-hidden="true"
+                >bookmark</i
+              >
               <span>Saved Items</span>
             </a>
           </ng-container>
@@ -176,7 +176,9 @@
               navigateToCalculateDailyIntake()
             "
           >
-            <i class="material-icons icon-inline" aria-hidden="true">calculate</i>
+            <i class="material-icons icon-inline" aria-hidden="true"
+              >calculate</i
+            >
             <span>Calculate Daily Intake</span>
           </a>
           <a class="nav-link" routerLink="/contribution" (click)="closeNav()">
@@ -189,13 +191,17 @@
             appClickable
             (click)="toggleTheme()"
             [attr.aria-label]="
-              (isDarkTheme$ | async) ? 'Switch to light mode' : 'Switch to dark mode'
+              (isDarkTheme$ | async)
+                ? 'Switch to light mode'
+                : 'Switch to dark mode'
             "
           >
             <i class="material-icons icon-inline" aria-hidden="true">{{
               (isDarkTheme$ | async) ? "light_mode" : "dark_mode"
             }}</i>
-            <span>{{ (isDarkTheme$ | async) ? "Light Mode" : "Dark Mode" }}</span>
+            <span>{{
+              (isDarkTheme$ | async) ? "Light Mode" : "Dark Mode"
+            }}</span>
           </a>
 
           <a

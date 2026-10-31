@@ -46,7 +46,8 @@
   outline: none;
   background: transparent;
   color: var(--color-text);
-  font-size: 0.875rem;
+  /* 16px: anything smaller makes iOS Safari zoom the page when the field is focused */
+  font-size: 1rem;
   line-height: 1.5;
   padding: 0;
   min-width: 0;
@@ -72,7 +73,6 @@
 .search-input::placeholder {
   color: var(--color-muted);
   opacity: 0.85;
-  font-size: 0.875rem;
   transition: color 0.2s ease;
 }
 
@@ -106,58 +106,56 @@
   transform: scale(0.98);
 }
 
-.search-action-button.clear-state {
-  background: transparent;
-  color: var(--color-muted);
-  border: 1.5px solid var(--color-border);
-}
-
-.search-action-button.clear-state:hover {
-  border-color: var(--text-error);
-  color: var(--text-error);
-  background: rgba(229, 62, 62, 0.05);
-}
-
 .search-action-button:focus-visible {
   outline: var(--focus-ring);
   outline-offset: 2px;
 }
 
-.search-action-button svg {
+.search-clear-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 2rem;
+  height: 2rem;
+  margin-right: 0.5rem;
+  padding: 0;
+  border: none;
+  border-radius: 50%;
+  background: transparent;
+  color: var(--color-muted);
+  cursor: pointer;
+  transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+.search-clear-button:hover {
+  background: var(--disabled-background);
+  color: var(--color-text);
+}
+
+.search-clear-button:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: 2px;
+}
+
+.search-clear-button svg {
   width: 1.125rem;
   height: 1.125rem;
   stroke: currentColor;
-  stroke-width: 1.8;
+  stroke-width: 2;
   stroke-linecap: round;
-  stroke-linejoin: round;
   fill: none;
 }
 
-.search-action-button svg path {
-  stroke: currentColor;
-  fill: none;
-}
-
-/* Mobile: collapse button to icon only, ensure touch target */
+/* Phone: keep the buttons comfortably tappable */
 @media (max-width: 600px) {
-  .search-btn-text {
-    display: none;
-  }
-
   .search-action-button {
-    padding: 0.5rem;
-    min-width: 2.75rem;
     min-height: 2.75rem;
   }
-}
 
-@media (max-width: 375px) {
-  .search-input-container {
-    padding: 0.5rem 0.5rem 0.5rem 0.75rem;
-  }
-
-  .search-input {
-    font-size: 0.875rem;
+  .search-clear-button {
+    width: 2.25rem;
+    height: 2.25rem;
   }
 }
 
@@ -171,30 +169,10 @@
   }
 }
 
-@media (max-width: 768px) {
-  .search-input-container {
-    padding: 0.5rem 0.5rem 0.5rem 0.75rem;
-  }
-
-  .search-input {
-    font-size: 0.875rem;
-  }
-}
-
-@media (max-width: 480px) {
-  .search-input-container {
-    padding: 0.5rem 0.5rem 0.5rem 0.75rem;
-    border-radius: 2rem;
-  }
-
-  .search-input {
-    font-size: 0.875rem;
-  }
-}
-
 @media (prefers-reduced-motion: reduce) {
   .search-input-container,
   .search-action-button,
+  .search-clear-button,
   .search-input {
     transition: none;
   }

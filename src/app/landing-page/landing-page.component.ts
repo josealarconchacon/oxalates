@@ -58,6 +58,10 @@ export class LandingPageComponent
   private subscriptions: Subscription[] = [];
   private lastQuery: string = '';
   private pendingFocus: boolean = false;
+  /** Results open by themselves once the query is this long. */
+  private readonly MIN_AUTO_SEARCH_LENGTH = 3;
+  /** The results were opened with Enter or the Search button, so a short query keeps them open. */
+  private openedBySubmit = false;
 
   private readonly FOCUSABLE_SELECTORS =
     'a[href]:not([disabled]), button:not([disabled]), textarea:not([disabled]), ' +
@@ -131,6 +135,9 @@ export class LandingPageComponent
 
   private setSearchResultsVisible(visible: boolean): void {
     this.showSearchResults = visible;
+    if (!visible) {
+      this.openedBySubmit = false;
+    }
     document.body.style.overflow = visible ? 'hidden' : '';
   }
 
@@ -193,11 +200,16 @@ export class LandingPageComponent
   onSearchQueryChange(query: string) {
     this.searchQuery = query;
 
-    // Same behavior for mobile and desktop: only show modal after 6 characters
-    if (query.length >= 6 && !this.showSearchResults) {
+    // Same behavior for mobile and desktop: the results open on their own from
+    // MIN_AUTO_SEARCH_LENGTH characters. A shorter query opens them only on Enter or Search.
+    const length = query.trim().length;
+    if (length >= this.MIN_AUTO_SEARCH_LENGTH && !this.showSearchResults) {
       this.setSearchResultsVisible(true);
       this.pendingFocus = true;
-    } else if (query.length < 6) {
+    } else if (
+      length === 0 ||
+      (length < this.MIN_AUTO_SEARCH_LENGTH && !this.openedBySubmit)
+    ) {
       this.setSearchResultsVisible(false);
     }
 
@@ -213,10 +225,16 @@ export class LandingPageComponent
   }
 
   /**
-   * Handle Enter key press to dismiss keyboard (same on mobile and desktop)
+   * Enter or the Search button: show the results now, however short the query.
+   * Already open (the query was long enough) means the results are on screen, so nothing to do.
    */
-  onSearchEnterPressed() {
-    this.pendingFocus = false;
+  onSearchSubmitted() {
+    if (!this.searchQuery.trim() || this.showSearchResults) {
+      return;
+    }
+    this.openedBySubmit = true;
+    this.setSearchResultsVisible(true);
+    this.pendingFocus = true;
   }
 
   onClearSearch() {
