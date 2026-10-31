@@ -39,11 +39,11 @@
 
         <div class="button-container">
           <button
-            class="action-button calculate"
+            class="action-button calculate ui-btn ui-btn--primary"
             [disabled]="isCalculating || !foodName || !servingSize"
             (click)="mealType ? logMeal() : calculateOxalate()"
           >
-            <i class="material-icons">{{ mealType ? "add" : "calculate" }}</i>
+            <i class="material-icons" aria-hidden="true">{{ mealType ? "add" : "calculate" }}</i>
             {{
               isCalculating
                 ? "Calculating..."
@@ -55,10 +55,10 @@
 
           <button
             *ngIf="showResults"
-            class="action-button clear"
+            class="action-button clear ui-btn ui-btn--secondary"
             (click)="clearResults()"
           >
-            <i class="material-icons">refresh</i>
+            <i class="material-icons" aria-hidden="true">refresh</i>
             New Calculation
           </button>
         </div>

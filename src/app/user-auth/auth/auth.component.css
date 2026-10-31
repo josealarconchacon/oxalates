@@ -219,8 +219,11 @@
 }
 
 .input-group {
+  position: relative;
   display: flex;
   flex-direction: column;
+  flex-wrap: wrap;
+  align-items: stretch;
   gap: 0.5rem;
 }
 
@@ -294,7 +297,7 @@
 
 .form-input:focus ~ .input-icon,
 .input-wrapper:hover .input-icon {
-  color: var(--primary-color);
+  color: var(--action-color);
   opacity: 1;
 }
 
@@ -334,50 +337,13 @@
   font-size: 0.75rem;
 }
 
-/* Primary button - gradient, pill, hover scale + shadow */
+/* Primary button: the look comes from .ui-btn--primary. This only matches the
+   52px field height and spaces it from the last field. */
 .submit-button {
   position: relative;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 0.5rem;
-  width: 100%;
-  padding: 1rem 1.5rem;
   height: 52px;
   min-height: 52px;
-  background: linear-gradient(
-    135deg,
-    var(--brand-gradient-start) 0%,
-    var(--brand-gradient-end) 100%
-  );
-  color: white;
-  border: none;
-  border-radius: 9999px;
-  font-size: 1rem;
-  font-weight: 600;
-  cursor: pointer;
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
   margin-top: 0.25rem;
-}
-
-.submit-button:hover:not(:disabled) {
-  transform: scale(1.02);
-  box-shadow: 0 8px 24px rgba(29, 161, 242, 0.4);
-}
-
-.submit-button:active:not(:disabled) {
-  transform: scale(0.99);
-}
-
-.submit-button:focus-visible {
-  outline: var(--focus-ring);
-  outline-offset: var(--focus-ring-offset);
-  box-shadow: none;
-}
-
-.submit-button:disabled {
-  opacity: 0.7;
-  cursor: not-allowed;
 }
 
 .button-text {
@@ -430,40 +396,12 @@
   border: 1px solid var(--border-color);
 }
 
-/* Google button - outlined, white, pill, soft shadow on hover */
+/* Outlined button: the look comes from .ui-btn--secondary. This only matches
+   the 52px field height and spaces the logo from the label. */
 .google-button {
-  display: flex;
-  align-items: center;
-  justify-content: center;
   gap: 0.75rem;
-  width: 100%;
-  padding: 0 1.5rem;
   height: 52px;
   min-height: 52px;
-  background: var(--button-background);
-  color: var(--button-text);
-  border: 2px solid var(--border-color);
-  border-radius: 9999px;
-  font-size: 1rem;
-  font-weight: 600;
-  cursor: pointer;
-  transition: border-color 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease;
-}
-
-.google-button:hover {
-  border-color: var(--gray-400);
-  box-shadow: var(--shadow-md);
-  transform: translateY(-1px);
-}
-
-.google-button:active {
-  transform: translateY(0);
-}
-
-.google-button:focus-visible {
-  outline: var(--focus-ring);
-  outline-offset: var(--focus-ring-offset);
-  box-shadow: none;
 }
 
 .google-icon {
@@ -499,28 +437,9 @@
   font-weight: 500;
 }
 
+/* Inline "Sign up" / "Sign in" link: the look comes from .ui-btn--text. */
 .toggle-link {
-  background: none;
-  border: none;
-  color: var(--action-color);
   font-size: 0.875rem;
-  font-weight: 600;
-  cursor: pointer;
-  transition: color 0.2s ease, text-decoration 0.2s ease;
-  text-decoration: none;
-  padding: 0.25rem 0.5rem;
-  border-radius: 4px;
-  display: inline;
-}
-
-.toggle-link:hover {
-  color: var(--action-color-hover);
-  text-decoration: underline;
-  text-underline-offset: 3px;
-}
-
-.toggle-link:focus-visible {
-  text-decoration: underline;
 }
 
 /* ===== ANIMATIONS ===== */
@@ -793,16 +712,6 @@
 :host-context(.dark-theme) .divider-text {
   background: rgba(45, 45, 45, 0.9);
   border-color: rgba(75, 85, 99, 0.5);
-}
-
-:host-context(.dark-theme) .google-button {
-  background: rgba(55, 55, 55, 0.6);
-  border-color: rgba(75, 85, 99, 0.6);
-}
-
-:host-context(.dark-theme) .google-button:hover {
-  border-color: rgba(100, 116, 139, 0.6);
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
 }
 
 /* Tablet dark mode */

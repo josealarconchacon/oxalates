@@ -52,7 +52,7 @@
 }
 
 :host-context(.dark-theme) .nav-link.active {
-  color: var(--primary-color);
+  color: var(--action-color);
   background-color: var(--nav-active);
   border-color: var(--primary-color);
 }
@@ -93,7 +93,7 @@
 :host-context(.dark-theme) .mobile-sidebar-nav .nav-link:hover,
 :host-context(.dark-theme) .mobile-sidebar-nav .nav-link.active {
   background-color: var(--nav-active);
-  color: var(--primary-color);
+  color: var(--action-color);
   border-color: var(--primary-color);
 }
 
@@ -264,7 +264,7 @@
   position: absolute;
   width: 20px;
   height: 2px;
-  background-color: #262626;
+  background-color: var(--text-primary);
   border-radius: 1px;
   transition: background-color 0.2s ease;
 }
@@ -278,11 +278,12 @@
 }
 
 .nav-close:hover {
-  background-color: #f8f8f8;
+  background-color: var(--hover-background);
 }
 
 .nav {
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
   gap: var(--spacing-4);
 }
@@ -317,7 +318,7 @@
 
 .nav-link {
   color: var(--text-secondary);
-  font-size: var(--font-size-md);
+  font-size: var(--font-size-base);
   font-weight: var(--font-weight-medium);
   text-decoration: none;
   padding: var(--spacing-2) var(--spacing-3);
@@ -335,7 +336,7 @@
 }
 
 .nav-link.active {
-  color: var(--primary-color);
+  color: var(--action-color);
   background-color: var(--gray-100);
 }
 
@@ -375,19 +376,20 @@
 .search-btn span,
 .calculate-btn span {
   /* font-size: var(--font-size-xs); */
-  font-size: var(--font-size-md);
+  font-size: var(--font-size-base);
   font-weight: 500;
 }
 
 .profile-btn {
   display: flex;
   align-items: center;
-  gap: var(--spacing-sm);
-  padding: var(--spacing-xs) var(--spacing-sm);
+  gap: var(--spacing-2);
+  /* The avatar button is the 44px touch target itself, with no extra padding. */
+  padding: 0;
 }
 
 .profile-text {
-  font-size: var(--font-size-md);
+  font-size: var(--font-size-base);
   font-weight: 500;
   color: var(--text-primary);
 }
@@ -610,12 +612,12 @@
   }
 
   .nav-link {
-    font-size: var(--font-size-md);
+    font-size: var(--font-size-base);
   }
 
   .search-btn span,
   .calculate-btn span {
-    font-size: var(--font-size-md);
+    font-size: var(--font-size-base);
   }
 }
 

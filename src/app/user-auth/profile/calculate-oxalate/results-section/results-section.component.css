@@ -10,9 +10,9 @@
 }
 
 :host-context(.dark-theme) .results-container {
-  background: var(--card-background-dark, #1a1a1a);
-  box-shadow: var(--shadow-md-dark, 0 4px 6px rgba(0, 0, 0, 0.3));
-  border-color: var(--border-color-dark, #2a2a2a);
+  background: var(--background-color);
+  box-shadow: var(--shadow-md);
+  border-color: var(--border-color);
 }
 
 .title-container {
@@ -31,13 +31,13 @@
 }
 
 :host-context(.dark-theme) .title {
-  color: var(--text-color-dark, #ffffff);
+  color: var(--text-primary);
 }
 
 .share-icon {
   background: transparent;
   border: none;
-  color: var(--primary-color);
+  color: var(--action-color);
   padding: var(--spacing-2);
   cursor: pointer;
   border-radius: var(--radius-lg);
@@ -53,7 +53,7 @@
 }
 
 :host-context(.dark-theme) .share-icon:hover {
-  background: var(--hover-background-dark, rgba(107, 164, 255, 0.1));
+  background: var(--primary-50);
 }
 
 .share-icon:disabled {
@@ -64,7 +64,7 @@
 
 :host-context(.dark-theme) .share-icon:disabled {
   opacity: 0.5;
-  color: var(--text-muted-dark, #666666);
+  color: var(--text-muted);
 }
 
 .share-icon i {
@@ -90,8 +90,8 @@
 }
 
 :host-context(.dark-theme) .total-oxalates {
-  background: var(--card-background-dark, #1a1a1a);
-  border-color: var(--border-color-dark, #2a2a2a);
+  background: var(--background-color);
+  border-color: var(--border-color);
 }
 
 .total-oxalates span {
@@ -102,92 +102,7 @@
 }
 
 :host-context(.dark-theme) .total-oxalates span {
-  color: var(--text-color-dark, #ffffff);
-}
-
-.indicators-and-totals {
-  display: flex;
-  align-items: center;
-  gap: var(--spacing-4);
-}
-
-.oxalate-level-indicators {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-end;
-  gap: var(--spacing-2);
-}
-
-.bar-chart {
-  width: 100%;
-  max-width: 15.3125rem;
-  height: 0.625rem;
-  background-color: var(--disabled-background);
-  border-radius: var(--radius-full);
-  overflow: hidden;
-  position: relative;
-  display: flex;
-  transition: background-color var(--transition-base);
-  border: 1px solid var(--border-color);
-}
-
-:host-context(.dark-theme) .bar-chart {
-  background-color: var(--background-color-dark, #121212);
-  border-color: var(--border-color-dark, #2a2a2a);
-}
-
-.bar {
-  height: 100%;
-  transition: width var(--transition-slow) ease-in-out,
-    opacity var(--transition-slow) ease-in-out;
-  position: relative;
-}
-
-.bar.green {
-  background-color: var(--success-color);
-  z-index: 4;
-}
-
-:host-context(.dark-theme) .bar.green {
-  background-color: var(--success-color-dark, #4caf50);
-}
-
-.bar.yellow {
-  background-color: var(--warning-color);
-  z-index: 3;
-}
-
-:host-context(.dark-theme) .bar.yellow {
-  background-color: var(--warning-color-dark, #ffc107);
-}
-
-.bar.red {
-  background-color: var(--error-color);
-  z-index: 2;
-}
-
-:host-context(.dark-theme) .bar.red {
-  background-color: var(--error-color-dark, #f44336);
-}
-
-.bar.dark-red {
-  background-color: var(--error-dark-color);
-  z-index: 1;
-}
-
-:host-context(.dark-theme) .bar.dark-red {
-  background-color: var(--error-dark-color-dark, #b71c1c);
-}
-
-.indicator-label {
-  font-size: var(--font-size-sm);
-  font-weight: var(--font-weight-medium);
-  color: var(--text-color);
-  transition: color var(--transition-base);
-}
-
-:host-context(.dark-theme) .indicator-label {
-  color: var(--text-color-dark, #ffffff);
+  color: var(--text-primary);
 }
 
 @media (max-width: 768px) {
@@ -201,23 +116,6 @@
     width: 100%;
   }
 
-  .indicators-and-totals {
-    width: 100%;
-    justify-content: flex-start;
-  }
-
-  .oxalate-level-indicators {
-    align-items: flex-start;
-  }
-
-  .bar-chart {
-    width: 100%;
-    max-width: 100%;
-  }
-
-  .indicator-label {
-    font-size: var(--font-size-xs);
-  }
 }
 
 @media (max-width: 375px) {
@@ -244,9 +142,6 @@
     font-size: var(--font-size-sm);
   }
 
-  .indicator-label {
-    font-size: var(--font-size-xs);
-  }
 }
 
 .action-buttons {
@@ -265,7 +160,7 @@
 }
 
 .download-icon:hover {
-  color: var(--primary-color);
+  color: var(--action-color);
 }
 
 .download-icon:disabled {

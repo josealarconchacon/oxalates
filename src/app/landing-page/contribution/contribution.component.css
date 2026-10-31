@@ -10,15 +10,17 @@
 }
 
 .card {
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  min-width: 0;
+  word-wrap: break-word;
   width: 100%;
   max-width: 740px;
   margin: 0 auto;
-  background: var(--card-background);
-  border-radius: 16px;
   max-height: 90vh;
   overflow-y: auto;
   transition: transform 0.3s ease, box-shadow 0.3s ease;
-  box-shadow: var(--shadow-sm);
 }
 
 .card:hover {
@@ -28,9 +30,13 @@
 
 .card-header {
   padding: 32px 32px 0;
+  background-color: rgba(33, 37, 41, 0.03);
+  border-bottom: 1px solid var(--border-color);
+  border-radius: 5px 5px 0 0;
 }
 
 .card-body {
+  flex: 1 1 auto;
   padding: 32px;
 }
 
@@ -136,50 +142,6 @@
   margin-bottom: 0;
 }
 
-.button-primary {
-  width: 100%;
-  padding: var(--spacing-4) var(--spacing-6);
-  min-height: 2.75rem;
-  background-color: var(--action-color);
-  color: var(--on-action);
-  border: none;
-  border-radius: var(--radius-lg);
-  font-weight: var(--font-weight-semibold);
-  cursor: pointer;
-  transition: background-color var(--transition-base);
-}
-
-.button-primary:hover {
-  background-color: var(--action-color-hover);
-}
-
-.button-primary:focus-visible {
-  outline: var(--focus-ring);
-  outline-offset: 2px;
-}
-
-.button-secondary {
-  width: 100%;
-  padding: var(--spacing-4) var(--spacing-6);
-  min-height: 2.75rem;
-  background-color: var(--surface-color);
-  color: var(--text-secondary);
-  border: 1px solid var(--border-color);
-  border-radius: var(--radius-lg);
-  font-weight: var(--font-weight-semibold);
-  cursor: pointer;
-  transition: background-color var(--transition-base), border-color var(--transition-base);
-}
-
-.button-secondary:hover {
-  background-color: var(--hover-background);
-}
-
-.button-secondary:focus-visible {
-  outline: var(--focus-ring);
-  outline-offset: 2px;
-}
-
 .payment-options {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(min(100%, 9.375rem), 1fr));
@@ -217,7 +179,7 @@
 /* PayPal's own navy keeps it distinct from the Venmo button now that the
    shared blue is the darker action color (white on it is 12:1). */
 .paypal-button {
-  background-color: #003087;
+  background-color: var(--brand-paypal);
   color: white;
 }
 
@@ -315,37 +277,9 @@
   margin-top: 16px;
 }
 
+/* The look comes from .ui-btn--primary; this only spaces the link. */
 .payment-link {
-  display: flex;
-  align-items: center;
-  justify-content: center;
   margin: var(--spacing-2) 0;
-  padding: var(--spacing-3) var(--spacing-4);
-  min-height: 2.75rem;
-  color: inherit;
-  text-decoration: none;
-  font-weight: var(--font-weight-medium);
-  transition: all var(--transition-base);
-  border-radius: var(--radius-lg);
-}
-
-.payment-link:hover {
-  opacity: 0.95;
-}
-
-.payment-link:focus-visible {
-  outline: 2px solid currentColor;
-  outline-offset: 2px;
-}
-
-.payment-link.button-primary {
-  background-color: var(--action-color);
-  color: var(--on-action);
-  border: none;
-}
-
-.payment-link.button-primary:hover {
-  background-color: var(--action-color-hover);
 }
 
 @keyframes fadeIn {

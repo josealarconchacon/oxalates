@@ -2,6 +2,7 @@
    live in src/styles/tokens/colors.css. This file keeps the rest of the
    design system: type, spacing, radius, elevation, z-index, breakpoints. */
 @import url("./styles/tokens/colors.css");
+@import url("./styles/components.css");
 
 /* Modern Design System - Bootstrap 5 Inspired */
 :root {
@@ -93,6 +94,11 @@
   --bp-tablet: 768px;
   --bp-desktop: 1024px;
   --bp-wide: 1440px;
+
+  /* Page chrome the auth and landing layouts offset against (they used to
+     carry these numbers as fallbacks on undefined variables). */
+  --header-height: 64px;
+  --navbar-height: 72px;
 }
 
 /* Dark theme variables (colors live in src/styles/tokens/colors.css) */
@@ -173,6 +179,33 @@ html {
   box-sizing: border-box;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+}
+
+/* The app's own versions of the two rules it used to get from Bootstrap's
+   reboot: elements the app makes clickable (appClickable sets role="button")
+   show the pointer, and inline icons sit on the text's middle line. */
+[role="button"] {
+  cursor: pointer;
+}
+
+img,
+svg {
+  vertical-align: middle;
+}
+
+/* Snackbars stay a dark surface in both themes, so their action needs a light
+   color: Material's default pink is 3.8:1 on it. */
+.app-snackbar {
+  --mat-snack-bar-button-color: #ffffff;
+}
+
+/* Material Icons are the app's only icon font. Add .icon-inline to an
+   <i class="material-icons"> that should size itself from the surrounding
+   text (Material's own class pins it at 24px). Icons are decorative: give them
+   aria-hidden="true" so a screen reader doesn't read the ligature's name. */
+.icon-inline {
+  font-size: 1em;
+  vertical-align: -0.125em;
 }
 
 /* Improved body base styles */
@@ -541,28 +574,6 @@ p {
   outline: var(--focus-ring);
   outline-offset: var(--focus-ring-offset);
   box-shadow: none;
-}
-
-.btn-primary {
-  color: #fff;
-  background-color: var(--primary-color);
-  border-color: var(--primary-color);
-}
-
-.btn-primary:hover {
-  background-color: var(--primary-dark);
-  border-color: var(--primary-dark);
-}
-
-.btn-secondary {
-  color: #fff;
-  background-color: var(--secondary-color);
-  border-color: var(--secondary-color);
-}
-
-.btn-secondary:hover {
-  background-color: #5c636a;
-  border-color: #565e64;
 }
 
 /* Utility Classes */
@@ -1002,7 +1013,7 @@ textarea {
 
 .sidebar-nav a.active {
   background-color: var(--nav-active);
-  color: var(--primary-color);
+  color: var(--action-color);
 }
 
 /* Tables */

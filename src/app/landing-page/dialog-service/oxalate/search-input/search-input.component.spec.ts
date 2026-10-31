@@ -268,105 +268,120 @@ describe('SearchInputComponent', () => {
     });
   });
 
-  describe('onKeyDown', () => {
+  describe('onSubmit', () => {
     beforeEach(() => {
       fixture.detectChanges();
     });
 
-    it('should set isDoneKeyPressed to true on Enter key', () => {
-      const event = new KeyboardEvent('keydown', { key: 'Enter' });
+    it('should emit searchSubmitted when there is a query', () => {
+      spyOn(component.searchSubmitted, 'emit');
+      component.searchQuery = 'spinach';
 
-      component.onKeyDown(event);
+      component.onSubmit();
 
-      expect(component['isDoneKeyPressed']).toBeTrue();
+      expect(component.searchSubmitted.emit).toHaveBeenCalledTimes(1);
     });
 
-    it('should emit enterPressed event on Enter key', () => {
-      spyOn(component.enterPressed, 'emit');
-      const event = new KeyboardEvent('keydown', { key: 'Enter' });
+    it('should not emit searchSubmitted for an empty or blank query', () => {
+      spyOn(component.searchSubmitted, 'emit');
 
-      component.onKeyDown(event);
+      component.searchQuery = '';
+      component.onSubmit();
+      component.searchQuery = '   ';
+      component.onSubmit();
 
-      expect(component.enterPressed.emit).toHaveBeenCalled();
+      expect(component.searchSubmitted.emit).not.toHaveBeenCalled();
     });
 
-    it('should set isDoneKeyPressed to true on Go key', () => {
-      const event = new KeyboardEvent('keydown', { key: 'Go' });
+    it('should put focus back in the field when there is nothing to search for', () => {
+      spyOn(component, 'focusInput');
+      component.searchQuery = '';
 
-      component.onKeyDown(event);
+      component.onSubmit();
 
-      expect(component['isDoneKeyPressed']).toBeTrue();
+      expect(component.focusInput).toHaveBeenCalled();
     });
 
-    it('should emit enterPressed event on Go key', () => {
-      spyOn(component.enterPressed, 'emit');
-      const event = new KeyboardEvent('keydown', { key: 'Go' });
+    it('should stop the browser from navigating away', () => {
+      const event = new Event('submit', { cancelable: true });
+      component.searchQuery = 'spinach';
 
-      component.onKeyDown(event);
+      component.onSubmit(event);
 
-      expect(component.enterPressed.emit).toHaveBeenCalled();
+      expect(event.defaultPrevented).toBeTrue();
     });
 
-    it('should set isDoneKeyPressed to true on Search key', () => {
-      const event = new KeyboardEvent('keydown', { key: 'Search' });
+    it('should mark the field as submitted so a resize does not pull the keyboard back up', () => {
+      spyOn(component, 'focusInput');
+      component.searchQuery = 'spinach';
 
-      component.onKeyDown(event);
+      component.onSubmit();
+      component.onResize();
 
-      expect(component['isDoneKeyPressed']).toBeTrue();
+      expect(component.focusInput).not.toHaveBeenCalled();
+    });
+  });
+
+  describe('search form (rendered)', () => {
+    const button = (selector: string): HTMLButtonElement | null =>
+      fixture.nativeElement.querySelector(selector);
+
+    beforeEach(() => {
+      fixture.detectChanges();
     });
 
-    it('should emit enterPressed event on Search key', () => {
-      spyOn(component.enterPressed, 'emit');
-      const event = new KeyboardEvent('keydown', { key: 'Search' });
+    it('is a labelled search landmark', () => {
+      const form: HTMLFormElement = fixture.nativeElement.querySelector('form');
 
-      component.onKeyDown(event);
-
-      expect(component.enterPressed.emit).toHaveBeenCalled();
+      expect(form.getAttribute('role')).toBe('search');
+      expect(form.getAttribute('aria-label')).toBeTruthy();
     });
 
-    it('should set isDoneKeyPressed to true on Done key', () => {
-      const event = new KeyboardEvent('keydown', { key: 'Done' });
+    it('has a text-only Search submit button and no second magnifier', () => {
+      const submit = button('button[type="submit"]')!;
 
-      component.onKeyDown(event);
-
-      expect(component['isDoneKeyPressed']).toBeTrue();
+      expect(submit.textContent!.trim()).toBe('Search');
+      expect(submit.querySelector('svg')).toBeNull();
+      expect(fixture.nativeElement.querySelectorAll('svg').length).toBe(1);
     });
 
-    it('should emit enterPressed event on Done key', () => {
-      spyOn(component.enterPressed, 'emit');
-      const event = new KeyboardEvent('keydown', { key: 'Done' });
-
-      component.onKeyDown(event);
-
-      expect(component.enterPressed.emit).toHaveBeenCalled();
+    it('shows no clear button until there is text', () => {
+      expect(button('.search-clear-button')).toBeNull();
     });
 
-    it('should not set isDoneKeyPressed for regular keys', () => {
-      component['isDoneKeyPressed'] = false;
-      const event = new KeyboardEvent('keydown', { key: 'a' });
+    it('shows a labelled clear button once there is text, and keeps Search', () => {
+      component.searchQuery = 'kale';
+      fixture.detectChanges();
 
-      component.onKeyDown(event);
-
-      expect(component['isDoneKeyPressed']).toBeFalse();
+      expect(button('.search-clear-button')!.getAttribute('aria-label')).toBe(
+        'Clear search'
+      );
+      expect(button('button[type="submit"]')!.textContent!.trim()).toBe(
+        'Search'
+      );
     });
 
-    it('should not emit enterPressed for regular keys', () => {
-      spyOn(component.enterPressed, 'emit');
-      const event = new KeyboardEvent('keydown', { key: 'a' });
+    it('clears the field and keeps focus there when the clear button is pressed', () => {
+      spyOn(component.clearSearch, 'emit');
+      spyOn(component, 'focusInput');
+      component.searchQuery = 'kale';
+      fixture.detectChanges();
 
-      component.onKeyDown(event);
+      button('.search-clear-button')!.click();
 
-      expect(component.enterPressed.emit).not.toHaveBeenCalled();
+      expect(component.searchQuery).toBe('');
+      expect(component.clearSearch.emit).toHaveBeenCalled();
+      expect(component.focusInput).toHaveBeenCalled();
     });
 
-    it('should handle special keys without errors', () => {
-      const keys = ['Shift', 'Control', 'Alt', 'Tab', 'Escape'];
+    it('submits when the Search button is pressed', () => {
+      spyOn(component.searchSubmitted, 'emit');
+      component.searchQuery = 'kale';
+      fixture.detectChanges();
 
-      keys.forEach((key) => {
-        const event = new KeyboardEvent('keydown', { key });
-        expect(() => component.onKeyDown(event)).not.toThrow();
-        expect(component['isDoneKeyPressed']).toBeFalse();
-      });
+      button('button[type="submit"]')!.click();
+
+      expect(component.searchSubmitted.emit).toHaveBeenCalledTimes(1);
     });
   });
 
@@ -375,22 +390,8 @@ describe('SearchInputComponent', () => {
       fixture.detectChanges();
     });
 
-    it('should call focusInput when isDoneKeyPressed is false and searchQuery exists', (done) => {
+    it('does not pull focus back into the field, on any screen size', (done) => {
       spyOn(component, 'focusInput');
-      component['isDoneKeyPressed'] = false;
-      component.searchQuery = 'test';
-
-      component.onBlur();
-
-      setTimeout(() => {
-        expect(component.focusInput).toHaveBeenCalled();
-        done();
-      }, 15);
-    });
-
-    it('should not call focusInput when isDoneKeyPressed is true', (done) => {
-      spyOn(component, 'focusInput');
-      component['isDoneKeyPressed'] = true;
       component.searchQuery = 'test';
 
       component.onBlur();
@@ -401,45 +402,8 @@ describe('SearchInputComponent', () => {
       }, 15);
     });
 
-    it('should not call focusInput when searchQuery is empty', (done) => {
-      spyOn(component, 'focusInput');
-      component['isDoneKeyPressed'] = false;
-      component.searchQuery = '';
-
-      component.onBlur();
-
-      setTimeout(() => {
-        expect(component.focusInput).not.toHaveBeenCalled();
-        done();
-      }, 15);
-    });
-
-    it('should reset isDoneKeyPressed when it was true', () => {
+    it('forgets that the field was submitted', () => {
       component['isDoneKeyPressed'] = true;
-      component.searchQuery = 'test';
-
-      component.onBlur();
-
-      expect(component['isDoneKeyPressed']).toBeFalse();
-    });
-
-    it('should not reset isDoneKeyPressed when refocusing', (done) => {
-      spyOn(component, 'focusInput');
-      component['isDoneKeyPressed'] = false;
-      component.searchQuery = 'test';
-
-      component.onBlur();
-
-      expect(component['isDoneKeyPressed']).toBeFalse();
-
-      setTimeout(() => {
-        done();
-      }, 15);
-    });
-
-    it('should handle case when both searchQuery is empty and isDoneKeyPressed is true', () => {
-      component['isDoneKeyPressed'] = true;
-      component.searchQuery = '';
 
       component.onBlur();
 
@@ -596,9 +560,9 @@ describe('SearchInputComponent', () => {
       expect(component.clearSearch instanceof EventEmitter).toBeTrue();
     });
 
-    it('should have enterPressed EventEmitter', () => {
-      expect(component.enterPressed).toBeDefined();
-      expect(component.enterPressed instanceof EventEmitter).toBeTrue();
+    it('should have searchSubmitted EventEmitter', () => {
+      expect(component.searchSubmitted).toBeDefined();
+      expect(component.searchSubmitted instanceof EventEmitter).toBeTrue();
     });
   });
 
@@ -622,25 +586,24 @@ describe('SearchInputComponent', () => {
       expect(component.clearSearch.emit).toHaveBeenCalled();
     });
 
-    it('should handle Enter key press workflow', () => {
-      spyOn(component.enterPressed, 'emit');
+    it('should handle submit workflow', () => {
+      spyOn(component.searchSubmitted, 'emit');
+      component.searchQuery = 'test';
       component['isDoneKeyPressed'] = false;
 
-      const event = new KeyboardEvent('keydown', { key: 'Enter' });
-      component.onKeyDown(event);
+      component.onSubmit();
 
       expect(component['isDoneKeyPressed']).toBeTrue();
-      expect(component.enterPressed.emit).toHaveBeenCalled();
+      expect(component.searchSubmitted.emit).toHaveBeenCalled();
     });
 
-    it('should handle blur after Enter key press', () => {
+    it('should handle blur after submitting', () => {
       spyOn(component, 'focusInput');
       component.searchQuery = 'test';
 
-      // Press Enter
-      const event = new KeyboardEvent('keydown', { key: 'Enter' });
-      component.onKeyDown(event);
+      component.onSubmit();
       component.onBlur();
+
       expect(component['isDoneKeyPressed']).toBeFalse();
       expect(component.focusInput).not.toHaveBeenCalled();
     });
@@ -682,19 +645,19 @@ describe('SearchInputComponent', () => {
       expect(component.searchQueryChange.emit).toHaveBeenCalledTimes(3);
     });
 
-    it('should handle multiple Enter key presses', () => {
-      spyOn(component.enterPressed, 'emit');
-      const event = new KeyboardEvent('keydown', { key: 'Enter' });
+    it('should handle multiple submits', () => {
+      spyOn(component.searchSubmitted, 'emit');
+      component.searchQuery = 'test';
 
-      component.onKeyDown(event);
-      component.onKeyDown(event);
-      component.onKeyDown(event);
+      component.onSubmit();
+      component.onSubmit();
+      component.onSubmit();
 
-      expect(component.enterPressed.emit).toHaveBeenCalledTimes(3);
+      expect(component.searchSubmitted.emit).toHaveBeenCalledTimes(3);
       expect(component['isDoneKeyPressed']).toBeTrue();
     });
 
-    it('should handle blur without prior keydown', () => {
+    it('should handle blur without a prior submit', () => {
       spyOn(component, 'focusInput');
       component.searchQuery = 'test';
       component['isDoneKeyPressed'] = false;

@@ -94,7 +94,7 @@
 
 .list-item.selected {
   background-color: var(--primary-50);
-  color: var(--primary-color);
+  color: var(--action-color);
 }
 
 .item-content {
@@ -353,7 +353,7 @@
 
 :host-context(.dark-theme) .list-item.selected {
   background-color: var(--nav-active);
-  color: var(--primary-color);
+  color: var(--action-color);
 }
 
 :host-context(.dark-theme) .item-title {
@@ -417,5 +417,5 @@
 .confirm-button.confirm-delete-button {
   background: var(--danger-color);
   border-color: var(--danger-color);
-  color: #fff;
+  color: var(--white);
 }

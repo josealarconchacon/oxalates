@@ -16,11 +16,9 @@
                 <div class="item-title">{{ oxalate.item }}</div>
                 <div class="item-subtitle">{{ getSubtitle(oxalate) }}</div>
               </div>
-              <i
-                class="fas"
-                [class.fa-chevron-right]="expandedCardId !== oxalate.id"
-                [class.fa-chevron-down]="expandedCardId === oxalate.id"
-              ></i>
+              <i class="material-icons icon-inline" aria-hidden="true">{{
+                expandedCardId === oxalate.id ? "expand_more" : "chevron_right"
+              }}</i>
             </button>
 
             <div
@@ -92,7 +90,7 @@
 
 <ng-template #noItems>
   <div class="no-items">
-    <i class="fas fa-bookmark fa-3x"></i>
+    <i class="material-icons icon-inline" aria-hidden="true">bookmark</i>
     <h3>No saved items yet</h3>
     <p>Items you save will appear here</p>
   </div>
@@ -131,7 +129,7 @@
       [attr.aria-label]="'Delete ' + oxalate.item"
       (click)="askDelete(oxalate.id)"
     >
-      <i class="fas fa-trash-alt" aria-hidden="true"></i>
+      <i class="material-icons icon-inline" aria-hidden="true">delete</i>
     </button>
   </ng-template>
 </ng-template>

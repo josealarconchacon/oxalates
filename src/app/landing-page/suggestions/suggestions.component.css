@@ -4,15 +4,15 @@
 :host {
   display: block;
   font-family: 'DM Sans', system-ui, -apple-system, sans-serif;
-  /* This page keeps its light surfaces in dark mode, so it needs the light
-     theme's ring (6.44:1 here); the dark theme's light blue is 2.3:1 on white.
-     Overrides --focus-ring itself because var() inside it resolves at :root. */
-  --focus-ring: 3px solid #0a58ca;
 }
 
 /* ===== PAGE BACKGROUND ===== */
 .suggestions-page-wrapper {
-  background: linear-gradient(160deg, #eff6ff 0%, #f9fafb 100%);
+  background: linear-gradient(
+    160deg,
+    var(--nav-active) 0%,
+    var(--surface-color) 100%
+  );
   min-height: 100vh;
   display: flex;
   align-items: center;
@@ -26,12 +26,15 @@
   max-width: 560px;
 }
 
+/* The surface comes from .ui-card. */
 .form-card {
-  background: white;
-  border-radius: 20px;
-  box-shadow: 0 8px 40px rgba(0, 0, 0, 0.08);
-  border: 1px solid rgba(0, 0, 0, 0.06);
   padding: 48px 40px;
+}
+
+/* In dark mode the surfaces are all near-black, so the page sits on the
+   darkest one and the card lifts off it. */
+:host-context(.dark-theme) .suggestions-page-wrapper {
+  background: var(--background-color);
 }
 
 /* ===== TYPOGRAPHY HIERARCHY ===== */
@@ -45,7 +48,7 @@
   font-weight: 600;
   letter-spacing: 0.15em;
   text-transform: uppercase;
-  color: #6b7280;
+  color: var(--text-muted);
   margin: 0 0 8px 0;
 }
 
@@ -53,13 +56,13 @@
   font-size: 30px;
   font-weight: 700;
   line-height: 1.2;
-  color: #111827;
+  color: var(--text-primary);
   margin: 0 0 12px 0;
 }
 
 .section-description {
   font-size: 16px;
-  color: #6b7280;
+  color: var(--text-muted);
   line-height: 1.6;
   max-width: 400px;
   margin: 0 auto;
@@ -82,7 +85,7 @@
   font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.05em;
-  color: #374151;
+  color: var(--text-secondary);
   margin-bottom: 8px;
   transition: transform 0.2s ease;
 }
@@ -92,36 +95,36 @@
 }
 
 .required-asterisk {
-  color: #ef4444;
+  color: var(--text-error);
   margin-left: 2px;
 }
 
 /* ===== FORM FIELDS ===== */
 .form-input {
   width: 100%;
-  background: #f9fafb;
-  border: 1.5px solid #e5e7eb;
+  background: var(--input-background);
+  /* The field edge is the only thing marking where to type, so it needs 3:1. */
+  border: 1.5px solid var(--gray-600);
   border-radius: 12px;
   padding: 14px 16px;
   font-size: 15px;
   font-family: inherit;
-  color: #111827;
+  color: var(--text-primary);
   transition: border-color 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
 }
 
 .form-input::placeholder {
-  color: #6b7280; /* was #9ca3af, 2.43:1 on this field */
+  color: var(--text-muted);
 }
 
 .form-input:focus {
-  border-color: #2563eb;
-  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
-  background: white;
+  border-color: var(--action-color);
+  box-shadow: 0 0 0 3px rgba(var(--color-primary-rgb), 0.2);
 }
 
 .form-input.ng-touched.ng-invalid {
-  border-color: #ef4444;
-  box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.08);
+  border-color: var(--text-error);
+  box-shadow: 0 0 0 1px var(--text-error);
 }
 
 .form-textarea {
@@ -136,7 +139,7 @@
   gap: 6px;
   margin-top: 8px;
   font-size: 12px;
-  color: #ef4444;
+  color: var(--text-error);
   animation: errorSlideIn 0.2s ease;
 }
 
@@ -158,7 +161,7 @@
 .input-hint {
   margin-top: 8px;
   font-size: 13px;
-  color: #6b7280;
+  color: var(--text-muted);
 }
 
 /* ===== ERROR BANNER ===== */
@@ -166,11 +169,11 @@
   display: flex;
   align-items: flex-start;
   gap: 10px;
-  background: #fef2f2;
-  border: 1px solid #fecaca;
+  background: var(--error-surface);
+  border: 1px solid var(--error-border);
   border-radius: 10px;
   padding: 12px 16px;
-  color: #b91c1c;
+  color: var(--error-on-surface);
   font-size: 14px;
 }
 
@@ -179,44 +182,9 @@
 }
 
 /* ===== SUBMIT BUTTON ===== */
+/* The look comes from .ui-btn--primary; this matches the 52px field height. */
 .submit-button {
-  width: 100%;
-  height: 52px;
-  border: none;
-  border-radius: 12px;
-  background: linear-gradient(135deg, #2563eb, #1d4ed8);
-  color: white;
-  font-size: 16px;
-  font-weight: 600;
-  letter-spacing: 0.3px;
-  font-family: inherit;
-  box-shadow: 0 4px 14px rgba(37, 99, 235, 0.35);
-  cursor: pointer;
-  transition: all 0.2s ease;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
-}
-
-.submit-button:hover:not(:disabled) {
-  transform: translateY(-1px);
-  box-shadow: 0 6px 20px rgba(37, 99, 235, 0.45);
-}
-
-.submit-button:active:not(:disabled) {
-  transform: translateY(0);
-}
-
-.submit-button:focus-visible {
-  outline: var(--focus-ring);
-  outline-offset: 2px;
-}
-
-.submit-button:disabled {
-  opacity: 0.55;
-  cursor: not-allowed;
-  transform: none;
+  min-height: 52px;
 }
 
 .button-loading {
@@ -229,8 +197,8 @@
 .button-spinner {
   width: 18px;
   height: 18px;
-  border: 2px solid rgba(255, 255, 255, 0.4);
-  border-top-color: white;
+  border: 2px solid currentColor;
+  border-top-color: transparent;
   border-radius: 50%;
   animation: spin 0.7s linear infinite;
 }
@@ -263,7 +231,7 @@
   width: 64px;
   height: 64px;
   margin: 0 auto 20px;
-  background: linear-gradient(135deg, #10b981, #059669);
+  background: var(--success-color);
   border-radius: 50%;
   position: relative;
 }
@@ -283,13 +251,13 @@
 .success-heading {
   font-size: 24px;
   font-weight: 700;
-  color: #111827;
+  color: var(--text-primary);
   margin: 0 0 8px 0;
 }
 
 .success-subtext {
   font-size: 15px;
-  color: #6b7280;
+  color: var(--text-muted);
   line-height: 1.5;
   margin: 0;
   max-width: 320px;
@@ -322,7 +290,7 @@
   }
 
   .submit-button {
-    height: 56px;
+    min-height: 56px;
   }
 }
 

@@ -1,7 +1,7 @@
 import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
 import { AuthService } from '../service/auth-service.service';
-import { AngularFireStorage } from '@angular/fire/compat/storage';
-import { finalize, map } from 'rxjs/operators';
+import { ProfileImageService } from '../service/profile-image.service';
+import { map } from 'rxjs/operators';
 import { Router } from '@angular/router';
 import { fadeInOut } from 'src/app/shared/animations/fadeInOut';
 import { presetColors, colorToHex } from '../../shared/utils/color-utils';
@@ -25,7 +25,6 @@ export class ProfileComponent implements OnInit {
 
   userProfile: any;
   isChangePasswordVisible: boolean = false;
-  selectedFile: File | null = null;
   isColorPickerVisible: boolean = false;
   currentHeaderColor: string = '#1da1f2';
   selectedColor: string = this.currentHeaderColor;
@@ -38,14 +37,9 @@ export class ProfileComponent implements OnInit {
 
   presetColors: string[] = presetColors;
 
-  navItems = [
-    { title: 'Profile Info', section: 'profile' },
-    { title: 'Saved Items', section: 'saveItem', icon: 'fas fa-bookmark' },
-  ];
-
   constructor(
     private authService: AuthService,
-    private storage: AngularFireStorage,
+    private profileImageService: ProfileImageService,
     private router: Router,
     private navigationService: NavigationService,
     private breakpointObserver: BreakpointObserver,
@@ -98,31 +92,13 @@ export class ProfileComponent implements OnInit {
   /** Falls back to the default avatar when the stored photo can't be shown. */
   onAvatarError = showDefaultAvatar;
 
-  onFileSelected(event: any): void {
-    this.selectedFile = event.target.files[0] as File;
-    if (this.selectedFile) {
-      this.uploadImage();
-    }
-  }
-
-  uploadImage(): void {
-    if (this.selectedFile) {
-      const filePath = `profile-images/${Date.now()}_${this.selectedFile.name}`;
-      const fileRef = this.storage.ref(filePath);
-      const task = this.storage.upload(filePath, this.selectedFile);
-
-      task
-        .snapshotChanges()
-        .pipe(
-          finalize(() => {
-            fileRef.getDownloadURL().subscribe((url) => {
-              this.authService.updateProfileImage(url).then(() => {
-                // profile will be updated through subscription
-              });
-            });
-          })
-        )
-        .subscribe();
+  onFileSelected(event: Event): void {
+    const input = event.target as HTMLInputElement;
+    const file = input.files?.[0];
+    // Clear the input so choosing the same file again still fires a change.
+    input.value = '';
+    if (file) {
+      void this.profileImageService.upload(file);
     }
   }
 

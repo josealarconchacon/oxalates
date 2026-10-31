@@ -137,47 +137,27 @@
 }
 
 .icon-nutrition mat-icon {
-  color: #2e7d32;
+  color: var(--icon-green);
 }
 
 .icon-speed mat-icon {
-  color: #b45309;
+  color: var(--icon-amber);
 }
 
 .icon-monitoring mat-icon {
-  color: #9c27b0;
+  color: var(--icon-purple);
 }
 
 .icon-consultation mat-icon {
-  color: #d32f2f;
+  color: var(--icon-red);
 }
 
 .icon-community mat-icon {
-  color: #c2185b;
+  color: var(--icon-pink);
 }
 
 .icon-default mat-icon {
   color: var(--action-color);
-}
-
-:host-context(.dark-theme) .icon-nutrition mat-icon {
-  color: #4caf50;
-}
-
-:host-context(.dark-theme) .icon-speed mat-icon {
-  color: #ff9800;
-}
-
-:host-context(.dark-theme) .icon-monitoring mat-icon {
-  color: #ce93d8;
-}
-
-:host-context(.dark-theme) .icon-consultation mat-icon {
-  color: #f44336;
-}
-
-:host-context(.dark-theme) .icon-community mat-icon {
-  color: #e91e63;
 }
 
 /* Tip Number */
@@ -198,9 +178,12 @@
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
+/* A white badge on the brand-gradient card: its number takes the gradient's own
+   end color, which stays dark in both themes (--action-color turns light blue
+   in dark mode, and that was 1.9:1 on this white). */
 .tip-card.community-card .tip-number {
   background: rgba(255, 255, 255, 0.9);
-  color: var(--action-color);
+  color: var(--brand-gradient-end);
 }
 
 /* Tip Content */
@@ -375,7 +358,7 @@
 }
 
 .community-link:focus-visible {
-  outline: 3px solid #ffffff;
+  outline: 3px solid var(--white);
   outline-offset: 2px;
 }
 

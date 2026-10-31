@@ -36,7 +36,7 @@
           <section class="meal-section">
             <div class="title-and-button">
               <h2 class="meal-title">Breakfast</h2>
-              <button class="add-button" (click)="openCalculator('breakfast')">
+              <button class="add-button ui-btn ui-btn--tonal" (click)="openCalculator('breakfast')">
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   width="20"
@@ -147,7 +147,7 @@
                       (click)="deleteFood('breakfast', i)"
                       [attr.aria-label]="'Delete ' + food.foodName"
                     >
-                      <i class="material-icons">close</i>
+                      <i class="material-icons" aria-hidden="true">close</i>
                     </button>
                   </td>
                 </tr>
@@ -195,7 +195,7 @@
           <section class="meal-section">
             <div class="title-and-button">
               <h2 class="meal-title">Lunch</h2>
-              <button class="add-button" (click)="openCalculator('lunch')">
+              <button class="add-button ui-btn ui-btn--tonal" (click)="openCalculator('lunch')">
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   width="20"
@@ -306,7 +306,7 @@
                       (click)="deleteFood('lunch', i)"
                       [attr.aria-label]="'Delete ' + food.foodName"
                     >
-                      <i class="material-icons">close</i>
+                      <i class="material-icons" aria-hidden="true">close</i>
                     </button>
                   </td>
                 </tr>
@@ -350,7 +350,7 @@
           <section class="meal-section">
             <div class="title-and-button">
               <h2 class="meal-title">Dinner</h2>
-              <button class="add-button" (click)="openCalculator('dinner')">
+              <button class="add-button ui-btn ui-btn--tonal" (click)="openCalculator('dinner')">
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   width="20"
@@ -461,7 +461,7 @@
                       (click)="deleteFood('dinner', i)"
                       [attr.aria-label]="'Delete ' + food.foodName"
                     >
-                      <i class="material-icons">close</i>
+                      <i class="material-icons" aria-hidden="true">close</i>
                     </button>
                   </td>
                 </tr>
@@ -507,7 +507,7 @@
           <section class="meal-section">
             <div class="title-and-button">
               <h2 class="meal-title">Snacks</h2>
-              <button class="add-button" (click)="openCalculator('snacks')">
+              <button class="add-button ui-btn ui-btn--tonal" (click)="openCalculator('snacks')">
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   width="20"
@@ -618,7 +618,7 @@
                       (click)="deleteFood('snacks', i)"
                       [attr.aria-label]="'Delete ' + food.foodName"
                     >
-                      <i class="material-icons">close</i>
+                      <i class="material-icons" aria-hidden="true">close</i>
                     </button>
                   </td>
                 </tr>

@@ -25,7 +25,8 @@ export class SearchInputComponent implements OnInit, OnDestroy {
   @Input() searchQuery: string = '';
   @Output() searchQueryChange = new EventEmitter<string>();
   @Output() clearSearch = new EventEmitter<void>();
-  @Output() enterPressed = new EventEmitter<void>();
+  /** The person asked for results: pressed Enter or the Search button. */
+  @Output() searchSubmitted = new EventEmitter<void>();
   @ViewChild('searchInputElement') searchInputElement?: ElementRef;
 
   isDarkTheme: boolean = false;
@@ -70,12 +71,21 @@ export class SearchInputComponent implements OnInit, OnDestroy {
     this.clearSearch.emit();
   }
 
-  onActionIconClick(): void {
-    if (this.hasSearchQuery) {
-      this.onClearSearch();
-    }
-
+  onClearClick(): void {
+    this.onClearSearch();
     this.focusInput();
+  }
+
+  /** Enter in the field or the Search button. Nothing to search for means nothing happens. */
+  onSubmit(event?: Event): void {
+    event?.preventDefault();
+    if (!this.hasSearchQuery) {
+      this.focusInput();
+      return;
+    }
+    // Lets the keyboard stay dismissed on a phone instead of resize re-focusing the field
+    this.isDoneKeyPressed = true;
+    this.searchSubmitted.emit();
   }
 
   @HostListener('window:resize')
@@ -87,50 +97,12 @@ export class SearchInputComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * Handle keydown events to prevent keyboard dismissal
+   * Only forgets that the field was submitted. It used to pull focus back into the
+   * field on phones, which trapped people in it: tapping Clear, a result or the
+   * page behind it all bounced the keyboard back up.
    */
-  @HostListener('keydown', ['$event'])
-  onKeyDown(event: KeyboardEvent) {
-    // Check if this is the "Done" key on mobile keyboard
-    if (
-      event.key === 'Enter' ||
-      event.key === 'Go' ||
-      event.key === 'Search' ||
-      event.key === 'Done'
-    ) {
-      // This is the Done key, allow keyboard dismissal
-      this.isDoneKeyPressed = true;
-      // Emit event for Enter key press
-      this.enterPressed.emit();
-      // Let the default behavior happen (keyboard dismissal)
-      return;
-    }
-
-    // For all other keys, let the default behavior happen
-    // This prevents character duplication
-  }
-
-  /**
-   * Handle blur event to refocus input on mobile only.
-   * On desktop/large screens, refocusing when user clicks pagination or results
-   * causes unwanted scroll-to-top (input is at top of page). Only refocus on
-   * mobile to keep keyboard visible when user taps outside input.
-   */
-  onBlur() {
-    // Only refocus if the Done key wasn't pressed
-    if (!this.isDoneKeyPressed && this.searchQuery) {
-      // Only refocus on mobile - on desktop, clicking pagination/results
-      // would scroll page back to top to show the refocused input
-      const isMobileViewport = window.innerWidth < 768;
-      if (isMobileViewport) {
-        setTimeout(() => {
-          this.focusInput();
-        }, 10);
-      }
-    } else {
-      // Reset the flag for next time
-      this.isDoneKeyPressed = false;
-    }
+  onBlur(): void {
+    this.isDoneKeyPressed = false;
   }
 
   /**

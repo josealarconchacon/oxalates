@@ -51,12 +51,9 @@
         (click)="toggleAutoPlay()"
         [attr.aria-label]="autoPlaying ? 'Pause slideshow' : 'Play slideshow'"
       >
-        <i
-          class="fas"
-          [class.fa-pause]="autoPlaying"
-          [class.fa-play]="!autoPlaying"
-          aria-hidden="true"
-        ></i>
+        <i class="material-icons icon-inline" aria-hidden="true">{{
+          autoPlaying ? "pause" : "play_arrow"
+        }}</i>
       </button>
       </div>
 
@@ -104,8 +101,8 @@
             <h2>Real-time Insights</h2>
             <div class="feature-image">
               <img
-                src="assets/app-logo/daily.png"
-                alt="Daily Stats"
+                src="assets/app-logo/daily-log.png"
+                alt="The daily log: total and soluble oxalate for the day, then a breakfast of avocado and dry roasted almonds with each food's oxalate in a table"
                 class="slide-image"
                 loading="lazy"
               />
@@ -123,7 +120,7 @@
           [@fadeInOut]
           aria-label="Previous slide"
         >
-          <i class="fas fa-chevron-left" aria-hidden="true"></i>
+          <i class="material-icons icon-inline" aria-hidden="true">chevron_left</i>
         </button>
         <button
           class="nav-button"
@@ -132,7 +129,7 @@
           [@fadeInOut]
           aria-label="Next slide"
         >
-          <i class="fas fa-chevron-right" aria-hidden="true"></i>
+          <i class="material-icons icon-inline" aria-hidden="true">chevron_right</i>
         </button>
       </div>
     </div>
