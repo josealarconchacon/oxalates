@@ -46,8 +46,10 @@ export class SuggestionsComponent {
         this.isLoading = false;
       },
       error: (error) => {
+        // The visitor gets a plain message; the technical detail stays in the console.
+        console.error('Feedback could not be sent:', error);
         this.submissionError =
-          error?.message || 'We could not send your feedback right now.';
+          'We could not send your feedback right now. Please try again in a few minutes.';
         this.isLoading = false;
       },
     });
