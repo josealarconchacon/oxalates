@@ -83,10 +83,12 @@ describe('SuggestionsComponent', () => {
       feedback: 'This feedback is lengthy enough to pass validation.',
     });
 
+    spyOn(console, 'error');
     component.submitFeedback();
 
     expect(component.submissionSuccess).toBeFalse();
     expect(component.submissionError).toContain('We could not send your feedback');
+    expect(component.submissionError).not.toContain('Submission failed');
     expect(component.isLoading).toBeFalse();
   });
 });
