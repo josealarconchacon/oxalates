@@ -322,6 +322,13 @@
   box-shadow: 0 8px 30px rgba(0, 0, 0, 0.15);
 }
 
+.download-button:disabled {
+  cursor: progress;
+  opacity: 0.7;
+  transform: none;
+  box-shadow: none;
+}
+
 .download-button.csv {
   border: 2px solid var(--primary-color);
   color: var(--action-color);

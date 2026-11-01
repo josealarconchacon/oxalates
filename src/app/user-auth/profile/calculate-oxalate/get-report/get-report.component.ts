@@ -8,8 +8,7 @@ import {
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { jsPDF } from 'jspdf';
-import autoTable from 'jspdf-autotable';
+import type { jsPDF } from 'jspdf';
 import { Subscription } from 'rxjs';
 import { FoodEntryService } from '../../food-entry/service/food-entry.service';
 import { AlertService } from 'src/app/shared/alert-service/alert.service';
@@ -48,6 +47,8 @@ export class GetReportComponent implements OnInit, OnDestroy {
   @Output() close = new EventEmitter<void>();
   maxDate: string;
   showAlert: boolean = false;
+  /** True while the PDF library is downloading and the document is built. */
+  isPreparingPdf = false;
   alertMessage: string = '';
   private alertSubscription!: Subscription;
 
@@ -142,53 +143,81 @@ export class GetReportComponent implements OnInit, OnDestroy {
 
   // Download as PDF
   downloadPDF(): void {
+    if (this.isPreparingPdf) {
+      return;
+    }
+
     // Create a new date object and set it to midnight to avoid timezone issues
     const date = new Date(this.selectedDate);
     date.setHours(0, 0, 0, 0);
 
+    this.isPreparingPdf = true;
     this.foodEntryService.getDailyEntry(date).subscribe({
-      next: (entry) => {
+      next: async (entry) => {
         if (!entry || this.isEmpty(entry)) {
+          this.isPreparingPdf = false;
           this.alertService.showAlert('No data available for selected date!');
           return;
         }
 
-        const doc = new jsPDF();
-        autoTable(doc, {
-          startY: 30,
-          head: [
-            [
-              'Meal Type',
-              'Food Name',
-              'Serving Size',
-              'Servings',
-              'Oxalate (mg)',
-              'Soluble Oxalate (mg)',
-            ],
-          ],
-          body: this.preparePDFData(entry),
-          theme: 'striped',
-          headStyles: { fillColor: [41, 128, 185], textColor: 255 },
-          footStyles: { fillColor: [189, 195, 199] },
-          didDrawPage: (data) => {
-            doc.setFontSize(16);
-            doc.text(
-              `Oxalate Report - ${date.toISOString().split('T')[0]}`,
-              14,
-              20
-            );
-          },
-        });
-
-        doc.save(`Oxalate_Report_${date.toISOString().split('T')[0]}.pdf`);
+        try {
+          const doc = await this.buildPdf(entry, date);
+          doc.save(`Oxalate_Report_${date.toISOString().split('T')[0]}.pdf`);
+        } catch (error) {
+          console.error('Error creating PDF:', error);
+          this.alertService.showAlert(
+            'Error downloading report. Please try again.'
+          );
+        } finally {
+          this.isPreparingPdf = false;
+        }
       },
       error: (error) => {
         console.error('Error fetching data:', error);
+        this.isPreparingPdf = false;
         this.alertService.showAlert(
           'Error downloading report. Please try again.'
         );
       },
     });
+  }
+
+  // The PDF libraries are about 370 KB, so they are fetched here, the first
+  // time someone asks for a PDF, instead of with the rest of the app.
+  private async buildPdf(entry: DailyEntry, date: Date): Promise<jsPDF> {
+    const [{ jsPDF }, { default: autoTable }] = await Promise.all([
+      import('jspdf'),
+      import('jspdf-autotable'),
+    ]);
+
+    const doc = new jsPDF();
+    autoTable(doc, {
+      startY: 30,
+      head: [
+        [
+          'Meal Type',
+          'Food Name',
+          'Serving Size',
+          'Servings',
+          'Oxalate (mg)',
+          'Soluble Oxalate (mg)',
+        ],
+      ],
+      body: this.preparePDFData(entry),
+      theme: 'striped',
+      headStyles: { fillColor: [41, 128, 185], textColor: 255 },
+      footStyles: { fillColor: [189, 195, 199] },
+      didDrawPage: () => {
+        doc.setFontSize(16);
+        doc.text(
+          `Oxalate Report - ${date.toISOString().split('T')[0]}`,
+          14,
+          20
+        );
+      },
+    });
+
+    return doc;
   }
 
   // Per RFC 4180: quote any field containing a comma, quote, or newline,

@@ -4,6 +4,14 @@
     <meta charset="utf-8" />
     <title>Oxalates</title>
     <base href="/" />
+    <style>
+      /* Keeps a page's top margin (the landing page has 96px) inside the app,
+         so it does not collapse through and push the whole <body> down when the
+         app replaces the loading placeholder. */
+      app-root {
+        display: flow-root;
+      }
+    </style>
     <meta
       name="viewport"
       content="width=device-width, initial-scale=1"
@@ -38,7 +46,6 @@
     <link rel="manifest" href="manifest.json" />
 
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin />
 
     <link
       href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Roboto:wght@300;400;500&display=swap"
@@ -50,7 +57,6 @@
       rel="stylesheet"
     />
 
-    <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6,es7,default"></script>
   </head>
   <body>
     <noscript>
