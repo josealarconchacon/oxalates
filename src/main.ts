@@ -1,7 +1,6 @@
 import { platformBrowserDynamic } from '@angular/platform-browser-dynamic';
 import { AppModule } from './app/app.module';
-import { enableProdMode, NgModuleRef } from '@angular/core';
-import { environment } from './environments/environment';
+import { NgModuleRef } from '@angular/core';
 
 // Extend Window interface to include our custom properties
 declare global {
@@ -10,10 +9,9 @@ declare global {
   }
 }
 
-// Enable production mode if needed
-if (environment.production) {
-  enableProdMode();
-}
+// No enableProdMode() here: `ng build` already strips Angular's development
+// checks from production builds. Calling it from the environment flag also
+// switched the checks off under `ng serve`, which hid real template errors.
 
 // Bootstrap the application with error handling
 platformBrowserDynamic()
