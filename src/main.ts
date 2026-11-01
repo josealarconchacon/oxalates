@@ -25,8 +25,9 @@ platformBrowserDynamic()
     }
     window.ngRef = ref;
 
-    // Add unload handler for cleanup
-    window.addEventListener('unload', () => {
+    // Clean up when the page goes away. `pagehide` replaces `unload`, which
+    // browsers are removing and which also stops the back/forward cache.
+    window.addEventListener('pagehide', () => {
       ref.destroy();
     });
   })
