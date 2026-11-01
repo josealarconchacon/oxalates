@@ -1,0 +1,22 @@
+name: Tests
+on: pull_request
+permissions:
+  contents: read
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+      - run: npm ci
+      # The real environment files hold the Firebase config and are gitignored.
+      # The specs only need the same shape, so build them from the example file.
+      - name: Create environment files from the example
+        run: |
+          cp src/environments/environment.example.ts src/environments/environment.ts
+          cp src/environments/environment.example.ts src/environments/environment.development.ts
+      - name: Run the unit tests
+        run: npx ng test --watch=false --browsers=ChromeHeadlessCI
