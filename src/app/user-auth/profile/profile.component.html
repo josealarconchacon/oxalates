@@ -102,14 +102,13 @@
               <label>Email</label>
               <p>{{ userProfile?.email || "username@example.com" }}</p>
             </div>
-            <button #changePasswordTrigger (click)="toggleChangePassword()" class="edit-button ui-btn ui-btn--secondary">
+            <button (click)="toggleChangePassword()" class="edit-button ui-btn ui-btn--secondary">
               <i class="material-icons icon-inline" aria-hidden="true">vpn_key</i> Change Password
             </button>
           </div>
         </div>
         <app-change-password
           [isVisible]="isChangePasswordVisible"
-          [triggerElement]="changePasswordTrigger"
           (close)="toggleChangePassword()"
         ></app-change-password>
         <app-save-items *ngSwitchCase="'saveItem'"></app-save-items>
