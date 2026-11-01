@@ -38,19 +38,13 @@ import { ViewMoreComponent } from './landing-page/dialog-service/oxalate/view-mo
 import { AlertComponent } from './landing-page/dialog-service/oxalate/shared/alert/alert.component';
 import { ConfigService } from 'src/assets/config/config.service';
 import { AuthComponent } from './user-auth/auth/auth.component';
-import { ProfileComponent } from './user-auth/profile/profile.component';
 import { CommonModule } from '@angular/common';
-import { ChangePasswordComponent } from './user-auth/change-password/change-password.component';
-import { SaveItemsComponent } from './user-auth/profile/save-items/save-items.component';
 import { AlertService } from './shared/alert-service/alert.service';
 import { RouterModule, TitleStrategy } from '@angular/router';
 import { PageTitleStrategy } from './shared/services/page-title.strategy';
 import { prefersReducedMotion } from './shared/utils/reduced-motion';
-import { ColorSketchModule } from 'ngx-color/sketch';
-import { CalculateOxalateComponent } from './user-auth/profile/calculate-oxalate/calculate-oxalate.component';
 import { FoodByCategoryComponent } from './landing-page/dialog-service/food-by-category/food-by-category.component';
 import { SearchInputComponent } from './landing-page/dialog-service/oxalate/search-input/search-input.component';
-import { FoodEntryComponent } from './user-auth/profile/food-entry/food-entry.component';
 import { ThemeService } from './shared/services/theme.service';
 import { BeCautiousComponent } from './landing-page/be-cautious/be-cautious.component';
 import { ClickableDirective } from './shared/directives/clickable.directive';
@@ -81,9 +75,6 @@ export function initializeApp(configService: ConfigService) {
     ManagingOxalateComponent,
     ViewMoreComponent,
     AuthComponent,
-    ProfileComponent,
-    ChangePasswordComponent,
-    SaveItemsComponent,
   ],
 
   imports: [
@@ -112,12 +103,8 @@ export function initializeApp(configService: ConfigService) {
     AngularFireModule.initializeApp(environment.firebaseConfig),
     AngularFireAnalyticsModule,
     AngularFireAuthModule,
-    ColorSketchModule,
-    ColorSketchModule,
-    CalculateOxalateComponent,
     FoodByCategoryComponent,
     SearchInputComponent,
-    FoodEntryComponent,
     ContributionComponent,
     HeaderComponent,
     FooterComponent,
