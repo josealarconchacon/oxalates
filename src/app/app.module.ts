@@ -16,7 +16,6 @@ import {
 import { MatExpansionModule } from '@angular/material/expansion';
 import { environment } from 'src/environments/environment.development';
 import { AngularFireModule } from '@angular/fire/compat';
-import { AngularFireAnalyticsModule } from '@angular/fire/compat/analytics';
 import { AngularFireAuthModule } from '@angular/fire/compat/auth';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
@@ -83,7 +82,6 @@ export function initializeApp(configService: ConfigService) {
     FormsModule,
     BrowserModule,
     AppRoutingModule,
-    // Angular's own animations ignore the prefers-reduced-motion CSS rule, so
     // switch the engine off when the visitor has asked for less motion.
     BrowserAnimationsModule.withConfig({
       disableAnimations: prefersReducedMotion(),
@@ -101,7 +99,6 @@ export function initializeApp(configService: ConfigService) {
     ScrollingModule,
     MatExpansionModule,
     AngularFireModule.initializeApp(environment.firebaseConfig),
-    AngularFireAnalyticsModule,
     AngularFireAuthModule,
     FoodByCategoryComponent,
     SearchInputComponent,

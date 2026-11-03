@@ -208,6 +208,16 @@ svg {
   vertical-align: -0.125em;
 }
 
+/* The icon font loads after first paint. Until it arrives (the stylesheet link
+   uses display=block, so the ligature's name stays invisible), give each icon its
+   final square box, so the page does not jump when the glyphs appear.
+   overflow: clip, unlike hidden, leaves the icon's baseline alone. */
+.material-icons {
+  width: 1em;
+  height: 1em;
+  overflow: clip;
+}
+
 /* Improved body base styles */
 body {
   font-family: var(--font-family-sans);

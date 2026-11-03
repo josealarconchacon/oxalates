@@ -192,6 +192,7 @@ describe('SearchInputComponent', () => {
 
     it('should emit clearSearch event', () => {
       spyOn(component.clearSearch, 'emit');
+      component.searchQuery = 'test';
 
       component.onClearSearch();
 
@@ -209,7 +210,9 @@ describe('SearchInputComponent', () => {
       expect(searchQueryChangeSpy).toHaveBeenCalledBefore(clearSearchSpy);
     });
 
-    it('should work when searchQuery is already empty', () => {
+    it('should do nothing when searchQuery is already empty', () => {
+      // Nothing to clear, so the page must not be told to close the results
+      // or move focus. The clear button is not shown without text either.
       spyOn(component.searchQueryChange, 'emit');
       spyOn(component.clearSearch, 'emit');
       component.searchQuery = '';
@@ -217,8 +220,17 @@ describe('SearchInputComponent', () => {
       component.onClearSearch();
 
       expect(component.searchQuery).toBe('');
-      expect(component.searchQueryChange.emit).toHaveBeenCalledWith('');
-      expect(component.clearSearch.emit).toHaveBeenCalled();
+      expect(component.searchQueryChange.emit).not.toHaveBeenCalled();
+      expect(component.clearSearch.emit).not.toHaveBeenCalled();
+    });
+
+    it('should treat a whitespace-only query as empty', () => {
+      spyOn(component.clearSearch, 'emit');
+      component.searchQuery = '   ';
+
+      component.onClearSearch();
+
+      expect(component.clearSearch.emit).not.toHaveBeenCalled();
     });
   });
 

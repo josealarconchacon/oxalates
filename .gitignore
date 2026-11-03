@@ -57,7 +57,12 @@ src/environments/environment.prod.ts
 .firebaserc
 
 # Ignore GitHub-related files
-.github/
+# Ignore everything in .github except the test workflow. The Firebase deploy
+# workflows stay local on purpose: they would deploy on every push to master.
+.github/*
+!.github/workflows/
+.github/workflows/*
+!.github/workflows/test.yml
 
 # Ignore Firebase configuration file
 firebase.json

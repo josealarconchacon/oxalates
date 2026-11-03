@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { AuthService } from '../service/auth-service.service';
 import { ProfileImageService } from '../service/profile-image.service';
 import { map } from 'rxjs/operators';
@@ -21,8 +21,6 @@ import { showDefaultAvatar } from 'src/app/shared/utils/avatar';
   animations: [fadeInOut],
 })
 export class ProfileComponent implements OnInit {
-  @ViewChild('changePasswordTrigger') changePasswordTrigger!: ElementRef<HTMLElement>;
-
   userProfile: any;
   isChangePasswordVisible: boolean = false;
   isColorPickerVisible: boolean = false;

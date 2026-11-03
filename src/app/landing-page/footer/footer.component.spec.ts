@@ -1,6 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { FooterComponent } from './footer.component';
-import { Router, NavigationEnd } from '@angular/router';
+import { ActivatedRoute, Router, NavigationEnd } from '@angular/router';
 import { Subject } from 'rxjs';
 import { MatIconModule } from '@angular/material/icon';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
@@ -17,9 +17,15 @@ describe('FooterComponent', () => {
 
   beforeEach(async () => {
     routerEvents$ = new Subject<any>();
-    const routerSpy = jasmine.createSpyObj('Router', ['navigate'], {
-      events: routerEvents$.asObservable(),
-    });
+    // The footer template's routerLink directives ask the router to build each
+    // link, so the fake needs those methods as well as navigate().
+    const routerSpy = jasmine.createSpyObj(
+      'Router',
+      ['navigate', 'createUrlTree', 'serializeUrl'],
+      { events: routerEvents$.asObservable() }
+    );
+    routerSpy.createUrlTree.and.returnValue({});
+    routerSpy.serializeUrl.and.returnValue('/');
     const authServiceSpy = jasmine.createSpyObj('AuthService', [
       'isAuthenticated',
     ]);
@@ -31,6 +37,7 @@ describe('FooterComponent', () => {
       imports: [FooterComponent, MatIconModule, NoopAnimationsModule],
       providers: [
         { provide: Router, useValue: routerSpy },
+        { provide: ActivatedRoute, useValue: {} },
         { provide: AuthService, useValue: authServiceSpy },
         { provide: AuthMessageService, useValue: authMessageServiceSpy },
       ],
