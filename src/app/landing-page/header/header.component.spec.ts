@@ -1,10 +1,9 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { RouterTestingModule } from '@angular/router/testing';
 import { HeaderComponent } from './header.component';
 import { AuthService } from 'src/app/user-auth/service/auth-service.service';
 import { of } from 'rxjs';
 import { MatIconModule } from '@angular/material/icon';
-import { Router } from '@angular/router';
+import { Router, provideRouter } from '@angular/router';
 import { ProfileImageService } from 'src/app/user-auth/service/profile-image.service';
 
 class MockAuthService {
@@ -24,9 +23,10 @@ describe('HeaderComponent', () => {
     };
 
     TestBed.configureTestingModule({
-      imports: [HeaderComponent, RouterTestingModule, MatIconModule],
+      imports: [HeaderComponent, MatIconModule],
       declarations: [],
       providers: [
+        provideRouter([]),
         { provide: AuthService, useClass: MockAuthService },
         { provide: ProfileImageService, useValue: profileImageService },
       ],

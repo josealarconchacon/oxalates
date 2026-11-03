@@ -1,5 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { provideHttpClient } from '@angular/common/http';
+import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { FormsModule } from '@angular/forms'; // Import FormsModule
 import { provideRouter } from '@angular/router';
 import { OxalateComponent } from './oxalate.component';
@@ -20,7 +21,6 @@ describe('OxalateComponent', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
       imports: [
-        HttpClientTestingModule,
         FormsModule, // Add FormsModule here to provide ngModel
         AngularFireModule.initializeApp(environment.firebaseConfig),
         AngularFirestoreModule,
@@ -30,7 +30,12 @@ describe('OxalateComponent', () => {
         ClickableDirective,
       ],
       declarations: [OxalateComponent, FilterComponent, ViewMoreComponent],
-      providers: [OxalateService, provideRouter([])],
+      providers: [
+        provideHttpClient(),
+        provideHttpClientTesting(),
+        OxalateService,
+        provideRouter([]),
+      ],
     });
     fixture = TestBed.createComponent(OxalateComponent);
     component = fixture.componentInstance;

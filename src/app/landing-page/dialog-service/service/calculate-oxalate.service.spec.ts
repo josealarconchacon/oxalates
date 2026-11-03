@@ -1,8 +1,9 @@
 import { TestBed } from '@angular/core/testing';
 import { CalculateOxalateService } from './calculate-oxalate.service';
+import { provideHttpClient } from '@angular/common/http';
 import {
-  HttpClientTestingModule,
   HttpTestingController,
+  provideHttpClientTesting,
 } from '@angular/common/http/testing';
 
 interface SimilarFood {
@@ -26,7 +27,7 @@ describe('CalculateOxalateService', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [HttpClientTestingModule],
+      providers: [provideHttpClient(), provideHttpClientTesting()],
     });
     service = TestBed.inject(CalculateOxalateService);
     httpMock = TestBed.inject(HttpTestingController);

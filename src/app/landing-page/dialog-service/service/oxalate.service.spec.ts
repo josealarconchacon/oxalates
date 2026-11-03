@@ -1,8 +1,9 @@
 import { TestBed } from '@angular/core/testing';
 import { OxalateService } from './oxalate.service';
+import { provideHttpClient } from '@angular/common/http';
 import {
-  HttpClientTestingModule,
   HttpTestingController,
+  provideHttpClientTesting,
 } from '@angular/common/http/testing';
 import { AngularFirestore } from '@angular/fire/compat/firestore';
 import { AuthService } from 'src/app/user-auth/service/auth-service.service';
@@ -38,8 +39,9 @@ describe('OxalateService', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [HttpClientTestingModule],
       providers: [
+        provideHttpClient(),
+        provideHttpClientTesting(),
         OxalateService,
         { provide: AngularFirestore, useValue: mockFirestore },
         { provide: AuthService, useValue: mockAuthService },
@@ -137,10 +139,12 @@ describe('OxalateService', () => {
         .doc()
         .collection()
         .doc()
-        .get.and.returnValue(Promise.resolve({ exists: false }));
+        .get.and.returnValue(of({ exists: false }));
       await expectAsync(
         service.deleteOxalate('test-user-id', '1')
-      ).toBeRejectedWithError();
+      ).toBeRejectedWithError(
+        'Document with ID 1 for user test-user-id does not exist'
+      );
     });
   });
 });

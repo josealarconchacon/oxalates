@@ -3,7 +3,7 @@ import { AngularFireAuth } from '@angular/fire/compat/auth';
 import { AngularFirestore } from '@angular/fire/compat/firestore';
 import { Router } from '@angular/router';
 import firebase from 'firebase/compat/app';
-import { BehaviorSubject, Observable, map, take } from 'rxjs';
+import { BehaviorSubject, Observable, firstValueFrom, map, take } from 'rxjs';
 import { UserProfile } from '../profile/model/user-profile';
 import { AlertService } from 'src/app/shared/alert-service/alert.service';
 import { isStrongPassword } from 'src/app/shared/utils/password-validator';
@@ -200,7 +200,7 @@ export class AuthService {
 
   private async getUserData(uid: string): Promise<UserProfile | null> {
     const userRef = this.afs.collection('users').doc(uid);
-    const userData = await userRef.get().toPromise();
+    const userData = await firstValueFrom(userRef.get());
 
     if (userData?.exists) {
       const data = userData.data() as UserProfile;

@@ -4,7 +4,7 @@ import { OxalateComponent } from './landing-page/dialog-service/oxalate/oxalate.
 import { LandingPageComponent } from './landing-page/landing-page.component';
 import { ViewMoreComponent } from './landing-page/dialog-service/oxalate/view-more/view-more.component';
 import { AuthComponent } from './user-auth/auth/auth.component';
-import { AuthGuard } from './user-auth/service/auth.guard';
+import { authGuard } from './user-auth/service/auth.guard';
 import { ContributionComponent } from './landing-page/contribution/contribution.component';
 import { SuggestionsComponent } from './landing-page/suggestions/suggestions.component';
 import { NotFoundComponent } from './landing-page/not-found/not-found.component';
@@ -40,7 +40,7 @@ export const routes: Routes = [
     path: 'profile',
     loadChildren: () =>
       import('./user-auth/profile/profile.module').then((m) => m.ProfileModule),
-    canActivate: [AuthGuard],
+    canActivate: [authGuard],
   },
   {
     path: 'food-entry',
@@ -48,7 +48,7 @@ export const routes: Routes = [
       import('./user-auth/profile/food-entry/food-entry.component').then(
         (m) => m.FoodEntryComponent
       ),
-    canActivate: [AuthGuard],
+    canActivate: [authGuard],
     title: 'Daily oxalate log',
   },
   { path: '**', component: NotFoundComponent, title: 'Page not found' },
