@@ -4,7 +4,29 @@
     <meta charset="utf-8" />
     <title>Oxalates</title>
     <base href="/" />
+    <script>
+      /* Apply the theme before the first paint so a dark-mode visitor never sees a
+         white page while Angular starts. Mirrors ThemeService: a saved 'dark' or
+         'light' wins, otherwise the OS setting decides. */
+      (function () {
+        try {
+          var saved = localStorage.getItem('theme');
+          var dark =
+            saved === 'dark' || saved === 'light'
+              ? saved === 'dark'
+              : !!(window.matchMedia && matchMedia('(prefers-color-scheme: dark)').matches);
+          if (dark) document.documentElement.classList.add('dark-theme');
+          document.documentElement.style.colorScheme = dark ? 'dark' : 'light';
+        } catch (e) {}
+      })();
+    </script>
     <style>
+      /* First-paint background for dark mode, before the real stylesheet has
+         arrived. Keep it equal to the dark --background-color token in
+         src/styles/tokens/colors.css. */
+      html.dark-theme {
+        background-color: #1a1a1a;
+      }
       /* Keeps a page's top margin (the landing page has 96px) inside the app,
          so it does not collapse through and push the whole <body> down when the
          app replaces the loading placeholder. */
@@ -53,7 +75,7 @@
     />
 
     <link
-      href="https://fonts.googleapis.com/icon?family=Material+Icons&display=swap"
+      href="https://fonts.googleapis.com/icon?family=Material+Icons&display=block"
       rel="stylesheet"
     />
 

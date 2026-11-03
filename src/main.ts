@@ -1,6 +1,8 @@
 import { platformBrowserDynamic } from '@angular/platform-browser-dynamic';
 import { AppModule } from './app/app.module';
 import { NgModuleRef } from '@angular/core';
+import { FirebaseApp } from '@angular/fire/compat';
+import { startAnalytics, whenPageIsIdle } from './app/shared/utils/defer-analytics';
 
 // Extend Window interface to include our custom properties
 declare global {
@@ -22,6 +24,10 @@ platformBrowserDynamic()
       window.ngRef.destroy();
     }
     window.ngRef = ref;
+
+    // Analytics used to start with the app (AngularFireAnalyticsModule). It now
+    // waits until the page has loaded and is idle.
+    whenPageIsIdle(() => startAnalytics(ref.injector.get(FirebaseApp)));
 
     // Clean up when the page goes away. `pagehide` replaces `unload`, which
     // browsers are removing and which also stops the back/forward cache.
