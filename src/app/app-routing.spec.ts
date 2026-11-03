@@ -1,5 +1,5 @@
 import { routes } from './app-routing.module';
-import { AuthGuard } from './user-auth/service/auth.guard';
+import { authGuard } from './user-auth/service/auth.guard';
 import { ProfileModule } from './user-auth/profile/profile.module';
 import { FoodEntryComponent } from './user-auth/profile/food-entry/food-entry.component';
 
@@ -15,7 +15,7 @@ describe('app routes for signed-in pages', () => {
     const profile = route('profile');
 
     expect(profile.component).toBeUndefined();
-    expect(profile.canActivate).toEqual([AuthGuard]);
+    expect(profile.canActivate).toEqual([authGuard]);
     expect(await (profile.loadChildren as () => Promise<unknown>)()).toBe(
       ProfileModule
     );
@@ -25,7 +25,7 @@ describe('app routes for signed-in pages', () => {
     const entry = route('food-entry');
 
     expect(entry.component).toBeUndefined();
-    expect(entry.canActivate).toEqual([AuthGuard]);
+    expect(entry.canActivate).toEqual([authGuard]);
     expect(entry.title).toBe('Daily oxalate log');
     expect(await (entry.loadComponent as () => Promise<unknown>)()).toBe(
       FoodEntryComponent

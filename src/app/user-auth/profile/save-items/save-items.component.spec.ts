@@ -1,5 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { provideHttpClient } from '@angular/common/http';
+import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { SaveItemsComponent } from './save-items.component';
 import { AngularFireModule } from '@angular/fire/compat';
 import { AngularFirestore } from '@angular/fire/compat/firestore';
@@ -33,10 +34,11 @@ describe('SaveItemsComponent', () => {
     TestBed.configureTestingModule({
       declarations: [SaveItemsComponent],
       imports: [
-        HttpClientTestingModule,
         AngularFireModule.initializeApp(firebaseConfig),
       ],
       providers: [
+        provideHttpClient(),
+        provideHttpClientTesting(),
         { provide: AngularFirestore, useValue: angularFirestoreMock },
       ],
     });

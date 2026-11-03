@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable, from, of } from 'rxjs';
+import { Observable, firstValueFrom, from, of } from 'rxjs';
 import Fuse from 'fuse.js';
 import { map, catchError, tap } from 'rxjs/operators';
 import { Oxalate } from '../../model/oxalate';
@@ -217,7 +217,7 @@ export class OxalateService {
     // console.log('Attempting to delete document with ID:', id);
 
     try {
-      const snapshot = await docRef.get().toPromise();
+      const snapshot = await firstValueFrom(docRef.get());
       if (!snapshot || !snapshot.exists) {
         throw new Error(
           `Document with ID ${id} for user ${userId} does not exist`

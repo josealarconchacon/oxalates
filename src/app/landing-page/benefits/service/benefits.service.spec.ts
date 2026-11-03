@@ -1,7 +1,8 @@
 import { TestBed } from '@angular/core/testing';
+import { provideHttpClient } from '@angular/common/http';
 import {
-  HttpClientTestingModule,
   HttpTestingController,
+  provideHttpClientTesting,
 } from '@angular/common/http/testing';
 import { BenefitsService, BenefitsData } from './benefits.service';
 
@@ -11,8 +12,7 @@ describe('BenefitsService', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [HttpClientTestingModule],
-      providers: [BenefitsService],
+      providers: [provideHttpClient(), provideHttpClientTesting(), BenefitsService],
     });
 
     service = TestBed.inject(BenefitsService);

@@ -1,9 +1,9 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { provideHttpClient } from '@angular/common/http';
 import {
-  HttpClientTestingModule,
   HttpTestingController,
+  provideHttpClientTesting,
 } from '@angular/common/http/testing';
-import { RouterTestingModule } from '@angular/router/testing';
 import { of, BehaviorSubject } from 'rxjs';
 
 import { FoodByCategoryComponent } from './food-by-category.component';
@@ -12,7 +12,7 @@ import { CategoryService } from '../oxalate/service/category.service';
 import { FilterService } from '../oxalate/service/filter.service';
 import { SvgService } from './service/svg.service';
 import { ThemeService } from '../../../shared/services/theme.service';
-import { Router } from '@angular/router';
+import { Router, provideRouter } from '@angular/router';
 
 describe('FoodByCategoryComponent', () => {
   let component: FoodByCategoryComponent;
@@ -45,12 +45,11 @@ describe('FoodByCategoryComponent', () => {
     });
 
     await TestBed.configureTestingModule({
-      imports: [
-        FoodByCategoryComponent,
-        HttpClientTestingModule,
-        RouterTestingModule,
-      ],
+      imports: [FoodByCategoryComponent],
       providers: [
+        provideHttpClient(),
+        provideHttpClientTesting(),
+        provideRouter([]),
         { provide: CategoryService, useValue: categoryServiceSpy },
         { provide: FilterService, useValue: filterServiceSpy },
         { provide: Router, useValue: routerSpy },

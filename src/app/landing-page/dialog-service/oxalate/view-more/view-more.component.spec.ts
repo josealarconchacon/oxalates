@@ -2,7 +2,8 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ViewMoreComponent } from './view-more.component';
 import { AngularFireModule } from '@angular/fire/compat';
 import { AngularFireAuthModule } from '@angular/fire/compat/auth';
-import { HttpClientTestingModule } from '@angular/common/http/testing'; // Import this module
+import { provideHttpClient } from '@angular/common/http';
+import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { environment } from 'src/environments/environment';
 
 describe('ViewMoreComponent', () => {
@@ -15,8 +16,8 @@ describe('ViewMoreComponent', () => {
       imports: [
         AngularFireModule.initializeApp(environment.firebaseConfig),
         AngularFireAuthModule,
-        HttpClientTestingModule,
       ],
+      providers: [provideHttpClient(), provideHttpClientTesting()],
     });
 
     fixture = TestBed.createComponent(ViewMoreComponent);

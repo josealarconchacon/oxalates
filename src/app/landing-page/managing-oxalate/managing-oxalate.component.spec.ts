@@ -1,5 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { provideHttpClient } from '@angular/common/http';
+import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { NO_ERRORS_SCHEMA } from '@angular/core';
 import { ManagingOxalateComponent } from './managing-oxalate.component';
 import { OxalateService } from './service/oxalate.service';
@@ -20,8 +21,11 @@ describe('ManagingOxalateComponent', () => {
 
     await TestBed.configureTestingModule({
       declarations: [ManagingOxalateComponent],
-      imports: [HttpClientTestingModule],
-      providers: [{ provide: OxalateService, useValue: mockOxalateService }],
+      providers: [
+        provideHttpClient(),
+        provideHttpClientTesting(),
+        { provide: OxalateService, useValue: mockOxalateService },
+      ],
       schemas: [NO_ERRORS_SCHEMA],
     }).compileComponents();
 

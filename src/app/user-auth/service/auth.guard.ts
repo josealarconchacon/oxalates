@@ -1,24 +1,20 @@
-import { Injectable } from '@angular/core';
-import { CanActivate, Router } from '@angular/router';
-import { Observable } from 'rxjs';
+import { inject } from '@angular/core';
+import { CanActivateFn, Router } from '@angular/router';
 import { map } from 'rxjs/operators';
 import { AuthService } from './auth-service.service';
 
-@Injectable({
-  providedIn: 'root',
-})
-export class AuthGuard implements CanActivate {
-  constructor(private authService: AuthService, private router: Router) {}
+/** Lets signed-in users through and sends everyone else to the sign-in page. */
+export const authGuard: CanActivateFn = () => {
+  const authService = inject(AuthService);
+  const router = inject(Router);
 
-  canActivate(): Observable<boolean> {
-    return this.authService.isAuthenticatedAsync().pipe(
-      map((isAuthenticated) => {
-        if (isAuthenticated) {
-          return true;
-        }
-        this.router.navigate(['/auth']);
-        return false;
-      })
-    );
-  }
-}
+  return authService.isAuthenticatedAsync().pipe(
+    map((isAuthenticated) => {
+      if (isAuthenticated) {
+        return true;
+      }
+      router.navigate(['/auth']);
+      return false;
+    })
+  );
+};
