@@ -74,7 +74,8 @@ y/
 .agents/
 skills-lock.json
 
-
+#Angular Upgrade Plan
+docs/angular-upgrade-plan.md
 
 .qodo
 .claude/
