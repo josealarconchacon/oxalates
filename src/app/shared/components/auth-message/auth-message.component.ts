@@ -20,7 +20,6 @@ import {
 
 @Component({
   selector: 'app-auth-message',
-  standalone: true,
   imports: [CommonModule, DialogDirective],
   templateUrl: './auth-message.component.html',
   animations: [

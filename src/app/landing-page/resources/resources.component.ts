@@ -6,6 +6,7 @@ import { ResourceService } from '../dialog-service/service/resource.service';
   selector: 'app-resources',
   templateUrl: './resources.component.html',
   styleUrls: ['./resources.component.css'],
+  standalone: false,
 })
 export class ResourcesComponent implements OnInit {
   foodResources: Resource[] = [];

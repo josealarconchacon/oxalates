@@ -1,4 +1,8 @@
-import { Injectable } from '@angular/core';
+import {
+  EnvironmentInjector,
+  Injectable,
+  runInInjectionContext,
+} from '@angular/core';
 import { AngularFirestore } from '@angular/fire/compat/firestore';
 import { AuthService } from 'src/app/user-auth/service/auth-service.service';
 import { catchError, from, map, Observable, switchMap, throwError } from 'rxjs';
@@ -25,10 +29,16 @@ export interface DailyFoodEntry {
 export class FoodEntryService {
   private readonly collectionName = 'foodEntries';
 
+  // AngularFire 19's compat classes call inject() when they are created, which only
+  // works inside an injection context. A method call is not one, so every
+  // Firestore reference below is built inside runInInjectionContext.
+
   constructor(
     private firestore: AngularFirestore,
-    private authService: AuthService
+    private authService: AuthService,
+    private injector: EnvironmentInjector
   ) {}
+
 
   private async getCurrentUser(): Promise<string> {
     const user = await this.authService.getCurrentUser();
@@ -46,12 +56,14 @@ export class FoodEntryService {
         }
 
         const dateString = date.toISOString().split('T')[0];
-        return this.firestore
-          .collection(this.collectionName)
-          .doc(user.uid)
-          .collection('entries')
-          .doc<DailyFoodEntry>(dateString)
-          .valueChanges()
+        return runInInjectionContext(this.injector, () =>
+          this.firestore
+            .collection(this.collectionName)
+            .doc(user.uid)
+            .collection('entries')
+            .doc<DailyFoodEntry>(dateString)
+            .valueChanges()
+        )
           .pipe(
             map((entry) => {
               if (!entry) {
@@ -82,11 +94,13 @@ export class FoodEntryService {
     try {
       const userId = await this.getCurrentUser();
       const dateString = date.toISOString().split('T')[0];
-      const docRef = this.firestore
-        .collection(this.collectionName)
-        .doc(userId)
-        .collection('entries')
-        .doc(dateString);
+      const docRef = runInInjectionContext(this.injector, () =>
+        this.firestore
+          .collection(this.collectionName)
+          .doc(userId)
+          .collection('entries')
+          .doc(dateString)
+      );
 
       await docRef.set(
         {

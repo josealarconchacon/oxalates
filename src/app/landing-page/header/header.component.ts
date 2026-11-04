@@ -16,7 +16,6 @@ import { ProfileImageService } from '../../user-auth/service/profile-image.servi
   selector: 'app-header',
   templateUrl: './header.component.html',
   styleUrls: ['./header.component.css'],
-  standalone: true,
   imports: [
     CommonModule,
     MatIconModule,

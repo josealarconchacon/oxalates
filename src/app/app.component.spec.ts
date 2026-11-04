@@ -6,12 +6,14 @@ import { Component } from '@angular/core';
 @Component({
   selector: 'app-header',
   template: '<div>Mock App Header</div>',
+  standalone: false,
 })
 class MockAppHeaderComponent {}
 
 @Component({
   selector: 'app-auth-message',
   template: '',
+  standalone: false,
 })
 class MockAuthMessageComponent {}
 

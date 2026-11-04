@@ -23,6 +23,7 @@ import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
   selector: 'app-view-more',
   templateUrl: './view-more.component.html',
   styleUrls: ['./view-more.component.css'],
+  standalone: false,
 })
 export class ViewMoreComponent implements OnInit, OnDestroy {
   @Input() oxalateData: Oxalate | undefined;

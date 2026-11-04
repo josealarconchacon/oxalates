@@ -5,7 +5,6 @@ import { DialogDirective } from '../../shared/directives/dialog.directive';
 
 @Component({
   selector: 'app-contribution',
-  standalone: true,
   imports: [CommonModule, FormsModule, DialogDirective],
   templateUrl: './contribution.component.html',
   styleUrls: ['./contribution.component.css'],

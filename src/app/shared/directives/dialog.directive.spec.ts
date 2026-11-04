@@ -4,7 +4,6 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { DialogDirective } from './dialog.directive';
 
 @Component({
-  standalone: true,
   imports: [DialogDirective, NgIf],
   template: `
     <button id="opener" type="button" (click)="open = true">Open</button>

@@ -19,6 +19,7 @@ import { showDefaultAvatar } from 'src/app/shared/utils/avatar';
   templateUrl: './profile.component.html',
   styleUrls: ['./profile.component.css'],
   animations: [fadeInOut],
+  standalone: false,
 })
 export class ProfileComponent implements OnInit {
   userProfile: any;

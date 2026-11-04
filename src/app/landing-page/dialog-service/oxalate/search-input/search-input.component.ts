@@ -16,7 +16,6 @@ import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-search-input',
-  standalone: true,
   imports: [FormsModule, CommonModule],
   templateUrl: './search-input.component.html',
   styleUrls: ['./search-input.component.css'],

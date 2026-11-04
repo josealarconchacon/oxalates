@@ -9,6 +9,7 @@ import { AuthService } from '../../service/auth-service.service';
   selector: 'app-save-items',
   templateUrl: './save-items.component.html',
   styleUrls: ['./save-items.component.css'],
+  standalone: false,
 })
 export class SaveItemsComponent implements OnInit {
   savedOxalates$: Observable<Omit<Oxalate, 'notes' | 'reference'>[]> = of([]);

@@ -6,7 +6,6 @@ import { ClickableDirective } from '../../../../shared/directives/clickable.dire
 
 @Component({
   selector: 'app-search-section',
-  standalone: true,
   imports: [FormsModule, CommonModule, ClickableDirective],
   templateUrl: './search-section.component.html',
   styleUrl: './search-section.component.css',

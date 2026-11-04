@@ -5,6 +5,7 @@ import { Benefit, BenefitsService } from './service/benefits.service';
   selector: 'app-benefits',
   templateUrl: './benefits.component.html',
   styleUrls: ['./benefits.component.css'],
+  standalone: false,
 })
 export class BenefitsComponent implements OnInit {
   benefits: Benefit[] = [];

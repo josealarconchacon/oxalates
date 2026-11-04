@@ -3,7 +3,6 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ClickableDirective } from './clickable.directive';
 
 @Component({
-  standalone: true,
   imports: [ClickableDirective],
   template: `
     <div class="plain" appClickable (click)="clicks = clicks + 1">Open</div>
