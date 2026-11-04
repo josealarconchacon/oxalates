@@ -7,7 +7,6 @@ import { MatListModule } from '@angular/material/list';
 import { MatCardModule } from '@angular/material/card';
 import { MatIconModule } from '@angular/material/icon';
 import { MatDialogModule } from '@angular/material/dialog';
-import { MatFormFieldModule } from '@angular/material/form-field';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import {
   provideHttpClient,
@@ -93,7 +92,6 @@ export function initializeApp(configService: ConfigService) {
     MatCardModule,
     MatIconModule,
     MatDialogModule,
-    MatFormFieldModule,
     FormsModule,
     ReactiveFormsModule,
     ScrollingModule,
