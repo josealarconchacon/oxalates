@@ -108,7 +108,7 @@ export class HeaderComponent implements OnInit {
     this.closeNav();
   }
 
-  @HostListener('window:scroll', ['$event'])
+  @HostListener('window:scroll')
   onWindowScroll() {
     // Use requestAnimationFrame for better performance
     if (this.rafId) {
