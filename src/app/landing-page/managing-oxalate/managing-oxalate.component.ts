@@ -20,6 +20,7 @@ interface OxalateContent {
   selector: 'app-managing-oxalate',
   templateUrl: './managing-oxalate.component.html',
   styleUrls: ['./managing-oxalate.component.css'],
+  standalone: false,
 })
 export class ManagingOxalateComponent implements OnInit {
   content: OxalateContent | null = null;

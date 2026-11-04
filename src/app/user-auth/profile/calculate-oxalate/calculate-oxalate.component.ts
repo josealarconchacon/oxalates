@@ -25,7 +25,6 @@ import { AlertComponent } from 'src/app/landing-page/dialog-service/oxalate/shar
 
 @Component({
   selector: 'app-calculate-oxalate',
-  standalone: true,
   imports: [
     CommonModule,
     FormsModule,

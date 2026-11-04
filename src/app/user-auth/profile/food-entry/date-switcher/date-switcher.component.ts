@@ -19,7 +19,6 @@ import { MatRippleModule } from '@angular/material/core';
 
 @Component({
   selector: 'app-date-switcher',
-  standalone: true,
   imports: [
     CommonModule,
     FormsModule,

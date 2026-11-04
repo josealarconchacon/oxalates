@@ -9,7 +9,6 @@ import { AuthMessageService } from '../../shared/services/auth-message.service';
   selector: 'app-footer',
   templateUrl: './footer.component.html',
   styleUrls: ['./footer.component.css'],
-  standalone: true,
   imports: [CommonModule, RouterLink],
   providers: [AuthService],
 })

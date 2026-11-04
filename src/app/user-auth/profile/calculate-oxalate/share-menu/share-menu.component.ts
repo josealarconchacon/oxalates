@@ -18,7 +18,6 @@ import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-share-menu',
-  standalone: true,
   imports: [DecimalPipe, CommonModule, DialogDirective],
   templateUrl: './share-menu.component.html',
   styleUrls: ['./share-menu.component.css'],

@@ -28,6 +28,7 @@ import { CategoryService } from './service/category.service';
   selector: 'app-oxalate',
   templateUrl: './oxalate.component.html',
   styleUrls: ['./oxalate.component.css'],
+  standalone: false,
 })
 export class OxalateComponent implements OnInit, OnDestroy {
   private subscriptions: Subscription[] = [];

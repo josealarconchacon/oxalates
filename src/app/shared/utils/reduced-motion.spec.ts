@@ -44,6 +44,7 @@ describe('Angular animations and disableAnimations', () => {
         ]),
       ]),
     ],
+    standalone: false,
   })
   class SlideProbeComponent {
     open = false;

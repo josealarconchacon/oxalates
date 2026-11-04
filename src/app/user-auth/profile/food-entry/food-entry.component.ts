@@ -28,7 +28,6 @@ export interface FoodItem {
 
 @Component({
   selector: 'app-food-entry',
-  standalone: true,
   imports: [
     FormsModule,
     CommonModule,

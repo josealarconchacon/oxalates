@@ -4,7 +4,6 @@ import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-serving-panel',
-  standalone: true,
   imports: [CommonModule, FormsModule],
   templateUrl: './serving-panel.component.html',
   styleUrl: './serving-panel.component.css',

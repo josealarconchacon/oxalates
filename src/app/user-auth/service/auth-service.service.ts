@@ -1,4 +1,8 @@
-import { Injectable } from '@angular/core';
+import {
+  EnvironmentInjector,
+  Injectable,
+  runInInjectionContext,
+} from '@angular/core';
 import { AngularFireAuth } from '@angular/fire/compat/auth';
 import { AngularFirestore } from '@angular/fire/compat/firestore';
 import { Router } from '@angular/router';
@@ -19,9 +23,19 @@ export class AuthService {
     private afAuth: AngularFireAuth,
     private afs: AngularFirestore,
     private router: Router,
-    private alertService: AlertService
+    private alertService: AlertService,
+    private injector: EnvironmentInjector
   ) {
     this.initAuthListener();
+  }
+
+  // AngularFire 19's compat classes call inject() when they are created, which only
+  // works inside an injection context. These calls run from callbacks and after
+  // awaits, so the reference is built inside runInInjectionContext.
+  private usersDoc(uid: string) {
+    return runInInjectionContext(this.injector, () =>
+      this.afs.collection('users').doc(uid)
+    );
   }
 
   private initAuthListener(): void {
@@ -199,7 +213,7 @@ export class AuthService {
   }
 
   private async getUserData(uid: string): Promise<UserProfile | null> {
-    const userRef = this.afs.collection('users').doc(uid);
+    const userRef = this.usersDoc(uid);
     const userData = await firstValueFrom(userRef.get());
 
     if (userData?.exists) {
@@ -231,7 +245,7 @@ export class AuthService {
       return Promise.reject(new Error('Invalid user data'));
     }
 
-    const userRef = this.afs.collection('users').doc(user.uid);
+    const userRef = this.usersDoc(user.uid);
     return userRef.set(userData, { merge: true });
   }
 
@@ -287,7 +301,7 @@ export class AuthService {
   async updateProfileImage(imageUrl: string): Promise<void> {
     const user = await this.getCurrentUser();
     if (user) {
-      const userRef = this.afs.collection('users').doc(user.uid);
+      const userRef = this.usersDoc(user.uid);
       await userRef.update({ photoURL: imageUrl });
       await user.updateProfile({ photoURL: imageUrl });
 

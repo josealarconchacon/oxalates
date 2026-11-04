@@ -5,7 +5,6 @@ import { SuggestionsService, CustomerFeedback } from './services/suggestions.ser
 
 @Component({
   selector: 'app-suggestions',
-  standalone: true,
   imports: [CommonModule, ReactiveFormsModule],
   templateUrl: './suggestions.component.html',
   styleUrls: ['./suggestions.component.css'],

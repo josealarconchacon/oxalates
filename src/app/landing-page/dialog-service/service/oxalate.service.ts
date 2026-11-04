@@ -1,5 +1,9 @@
 import { HttpClient } from '@angular/common/http';
-import { Injectable } from '@angular/core';
+import {
+  EnvironmentInjector,
+  Injectable,
+  runInInjectionContext,
+} from '@angular/core';
 import { Observable, firstValueFrom, from, of } from 'rxjs';
 import Fuse from 'fuse.js';
 import { map, catchError, tap } from 'rxjs/operators';
@@ -21,7 +25,8 @@ export class OxalateService {
   constructor(
     private http: HttpClient,
     private firestore: AngularFirestore,
-    private authService: AuthService
+    private authService: AuthService,
+    private injector: EnvironmentInjector
   ) {
     // Preload data when service is initialized
     this.preloadData();
@@ -152,6 +157,9 @@ export class OxalateService {
     );
   }
 
+  // AngularFire 19's compat classes call inject() when they are created, which only
+  // works inside an injection context. A method call is not one, so every
+  // Firestore reference below is built inside runInInjectionContext.
   private async getCurrentUser(): Promise<any> {
     const user = await this.authService.getCurrentUser();
     if (!user) {
@@ -161,11 +169,14 @@ export class OxalateService {
   }
 
   async itemExists(oxalateData: Oxalate, userId: string): Promise<boolean> {
-    const existingItems = await this.firestore
-      .collection(this.collectionName)
-      .doc(userId)
-      .collection('oxalates')
-      .ref.get();
+    const existingItems = await runInInjectionContext(
+      this.injector,
+      () =>
+        this.firestore
+          .collection(this.collectionName)
+          .doc(userId)
+          .collection('oxalates').ref
+    ).get();
 
     return existingItems.docs.some((doc) => {
       const data = doc.data() as Oxalate;
@@ -177,13 +188,14 @@ export class OxalateService {
     oxalateData: Oxalate,
     userId: string
   ): Promise<void> {
-    const userDocRef = this.firestore
-      .collection(this.collectionName)
-      .doc(userId);
+    const oxalatesRef = runInInjectionContext(this.injector, () =>
+      this.firestore
+        .collection(this.collectionName)
+        .doc(userId)
+        .collection('oxalates')
+    );
 
-    const docRef = await userDocRef
-      .collection('oxalates')
-      .add({ ...oxalateData });
+    const docRef = await oxalatesRef.add({ ...oxalateData });
     // console.log('Oxalate saved with ID:', docRef.id);
     console.log('Oxalate saved with ID:', '...');
   }
@@ -208,11 +220,13 @@ export class OxalateService {
   }
 
   async deleteOxalate(userId: string, id: string): Promise<void> {
-    const docRef = this.firestore
-      .collection(this.collectionName)
-      .doc(userId)
-      .collection('oxalates')
-      .doc(id);
+    const docRef = runInInjectionContext(this.injector, () =>
+      this.firestore
+        .collection(this.collectionName)
+        .doc(userId)
+        .collection('oxalates')
+        .doc(id)
+    );
     console.log('Attempting to delete document with ID: ...');
     // console.log('Attempting to delete document with ID:', id);
 
@@ -234,11 +248,13 @@ export class OxalateService {
   }
 
   getSavedOxalates(userId: string): Observable<Oxalate[]> {
-    const oxalatesRef = this.firestore
-      .collection(this.collectionName)
-      .doc(userId)
-      .collection('oxalates')
-      .get();
+    const oxalatesRef = runInInjectionContext(this.injector, () =>
+      this.firestore
+        .collection(this.collectionName)
+        .doc(userId)
+        .collection('oxalates')
+        .get()
+    );
 
     return from(oxalatesRef).pipe(
       map((oxalatesSnapshot) => {

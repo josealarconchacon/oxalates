@@ -13,7 +13,6 @@ import { ClickableDirective } from '../../../shared/directives/clickable.directi
 
 @Component({
   selector: 'app-food-by-category',
-  standalone: true,
   imports: [CommonModule, ClickableDirective],
   templateUrl: './food-by-category.component.html',
   styleUrl: './food-by-category.component.css',

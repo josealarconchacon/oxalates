@@ -13,7 +13,6 @@ import { GetReportComponent } from '../get-report/get-report.component';
 
 @Component({
   selector: 'app-results-section',
-  standalone: true,
   imports: [CommonModule, ShareMenuComponent, GetReportComponent],
   templateUrl: './results-section.component.html',
   styleUrls: ['./results-section.component.css'],
