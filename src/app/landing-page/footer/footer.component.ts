@@ -2,14 +2,14 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Router, NavigationEnd, RouterLink } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { AuthService } from '../../user-auth/service/auth-service.service';
-import { CommonModule } from '@angular/common';
+
 import { AuthMessageService } from '../../shared/services/auth-message.service';
 
 @Component({
   selector: 'app-footer',
   templateUrl: './footer.component.html',
   styleUrls: ['./footer.component.css'],
-  imports: [CommonModule, RouterLink],
+  imports: [RouterLink],
 })
 export class FooterComponent implements OnInit, OnDestroy {
   showBackToHome: boolean = false;

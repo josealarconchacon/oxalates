@@ -1,24 +1,27 @@
 <section class="category-container" [class.dark-theme]="isDarkTheme$ | async">
   <h2 class="by-category">Browse by Category</h2>
   <div class="cards-wrapper">
-    <div
-      class="category-card"
-      *ngFor="let card of cardsArray"
-      appClickable
-      (click)="onCardClick(card.title)"
-    >
-      <div class="category-badge" *ngIf="card.badge">{{ card.badge }}</div>
-      <div class="category-card-content">
-        <div
-          class="category-icon"
-          [class.svg-debug]="true"
-          [innerHTML]="getSanitizedIcon(card.iconSvg)"
-        ></div>
-        <h3 class="category-title">{{ card.title }}</h3>
+    @for (card of cardsArray; track card) {
+      <div
+        class="category-card"
+        appClickable
+        (click)="onCardClick(card.title)"
+        >
+        @if (card.badge) {
+          <div class="category-badge">{{ card.badge }}</div>
+        }
+        <div class="category-card-content">
+          <div
+            class="category-icon"
+            [class.svg-debug]="true"
+            [innerHTML]="getSanitizedIcon(card.iconSvg)"
+          ></div>
+          <h3 class="category-title">{{ card.title }}</h3>
+        </div>
+        <div class="category-overlay">
+          <div class="overlay-text">{{ card.overlayText }}</div>
+        </div>
       </div>
-      <div class="category-overlay">
-        <div class="overlay-text">{{ card.overlayText }}</div>
-      </div>
-    </div>
+    }
   </div>
 </section>

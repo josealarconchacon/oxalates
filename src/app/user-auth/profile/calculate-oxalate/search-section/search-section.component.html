@@ -9,38 +9,40 @@
       (ngModelChange)="onFoodNameChange($event)"
       placeholder="Search foods..."
       class="search-input"
-    />
+      />
   </div>
 
-  <div
-    *ngIf="showSuggestions && similarFoods.length > 0"
-    class="suggestions-panel"
-  >
+  @if (showSuggestions && similarFoods.length > 0) {
     <div
-      *ngFor="let food of similarFoods"
-      class="food-card"
-      appClickable
-      (click)="onSelectFood(food)"
-    >
-      <div class="food-header">
-        <div class="food-info">
-          <span class="food-name">{{ food.name }}</span>
+      class="suggestions-panel"
+      >
+      @for (food of similarFoods; track food) {
+        <div
+          class="food-card"
+          appClickable
+          (click)="onSelectFood(food)"
+          >
+          <div class="food-header">
+            <div class="food-info">
+              <span class="food-name">{{ food.name }}</span>
+            </div>
+            <div class="oxalate-info">
+              <div class="info-item">
+                <span class="label">Oxalate Per Serving:</span>
+                <span class="value"
+                  >{{ food.totalOxalate | number : "1.2-2" }} mg</span
+                  >
+                </div>
+                <div class="info-item">
+                  <span class="label">Soluble Oxalate Per Serving:</span>
+                  <span class="value"
+                    >{{ food.solubleOxalate | number : "1.2-2" }} mg</span
+                    >
+                  </div>
+                </div>
+              </div>
+            </div>
+          }
         </div>
-        <div class="oxalate-info">
-          <div class="info-item">
-            <span class="label">Oxalate Per Serving:</span>
-            <span class="value"
-              >{{ food.totalOxalate | number : "1.2-2" }} mg</span
-            >
-          </div>
-          <div class="info-item">
-            <span class="label">Soluble Oxalate Per Serving:</span>
-            <span class="value"
-              >{{ food.solubleOxalate | number : "1.2-2" }} mg</span
-            >
-          </div>
-        </div>
-      </div>
+      }
     </div>
-  </div>
-</div>

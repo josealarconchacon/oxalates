@@ -1,10 +1,10 @@
-import { CommonModule } from '@angular/common';
+
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-serving-panel',
-  imports: [CommonModule, FormsModule],
+  imports: [FormsModule],
   templateUrl: './serving-panel.component.html',
   styleUrl: './serving-panel.component.css',
 })

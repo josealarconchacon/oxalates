@@ -137,10 +137,10 @@ export class ViewMoreComponent implements OnInit, OnDestroy {
       return;
     }
 
-    // getCurrentNavigation() returns null in ngOnInit (navigation has completed).
+    // currentNavigation() returns null in ngOnInit (navigation has completed).
     // Use history.state as fallback - Angular router stores navigation state there.
     const navState =
-      this.router.getCurrentNavigation()?.extras?.state ?? history?.state;
+      this.router.currentNavigation()?.extras?.state ?? history?.state;
 
     if (navState?.['selectedOxalate']) {
       this.oxalateData = navState['selectedOxalate'] as Oxalate;

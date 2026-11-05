@@ -2,21 +2,22 @@
   <div class="suggestions-container">
     <div class="form-card ui-card ui-card--raised">
       <!-- Success state: replaces form content -->
-      <div
-        class="success-card"
-        *ngIf="submissionSuccess"
-        role="status"
-        aria-live="polite"
-      >
-        <div class="success-icon" aria-hidden="true"></div>
-        <h1 class="success-heading">Thank you!</h1>
-        <p class="success-subtext">
-          Your feedback has been received. We'll review it shortly.
-        </p>
-      </div>
+      @if (submissionSuccess) {
+        <div
+          class="success-card"
+          role="status"
+          aria-live="polite"
+          >
+          <div class="success-icon" aria-hidden="true"></div>
+          <h1 class="success-heading">Thank you!</h1>
+          <p class="success-subtext">
+            Your feedback has been received. We'll review it shortly.
+          </p>
+        </div>
+      }
 
       <!-- Form state: shown when not success -->
-      <ng-container *ngIf="!submissionSuccess">
+      @if (!submissionSuccess) {
         <header class="section-header">
           <p class="eyebrow">HELP US IMPROVE</p>
           <h1>Share feedback with us</h1>
@@ -25,14 +26,13 @@
             support your oxalate journey.
           </p>
         </header>
-
         <form
           [formGroup]="feedbackForm"
           (ngSubmit)="submitFeedback()"
           class="feedback-form"
           aria-label="Customer feedback form"
           novalidate
-        >
+          >
           <div class="form-group">
             <label for="name">
               Name
@@ -49,20 +49,20 @@
                 feedbackForm.get('name')?.invalid &&
                 feedbackForm.get('name')?.touched
               "
-            />
-            <p
-              class="error-message"
-              *ngIf="
-                feedbackForm.get('name')?.invalid &&
-                feedbackForm.get('name')?.touched
-              "
-              role="alert"
-            >
-              <i class="material-icons icon-inline error-icon" aria-hidden="true">warning</i>
-              Please enter your name
-            </p>
+              />
+            @if (
+              feedbackForm.get('name')?.invalid &&
+              feedbackForm.get('name')?.touched
+              ) {
+              <p
+                class="error-message"
+                role="alert"
+                >
+                <i class="material-icons icon-inline error-icon" aria-hidden="true">warning</i>
+                Please enter your name
+              </p>
+            }
           </div>
-
           <div class="form-group">
             <label for="email">
               Email
@@ -79,20 +79,20 @@
                 feedbackForm.get('email')?.invalid &&
                 feedbackForm.get('email')?.touched
               "
-            />
-            <p
-              class="error-message"
-              *ngIf="
-                feedbackForm.get('email')?.invalid &&
-                feedbackForm.get('email')?.touched
-              "
-              role="alert"
-            >
-              <i class="material-icons icon-inline error-icon" aria-hidden="true">warning</i>
-              Provide a valid email address
-            </p>
+              />
+            @if (
+              feedbackForm.get('email')?.invalid &&
+              feedbackForm.get('email')?.touched
+              ) {
+              <p
+                class="error-message"
+                role="alert"
+                >
+                <i class="material-icons icon-inline error-icon" aria-hidden="true">warning</i>
+                Provide a valid email address
+              </p>
+            }
           </div>
-
           <div class="form-group">
             <label for="feedback">
               Feedback
@@ -110,47 +110,51 @@
                 feedbackForm.get('feedback')?.touched
               "
             ></textarea>
-            <p
-              class="error-message"
-              *ngIf="
-                feedbackForm.get('feedback')?.invalid &&
-                feedbackForm.get('feedback')?.touched
-              "
-              role="alert"
-            >
-              <i class="material-icons icon-inline error-icon" aria-hidden="true">warning</i>
-              Feedback must be at least 20 characters
-            </p>
+            @if (
+              feedbackForm.get('feedback')?.invalid &&
+              feedbackForm.get('feedback')?.touched
+              ) {
+              <p
+                class="error-message"
+                role="alert"
+                >
+                <i class="material-icons icon-inline error-icon" aria-hidden="true">warning</i>
+                Feedback must be at least 20 characters
+              </p>
+            }
             <p class="input-hint">
               Let us know what we did well and where we can do better.
             </p>
           </div>
-
           <!-- Error banner: above submit button -->
-          <div
-            class="error-banner"
-            *ngIf="submissionError"
-            role="alert"
-            aria-live="assertive"
-          >
-            <i class="material-icons icon-inline error-banner-icon" aria-hidden="true">warning</i>
-            {{ submissionError }}
-          </div>
-
+          @if (submissionError) {
+            <div
+              class="error-banner"
+              role="alert"
+              aria-live="assertive"
+              >
+              <i class="material-icons icon-inline error-banner-icon" aria-hidden="true">warning</i>
+              {{ submissionError }}
+            </div>
+          }
           <button
             type="submit"
             class="submit-button ui-btn ui-btn--primary ui-btn--block"
             [disabled]="feedbackForm.invalid || isLoading"
             [attr.aria-busy]="isLoading"
-          >
-            <span *ngIf="!isLoading">Send Feedback</span>
-            <span *ngIf="isLoading" class="button-loading">
-              <span class="button-spinner" aria-hidden="true"></span>
-              Sending...
-            </span>
+            >
+            @if (!isLoading) {
+              <span>Send Feedback</span>
+            }
+            @if (isLoading) {
+              <span class="button-loading">
+                <span class="button-spinner" aria-hidden="true"></span>
+                Sending...
+              </span>
+            }
           </button>
         </form>
-      </ng-container>
+      }
     </div>
   </div>
 </div>

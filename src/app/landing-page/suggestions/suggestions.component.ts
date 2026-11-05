@@ -1,11 +1,11 @@
 import { Component } from '@angular/core';
-import { CommonModule } from '@angular/common';
+
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { SuggestionsService, CustomerFeedback } from './services/suggestions.service';
 
 @Component({
   selector: 'app-suggestions',
-  imports: [CommonModule, ReactiveFormsModule],
+  imports: [ReactiveFormsModule],
   templateUrl: './suggestions.component.html',
   styleUrls: ['./suggestions.component.css'],
 })

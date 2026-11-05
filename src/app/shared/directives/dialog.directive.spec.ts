@@ -1,31 +1,32 @@
-import { NgIf } from '@angular/common';
+
 import { Component } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { DialogDirective } from './dialog.directive';
 
 @Component({
-  imports: [DialogDirective, NgIf],
+  imports: [DialogDirective],
   template: `
     <button id="opener" type="button" (click)="open = true">Open</button>
     <button id="outside" type="button">Outside</button>
-    <div
-      *ngIf="open"
-      id="box"
-      appDialog
-      aria-label="Test dialog"
-      (dialogClose)="closed = closed + 1; open = false"
-    >
-      <button id="first" type="button">First</button>
-      <button id="middle" type="button">Middle</button>
-      <button
-        id="last"
-        type="button"
-        [attr.data-autofocus]="autofocusLast ? '' : null"
-      >
-        Last
-      </button>
-    </div>
-  `,
+    @if (open) {
+      <div
+        id="box"
+        appDialog
+        aria-label="Test dialog"
+        (dialogClose)="closed = closed + 1; open = false"
+        >
+        <button id="first" type="button">First</button>
+        <button id="middle" type="button">Middle</button>
+        <button
+          id="last"
+          type="button"
+          [attr.data-autofocus]="autofocusLast ? '' : null"
+          >
+          Last
+        </button>
+      </div>
+    }
+    `,
 })
 class HostComponent {
   open = false;

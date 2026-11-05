@@ -35,7 +35,7 @@ describe('prefersReducedMotion', () => {
 describe('Angular animations and disableAnimations', () => {
   @Component({
     selector: 'app-slide-probe',
-    template: '<div class="probe" *ngIf="open" @slide>content</div>',
+    template: '@if (open) {<div class="probe" @slide>content</div>}',
     animations: [
       trigger('slide', [
         transition(':enter', [
