@@ -12,10 +12,18 @@ import { UserProfile } from '../profile/model/user-profile';
 import { AlertService } from 'src/app/shared/alert-service/alert.service';
 import { isStrongPassword } from 'src/app/shared/utils/password-validator';
 
+/**
+ * Set in sessionStorage just before a Google sign-in redirect, so the app only
+ * asks Firebase for a redirect result on the page load that follows one.
+ */
+export const GOOGLE_REDIRECT_PENDING_KEY = 'googleRedirectPending';
+
 @Injectable({
   providedIn: 'root',
 })
 export class AuthService {
+  /** Settles once a pending Google redirect sign-in has been handled. */
+  readonly redirectSignInDone: Promise<void>;
   private userProfileSubject = new BehaviorSubject<any>(null);
   userProfile$: Observable<any> = this.userProfileSubject.asObservable();
 
@@ -27,6 +35,7 @@ export class AuthService {
     private injector: EnvironmentInjector
   ) {
     this.initAuthListener();
+    this.redirectSignInDone = this.completeGoogleRedirectSignIn();
   }
 
   // AngularFire 19's compat classes call inject() when they are created, which only
@@ -160,28 +169,67 @@ export class AuthService {
   }
 
   async googleSignIn(): Promise<void> {
+    const provider = new firebase.auth.GoogleAuthProvider();
     try {
-      const provider = new firebase.auth.GoogleAuthProvider();
       const result = await this.afAuth.signInWithPopup(provider);
       await this.updateUserData(result.user);
       this.router.navigate(['/oxalate']);
     } catch (error: any) {
-      console.error('Error during Google sign-in:', error);
-
-      // Handle specific errors
       switch (error.code) {
-        case 'auth/account-exists-with-different-credential':
-          this.alertService.showAlert(
-            'An account already exists with this email using a different sign-in method.'
-          );
-          break;
+        // The user closed the popup, or clicked again and a new popup replaced
+        // this one. Neither is a failure, so there is nothing to report.
+        case 'auth/popup-closed-by-user':
         case 'auth/cancelled-popup-request':
-          this.alertService.showAlert('Sign-in request was cancelled.');
-          break;
+          return;
+        // The browser blocked the popup (common on phones): sign in on a full
+        // page instead. The result is picked up on the next page load.
+        case 'auth/popup-blocked':
+        case 'auth/operation-not-supported-in-this-environment':
+          await this.googleSignInWithRedirect(provider);
+          return;
         default:
-          this.alertService.showAlert('Failed to sign in with Google.');
-          break;
+          this.reportGoogleSignInError(error);
       }
+    }
+  }
+
+  private async googleSignInWithRedirect(
+    provider: firebase.auth.GoogleAuthProvider
+  ): Promise<void> {
+    sessionStorage.setItem(GOOGLE_REDIRECT_PENDING_KEY, '1');
+    try {
+      await this.afAuth.signInWithRedirect(provider);
+    } catch (error) {
+      sessionStorage.removeItem(GOOGLE_REDIRECT_PENDING_KEY);
+      this.reportGoogleSignInError(error);
+    }
+  }
+
+  /** Finishes a Google sign-in that went through a redirect instead of a popup. */
+  private async completeGoogleRedirectSignIn(): Promise<void> {
+    if (!sessionStorage.getItem(GOOGLE_REDIRECT_PENDING_KEY)) {
+      return;
+    }
+    sessionStorage.removeItem(GOOGLE_REDIRECT_PENDING_KEY);
+    try {
+      const result = await this.afAuth.getRedirectResult();
+      if (result.user) {
+        await this.updateUserData(result.user);
+        this.router.navigate(['/oxalate']);
+      }
+    } catch (error) {
+      this.reportGoogleSignInError(error);
+    }
+  }
+
+  private reportGoogleSignInError(error: any): void {
+    console.error('Error during Google sign-in:', error);
+    if (error?.code === 'auth/account-exists-with-different-credential') {
+      this.alertService.showAlert(
+        'An account already exists with this email using a different sign-in method.'
+      );
+    } else {
+      this.alertService.showAlert('Failed to sign in with Google.');
     }
   }
 

@@ -275,4 +275,13 @@ describe('FooterComponent', () => {
       expect(component.showBackToHome).toBeFalse();
     });
   });
+
+  it('links to the privacy policy and terms of use', () => {
+    fixture.detectChanges();
+    const links = Array.from(
+      fixture.nativeElement.querySelectorAll('a.footer-legal-link')
+    ).map((a: any) => a.textContent.trim());
+
+    expect(links).toEqual(['Privacy', 'Terms']);
+  });
 });

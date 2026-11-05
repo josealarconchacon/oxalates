@@ -171,6 +171,17 @@
   letter-spacing: 0.02em;
 }
 
+.footer-legal-link {
+  margin-left: var(--spacing-2, 0.5rem);
+  color: inherit;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+.footer-legal-link + span {
+  margin-left: var(--spacing-2, 0.5rem);
+}
+
 @media screen and (max-width: 480px) {
   .footer-content {
     padding: 0 var(--spacing-4);
