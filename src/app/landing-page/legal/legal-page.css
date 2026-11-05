@@ -1,0 +1,53 @@
+/* Shared by the privacy policy and terms of use pages. */
+:host {
+  display: block;
+}
+
+.legal {
+  max-width: 46rem;
+  margin: 0 auto;
+  padding: clamp(5rem, 14vw, 7rem) clamp(1rem, 4vw, 1.5rem) 4rem;
+  color: var(--text-primary);
+  line-height: 1.7;
+}
+
+.legal h1 {
+  margin: 0 0 var(--spacing-2, 0.5rem);
+  font-size: clamp(1.75rem, 5vw, 2.5rem);
+}
+
+.legal-updated {
+  margin: 0 0 var(--spacing-8, 2rem);
+  color: var(--text-secondary);
+}
+
+.legal h2 {
+  margin: var(--spacing-8, 2rem) 0 var(--spacing-3, 0.75rem);
+  font-size: 1.25rem;
+}
+
+.legal p,
+.legal li {
+  color: var(--text-primary);
+}
+
+.legal ul {
+  padding-left: 1.25rem;
+}
+
+.legal li + li {
+  margin-top: var(--spacing-2, 0.5rem);
+}
+
+.legal a {
+  color: var(--primary-color);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+.legal-note {
+  padding: var(--spacing-4, 1rem);
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  background: var(--card-background);
+}

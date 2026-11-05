@@ -31,6 +31,23 @@ export const routes: Routes = [
     component: ContributionComponent,
     title: 'Support the project',
   },
+  // Linked from Google's sign-in consent screen; loaded only when opened.
+  {
+    path: 'privacy',
+    loadComponent: () =>
+      import('./landing-page/legal/privacy/privacy.component').then(
+        (m) => m.PrivacyComponent
+      ),
+    title: 'Privacy Policy',
+  },
+  {
+    path: 'terms',
+    loadComponent: () =>
+      import('./landing-page/legal/terms/terms.component').then(
+        (m) => m.TermsComponent
+      ),
+    title: 'Terms of Use',
+  },
   {
     path: 'suggestions',
     component: SuggestionsComponent,
