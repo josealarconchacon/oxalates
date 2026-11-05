@@ -41,13 +41,7 @@ describe('FooterComponent', () => {
         { provide: AuthService, useValue: authServiceSpy },
         { provide: AuthMessageService, useValue: authMessageServiceSpy },
       ],
-    })
-      .overrideComponent(FooterComponent, {
-        remove: {
-          providers: [AuthService],
-        },
-      })
-      .compileComponents();
+    }).compileComponents();
 
     fixture = TestBed.createComponent(FooterComponent);
     component = fixture.componentInstance;

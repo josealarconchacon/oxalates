@@ -1,5 +1,10 @@
 import { ContributionComponent } from './landing-page/contribution/contribution.component';
-import { APP_INITIALIZER, NgModule, OnInit } from '@angular/core';
+import {
+  APP_INITIALIZER,
+  NgModule,
+  OnInit,
+  provideZoneChangeDetection,
+} from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatToolbarModule } from '@angular/material/toolbar';
@@ -109,6 +114,10 @@ export function initializeApp(configService: ConfigService) {
     AlertComponent,
   ],
   providers: [
+    // Angular 21 runs apps without Zone.js unless they opt in. This app relies on
+    // Zone.js to redraw after async work (Firebase, HTTP, timers); without it the
+    // page only updated after a click, e.g. the daily log stuck on "Loading".
+    provideZoneChangeDetection(),
     ConfigService,
     AlertService,
     { provide: TitleStrategy, useClass: PageTitleStrategy },

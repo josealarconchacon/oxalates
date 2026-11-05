@@ -10,7 +10,6 @@ import { AuthMessageService } from '../../shared/services/auth-message.service';
   templateUrl: './footer.component.html',
   styleUrls: ['./footer.component.css'],
   imports: [CommonModule, RouterLink],
-  providers: [AuthService],
 })
 export class FooterComponent implements OnInit, OnDestroy {
   showBackToHome: boolean = false;
