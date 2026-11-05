@@ -7,7 +7,7 @@
         (click)="openShareMenu()"
         [disabled]="!hasFoodItems()"
         [attr.aria-label]="'Share daily oxalate breakdown'"
-      >
+        >
         <i class="material-icons icon-inline" aria-hidden="true">share</i>
       </button>
       <button
@@ -15,7 +15,7 @@
         (click)="openReport()"
         [disabled]="!hasFoodItems()"
         [attr.aria-label]="'Download oxalate report'"
-      >
+        >
         <i class="material-icons icon-inline" aria-hidden="true">download</i>
       </button>
     </div>
@@ -27,10 +27,10 @@
       <span
         >Total Soluble Oxalate:
         {{ totalSolubleOxalate | number : "1.1-1" }} mg</span
-      >
-    </div>
+        >
+      </div>
 
-    <!-- <div class="indicators-and-totals">
+      <!-- <div class="indicators-and-totals">
       <div class="oxalate-level-indicators">
         <div class="bar-chart">
           <div
@@ -60,27 +60,29 @@
         </div>
         <span class="indicator-label"
           >Oxalate Level: {{ getOxalateLevel(totalOxalate) }}</span
-        >
-      </div>
-    </div> -->
+          >
+        </div>
+      </div> -->
+    </div>
   </div>
-</div>
 
-<app-share-menu
-  *ngIf="shareMenuVisible"
-  [dailyMeals]="mealItems"
+  @if (shareMenuVisible) {
+    <app-share-menu
+      [dailyMeals]="mealItems"
   [dailyTotal]="{
     totalOxalate: totalOxalate,
     totalSolubleOxalate: totalSolubleOxalate
   }"
-  (close)="closeShareMenu()"
-></app-share-menu>
+      (close)="closeShareMenu()"
+    ></app-share-menu>
+  }
 
-<app-get-report
-  *ngIf="showReport"
-  [mealItems]="mealItems"
-  [totalOxalate]="inputTotalOxalate"
-  [totalSolubleOxalate]="inputTotalSolubleOxalate"
-  [selectedDate]="selectedDate"
-  (close)="closeReport()"
-></app-get-report>
+  @if (showReport) {
+    <app-get-report
+      [mealItems]="mealItems"
+      [totalOxalate]="inputTotalOxalate"
+      [totalSolubleOxalate]="inputTotalSolubleOxalate"
+      [selectedDate]="selectedDate"
+      (close)="closeReport()"
+    ></app-get-report>
+  }

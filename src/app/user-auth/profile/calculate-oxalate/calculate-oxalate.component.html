@@ -1,4 +1,6 @@
-<app-alert *ngIf="showAlert" [message]="alertMessage"></app-alert>
+@if (showAlert) {
+  <app-alert [message]="alertMessage"></app-alert>
+}
 
 <div class="app-container" [class.dark-theme]="isDarkTheme">
   <div class="content-wrapper">
@@ -8,9 +10,9 @@
           <h2>{{ mealType ? "Add to " + (mealType | titlecase) : "Oxalate" }}</h2>
           <p class="subtitle">
             {{
-              mealType
-                ? "Search for a food, then set how many servings you had."
-                : "Log your daily intake"
+            mealType
+            ? "Search for a food, then set how many servings you had."
+            : "Log your daily intake"
             }}
           </p>
         </div>
@@ -42,25 +44,26 @@
             class="action-button calculate ui-btn ui-btn--primary"
             [disabled]="isCalculating || !foodName || !servingSize"
             (click)="mealType ? logMeal() : calculateOxalate()"
-          >
+            >
             <i class="material-icons" aria-hidden="true">{{ mealType ? "add" : "calculate" }}</i>
             {{
-              isCalculating
-                ? "Calculating..."
-                : mealType
-                ? "Log Food"
-                : "Calculate"
+            isCalculating
+            ? "Calculating..."
+            : mealType
+            ? "Log Food"
+            : "Calculate"
             }}
           </button>
 
-          <button
-            *ngIf="showResults"
-            class="action-button clear ui-btn ui-btn--secondary"
-            (click)="clearResults()"
-          >
-            <i class="material-icons" aria-hidden="true">refresh</i>
-            New Calculation
-          </button>
+          @if (showResults) {
+            <button
+              class="action-button clear ui-btn ui-btn--secondary"
+              (click)="clearResults()"
+              >
+              <i class="material-icons" aria-hidden="true">refresh</i>
+              New Calculation
+            </button>
+          }
         </div>
       </div>
     </div>

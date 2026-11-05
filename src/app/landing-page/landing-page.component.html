@@ -12,7 +12,7 @@
               fetchpriority="high"
               width="563"
               height="443"
-            />
+              />
           </div>
           <div class="hero-text">
             <h1>What are Oxalates?</h1>
@@ -24,138 +24,153 @@
               individuals.
             </p>
             <!-- Search Section - Moved inside hero-text for better integration -->
-            <div class="search-container" *ngIf="!showSearchResults">
-              <div class="search-wrapper">
-                <app-search-input
-                  #mainSearchInput
-                  [searchQuery]="searchQuery"
-                  (searchQueryChange)="onSearchQueryChange($event)"
-                  (clearSearch)="onClearSearch()"
-                  (searchSubmitted)="onSearchSubmitted()"
-                ></app-search-input>
+            @if (!showSearchResults) {
+              <div class="search-container">
+                <div class="search-wrapper">
+                  <app-search-input
+                    #mainSearchInput
+                    [searchQuery]="searchQuery"
+                    (searchQueryChange)="onSearchQueryChange($event)"
+                    (clearSearch)="onClearSearch()"
+                    (searchSubmitted)="onSearchSubmitted()"
+                  ></app-search-input>
+                </div>
               </div>
-            </div>
+            }
           </div>
         </div>
 
         <!-- Search Results Section -->
-        <div
-          class="modal-backdrop"
-          *ngIf="showSearchResults"
-          (click)="closeSearchResults()"
-        ></div>
-        <div
-          *ngIf="showSearchResults"
-          class="search-results-container"
-          #modalContainer
-          role="dialog"
-          aria-modal="true"
-          aria-labelledby="searchResultsHeading"
-          tabindex="-1"
-        >
-          <!-- Modal Header -->
-          <div class="modal-header">
-            <h2 id="searchResultsHeading">Search Results</h2>
-            <button
-              class="close-button"
-              (click)="closeSearchResults()"
-              title="Close Results"
+        @if (showSearchResults) {
+          <div
+            class="modal-backdrop"
+            (click)="closeSearchResults()"
+          ></div>
+        }
+        @if (showSearchResults) {
+          <div
+            class="search-results-container"
+            #modalContainer
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="searchResultsHeading"
+            tabindex="-1"
             >
-              ×
-            </button>
-          </div>
-
-          <!-- Search Input Section -->
-          <div class="modal-search-wrapper">
-            <app-search-input
-              #modalSearchInput
-              [searchQuery]="searchQuery"
-              (searchQueryChange)="onSearchQueryChange($event)"
-              (clearSearch)="onClearSearch()"
-              (searchSubmitted)="onSearchSubmitted()"
-            ></app-search-input>
-          </div>
-
-          <!-- Announces the search progress and the result count -->
-          <p class="sr-only" role="status" aria-atomic="true">
-            {{ searchStatus }}
-          </p>
-
-          <!-- Loading State -->
-          <div *ngIf="isLoading" class="loading-container">
-            <div class="loading-spinner" aria-hidden="true"></div>
-            <p>Searching...</p>
-          </div>
-
-          <!-- Results Content -->
-          <div *ngIf="!isLoading" class="search-results">
-            <div class="results-header" *ngIf="searchQuery">
-              <div class="results-stats">
-                <span class="results-count">{{ searchResults.length }}</span>
-                results found for "<span class="search-term">{{
-                  searchQuery
-                }}</span
-                >"
+            <!-- Modal Header -->
+            <div class="modal-header">
+              <h2 id="searchResultsHeading">Search Results</h2>
+              <button
+                class="close-button"
+                (click)="closeSearchResults()"
+                title="Close Results"
+                >
+                ×
+              </button>
+            </div>
+            <!-- Search Input Section -->
+            <div class="modal-search-wrapper">
+              <app-search-input
+                #modalSearchInput
+                [searchQuery]="searchQuery"
+                (searchQueryChange)="onSearchQueryChange($event)"
+                (clearSearch)="onClearSearch()"
+                (searchSubmitted)="onSearchSubmitted()"
+              ></app-search-input>
+            </div>
+            <!-- Announces the search progress and the result count -->
+            <p class="sr-only" role="status" aria-atomic="true">
+              {{ searchStatus }}
+            </p>
+            <!-- Loading State -->
+            @if (isLoading) {
+              <div class="loading-container">
+                <div class="loading-spinner" aria-hidden="true"></div>
+                <p>Searching...</p>
               </div>
-            </div>
-
-            <!-- Initial State -->
-            <div *ngIf="!searchQuery" class="search-initial-state">
-              <i class="material-icons icon-inline" aria-hidden="true">search</i>
-              <h3>Start typing to search</h3>
-              <p>Search for foods to see their oxalate levels</p>
-            </div>
-
-            <!-- No Results State -->
-            <div
-              *ngIf="searchQuery && searchResults.length === 0"
-              class="no-results"
-            >
-              <i class="material-icons icon-inline" aria-hidden="true">search</i>
-              <h3>No results found</h3>
-              <p>Try a different search term or check spelling</p>
-            </div>
-
-            <!-- Results List (matches Oxalate screen layout) -->
-            <div
-              class="results-list"
-              *ngIf="searchQuery && searchResults.length > 0"
-            >
-              <div
-                *ngFor="let result of searchResults; let last = last"
-                class="result-item"
-                [class.result-item-last]="last"
-                appClickable
-                (click)="viewOxalateDetails(result)"
-              >
-                <div class="result-left">
-                  <p class="result-category-breadcrumb">{{ result.category }}</p>
-                  <h3 class="result-title">{{ result.item }}</h3>
-                  <p class="result-meta-line">
-                    Oxalate per serving: {{ result.calc_oxalate_per_serving }}{{ result.calc_oxalate_per_serving !== 'n/a' ? ' mg' : '' }}
-                    <span class="meta-sep">·</span>
-                    Soluble: {{ result.calc_soluble_mg_oxalate_per_serving }}{{ result.calc_soluble_mg_oxalate_per_serving !== 'n/a' ? ' mg' : '' }}
-                    <span *ngIf="result.serving_size" class="meta-sep">·</span>
-                    <span *ngIf="result.serving_size">{{ result.serving_size }}</span>
-                    <span class="meta-sep level-badge-inline-sep" *ngIf="result.calc_level">·</span>
-                    <span
-                      *ngIf="result.calc_level"
-                      class="level-badge level-badge-inline"
-                      [class.badge-high]="result.calc_level === 'High' || result.calc_level === 'Very High' || result.calc_level === 'Extremely High'"
-                      [class.badge-medium]="result.calc_level === 'Medium'"
-                      [class.badge-low]="result.calc_level === 'Low'"
-                      [class.badge-very-low]="result.calc_level === 'Very Low'"
-                    >{{ result.calc_level }}</span>
-                  </p>
-                </div>
-                <div class="result-right">
-                  <span class="result-oxalate-value">{{ result.calc_oxalate_per_serving }}{{ result.calc_oxalate_per_serving !== 'n/a' ? ' mg' : '' }} per serving</span>
-                  <span class="result-soluble-value">Soluble: {{ result.calc_soluble_mg_oxalate_per_serving }}{{ result.calc_soluble_mg_oxalate_per_serving !== 'n/a' ? ' mg' : '' }}</span>
-                </div>
+            }
+            <!-- Results Content -->
+            @if (!isLoading) {
+              <div class="search-results">
+                @if (searchQuery) {
+                  <div class="results-header">
+                    <div class="results-stats">
+                      <span class="results-count">{{ searchResults.length }}</span>
+                      results found for "<span class="search-term">{{
+                      searchQuery
+                      }}</span
+                      >"
+                    </div>
+                  </div>
+                }
+                <!-- Initial State -->
+                @if (!searchQuery) {
+                  <div class="search-initial-state">
+                    <i class="material-icons icon-inline" aria-hidden="true">search</i>
+                    <h3>Start typing to search</h3>
+                    <p>Search for foods to see their oxalate levels</p>
+                  </div>
+                }
+                <!-- No Results State -->
+                @if (searchQuery && searchResults.length === 0) {
+                  <div
+                    class="no-results"
+                    >
+                    <i class="material-icons icon-inline" aria-hidden="true">search</i>
+                    <h3>No results found</h3>
+                    <p>Try a different search term or check spelling</p>
+                  </div>
+                }
+                <!-- Results List (matches Oxalate screen layout) -->
+                @if (searchQuery && searchResults.length > 0) {
+                  <div
+                    class="results-list"
+                    >
+                    @for (result of searchResults; track result; let last = $last) {
+                      <div
+                        class="result-item"
+                        [class.result-item-last]="last"
+                        appClickable
+                        (click)="viewOxalateDetails(result)"
+                        >
+                        <div class="result-left">
+                          <p class="result-category-breadcrumb">{{ result.category }}</p>
+                          <h3 class="result-title">{{ result.item }}</h3>
+                          <p class="result-meta-line">
+                            Oxalate per serving: {{ result.calc_oxalate_per_serving }}{{ result.calc_oxalate_per_serving !== 'n/a' ? ' mg' : '' }}
+                            <span class="meta-sep">·</span>
+                            Soluble: {{ result.calc_soluble_mg_oxalate_per_serving }}{{ result.calc_soluble_mg_oxalate_per_serving !== 'n/a' ? ' mg' : '' }}
+                            @if (result.serving_size) {
+                              <span class="meta-sep">·</span>
+                            }
+                            @if (result.serving_size) {
+                              <span>{{ result.serving_size }}</span>
+                            }
+                            @if (result.calc_level) {
+                              <span class="meta-sep level-badge-inline-sep">·</span>
+                            }
+                            @if (result.calc_level) {
+                              <span
+                                class="level-badge level-badge-inline"
+                                [class.badge-high]="result.calc_level === 'High' || result.calc_level === 'Very High' || result.calc_level === 'Extremely High'"
+                                [class.badge-medium]="result.calc_level === 'Medium'"
+                                [class.badge-low]="result.calc_level === 'Low'"
+                                [class.badge-very-low]="result.calc_level === 'Very Low'"
+                              >{{ result.calc_level }}</span>
+                            }
+                          </p>
+                        </div>
+                        <div class="result-right">
+                          <span class="result-oxalate-value">{{ result.calc_oxalate_per_serving }}{{ result.calc_oxalate_per_serving !== 'n/a' ? ' mg' : '' }} per serving</span>
+                          <span class="result-soluble-value">Soluble: {{ result.calc_soluble_mg_oxalate_per_serving }}{{ result.calc_soluble_mg_oxalate_per_serving !== 'n/a' ? ' mg' : '' }}</span>
+                        </div>
+                      </div>
+                    }
+                  </div>
+                }
               </div>
-            </div>
+            }
           </div>
-        </div>
+        }
       </div>
     </div>
   </section>

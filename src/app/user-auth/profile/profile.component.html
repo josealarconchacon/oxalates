@@ -1,13 +1,13 @@
 <div class="app-container">
   <div class="app-main">
     <h1 class="sr-only">Your profile</h1>
-    <ng-container *ngIf="(isMobile$ | async) === false">
+    @if ((isMobile$ | async) === false) {
       <aside class="sidebar">
         <div class="profile-card ui-card">
           <div
             class="profile-header"
             [style.backgroundColor]="currentHeaderColor"
-          >
+            >
             <img
               [src]="userProfile?.photoURL || 'assets/images/default-avatar.svg'"
               alt="Profile Picture"
@@ -16,31 +16,30 @@
               loading="lazy"
               width="88"
               height="88"
-            />
+              />
             <input
               id="file-upload"
               type="file"
               (change)="onFileSelected($event)"
               accept="image/jpeg,image/png,image/webp,image/gif"
               hidden
-            />
+              />
             <label
               for="file-upload"
               class="edit-avatar"
               appClickable
               aria-label="Change profile photo"
-            >
+              >
               <i class="material-icons icon-inline" aria-hidden="true">photo_camera</i>
             </label>
             <button
               class="color-picker-toggle"
               (click)="toggleColorPicker()"
               aria-label="Open color picker"
-            >
+              >
               <i class="material-icons icon-inline picker-icon" aria-hidden="true">palette</i>
             </button>
           </div>
-
           <div class="profile-info">
             <h2 class="profile-name">
               {{ userProfile?.displayName || "Username" }}
@@ -56,14 +55,14 @@
             [class.active]="(activeSection$ | async) === 'profile'"
             appClickable
             (click)="setActiveSection('profile')"
-          >
+            >
             <i class="material-icons icon-inline" aria-hidden="true">person</i> Profile Info
           </a>
           <a
             [class.active]="(activeSection$ | async) === 'saveItem'"
             appClickable
             (click)="setActiveSection('saveItem')"
-          >
+            >
             <i class="material-icons icon-inline" aria-hidden="true">bookmark</i> Saved Items
           </a>
           <a appClickable (click)="onLogout()" class="logout">
@@ -71,112 +70,115 @@
           </a>
         </nav>
       </aside>
-    </ng-container>
+    }
     <section class="content-area">
-      <ng-container [ngSwitch]="activeSection$ | async">
-        <div *ngSwitchCase="'profile'" class="profile-details">
-          <!-- Profile details content -->
-          <div class="profile-header-container">
-            <h2 class="section-title">Profile Information</h2>
-            <!-- Need to fix theme   -->
-            <button
-              class="theme-toggle"
-              (click)="toggleTheme()"
+      @switch (activeSection$ | async) {
+        @case ('profile') {
+          <div class="profile-details">
+            <!-- Profile details content -->
+            <div class="profile-header-container">
+              <h2 class="section-title">Profile Information</h2>
+              <!-- Need to fix theme   -->
+              <button
+                class="theme-toggle"
+                (click)="toggleTheme()"
               [attr.aria-label]="
                 (isDarkTheme$ | async)
                   ? 'Switch to light mode'
                   : 'Switch to dark mode'
               "
-            >
-              <i class="material-icons icon-inline" aria-hidden="true">{{
-                (isDarkTheme$ | async) ? "light_mode" : "dark_mode"
-              }}</i>
-            </button>
-          </div>
-          <div class="info-card ui-card ui-card--padded">
-            <div class="info-item">
-              <label>Name</label>
-              <p>{{ userProfile?.displayName || "Username" }}</p>
+                >
+                <i class="material-icons icon-inline" aria-hidden="true">{{
+                  (isDarkTheme$ | async) ? "light_mode" : "dark_mode"
+                }}</i>
+              </button>
             </div>
-            <div class="info-item">
-              <label>Email</label>
-              <p>{{ userProfile?.email || "username@example.com" }}</p>
+            <div class="info-card ui-card ui-card--padded">
+              <div class="info-item">
+                <label>Name</label>
+                <p>{{ userProfile?.displayName || "Username" }}</p>
+              </div>
+              <div class="info-item">
+                <label>Email</label>
+                <p>{{ userProfile?.email || "username@example.com" }}</p>
+              </div>
+              <button (click)="toggleChangePassword()" class="edit-button ui-btn ui-btn--secondary">
+                <i class="material-icons icon-inline" aria-hidden="true">vpn_key</i> Change Password
+              </button>
             </div>
-            <button (click)="toggleChangePassword()" class="edit-button ui-btn ui-btn--secondary">
-              <i class="material-icons icon-inline" aria-hidden="true">vpn_key</i> Change Password
-            </button>
           </div>
-        </div>
-        <app-change-password
-          [isVisible]="isChangePasswordVisible"
-          (close)="toggleChangePassword()"
-        ></app-change-password>
-        <app-save-items *ngSwitchCase="'saveItem'"></app-save-items>
-      </ng-container>
+        }
+        @case ('saveItem') {
+          <app-save-items></app-save-items>
+        }
+      }
+      <!-- Outside the switch: it is rendered whatever section is active. -->
+      <app-change-password
+        [isVisible]="isChangePasswordVisible"
+        (close)="toggleChangePassword()"
+      ></app-change-password>
     </section>
   </div>
-  <div
-    *ngIf="isColorPickerVisible"
-    class="color-picker-backdrop"
-    (click)="onBackdropClick($event)"
-    [@fadeInOut]
-  >
+  @if (isColorPickerVisible) {
     <div
-      class="color-picker-content"
-      role="dialog"
-      aria-modal="true"
-      aria-label="Color picker"
-    >
-      <div class="color-picker-header">
-        <h3 class="color-picker-title">Choose Color</h3>
-        <button
-          class="close-button"
-          (click)="cancelColor()"
-          aria-label="Close color picker"
-        >
-          <i class="material-icons icon-inline" aria-hidden="true">close</i>
-        </button>
-      </div>
-
+      class="color-picker-backdrop"
+      (click)="onBackdropClick($event)"
+      [@fadeInOut]
+      >
       <div
-        class="color-preview"
-        [style.backgroundColor]="selectedColor"
-        role="img"
-        [attr.aria-label]="'Selected color: ' + selectedColor"
-      ></div>
-
-      <div class="color-grid" role="listbox" aria-label="Preset colors">
-        <button
-          *ngFor="let color of presetColors"
-          class="color-preset"
-          [class.selected]="selectedColor === color"
-          [style.backgroundColor]="color"
-          (click)="onColorSelect(color)"
-          role="option"
-          [attr.aria-selected]="selectedColor === color"
-          [attr.aria-label]="'Color: ' + color"
+        class="color-picker-content"
+        role="dialog"
+        aria-modal="true"
+        aria-label="Color picker"
         >
-          <span class="sr-only">{{ color }}</span>
-        </button>
-      </div>
-
-      <div class="color-input-group">
-        <color-sketch
-          [(color)]="selectedColor"
-          (colorChange)="onColorSelect($event)"
-          aria-label="Color picker"
-        ></color-sketch>
-        <div class="color-value" role="status" aria-live="polite">
-          {{ selectedColor }}
+        <div class="color-picker-header">
+          <h3 class="color-picker-title">Choose Color</h3>
+          <button
+            class="close-button"
+            (click)="cancelColor()"
+            aria-label="Close color picker"
+            >
+            <i class="material-icons icon-inline" aria-hidden="true">close</i>
+          </button>
+        </div>
+        <div
+          class="color-preview"
+          [style.backgroundColor]="selectedColor"
+          role="img"
+          [attr.aria-label]="'Selected color: ' + selectedColor"
+        ></div>
+        <div class="color-grid" role="listbox" aria-label="Preset colors">
+          @for (color of presetColors; track color) {
+            <button
+              class="color-preset"
+              [class.selected]="selectedColor === color"
+              [style.backgroundColor]="color"
+              (click)="onColorSelect(color)"
+              role="option"
+              [attr.aria-selected]="selectedColor === color"
+              [attr.aria-label]="'Color: ' + color"
+              >
+              <span class="sr-only">{{ color }}</span>
+            </button>
+          }
+        </div>
+        <div class="color-input-group">
+          <color-sketch
+            [(color)]="selectedColor"
+            (colorChange)="onColorSelect($event)"
+            aria-label="Color picker"
+          ></color-sketch>
+          <div class="color-value" role="status" aria-live="polite">
+            {{ selectedColor }}
+          </div>
+        </div>
+        <div class="color-actions">
+          <button class="ui-btn ui-btn--primary" (click)="saveColor()">Save</button>
+          <button class="ui-btn ui-btn--secondary" (click)="cancelColor()">
+            Cancel
+          </button>
         </div>
       </div>
-
-      <div class="color-actions">
-        <button class="ui-btn ui-btn--primary" (click)="saveColor()">Save</button>
-        <button class="ui-btn ui-btn--secondary" (click)="cancelColor()">
-          Cancel
-        </button>
-      </div>
     </div>
-  </div>
+  }
 </div>

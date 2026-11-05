@@ -13,7 +13,7 @@
       [attr.aria-label]="
         isNavOpen ? 'Close navigation menu' : 'Open navigation menu'
       "
-    >
+      >
       <span class="bar"></span>
       <span class="bar"></span>
       <span class="bar"></span>
@@ -32,31 +32,30 @@
       [class.open]="isNavOpen"
       role="navigation"
       aria-label="Main navigation"
-    >
+      >
       <button
         class="nav-close"
         (click)="closeNav()"
         aria-label="Close navigation menu"
       ></button>
 
-      <ng-container *ngIf="!(isMobile$ | async)">
+      @if (!(isMobile$ | async)) {
         <a routerLink="/contribution" class="nav-link">Support the Project</a>
         <button
           class="calculate-btn"
           (click)="navigateToCalculateDailyIntake(); closeNav()"
           aria-label="Calculate Daily Oxalate Intake"
-        >
+          >
           <span>Calculate Daily Intake</span>
         </button>
         <button
           class="search-btn"
           (click)="search(); closeNav()"
           aria-label="Search for Foods"
-        >
+          >
           <!-- <mat-icon>search</mat-icon> -->
           <span>Search for Foods</span>
         </button>
-
         <button
           class="theme-toggle-btn"
           (click)="toggleTheme()"
@@ -65,47 +64,47 @@
               ? 'Switch to light mode'
               : 'Switch to dark mode'
           "
-        >
+          >
           <i class="material-icons icon-inline" aria-hidden="true">{{
             (isDarkTheme$ | async) ? "light_mode" : "dark_mode"
           }}</i>
         </button>
+        @if (userProfile) {
+          <button
+            class="profile-btn"
+            (click)="goToProfile(); closeNav()"
+            aria-label="Go to Profile"
+            >
+            <img
+              [src]="userProfile.photoURL || 'assets/images/default-avatar.svg'"
+              alt="User Profile Picture"
+              class="user-image"
+              (error)="onAvatarError($event)"
+              loading="lazy"
+              width="32"
+              height="32"
+              />
+          </button>
+        }
+        @if (!userProfile) {
+          <button
+            class="user-icon-btn"
+            (click)="goToLoginPage(); closeNav()"
+            aria-label="Login or Sign Up"
+            >
+            <mat-icon>person_outline</mat-icon>
+          </button>
+        }
+      }
 
-        <button
-          *ngIf="userProfile"
-          class="profile-btn"
-          (click)="goToProfile(); closeNav()"
-          aria-label="Go to Profile"
-        >
-          <img
-            [src]="userProfile.photoURL || 'assets/images/default-avatar.svg'"
-            alt="User Profile Picture"
-            class="user-image"
-            (error)="onAvatarError($event)"
-            loading="lazy"
-            width="32"
-            height="32"
-          />
-        </button>
-
-        <button
-          *ngIf="!userProfile"
-          class="user-icon-btn"
-          (click)="goToLoginPage(); closeNav()"
-          aria-label="Login or Sign Up"
-        >
-          <mat-icon>person_outline</mat-icon>
-        </button>
-      </ng-container>
-
-      <ng-container *ngIf="isMobile$ | async">
+      @if (isMobile$ | async) {
         <div class="mobile-sidebar-nav">
-          <ng-container *ngIf="userProfile; else mobileLoggedOut">
+          @if (userProfile) {
             <div
               class="profile-info-container"
               appClickable
               (click)="setActiveSection('profile'); goToProfile()"
-            >
+              >
               <img
                 [src]="
                   userProfile.photoURL || 'assets/images/default-avatar.svg'
@@ -116,11 +115,11 @@
                 loading="lazy"
                 width="32"
                 height="32"
-              />
+                />
               <a
                 class="nav-link profile-link"
                 [class.active]="(activeSection$ | async) === 'profile'"
-              >
+                >
                 <span>Profile Info</span>
               </a>
               <input
@@ -130,13 +129,13 @@
                 (change)="onProfileImageChange($event)"
                 accept="image/jpeg,image/png,image/webp,image/gif"
                 style="display: none"
-              />
+                />
               <label
                 for="profile-image-upload"
                 class="profile-image-upload-label"
                 appClickable
                 aria-label="Change profile picture"
-              >
+                >
                 <mat-icon>edit</mat-icon>
               </label>
             </div>
@@ -146,75 +145,70 @@
               [queryParams]="{ section: 'saveItem' }"
               [class.active]="(activeSection$ | async) === 'saveItem'"
               (click)="setActiveSection('saveItem'); closeNav()"
-            >
+              >
               <i class="material-icons icon-inline" aria-hidden="true"
                 >bookmark</i
-              >
-              <span>Saved Items</span>
+                >
+                <span>Saved Items</span>
+              </a>
+            } @else {
+              <a class="nav-link" routerLink="/auth" (click)="closeNav()">
+                <mat-icon class="default-user-icon">person_outline</mat-icon>
+                <span>Login or Sign Up</span>
+              </a>
+            }
+            <a class="nav-link" routerLink="/oxalate" (click)="closeNav()">
+              <i class="material-icons icon-inline" aria-hidden="true">search</i>
+              <span>Search For Foods</span>
             </a>
-          </ng-container>
-
-          <ng-template #mobileLoggedOut>
-            <a class="nav-link" routerLink="/auth" (click)="closeNav()">
-              <mat-icon class="default-user-icon">person_outline</mat-icon>
-              <span>Login or Sign Up</span>
-            </a>
-          </ng-template>
-
-          <a class="nav-link" routerLink="/oxalate" (click)="closeNav()">
-            <i class="material-icons icon-inline" aria-hidden="true">search</i>
-            <span>Search For Foods</span>
-          </a>
-
-          <!-- Auth-gated, so a button-style action rather than a plain link -->
-          <a
-            class="nav-link"
-            appClickable
-            [class.active]="(activeSection$ | async) === 'calculate-oxalate'"
+            <!-- Auth-gated, so a button-style action rather than a plain link -->
+            <a
+              class="nav-link"
+              appClickable
+              [class.active]="(activeSection$ | async) === 'calculate-oxalate'"
             (click)="
               setActiveSection('calculate-oxalate');
               navigateToCalculateDailyIntake()
             "
-          >
-            <i class="material-icons icon-inline" aria-hidden="true"
-              >calculate</i
-            >
-            <span>Calculate Daily Intake</span>
-          </a>
-          <a class="nav-link" routerLink="/contribution" (click)="closeNav()">
-            <i class="material-icons icon-inline" aria-hidden="true">support</i>
-            <span>Support The Project</span>
-          </a>
-
-          <a
-            class="nav-link"
-            appClickable
-            (click)="toggleTheme()"
+              >
+              <i class="material-icons icon-inline" aria-hidden="true"
+                >calculate</i
+                >
+                <span>Calculate Daily Intake</span>
+              </a>
+              <a class="nav-link" routerLink="/contribution" (click)="closeNav()">
+                <i class="material-icons icon-inline" aria-hidden="true">support</i>
+                <span>Support The Project</span>
+              </a>
+              <a
+                class="nav-link"
+                appClickable
+                (click)="toggleTheme()"
             [attr.aria-label]="
               (isDarkTheme$ | async)
                 ? 'Switch to light mode'
                 : 'Switch to dark mode'
             "
-          >
-            <i class="material-icons icon-inline" aria-hidden="true">{{
-              (isDarkTheme$ | async) ? "light_mode" : "dark_mode"
-            }}</i>
-            <span>{{
-              (isDarkTheme$ | async) ? "Light Mode" : "Dark Mode"
-            }}</span>
-          </a>
-
-          <a
-            *ngIf="userProfile"
-            appClickable
-            (click)="onLogout()"
-            class="nav-link logout"
-          >
-            <i class="material-icons icon-inline" aria-hidden="true">logout</i>
-            <span>Logout</span>
-          </a>
-        </div>
-      </ng-container>
-    </nav>
-  </div>
-</header>
+                >
+                <i class="material-icons icon-inline" aria-hidden="true">{{
+                  (isDarkTheme$ | async) ? "light_mode" : "dark_mode"
+                }}</i>
+                <span>{{
+                  (isDarkTheme$ | async) ? "Light Mode" : "Dark Mode"
+                }}</span>
+              </a>
+              @if (userProfile) {
+                <a
+                  appClickable
+                  (click)="onLogout()"
+                  class="nav-link logout"
+                  >
+                  <i class="material-icons icon-inline" aria-hidden="true">logout</i>
+                  <span>Logout</span>
+                </a>
+              }
+            </div>
+          }
+        </nav>
+      </div>
+    </header>

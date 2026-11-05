@@ -8,11 +8,13 @@
     (ngModelChange)="applyFilters()"
     class="filter-inline-select"
     [class.active]="!!filters.category"
-  >
+    >
     <option [ngValue]="''">Any Category</option>
-    <option *ngFor="let category of categories" [ngValue]="category">
-      {{ category }}
-    </option>
+    @for (category of categories; track category) {
+      <option [ngValue]="category">
+        {{ category }}
+      </option>
+    }
   </select>
 
   <!-- Level Dropdown -->
@@ -24,11 +26,13 @@
     (ngModelChange)="applyFilters()"
     class="filter-inline-select"
     [class.active]="!!filters.calc_level"
-  >
+    >
     <option [ngValue]="''">All Levels</option>
-    <option *ngFor="let level of calcLevels" [ngValue]="level">
-      {{ level }}
-    </option>
+    @for (level of calcLevels; track level) {
+      <option [ngValue]="level">
+        {{ level }}
+      </option>
+    }
   </select>
 
   <!-- Clear Filters Button -->

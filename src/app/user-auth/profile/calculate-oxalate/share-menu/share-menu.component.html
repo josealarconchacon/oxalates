@@ -2,7 +2,7 @@
   class="share-menu-overlay"
   (click)="closeShareMenu($event)"
   [ngClass]="{ 'dark-theme': isDarkTheme }"
->
+  >
   <div
     class="share-menu-content"
     appDialog
@@ -10,7 +10,7 @@
     (dialogClose)="close.emit()"
     [@menuAnimation]="'show'"
     (click)="$event.stopPropagation()"
-  >
+    >
     <div class="share-preview">
       <h3 class="preview-title" id="share-menu-title">Share Your Results</h3>
       <div class="result-card">
@@ -19,76 +19,80 @@
           <span>Your Oxalate Results</span>
         </div>
         <div class="result-content">
-          <div *ngFor="let meal of dailyMeals" class="result-item">
-            <i class="material-icons" aria-hidden="true">restaurant_menu</i>
-            <div class="meal-info">
-              <strong>{{ meal.title }}</strong>
-              <div class="meal-items">
-                <div *ngFor="let food of meal.items" class="food-item">
-                  <i class="material-icons" aria-hidden="true">local_dining</i>
-                  <span>
-                    {{ food.foodName }}: <br />{{ food.oxalatePerServing }} mg
-                    of oxalate, {{ food.solubleOxalatePerServing }} mg of
-                    soluble oxalate
-                  </span>
+          @for (meal of dailyMeals; track meal) {
+            <div class="result-item">
+              <i class="material-icons" aria-hidden="true">restaurant_menu</i>
+              <div class="meal-info">
+                <strong>{{ meal.title }}</strong>
+                <div class="meal-items">
+                  @for (food of meal.items; track food) {
+                    <div class="food-item">
+                      <i class="material-icons" aria-hidden="true">local_dining</i>
+                      <span>
+                        {{ food.foodName }}: <br />{{ food.oxalatePerServing }} mg
+                        of oxalate, {{ food.solubleOxalatePerServing }} mg of
+                        soluble oxalate
+                      </span>
+                    </div>
+                  }
                 </div>
               </div>
             </div>
-          </div>
+          }
           <div class="result-item highlight">
             <i class="material-icons" aria-hidden="true">timeline</i>
             <div>
               <span>Total Oxalate: </span>
               <strong>
                 {{ dailyTotal.totalOxalate | number : "1.2-2" }}mg</strong
-              >
-            </div>
-            <div>
-              <span>Soluble Oxalate: </span>
-              <strong
-                >{{
+                >
+              </div>
+              <div>
+                <span>Soluble Oxalate: </span>
+                <strong
+                  >{{
                   dailyTotal.totalSolubleOxalate | number : "1.2-2"
-                }}mg</strong
-              >
+                  }}mg</strong
+                  >
+                </div>
+              </div>
             </div>
           </div>
         </div>
-      </div>
-    </div>
 
-    <div class="share-options">
-      <!-- <a
-        class="share-button"
-        [href]="shareOptions[0].getShareUrl(getShareableText())"
-        target="_blank"
-      >
-        <i class="material-icons" [style.color]="shareOptions[0].color"
-          >facebook</i
-        >
-        <span>{{ shareOptions[0].label }}</span>
-      </a> -->
+        <div class="share-options">
+          <!-- <a
+          class="share-button"
+          [href]="shareOptions[0].getShareUrl(getShareableText())"
+          target="_blank"
+          >
+          <i class="material-icons" [style.color]="shareOptions[0].color"
+            >facebook</i
+            >
+            <span>{{ shareOptions[0].label }}</span>
+          </a> -->
 
-      <!-- <a
-        class="share-button"
-        [href]="shareOptions[1].getShareUrl(getShareableText())"
-        target="_blank"
-      >
-        <i class="material-icons" [style.color]="shareOptions[1].color"
-          >reddit</i
-        >
-        <span>{{ shareOptions[1].label }}</span>
-      </a> -->
-      <button
-        class="share-button copy-button"
-        (click)="copyToClipboard()"
+          <!-- <a
+          class="share-button"
+          [href]="shareOptions[1].getShareUrl(getShareableText())"
+          target="_blank"
+          >
+          <i class="material-icons" [style.color]="shareOptions[1].color"
+            >reddit</i
+            >
+            <span>{{ shareOptions[1].label }}</span>
+          </a> -->
+          <button
+            class="share-button copy-button"
+            (click)="copyToClipboard()"
         [@slideIn]="{
           value: true,
           params: { delay: shareOptions.length * 50 }
         }"
-      >
-        <i class="material-icons" aria-hidden="true">content_copy</i>
-        <span>{{ copySuccess ? "Copied!" : "Copy to clipboard" }}</span>
-      </button>
+            >
+            <i class="material-icons" aria-hidden="true">content_copy</i>
+            <span>{{ copySuccess ? "Copied!" : "Copy to clipboard" }}</span>
+          </button>
+        </div>
+      </div>
     </div>
-  </div>
-</div>
