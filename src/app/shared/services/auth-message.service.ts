@@ -1,50 +1,35 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, Observable, timer, Subscription } from 'rxjs';
+import { BehaviorSubject } from 'rxjs';
 import { Router } from '@angular/router';
 
+/**
+ * Opens and closes the "sign in to use this" prompt shown when a visitor who
+ * isn't signed in picks a feature that needs an account.
+ *
+ * The prompt never closes or navigates on its own: the visitor chooses to sign
+ * in or to stay where they are.
+ */
 @Injectable({
   providedIn: 'root',
 })
 export class AuthMessageService {
   private showMessageSubject = new BehaviorSubject<boolean>(false);
-  showMessage$ = this.showMessageSubject.asObservable();
-  private timerSubscription: Subscription | null = null;
-  private resolveShowAuthMessage: (() => void) | null = null;
+  readonly showMessage$ = this.showMessageSubject.asObservable();
 
   constructor(private router: Router) {}
 
-  showAuthMessage(): Promise<void> {
-    return new Promise((resolve) => {
-      this.resolveShowAuthMessage = resolve;
-      this.showMessageSubject.next(true);
-      this.timerSubscription = timer(10000).subscribe(() => {
-        this.continueToAuth();
-      });
-    });
+  showAuthMessage(): void {
+    this.showMessageSubject.next(true);
   }
 
-  /**
-   * Stop the automatic redirect once the visitor is interacting with the
-   * tour, so it never leaves while they are still reading (WCAG 2.2.1).
-   * They can still leave with "Get Started Now" or Escape.
-   */
-  cancelAutoContinue(): void {
-    if (this.timerSubscription) {
-      this.timerSubscription.unsubscribe();
-      this.timerSubscription = null;
-    }
+  /** "Not now", the close button, Escape or a backdrop click: stay on the page. */
+  dismiss(): void {
+    this.showMessageSubject.next(false);
   }
 
+  /** "Sign in or create account". */
   continueToAuth(): void {
-    if (this.timerSubscription) {
-      this.timerSubscription.unsubscribe();
-      this.timerSubscription = null;
-    }
     this.showMessageSubject.next(false);
     this.router.navigate(['/auth']);
-    if (this.resolveShowAuthMessage) {
-      this.resolveShowAuthMessage();
-      this.resolveShowAuthMessage = null;
-    }
   }
 }
