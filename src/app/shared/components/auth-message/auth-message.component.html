@@ -1,145 +1,55 @@
 @if (authMessageService.showMessage$ | async) {
-  <div
-    class="auth-message-overlay"
-    [@fadeInOut]
-    (touchstart)="onTouchStart($event)"
-    (touchmove)="onTouchMove($event)"
-    (touchend)="onTouchEnd()"
-    >
+  <div class="auth-prompt-backdrop" (click)="onBackdropClick($event)">
     <div
-      class="auth-message-content"
+      class="auth-prompt"
       appDialog
-      aria-label="Welcome tour"
-      (dialogClose)="onContinue()"
-      >
-      <!-- Slide changes the visitor asks for are announced here -->
-      <div class="sr-only" role="status" aria-live="polite">
-        {{ announcement }}
-      </div>
-      <div
-        class="demo-deck"
-        (mouseenter)="pauseAutoPlay()"
-        (mouseleave)="resumeAutoPlay()"
-        (focusin)="onDeckFocusIn($event)"
-        (focusout)="onDeckFocusOut($event)"
-        >
-        <!-- Progress indicators and the pause/play control -->
-        <div class="deck-controls">
-          <div
-            class="progress-indicators"
-            role="tablist"
-            aria-label="Presentation Navigation"
-            >
-            @for (slide of slides; track slide; let i = $index) {
-              <div
-                class="indicator"
-                [class.active]="currentSlide === i"
-                (click)="goToSlide(i)"
-                [@indicatorPulse]="currentSlide === i"
-                role="tab"
-                [attr.aria-selected]="currentSlide === i"
-                [attr.aria-label]="'Slide ' + (i + 1) + ' of ' + slides.length"
-                [attr.tabindex]="currentSlide === i ? 0 : -1"
-                (keydown.enter)="goToSlide(i)"
-                (keydown.space)="goToSlide(i); $event.preventDefault()"
-              ></div>
-            }
-          </div>
-          <button
-            type="button"
-            class="autoplay-toggle"
-            (click)="toggleAutoPlay()"
-            [attr.aria-label]="autoPlaying ? 'Pause slideshow' : 'Play slideshow'"
-            >
-            <i class="material-icons icon-inline" aria-hidden="true">{{
-              autoPlaying ? "pause" : "play_arrow"
-            }}</i>
-          </button>
-        </div>
-        <!-- Slide content -->
-        <div
-          class="slide-container"
-          role="tabpanel"
-          [attr.aria-label]="'Slide ' + (currentSlide + 1)"
-          >
-          <div class="slide" [@slideAnimation]="currentSlide">
-            <!-- Welcome Slide -->
-            @if (currentSlide === 0) {
-              <div
-                class="slide-content welcome-slide"
-                [@contentAnimation]
-                role="region"
-                aria-label="Welcome"
-                >
-                <div class="welcome-content-wrapper">
-                  <div class="welcome-text-content">
-                    <p class="welcome-subtitle">
-                      Sign in to log<br />
-                      oxalate intake and add items to favorites
-                    </p>
-                  </div>
-                  <div class="welcome-image-container">
-                    <img
-                      src="assets/app-logo/load.png"
-                      alt="Welcome Image"
-                      class="slide-image"
-                      loading="lazy"
-                      />
-                  </div>
-                </div>
-              </div>
-            }
-            <!-- Demo Features Slide -->
-            @if (currentSlide === 1) {
-              <div
-                class="slide-content"
-                [@contentAnimation]
-                role="region"
-                aria-label="Features Overview"
-                >
-                <h2>Real-time Insights</h2>
-                <div class="feature-image">
-                  <img
-                    src="assets/app-logo/daily-log.png"
-                    alt="The daily log: total and soluble oxalate for the day, then a breakfast of avocado and dry roasted almonds with each food's oxalate in a table"
-                    class="slide-image"
-                    loading="lazy"
-                    />
-                </div>
-              </div>
-            }
-          </div>
-        </div>
-        <!-- Navigation buttons -->
-        <div class="nav-buttons">
-          <button
-            class="nav-button"
-            (click)="previousSlide()"
-            [disabled]="currentSlide === 0"
-            [@fadeInOut]
-            aria-label="Previous slide"
-            >
-            <i class="material-icons icon-inline" aria-hidden="true">chevron_left</i>
-          </button>
-          <button
-            class="nav-button"
-            (click)="nextSlide()"
-            [disabled]="currentSlide === slides.length - 1"
-            [@fadeInOut]
-            aria-label="Next slide"
-            >
-            <i class="material-icons icon-inline" aria-hidden="true">chevron_right</i>
-          </button>
-        </div>
-      </div>
+      aria-labelledby="auth-prompt-title"
+      aria-describedby="auth-prompt-text"
+      (dialogClose)="dismiss()"
+    >
       <button
-        class="continue-button"
-        (click)="onContinue()"
-        [@pulseAnimation]
-        data-autofocus
-        >
-        Get Started Now
+        type="button"
+        class="auth-prompt-close"
+        aria-label="Close"
+        (click)="dismiss()"
+      >
+        <i class="material-icons" aria-hidden="true">close</i>
       </button>
+
+      <h2 id="auth-prompt-title" class="auth-prompt-title">
+        Track your daily oxalate intake
+      </h2>
+      <p id="auth-prompt-text" class="auth-prompt-text">
+        This needs a free account, so your log is saved and ready on any device.
+      </p>
+
+      <ul class="auth-prompt-benefits">
+        @for (benefit of benefits; track benefit.title) {
+          <li class="auth-prompt-benefit">
+            <span class="auth-prompt-icon" aria-hidden="true">
+              <i class="material-icons">{{ benefit.icon }}</i>
+            </span>
+            <span>
+              <strong>{{ benefit.title }}</strong>
+              <span class="auth-prompt-benefit-text">{{ benefit.text }}</span>
+            </span>
+          </li>
+        }
+      </ul>
+
+      <div class="auth-prompt-actions">
+        <button
+          type="button"
+          class="ui-btn ui-btn--primary"
+          data-autofocus
+          (click)="signIn()"
+        >
+          Sign in or create account
+        </button>
+        <button type="button" class="ui-btn ui-btn--secondary" (click)="dismiss()">
+          Not now
+        </button>
+      </div>
     </div>
   </div>
 }

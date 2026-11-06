@@ -1,264 +1,98 @@
-import { ComponentFixture, TestBed, fakeAsync, tick } from '@angular/core/testing';
-import { provideNoopAnimations } from '@angular/platform-browser/animations';
-import { BehaviorSubject } from 'rxjs';
-import { AuthMessageComponent } from './auth-message.component';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { Router } from '@angular/router';
 import { AuthMessageService } from '../../services/auth-message.service';
+import { AuthMessageComponent } from './auth-message.component';
 
 describe('AuthMessageComponent', () => {
   let fixture: ComponentFixture<AuthMessageComponent>;
-  let component: AuthMessageComponent;
-  let show$: BehaviorSubject<boolean>;
-  let service: {
-    showMessage$: BehaviorSubject<boolean>;
-    continueToAuth: jasmine.Spy;
-    cancelAutoContinue: jasmine.Spy;
-  };
+  let service: AuthMessageService;
+  let router: jasmine.SpyObj<Router>;
 
-  const el = (selector: string): HTMLElement | null =>
-    fixture.nativeElement.querySelector(selector);
+  const el = <T extends HTMLElement = HTMLElement>(selector: string) =>
+    fixture.nativeElement.querySelector(selector) as T | null;
+  const buttonByText = (text: string) =>
+    Array.from<HTMLButtonElement>(
+      fixture.nativeElement.querySelectorAll('button')
+    ).find((b) => b.textContent!.trim() === text)!;
 
-  const open = () => {
-    show$.next(true);
+  function open(): void {
+    service.showAuthMessage();
     fixture.detectChanges();
-  };
+  }
 
-  beforeEach(() => {
-    show$ = new BehaviorSubject<boolean>(false);
-    service = {
-      showMessage$: show$,
-      continueToAuth: jasmine.createSpy('continueToAuth'),
-      cancelAutoContinue: jasmine.createSpy('cancelAutoContinue'),
-    };
-
-    TestBed.configureTestingModule({
+  beforeEach(async () => {
+    router = jasmine.createSpyObj('Router', ['navigate']);
+    await TestBed.configureTestingModule({
       imports: [AuthMessageComponent],
-      providers: [
-        { provide: AuthMessageService, useValue: service },
-        provideNoopAnimations(),
-      ],
-    });
+      providers: [{ provide: Router, useValue: router }],
+    }).compileComponents();
 
+    service = TestBed.inject(AuthMessageService);
     fixture = TestBed.createComponent(AuthMessageComponent);
-    component = fixture.componentInstance;
     fixture.detectChanges();
   });
 
   afterEach(() => {
-    fixture.destroy();
+    service.dismiss();
+    fixture.detectChanges();
   });
 
-  describe('dialog semantics', () => {
-    it('renders nothing until the tour is shown', () => {
-      expect(el('.auth-message-overlay')).toBeNull();
+  it('renders nothing until it is opened', () => {
+    expect(el('[role="dialog"]')).toBeNull();
+  });
+
+  describe('when open', () => {
+    beforeEach(() => open());
+
+    it('is a labelled modal dialog', () => {
+      const dialog = el('[role="dialog"]')!;
+      expect(dialog.getAttribute('aria-modal')).toBe('true');
+      const title = el('#' + dialog.getAttribute('aria-labelledby'))!;
+      expect(title.textContent).toContain('Track your daily oxalate intake');
+      expect(el('#' + dialog.getAttribute('aria-describedby'))).not.toBeNull();
     });
 
-    it('is a single modal dialog with an accessible name', () => {
-      open();
-
-      const dialogs = fixture.nativeElement.querySelectorAll('[role="dialog"]');
-      expect(dialogs.length).toBe(1);
-      expect(dialogs[0].classList).toContain('auth-message-content');
-      expect(dialogs[0].getAttribute('aria-modal')).toBe('true');
-      expect(dialogs[0].getAttribute('aria-label')).toBe('Welcome tour');
-      expect(el('.auth-message-overlay')!.hasAttribute('role')).toBeFalse();
+    it('lists what an account gives you', () => {
+      const items = Array.from(
+        fixture.nativeElement.querySelectorAll('.auth-prompt-benefit strong')
+      ).map((s: any) => s.textContent.trim());
+      expect(items).toEqual(['A daily food log', 'Saved foods', 'Reports']);
     });
 
-    it('moves focus to the Get Started button, whose name matches its label', () => {
-      open();
-
-      const button = el('.continue-button')!;
-      expect(document.activeElement).toBe(button);
-      expect(button.hasAttribute('aria-label')).toBeFalse();
-    });
-
-    it('does not cancel the redirect just because focus moved in', () => {
-      open();
-
-      expect(service.cancelAutoContinue).not.toHaveBeenCalled();
-    });
-
-    it('continues to sign-in on Escape, once', () => {
-      open();
-
-      document.dispatchEvent(
-        new KeyboardEvent('keydown', { key: 'Escape', bubbles: true })
+    it('puts focus on the sign-in button', () => {
+      expect(document.activeElement).toBe(
+        buttonByText('Sign in or create account')
       );
-
-      expect(service.continueToAuth).toHaveBeenCalledTimes(1);
     });
-  });
 
-  describe('autoplay', () => {
-    it('advances once, then stops after showing every slide', fakeAsync(() => {
-      open();
-      expect(component.autoPlaying).toBeTrue();
-
-      tick(5000);
-      expect(component.currentSlide).toBe(1);
-
-      tick(5000);
-      expect(component.currentSlide).toBe(1);
-      expect(component.autoPlaying).toBeFalse();
-
-      tick(20000);
-      expect(component.currentSlide).toBe(1);
-      fixture.destroy();
-    }));
-
-    it('does not announce slide changes the visitor did not ask for', fakeAsync(() => {
-      open();
-
-      tick(5000);
-
-      expect(component.announcement).toBe('');
-      fixture.destroy();
-    }));
-
-    it('announces slide changes the visitor asks for', () => {
-      open();
-
-      component.nextSlide();
+    it('"Sign in or create account" opens the sign-in page', () => {
+      buttonByText('Sign in or create account').click();
       fixture.detectChanges();
 
-      expect(el('[role="status"]')!.textContent).toContain(
-        'Showing slide 2 of 2: Features'
-      );
+      expect(router.navigate).toHaveBeenCalledOnceWith(['/auth']);
+      expect(el('[role="dialog"]')).toBeNull();
     });
 
-    it('pauses while the pointer is over the deck', fakeAsync(() => {
-      open();
+    for (const [how, close] of [
+      ['"Not now"', () => buttonByText('Not now').click()],
+      ['the close button', () => el<HTMLButtonElement>('.auth-prompt-close')!.click()],
+      ['Escape', () => document.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape' }))],
+      ['a click on the backdrop', () => el('.auth-prompt-backdrop')!.click()],
+    ] as const) {
+      it(`${how} closes it without leaving the page`, () => {
+        close();
+        fixture.detectChanges();
 
-      component.pauseAutoPlay();
-      tick(15000);
-      expect(component.currentSlide).toBe(0);
+        expect(el('[role="dialog"]')).toBeNull();
+        expect(router.navigate).not.toHaveBeenCalled();
+      });
+    }
 
-      component.resumeAutoPlay();
-      tick(5000);
-      expect(component.currentSlide).toBe(1);
-      fixture.destroy();
-    }));
-
-    it('pauses while a control in the deck has keyboard focus', fakeAsync(() => {
-      open();
-      const deck = el('.demo-deck')!;
-      const control = el('.autoplay-toggle')!;
-      spyOn(control, 'matches').and.callFake(
-        (selector: string) => selector === ':focus-visible'
-      );
-
-      control.dispatchEvent(new FocusEvent('focusin', { bubbles: true }));
-      tick(15000);
-      expect(component.currentSlide).toBe(0);
-
-      deck.dispatchEvent(
-        new FocusEvent('focusout', { bubbles: true, relatedTarget: null })
-      );
-      tick(5000);
-      expect(component.currentSlide).toBe(1);
-      fixture.destroy();
-    }));
-
-    it('is not paused by focus that did not come from the keyboard', fakeAsync(() => {
-      open();
-      const control = el('.autoplay-toggle')!;
-      spyOn(control, 'matches').and.returnValue(false);
-
-      control.dispatchEvent(new FocusEvent('focusin', { bubbles: true }));
-      tick(5000);
-
-      expect(component.currentSlide).toBe(1);
-      fixture.destroy();
-    }));
-
-    it('does not start for visitors who prefer reduced motion', fakeAsync(() => {
-      spyOn(window, 'matchMedia').and.returnValue({
-        matches: true,
-      } as MediaQueryList);
-
-      open();
-      tick(20000);
-
-      expect(component.autoPlaying).toBeFalse();
-      expect(component.currentSlide).toBe(0);
-      fixture.destroy();
-    }));
-
-    it('starts again from the first slide each time the tour opens', fakeAsync(() => {
-      open();
-      tick(10000);
-      expect(component.autoPlaying).toBeFalse();
-
-      show$.next(false);
-      show$.next(true);
+    it('a click inside the box does not close it', () => {
+      el('.auth-prompt-title')!.click();
       fixture.detectChanges();
 
-      expect(component.currentSlide).toBe(0);
-      expect(component.autoPlaying).toBeTrue();
-      tick(5000);
-      expect(component.currentSlide).toBe(1);
-      fixture.destroy();
-    }));
-  });
-
-  describe('pause and play button', () => {
-    const toggle = () => el('.autoplay-toggle') as HTMLButtonElement;
-
-    it('is a named button that reflects the current state', () => {
-      open();
-      expect(toggle().getAttribute('aria-label')).toBe('Pause slideshow');
-
-      toggle().click();
-      fixture.detectChanges();
-
-      expect(toggle().getAttribute('aria-label')).toBe('Play slideshow');
-    });
-
-    it('stops the slideshow when paused and resumes when played', fakeAsync(() => {
-      open();
-
-      toggle().click();
-      tick(15000);
-      expect(component.currentSlide).toBe(0);
-
-      toggle().click();
-      tick(5000);
-      expect(component.currentSlide).toBe(1);
-      fixture.destroy();
-    }));
-
-    it('plays from the beginning when it was left on the last slide', fakeAsync(() => {
-      open();
-      tick(10000);
-      expect(component.currentSlide).toBe(1);
-
-      toggle().click();
-
-      expect(component.currentSlide).toBe(0);
-      expect(component.autoPlaying).toBeTrue();
-      tick(5000);
-      fixture.destroy();
-    }));
-  });
-
-  describe('redirect timer', () => {
-    it('is cancelled by a pointer press inside the tour', () => {
-      open();
-
-      el('.demo-deck')!.dispatchEvent(
-        new PointerEvent('pointerdown', { bubbles: true })
-      );
-
-      expect(service.cancelAutoContinue).toHaveBeenCalled();
-    });
-
-    it('is cancelled by a key press inside the tour', () => {
-      open();
-
-      el('.continue-button')!.dispatchEvent(
-        new KeyboardEvent('keydown', { key: 'Tab', bubbles: true })
-      );
-
-      expect(service.cancelAutoContinue).toHaveBeenCalled();
+      expect(el('[role="dialog"]')).not.toBeNull();
     });
   });
 });
