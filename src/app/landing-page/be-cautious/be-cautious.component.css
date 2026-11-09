@@ -31,7 +31,7 @@
   min-width: 0;
 }
 
-.title-group h2 {
+.title-group h3 {
   margin: 0 0 8px;
   font-size: clamp(1.25rem, 1.1rem + 0.6vw, 1.5rem); /* 20px → 24px */
   line-height: 1.25;

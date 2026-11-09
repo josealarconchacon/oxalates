@@ -1,5 +1,11 @@
 import { Router, ActivatedRoute, RouterLink } from '@angular/router';
-import { Component, HostListener, OnInit } from '@angular/core';
+import {
+  Component,
+  ElementRef,
+  HostListener,
+  OnInit,
+  ViewChild,
+} from '@angular/core';
 import { AuthService } from 'src/app/user-auth/service/auth-service.service';
 import { NavigationService } from 'src/app/user-auth/service/navigation.service';
 import { BreakpointObserver } from '@angular/cdk/layout';
@@ -38,6 +44,9 @@ export class HeaderComponent implements OnInit {
   activeSection$: Observable<string>;
   isMobile$: Observable<boolean>;
   isDarkTheme$ = this.themeService.isDarkTheme$;
+
+  @ViewChild('menuButton') menuButton?: ElementRef<HTMLButtonElement>;
+  @ViewChild('closeButton') closeButton?: ElementRef<HTMLButtonElement>;
 
   private scrollThreshold = 50;
   private lastScrollPosition = 0;
@@ -80,6 +89,18 @@ export class HeaderComponent implements OnInit {
 
   toggleNav() {
     this.isNavOpen = !this.isNavOpen;
+    if (this.isNavOpen) {
+      // Wait a frame for the drawer to become visible, then move focus in.
+      requestAnimationFrame(() => this.closeButton?.nativeElement.focus());
+    }
+  }
+
+  /** Escape closes the slide-out menu and returns focus to the menu button. */
+  @HostListener('document:keydown.escape')
+  onEscape(): void {
+    if (!this.isNavOpen) return;
+    this.closeNav();
+    this.menuButton?.nativeElement.focus();
   }
 
   closeNav(): void {

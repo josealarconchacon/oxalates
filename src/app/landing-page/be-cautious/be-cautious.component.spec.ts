@@ -20,8 +20,9 @@ describe('BeCautiousComponent', () => {
   });
 
   it('should render main heading', () => {
-    const h2 = fixture.nativeElement.querySelector('h2');
-    expect(h2.textContent.trim()).toBe('Be Cautious of Oxalate Dumping');
+    // h3: it sits under the "Reasons to Reduce Oxalate Intake" h2
+    const heading = fixture.nativeElement.querySelector('h3');
+    expect(heading.textContent.trim()).toBe('Be Cautious of Oxalate Dumping');
   });
 
   it('should render description paragraph', () => {
