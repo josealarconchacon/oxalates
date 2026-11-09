@@ -17,14 +17,15 @@
           {{ isLoading ? "Loading your food entries." : "Food entries loaded." }}
         </p>
 
+        <!-- The page draws at once; only the parts that need the day's data
+        show placeholders until it arrives. -->
         @if (isLoading) {
-          <div class="loading-container">
-            <div class="loading-spinner" aria-hidden="true"></div>
-            <p>Loading your food entries...</p>
+          <div class="results-skeleton" aria-hidden="true">
+            <span class="skeleton-line skeleton-line--title"></span>
+            <span class="skeleton-line"></span>
+            <span class="skeleton-line skeleton-line--short"></span>
           </div>
-        }
-
-        @if (!isLoading) {
+        } @else {
           <div>
             <app-results-section
               [breakfastItems]="breakfastItems"
@@ -36,12 +37,11 @@
           </div>
         }
 
-        @if (!isLoading) {
           <div class="food-table-container">
             <section class="meal-section">
               <div class="title-and-button">
                 <h2 class="meal-title">Breakfast</h2>
-                <button class="add-button ui-btn ui-btn--tonal" (click)="openCalculator('breakfast')">
+                <button class="add-button ui-btn ui-btn--tonal" [disabled]="isLoading" (click)="openCalculator('breakfast')">
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
                     width="20"
@@ -61,7 +61,7 @@
                   <span class="label">Add Food</span>
                 </button>
               </div>
-              @if (breakfastItems.length > 0) {
+              @if (!isLoading && breakfastItems.length > 0) {
                 <table class="food-table">
                   <thead>
                     <tr class="header-detail">
@@ -196,7 +196,12 @@
                         </tbody>
                       </table>
                     }
-                    @if (breakfastItems.length === 0) {
+                    @if (isLoading) {
+                      <div class="meal-skeleton" aria-hidden="true">
+                        <span class="skeleton-line"></span>
+                        <span class="skeleton-line skeleton-line--short"></span>
+                      </div>
+                    } @else if (breakfastItems.length === 0) {
                       <div class="empty-state">
                         <span>No foods added yet</span>
                       </div>
@@ -205,7 +210,7 @@
                   <section class="meal-section">
                     <div class="title-and-button">
                       <h2 class="meal-title">Lunch</h2>
-                      <button class="add-button ui-btn ui-btn--tonal" (click)="openCalculator('lunch')">
+                      <button class="add-button ui-btn ui-btn--tonal" [disabled]="isLoading" (click)="openCalculator('lunch')">
                         <svg
                           xmlns="http://www.w3.org/2000/svg"
                           width="20"
@@ -225,7 +230,7 @@
                         <span class="label">Add Food</span>
                       </button>
                     </div>
-                    @if (lunchItems.length > 0) {
+                    @if (!isLoading && lunchItems.length > 0) {
                       <table class="food-table">
                         <thead>
                           <tr class="header-detail">
@@ -356,7 +361,12 @@
                               </tbody>
                             </table>
                           }
-                          @if (lunchItems.length === 0) {
+                          @if (isLoading) {
+                      <div class="meal-skeleton" aria-hidden="true">
+                        <span class="skeleton-line"></span>
+                        <span class="skeleton-line skeleton-line--short"></span>
+                      </div>
+                    } @else if (lunchItems.length === 0) {
                             <div class="empty-state">
                               <span>No foods added yet</span>
                             </div>
@@ -365,7 +375,7 @@
                         <section class="meal-section">
                           <div class="title-and-button">
                             <h2 class="meal-title">Dinner</h2>
-                            <button class="add-button ui-btn ui-btn--tonal" (click)="openCalculator('dinner')">
+                            <button class="add-button ui-btn ui-btn--tonal" [disabled]="isLoading" (click)="openCalculator('dinner')">
                               <svg
                                 xmlns="http://www.w3.org/2000/svg"
                                 width="20"
@@ -385,7 +395,7 @@
                               <span class="label">Add Food</span>
                             </button>
                           </div>
-                          @if (dinnerItems.length > 0) {
+                          @if (!isLoading && dinnerItems.length > 0) {
                             <table class="food-table">
                               <thead>
                                 <tr class="header-detail">
@@ -518,7 +528,12 @@
                                     </tbody>
                                   </table>
                                 }
-                                @if (dinnerItems.length === 0) {
+                                @if (isLoading) {
+                      <div class="meal-skeleton" aria-hidden="true">
+                        <span class="skeleton-line"></span>
+                        <span class="skeleton-line skeleton-line--short"></span>
+                      </div>
+                    } @else if (dinnerItems.length === 0) {
                                   <div class="empty-state">
                                     <span>No foods added yet</span>
                                   </div>
@@ -527,7 +542,7 @@
                               <section class="meal-section">
                                 <div class="title-and-button">
                                   <h2 class="meal-title">Snacks</h2>
-                                  <button class="add-button ui-btn ui-btn--tonal" (click)="openCalculator('snacks')">
+                                  <button class="add-button ui-btn ui-btn--tonal" [disabled]="isLoading" (click)="openCalculator('snacks')">
                                     <svg
                                       xmlns="http://www.w3.org/2000/svg"
                                       width="20"
@@ -547,7 +562,7 @@
                                     <span class="label">Add Food</span>
                                   </button>
                                 </div>
-                                @if (snackItems.length > 0) {
+                                @if (!isLoading && snackItems.length > 0) {
                                   <table class="food-table">
                                     <thead>
                                       <tr class="header-detail">
@@ -678,14 +693,18 @@
                                           </tbody>
                                         </table>
                                       }
-                                      @if (snackItems.length === 0) {
+                                      @if (isLoading) {
+                      <div class="meal-skeleton" aria-hidden="true">
+                        <span class="skeleton-line"></span>
+                        <span class="skeleton-line skeleton-line--short"></span>
+                      </div>
+                    } @else if (snackItems.length === 0) {
                                         <div class="empty-state">
                                           <span>No foods added yet</span>
                                         </div>
                                       }
                                     </section>
                                   </div>
-                                }
                               </div>
 
                               @if (showCalculator) {

@@ -175,6 +175,9 @@ export class FoodEntryComponent implements OnInit, OnDestroy {
   }
 
   openCalculator(mealType: string) {
+    // Saving rewrites the whole meal list, so adding before the day has
+    // loaded would replace the saved foods with just the new one.
+    if (this.isLoading) return;
     this.selectedMealType = mealType as
       | 'breakfast'
       | 'lunch'
