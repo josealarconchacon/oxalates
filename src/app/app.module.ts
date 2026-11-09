@@ -36,6 +36,7 @@ import { ScrollingModule } from '@angular/cdk/scrolling';
 import { FooterComponent } from './landing-page/footer/footer.component';
 import { ResourcesComponent } from './landing-page/resources/resources.component';
 import { BenefitsComponent } from './landing-page/benefits/benefits.component';
+import { IconComponent } from './shared/components/icon/icon.component';
 import { ManagingOxalateComponent } from './landing-page/managing-oxalate/managing-oxalate.component';
 import { ViewMoreComponent } from './landing-page/dialog-service/oxalate/view-more/view-more.component';
 import { AlertComponent } from './landing-page/dialog-service/oxalate/shared/alert/alert.component';
@@ -112,6 +113,7 @@ export function initializeApp(configService: ConfigService) {
     BeCautiousComponent,
     ClickableDirective,
     AlertComponent,
+    IconComponent,
   ],
   providers: [
     // Angular 21 runs apps without Zone.js unless they opt in. This app relies on

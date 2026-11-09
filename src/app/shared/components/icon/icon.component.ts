@@ -19,7 +19,11 @@ export type IconName =
   | 'flask-round'
   | 'bean'
   | 'nut'
-  | 'triangle-alert';
+  | 'triangle-alert'
+  | 'shield-check'
+  | 'gem'
+  | 'activity'
+  | 'funnel';
 
 /**
  * One line-icon set for the app (Lucide paths, 24×24 grid).
@@ -113,6 +117,20 @@ export type IconName =
         @case ('triangle-alert') {
           <svg:path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3" />
           <svg:path d="M12 9v4M12 17h.01" />
+        }
+        @case ('shield-check') {
+          <svg:path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z" />
+          <svg:path d="m9 12 2 2 4-4" />
+        }
+        @case ('gem') {
+          <svg:path d="M6 3h12l4 6-10 13L2 9Z" />
+          <svg:path d="M11 3 8 9l4 13 4-13-3-6M2 9h20" />
+        }
+        @case ('activity') {
+          <svg:path d="M22 12h-2.48a2 2 0 0 0-1.93 1.46l-2.35 8.36a.25.25 0 0 1-.48 0L9.24 2.18a.25.25 0 0 0-.48 0l-2.35 8.36A2 2 0 0 1 4.49 12H2" />
+        }
+        @case ('funnel') {
+          <svg:path d="M22 3H2l8 9.46V19l4 2v-8.54L22 3z" />
         }
       }
     </svg>
