@@ -17,6 +17,13 @@ class MockAppHeaderComponent {}
 })
 class MockAuthMessageComponent {}
 
+@Component({
+  selector: 'app-footer',
+  template: '<footer>Mock App Footer</footer>',
+  standalone: false,
+})
+class MockAppFooterComponent {}
+
 describe('AppComponent', () => {
   let fixture: ComponentFixture<AppComponent>;
   let component: AppComponent;
@@ -28,6 +35,7 @@ describe('AppComponent', () => {
         AppComponent,
         MockAppHeaderComponent,
         MockAuthMessageComponent,
+        MockAppFooterComponent,
       ],
       providers: [provideRouter([])],
     }).compileComponents();
@@ -86,5 +94,18 @@ describe('AppComponent', () => {
       expect(event.defaultPrevented).toBeTrue();
       expect(document.activeElement).toBe(el('main'));
     });
+  });
+
+  it('renders the footer once, after <main> and outside it', () => {
+    const compiled = fixture.nativeElement as HTMLElement;
+    const footers = compiled.querySelectorAll('app-footer');
+    const main = compiled.querySelector('main')!;
+
+    expect(footers.length).toBe(1);
+    expect(main.contains(footers[0])).toBeFalse();
+    expect(
+      main.compareDocumentPosition(footers[0]) &
+        Node.DOCUMENT_POSITION_FOLLOWING
+    ).toBeTruthy();
   });
 });
