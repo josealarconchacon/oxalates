@@ -15,9 +15,9 @@
 /* --- Design system colors (redefined under .dark-theme below) --- */
 :root {
   /* Color System */
-  --primary-color: #1da1f2;
-  --primary-dark: #0a58ca;
-  /* --primary-light: #6ea8fe; */
+  --primary-color: #1f7a50; /* brand green, decorative (5.3:1 on white) */
+  --primary-dark: #124d33;
+  --primary-light: rgba(23, 96, 63, 0.18); /* soft focus glow */
   --secondary-color: #6c757d;
   --success-color: #198754;
   --info-color: #0dcaf0;
@@ -27,17 +27,16 @@
   --dark-color: #212529;
   --dotting-color: #4cc9b7;
 
-  /* Action blue: the brand blue (#1da1f2) is only 2.83:1 on white, so it can't
-     carry text or sit behind white text. Use these for anything people have to
-     read (link text, button labels, badges) and keep --primary-color for
-     decoration. --on-action is the text color that goes on top of a fill. */
-  --action-color: #0a58ca; /* 6.44:1 on white */
-  --action-color-hover: #084298; /* 9.36:1 on white */
+  /* Action color: the brand green, used for anything people have to read or
+     press (link text, button labels, badges, focus ring). --primary-color is
+     its decorative sibling. --on-action is the text that goes on a fill. */
+  --action-color: #17603f; /* brand green: 7.4:1 on white */
+  --action-color-hover: #124d33; /* 9.7:1 on white */
   --on-action: #ffffff;
   /* Branded gradient behind white text (sign-in panel, submit button): both
      stops stay at 5.7:1 or better with white, in either theme. */
-  --brand-gradient-start: #1565c0;
-  --brand-gradient-end: #0a58ca;
+  --brand-gradient-start: #1f7a50;
+  --brand-gradient-end: #17603f;
 
   /* One focus ring for the whole app. It follows --action-color, so it is
      6.44:1 on white in light mode and 6:1 or better on the dark surfaces,
@@ -87,8 +86,11 @@
   --icon-red: #d32f2f;
   --icon-pink: #c2185b;
 
-  /* Third-party brand colors. The shared action blue is also Venmo's, so PayPal
-     keeps its own navy to stay distinct (white on it is 12:1). */
+  /* Third-party brand colors, the same in both themes. Venmo keeps the blue
+     it had before the brand went green (white on it is 6.4:1); PayPal keeps
+     its own navy (12:1). */
+  --brand-venmo: #0a58ca;
+  --brand-venmo-hover: #084298;
   --brand-paypal: #003087;
 
   /* Oxalate level badges (very low to high, plus trace): one surface, border
@@ -119,7 +121,7 @@
   /* Where a section's soft top-to-bottom wash ends. */
   --section-fade-end: #f7f7fe;
 
-  /* White that stays white in both themes: on the brand-blue panels and as
+  /* White that stays white in both themes: on the brand-green panels and as
      the halo around a focused color swatch. */
   --white: #ffffff;
 
@@ -156,7 +158,7 @@
   --link-color: var(--action-color);
   --button-text: #333333;
   --button-background: #ffffff;
-  --nav-active: #e3f2fd;
+  --nav-active: #e6f0ea;
   --nav-hover: #f5f5f5;
   --dropdown-background: #ffffff;
   --tooltip-background: #333333;
@@ -167,7 +169,7 @@
   /* Oxalate search UI names. Aliases of the tokens above, so the search pages
      follow the same palette, contrast fixes and theme switch as the rest. */
   --color-primary: var(--action-color);
-  --color-primary-rgb: 10, 88, 202; /* --action-color as r, g, b */
+  --color-primary-rgb: 23, 96, 63; /* --action-color as r, g, b */
   --color-text: var(--text-color);
   --color-surface: var(--card-background);
   --color-card: var(--card-background);
@@ -196,22 +198,26 @@
      that sits on them. */
   --color-footer-bg: #111a15;
   --color-on-ink: #ffffff;
+
+  /* Focused form fields (the auth inputs read these) */
+  --input-border-focus: var(--action-color);
+  --input-shadow-focus: rgba(23, 96, 63, 0.15);
 }
 
 /* Dark theme variables */
 .dark-theme {
-  /* Lighter blue that reads on dark surfaces (4.9:1 even on the #3a3a3a
-     dialog); fills take dark text, since white on it is only 2.4:1. */
-  --action-color: #6db1ea;
-  --action-color-hover: #8bc0ee;
+  /* Brand green, lightened so it reads on the dark surfaces; fills under
+     it take dark text (--on-action). */
+  --action-color: #6fcf9c; /* light green on dark: 9.7:1 on the page; fills take dark text */
+  --action-color-hover: #8fdcb3;
   --on-action: #0f1512;
-  --color-primary-rgb: 109, 177, 234; /* --action-color as r, g, b */
+  --color-primary-rgb: 111, 207, 156; /* --action-color as r, g, b */
   --shadow-card: 0 2px 8px rgba(0, 0, 0, 0.3);
 
-  --primary-color: #1a91da;
-  --primary-dark: #1577b5;
-  --primary-light: #4ba9e1;
-  --primary-color-rgb: 26, 145, 218;
+  --primary-color: #3fae78;
+  --primary-dark: #1f7a50;
+  --primary-light: rgba(111, 207, 156, 0.22); /* soft focus glow */
+  --primary-color-rgb: 63, 174, 120;
 
   /* Theme Colors */
   --background-color: #0f1512;
@@ -226,8 +232,8 @@
   --text-muted: #a3b0a9; /* 7.6:1 on cards, 8.2:1 on the page */
   --text-disabled: #666666;
   --text-inverse: #0f1512;
-  --text-link: #4ba9e1;
-  --text-link-hover: #1a91da;
+  --text-link: #6fcf9c;
+  --text-link-hover: #8fdcb3;
   --text-error: #ff6b6b;
   --text-success: #69db7c;
   --text-warning: #ffd43b;
@@ -288,10 +294,10 @@
   --sidebar-background: #161e1a;
   --header-background: #0f1512;
   --footer-background: #0a0e0c;
-  --link-color: #4ba9e1;
+  --link-color: #6fcf9c;
   --button-text: #ffffff;
   --button-background: #1f2a24;
-  --nav-active: #1a91da33;
+  --nav-active: rgba(111, 207, 156, 0.16);
   --nav-hover: #1f2a24;
   --dropdown-background: #1f2a24;
   --tooltip-background: #1f2a24;
@@ -312,6 +318,6 @@
 
   /* Form elements */
   --input-placeholder: #95a29b;
-  --input-border-focus: #4ba9e1;
-  --input-shadow-focus: rgba(75, 169, 225, 0.2);
+  --input-border-focus: #6fcf9c;
+  --input-shadow-focus: rgba(111, 207, 156, 0.2);
 }

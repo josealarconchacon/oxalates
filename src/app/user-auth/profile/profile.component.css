@@ -51,8 +51,8 @@
    just outside it) gives the blue ring something to contrast with. */
 .color-picker-toggle:focus-visible,
 :host-context(.dark-theme) .color-picker-toggle:focus-visible {
-  /* Fixed blue: it always sits on the white halo, in both themes */
-  outline: 3px solid #0a58ca;
+  /* Fixed brand green: it always sits on the white halo, in both themes */
+  outline: 3px solid #17603f;
   outline-offset: var(--focus-ring-offset);
   box-shadow: 0 0 0 8px var(--white);
 }
@@ -672,9 +672,9 @@
   --gray-600: #a3b0a9;
   --gray-700: #dfe6e2;
   --gray-900: #dfe6e2;
-  --primary-50: #1a365d;
-  --primary-color: #5fa8e6;
-  --primary-light: #2d4a7c;
+  --primary-50: #1b3328;
+  --primary-color: #6fcf9c;
+  --primary-light: #24493a;
   --danger-color: #ff6b6b;
   --danger-50: #2d1a1a;
 }

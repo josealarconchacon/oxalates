@@ -262,7 +262,7 @@
 .form-input:focus {
   border-color: var(--input-border-focus, var(--primary-color));
   background: var(--background-color);
-  box-shadow: 0 0 0 4px var(--input-shadow-focus, rgba(29, 161, 242, 0.15));
+  box-shadow: 0 0 0 4px var(--input-shadow-focus);
 }
 
 .form-input:hover:not(:focus) {
@@ -698,7 +698,7 @@
 }
 
 :host-context(.dark-theme) .form-input:focus {
-  box-shadow: 0 0 0 4px rgba(29, 161, 242, 0.25);
+  box-shadow: 0 0 0 4px var(--input-shadow-focus);
 }
 
 :host-context(.dark-theme) .form-input.error {
