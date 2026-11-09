@@ -1,9 +1,9 @@
 /* Suggestions Form - Modern Health & Wellness Design */
-/* Uses DM Sans (imported in index.html) */
+/* Uses the app font (--font-family-sans) */
 
 :host {
   display: block;
-  font-family: 'DM Sans', system-ui, -apple-system, sans-serif;
+  font-family: var(--font-family-sans);
 }
 
 /* ===== PAGE BACKGROUND ===== */
