@@ -749,3 +749,19 @@ section.resources-section {
   max-width: 1200px;
   padding: 0 clamp(20px, 4vw, 32px);
 }
+
+/* ---------- Tips ---------- */
+section.managing-section {
+  margin-top: 0;
+  padding: clamp(56px, 9vw, 112px) 0;
+  background-color: var(--color-bg);
+}
+
+:host-context(.dark-theme) section.managing-section {
+  background-color: transparent;
+}
+
+.managing-section .container {
+  max-width: 1200px;
+  padding: 0 clamp(20px, 4vw, 32px);
+}

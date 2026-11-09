@@ -23,7 +23,11 @@ export type IconName =
   | 'shield-check'
   | 'gem'
   | 'activity'
-  | 'funnel';
+  | 'funnel'
+  | 'droplet'
+  | 'gauge'
+  | 'clipboard-list'
+  | 'users';
 
 /**
  * One line-icon set for the app (Lucide paths, 24×24 grid).
@@ -131,6 +135,21 @@ export type IconName =
         }
         @case ('funnel') {
           <svg:path d="M22 3H2l8 9.46V19l4 2v-8.54L22 3z" />
+        }
+        @case ('droplet') {
+          <svg:path d="M12 22a7 7 0 0 0 7-7c0-2-1-3.9-3-5.5s-3.5-4-4-6.5c-.5 2.5-2 4.9-4 6.5C6 11.1 5 13 5 15a7 7 0 0 0 7 7z" />
+        }
+        @case ('gauge') {
+          <svg:path d="m12 14 4-4M3.34 19a10 10 0 1 1 17.32 0" />
+        }
+        @case ('clipboard-list') {
+          <svg:rect width="8" height="4" x="8" y="2" rx="1" ry="1" />
+          <svg:path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2M12 11h4M12 16h4M8 11h.01M8 16h.01" />
+        }
+        @case ('users') {
+          <svg:path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2" />
+          <svg:circle cx="9" cy="7" r="4" />
+          <svg:path d="M22 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75" />
         }
       }
     </svg>
