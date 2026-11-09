@@ -1,4 +1,4 @@
-<div>
+<div class="app-shell">
   <a class="skip-link" href="#main" (click)="skipToMain($event)"
     >Skip to main content</a
   >
@@ -6,5 +6,7 @@
   <main id="main" #main tabindex="-1">
     <router-outlet></router-outlet>
   </main>
+  <!-- Outside <main>, so it is the page's contentinfo landmark on every route -->
+  <app-footer></app-footer>
   <app-auth-message></app-auth-message>
 </div>

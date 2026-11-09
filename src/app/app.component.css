@@ -1,1 +1,12 @@
+/* Column layout: on short pages <main> grows, so the footer sits at the
+   bottom of the screen instead of halfway up it. */
+.app-shell {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  min-height: 100dvh;
+}
 
+.app-shell > main {
+  flex: 1 0 auto;
+}

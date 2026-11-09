@@ -132,11 +132,6 @@ section:nth-child(even) {
   background-color: var(--background-color);
 }
 
-/* The footer is a full-bleed dark band, so it skips the section padding. */
-.footer-section {
-  padding: 0;
-}
-
 .search-results-container {
   position: fixed;
   top: 50%;
