@@ -1,8 +1,6 @@
 import { ContributionComponent } from './landing-page/contribution/contribution.component';
 import {
-  APP_INITIALIZER,
   NgModule,
-  OnInit,
   provideZoneChangeDetection,
 } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
@@ -40,7 +38,6 @@ import { IconComponent } from './shared/components/icon/icon.component';
 import { ManagingOxalateComponent } from './landing-page/managing-oxalate/managing-oxalate.component';
 import { ViewMoreComponent } from './landing-page/dialog-service/oxalate/view-more/view-more.component';
 import { AlertComponent } from './landing-page/dialog-service/oxalate/shared/alert/alert.component';
-import { ConfigService } from 'src/assets/config/config.service';
 import { AuthComponent } from './user-auth/auth/auth.component';
 import { CommonModule } from '@angular/common';
 import { AlertService } from './shared/alert-service/alert.service';
@@ -53,21 +50,9 @@ import { ThemeService } from './shared/services/theme.service';
 import { BeCautiousComponent } from './landing-page/be-cautious/be-cautious.component';
 import { ClickableDirective } from './shared/directives/clickable.directive';
 
-export function initializeApp(configService: ConfigService) {
-  return (): Promise<void> => {
-    return new Promise<void>((resolve, reject) => {
-      configService.getConfig().subscribe(
-        (config) => {
-          // Set the Firebase configuration dynamically
-          environment.firebaseConfig = config;
-          resolve();
-        },
-        (error) => reject(error),
-      );
-    });
-  };
-}
-
+// Firebase is configured from the environment file above. (An app
+// initializer used to fetch an empty assets/config/firebase-config.json first,
+// which held up the first paint of every page and was never used.)
 @NgModule({
   declarations: [
     AppComponent,
@@ -120,26 +105,12 @@ export function initializeApp(configService: ConfigService) {
     // Zone.js to redraw after async work (Firebase, HTTP, timers); without it the
     // page only updated after a click, e.g. the daily log stuck on "Loading".
     provideZoneChangeDetection(),
-    ConfigService,
     AlertService,
     { provide: TitleStrategy, useClass: PageTitleStrategy },
-    {
-      provide: APP_INITIALIZER,
-      useFactory: initializeApp,
-      deps: [ConfigService],
-      multi: true,
-    },
     provideHttpClient(withInterceptorsFromDi()),
     ThemeService,
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
   bootstrap: [AppComponent],
 })
-export class AppModule implements OnInit {
-  constructor(private configService: ConfigService) {}
-  ngOnInit() {
-    this.configService.getConfig().subscribe(() => {
-      console.log('Firebase configuration initialized');
-    });
-  }
-}
+export class AppModule {}

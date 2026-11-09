@@ -61,6 +61,44 @@ describe('FoodEntryComponent', () => {
     });
   });
 
+  describe('while the day is loading', () => {
+    beforeEach(() => {
+      component.isLoading = true;
+      fixture.detectChanges();
+    });
+
+    it('still draws the four meal sections, with placeholders', () => {
+      const titles = [
+        ...fixture.nativeElement.querySelectorAll('.meal-title'),
+      ].map((h: HTMLElement) => h.textContent!.trim());
+
+      expect(titles).toEqual(['Breakfast', 'Lunch', 'Dinner', 'Snacks']);
+      expect(
+        fixture.nativeElement.querySelectorAll('.meal-skeleton').length
+      ).toBe(4);
+      // No "No foods added yet" until we actually know the day is empty
+      expect(fixture.nativeElement.querySelector('.empty-state')).toBeNull();
+    });
+
+    it('keeps Add Food disabled, so a save cannot overwrite unloaded foods', () => {
+      const buttons = [
+        ...fixture.nativeElement.querySelectorAll('.add-button'),
+      ] as HTMLButtonElement[];
+
+      expect(buttons.length).toBe(4);
+      expect(buttons.every((b) => b.disabled)).toBeTrue();
+    });
+
+    it('ignores openCalculator until loading finishes', () => {
+      component.openCalculator('lunch');
+      expect(component.showCalculator).toBeFalse();
+
+      component.isLoading = false;
+      component.openCalculator('lunch');
+      expect(component.showCalculator).toBeTrue();
+    });
+  });
+
   describe('expandable food rows', () => {
     const el = (selector: string) =>
       fixture.nativeElement.querySelector(selector) as HTMLElement | null;
