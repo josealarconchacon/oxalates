@@ -703,28 +703,19 @@ section:nth-child(even) {
   }
 }
 
-/* Optimize categories section for better scroll performance */
-.categories-section {
-  /* Optimize for better scroll performance */
-  will-change: auto;
-  transform: translateZ(0);
+/* ---------- Browse by Category ---------- */
+/* Shares the hero's page background, so the two read as one area. */
+section.categories-section {
+  margin-top: 0;
+  padding: 0 0 clamp(56px, 9vw, 112px);
+  background-color: var(--color-bg);
+}
+
+:host-context(.dark-theme) section.categories-section {
+  background-color: transparent;
 }
 
 .categories-section .container {
-  /* Optimize container for better performance */
-  will-change: auto;
-  transform: translateZ(0);
-}
-
-/* Optimize all sections for better scroll performance */
-.section {
-  /* Optimize for better scroll performance */
-  will-change: auto;
-  transform: translateZ(0);
-}
-
-.section .container {
-  /* Optimize container for better performance */
-  will-change: auto;
-  transform: translateZ(0);
+  max-width: 1200px;
+  padding: 0 clamp(20px, 4vw, 32px);
 }

@@ -1,27 +1,24 @@
-<section class="category-container" [class.dark-theme]="isDarkTheme$ | async">
-  <h2 class="by-category">Browse by Category</h2>
-  <div class="cards-wrapper">
-    @for (card of cardsArray; track card) {
-      <div
+<h2 class="by-category">Browse by Category</h2>
+<ul class="cards-wrapper">
+  @for (card of cardsArray; track card.title) {
+    <li>
+      <a
         class="category-card"
-        appClickable
-        (click)="onCardClick(card.title)"
+        routerLink="/oxalate"
+        [queryParams]="{ category: card.title }"
+        [attr.aria-label]="card.overlayText || card.title"
+        (click)="selectCategory(card.title)"
+      >
+        <span
+          class="category-icon"
+          [ngClass]="styleFor(card.title).tint"
+          aria-hidden="true"
         >
-        @if (card.badge) {
-          <div class="category-badge">{{ card.badge }}</div>
-        }
-        <div class="category-card-content">
-          <div
-            class="category-icon"
-            [class.svg-debug]="true"
-            [innerHTML]="getSanitizedIcon(card.iconSvg)"
-          ></div>
-          <h3 class="category-title">{{ card.title }}</h3>
-        </div>
-        <div class="category-overlay">
-          <div class="overlay-text">{{ card.overlayText }}</div>
-        </div>
-      </div>
-    }
-  </div>
-</section>
+          <app-icon [name]="styleFor(card.title).icon" [size]="26" />
+        </span>
+        <span class="category-title">{{ card.title }}</span>
+        <app-icon class="category-arrow" name="arrow-right" />
+      </a>
+    </li>
+  }
+</ul>
