@@ -13,10 +13,14 @@ import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { ThemeService } from 'src/app/shared/services/theme.service';
 import { Subscription } from 'rxjs';
+import { IconComponent } from 'src/app/shared/components/icon/icon.component';
+
+/** Gives each search box its own input id for its <label>. */
+let nextSearchInputId = 0;
 
 @Component({
   selector: 'app-search-input',
-  imports: [FormsModule, CommonModule],
+  imports: [FormsModule, CommonModule, IconComponent],
   templateUrl: './search-input.component.html',
   styleUrls: ['./search-input.component.css'],
 })
@@ -28,6 +32,7 @@ export class SearchInputComponent implements OnInit, OnDestroy {
   @Output() searchSubmitted = new EventEmitter<void>();
   @ViewChild('searchInputElement') searchInputElement?: ElementRef;
 
+  readonly inputId = `food-search-${nextSearchInputId++}`;
   isDarkTheme: boolean = false;
   private themeSubscription: Subscription | null = null;
   private isDoneKeyPressed: boolean = false;

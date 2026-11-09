@@ -1,44 +1,40 @@
 <div class="main-container">
-  <!-- Hero Section -->
-  <section class="hero">
-    <div class="container">
-      <div class="hero-content">
-        <div class="hero-top">
-          <div class="hero-img">
-            <img
-              class="hero-image"
-              src="../../assets/app-logo/landing-logo1.webp"
-              alt="Pencil illustration of beets with their greens, spinach leaves and almonds, foods that are high in oxalates"
-              fetchpriority="high"
-              width="563"
-              height="443"
-              />
-          </div>
-          <div class="hero-text">
-            <h1>What are Oxalates?</h1>
-            <p>
-              Oxalates are naturally occurring compounds found in plants and
-              sometimes produced within the body. In excess, oxalates are most
-              well known for their association with kidney stones, but they can
-              also lead to a myriad of other health problems in sensitive
-              individuals.
-            </p>
-            <!-- Search Section - Moved inside hero-text for better integration -->
-            @if (!showSearchResults) {
-              <div class="search-container">
-                <div class="search-wrapper">
-                  <app-search-input
-                    #mainSearchInput
-                    [searchQuery]="searchQuery"
-                    (searchQueryChange)="onSearchQueryChange($event)"
-                    (clearSearch)="onClearSearch()"
-                    (searchSubmitted)="onSearchSubmitted()"
-                  ></app-search-input>
-                </div>
-              </div>
-            }
-          </div>
+  <!-- Hero: text and search first, illustration second -->
+  <section class="hero" aria-labelledby="hero-title">
+    <div class="hero-inner">
+      <div class="hero-grid">
+        <div class="hero-text">
+          <h1 id="hero-title">What are Oxalates?</h1>
+          <p>
+            Oxalates are naturally occurring compounds found in plants and
+            sometimes produced within the body. In excess, oxalates are most
+            well known for their association with kidney stones, but they can
+            also lead to a myriad of other health problems in sensitive
+            individuals.
+          </p>
+          @if (!showSearchResults) {
+            <div class="hero-search">
+              <app-search-input
+                #mainSearchInput
+                [searchQuery]="searchQuery"
+                (searchQueryChange)="onSearchQueryChange($event)"
+                (clearSearch)="onClearSearch()"
+                (searchSubmitted)="onSearchSubmitted()"
+              ></app-search-input>
+            </div>
+          }
         </div>
+        <div class="hero-art">
+          <img
+            class="hero-image"
+            src="../../assets/app-logo/landing-logo1.webp"
+            alt="Pencil illustration of beets with their greens, spinach leaves and almonds, foods that are high in oxalates"
+            fetchpriority="high"
+            width="563"
+            height="443"
+          />
+        </div>
+      </div>
 
         <!-- Search Results Section -->
         @if (showSearchResults) {
@@ -171,7 +167,6 @@
             }
           </div>
         }
-      </div>
     </div>
   </section>
 
