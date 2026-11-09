@@ -5,7 +5,7 @@
   width: 100%;
   height: 100%;
   background-color: rgba(0, 0, 0, 0.5);
-  z-index: 99;
+  z-index: 1010; /* above the fixed header (1000) */
   animation: fadeIn 0.2s ease-in-out;
 }
 
@@ -41,92 +41,82 @@ body {
   padding: 0;
 }
 
-.theme-toggle-container {
-  position: fixed;
-  top: 20px;
-  right: 20px;
-  z-index: var(--z-50);
-}
-
 .main-container {
-  margin-top: calc(var(--header-height, 64px) + 2rem);
+  margin-top: var(--header-height);
   padding-top: env(safe-area-inset-top);
 }
 
+/* ---------- Hero ---------- */
 .hero {
-  display: flex;
-  justify-content: center;
+  padding: clamp(56px, 9vw, 112px) 0;
+  background-color: var(--color-bg);
+}
+
+.hero-inner {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 clamp(20px, 4vw, 32px);
+}
+
+.hero-grid {
+  display: grid;
+  /* 1.2 : 1 keeps "What are Oxalates?" on one line from 1280px up */
+  grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr);
   align-items: center;
-  padding: clamp(2rem, 8vw, 7.5rem) clamp(0.125rem, 1vw, 0.5rem) clamp(2rem, 6vw, 5rem);
-  min-height: 80vh;
-  min-height: 80dvh; /* Dynamic viewport height for mobile browsers */
-  background-color: var(--background-color);
-  box-sizing: border-box;
-  margin: 0;
-}
-
-.hero-content {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  width: 100%;
-  padding: 0 clamp(0.25rem, 1vw, 0.5rem);
-  max-width: 100%;
-  margin-top: clamp(2rem, 12vw, 9.375rem);
-}
-
-.hero-top {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  width: 100%;
-  margin-bottom: 50px;
-}
-
-.hero-img {
-  width: 100%;
-  max-width: 100%;
-  text-align: center;
-  padding: 0 4px;
-  margin-bottom: 16px;
-  order: 1;
-}
-
-.hero-text {
-  width: 100%;
-  text-align: center;
-  padding: 0 16px;
-  margin-bottom: 32px;
-  order: 2;
+  gap: clamp(40px, 6vw, 80px);
 }
 
 .hero-text h1 {
-  font-size: clamp(var(--font-size-4xl), 5vw, 2.5rem);
-  margin: 0 0 var(--spacing-4) 0;
-  font-weight: var(--font-weight-semibold);
-  color: var(--text-primary);
-  line-height: var(--line-height-tight);
+  margin: 0 0 24px;
+  font-size: clamp(2.75rem, 1.6rem + 3.6vw, 4.25rem); /* 44px → 68px */
+  line-height: 1.02;
+  letter-spacing: -0.03em;
+  color: var(--color-ink);
 }
 
 .hero-text p {
-  font-size: var(--font-size-lg);
-  color: var(--text-secondary);
-  line-height: var(--line-height-relaxed);
-  margin: 0 auto var(--spacing-5) auto;
-  max-width: 50rem;
+  max-width: 34em;
+  margin: 0 0 32px;
+  font-size: clamp(1.0625rem, 1rem + 0.3vw, 1.1875rem); /* 17px → 19px */
+  line-height: 1.65;
+  color: var(--color-muted);
+}
+
+.hero-search {
+  max-width: 560px;
+}
+
+.hero-art {
+  display: grid;
+  place-items: center;
+  aspect-ratio: 5 / 4;
+  padding: clamp(24px, 4vw, 48px);
+  border-radius: 28px;
+  background-color: var(--color-hero-panel);
 }
 
 .hero-image {
-  max-width: 100%;
-  height: auto;
-  border-radius: 8px;
-  transition: transform 0.2s ease;
-  touch-action: manipulation;
-  -webkit-tap-highlight-color: transparent;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  /* The sketch has a white background; multiply lets the panel show through. */
+  mix-blend-mode: multiply;
 }
 
-.hero-image:hover {
-  transform: scale(1.01);
+@media (max-width: 859.98px) {
+  .hero-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .hero-search {
+    max-width: none;
+  }
+
+  /* Stacked: a wide, capped panel so categories stay near the fold */
+  .hero-art {
+    aspect-ratio: 16 / 10;
+    max-height: 360px;
+  }
 }
 
 section {
@@ -142,249 +132,9 @@ section:nth-child(even) {
   background-color: var(--background-color);
 }
 
-.section-container {
-  width: 100%;
-  max-width: var(--container-xl);
-  margin: 0 auto;
-  padding: 0 4px;
-  box-sizing: border-box;
-}
-
-@media screen and (min-width: 320px) {
-  .hero {
-    padding: 8px 4px;
-  }
-
-  .hero-content {
-    gap: 20px;
-  }
-
-  .hero-text {
-    padding: 0 12px;
-    margin-bottom: 24px;
-  }
-
-  .hero-text h1 {
-    font-size: 1.6rem;
-    margin-bottom: 12px;
-  }
-
-  .hero-text p {
-    font-size: 1rem;
-    line-height: 1.4;
-    margin-bottom: 36px;
-  }
-
-  .search-wrapper {
-    padding: 12px;
-    border-radius: 12px;
-  }
-}
-
-@media screen and (min-width: 768px) {
-  .hero {
-    padding: 15px 10px;
-    min-height: 60vh;
-  }
-
-  .hero-content {
-    max-width: 1200px;
-    margin: 80px auto 0;
-    padding: 0 24px;
-  }
-
-  .hero-top {
-    flex-direction: row;
-    justify-content: space-between;
-    align-items: center;
-    gap: 40px;
-  }
-
-  .hero-img {
-    flex: 1;
-    max-width: 50%;
-    order: 1;
-  }
-
-  .hero-text {
-    flex: 1;
-    text-align: left;
-    max-width: 50%;
-    padding: 0;
-    order: 2;
-  }
-
-  .hero-text h1 {
-    font-size: 1.8rem;
-    margin-bottom: 16px;
-  }
-
-  .hero-text p {
-    font-size: 1.1rem;
-    line-height: 1.5;
-    max-width: 700px;
-    margin-bottom: 48px;
-  }
-
-  .search-wrapper {
-    padding: 16px;
-    border-radius: 16px;
-  }
-}
-
-@media screen and (min-width: 992px) {
-  .hero {
-    padding: 20px 15px;
-  }
-
-  .hero-content {
-    max-width: 1300px;
-  }
-
-  .hero-top {
-    gap: 60px;
-  }
-
-  .hero-text {
-    margin-bottom: 48px;
-  }
-
-  .hero-text h1 {
-    font-size: 2rem;
-    margin-bottom: 20px;
-  }
-
-  .hero-text p {
-    font-size: 1.2rem;
-    line-height: 1.6;
-    max-width: 800px;
-    margin-bottom: 56px;
-  }
-
-  .hero-image {
-    border-radius: 12px;
-  }
-
-  .section-container {
-    padding: 0 15px;
-  }
-
-  .search-wrapper {
-    padding: 20px;
-  }
-
-  .hero-text {
-    max-width: 900px;
-  }
-
-  .hero-img {
-    max-width: 700px;
-  }
-}
-
-@media screen and (min-width: 1200px) {
-  .hero-content {
-    max-width: 1400px;
-  }
-
-  .hero-top {
-    gap: 80px;
-  }
-
-  .hero-text h1 {
-    font-size: 2.2rem;
-  }
-
-  .hero-text p {
-    font-size: 1.25rem;
-    max-width: 900px;
-  }
-
-  .hero-text {
-    max-width: 1000px;
-  }
-
-  .hero-img {
-    max-width: 800px;
-  }
-}
-
-@media screen and (min-width: 1440px) {
-  .hero-content {
-    gap: 35px;
-    max-width: 99%;
-  }
-
-  .hero-text h1 {
-    font-size: 2.4rem;
-  }
-
-  .hero-text p {
-    font-size: 1.3rem;
-  }
-}
-
-@media screen and (min-width: 1920px) {
-  .hero-content {
-    max-width: 99.5%;
-    gap: 40px;
-  }
-}
-
-@media (hover: none) {
-  .hero-image:hover {
-    transform: none;
-  }
-
-  .hero-image:active {
-    transform: scale(0.98);
-  }
-}
-
-@media screen and (max-height: 500px) and (orientation: landscape) {
-  .hero {
-    min-height: auto;
-    padding: 10px 5px;
-  }
-
-  .hero-text h1 {
-    font-size: 1.4rem;
-    margin-bottom: 8px;
-  }
-
-  .hero-text p {
-    font-size: 0.9rem;
-    line-height: 1.3;
-  }
-}
-
-@media (prefers-contrast: more) {
-  .hero-text {
-    color: var(--text-primary);
-  }
-
-  .hero-text p {
-    color: var(--text-primary);
-  }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .hero-image {
-    transition: none;
-  }
-
-  .hero-image:hover {
-    transform: none;
-  }
-}
-
-.search-wrapper {
-  width: 100%;
-  background: transparent;
-  border-radius: 0;
+/* The footer is a full-bleed dark band, so it skips the section padding. */
+.footer-section {
   padding: 0;
-  transition: all 0.2s ease;
-  border: none;
 }
 
 .search-results-container {
@@ -400,7 +150,7 @@ section:nth-child(even) {
   border-radius: 12px;
   box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
   overflow-y: auto;
-  z-index: 100;
+  z-index: 1011;
   padding: 0;
   box-sizing: border-box;
   display: flex;
@@ -813,9 +563,6 @@ section:nth-child(even) {
 }
 
 @media screen and (max-width: 375px) {
-  .hero-content {
-    margin-top: clamp(1.5rem, 8vw, 2rem);
-  }
 
   .search-results-container {
     max-height: 100dvh;
@@ -912,9 +659,6 @@ section:nth-child(even) {
 }
 
 @media (max-width: 768px) {
-  .search-wrapper {
-    border-radius: 14px;
-  }
 
   .search-results-container {
     height: calc(90vh - 140px);
@@ -923,9 +667,6 @@ section:nth-child(even) {
 }
 
 @media (max-width: 480px) {
-  .search-wrapper {
-    border-radius: 0.75rem;
-  }
 
   .search-results-container {
     height: calc(100vh - 140px);
@@ -944,68 +685,57 @@ section:nth-child(even) {
   }
 }
 
-:host-context(.dark-theme) .hero-text h1 {
-  color: var(--text-primary);
-}
-
-/* Search input now uses CSS variables, so these overrides are no longer needed */
-
-:host-context(.dark-theme) .search-container {
-  background-color: transparent;
-}
-
-:host-context(.dark-theme) .theme-toggle-btn {
-  background-color: var(--card-background);
-  color: var(--text-primary);
-}
-
-.theme-toggle-container {
-  position: fixed;
-  top: 20px;
-  right: 20px;
-  z-index: var(--z-50);
-}
-
-.theme-toggle-btn {
-  background-color: var(--card-background);
-  color: var(--text-primary);
-  border: 1px solid var(--border-color);
-  padding: 8px 16px;
-  border-radius: var(--radius-full);
-  cursor: pointer;
-  font-size: var(--font-size-sm);
-  box-shadow: var(--shadow-sm);
-  transition: all var(--transition-base);
-}
-
-.theme-toggle-btn:hover {
-  background-color: var(--hover-background);
-  transform: translateY(-2px);
-  box-shadow: var(--shadow-md);
-}
-
-/* Optimize categories section for better scroll performance */
-.categories-section {
-  /* Optimize for better scroll performance */
-  will-change: auto;
-  transform: translateZ(0);
+/* ---------- Browse by Category ---------- */
+/* Shares the hero's page background, so the two read as one area. */
+section.categories-section {
+  margin-top: 0;
+  padding: 0 0 clamp(56px, 9vw, 112px);
+  background-color: var(--color-bg);
 }
 
 .categories-section .container {
-  /* Optimize container for better performance */
-  will-change: auto;
-  transform: translateZ(0);
+  max-width: 1200px;
+  padding: 0 clamp(20px, 4vw, 32px);
 }
 
-/* Optimize all sections for better scroll performance */
-.section {
-  /* Optimize for better scroll performance */
-  will-change: auto;
-  transform: translateZ(0);
+/* ---------- Reasons + dumping warning + benefits ---------- */
+/* Full-width white band between two hairlines. */
+section.reasons-section {
+  padding: 0;
+  background-color: var(--color-surface);
+  border-top: 1px solid var(--color-line);
+  border-bottom: 1px solid var(--color-line);
 }
 
-.section .container {
-  /* Optimize container for better performance */
-  will-change: auto;
-  transform: translateZ(0);
+/* ---------- Common Foods ---------- */
+section.resources-section {
+  margin-top: 0;
+  padding: clamp(56px, 9vw, 112px) 0 0;
+  background-color: var(--color-bg);
+}
+
+.resources-section .container {
+  max-width: 1200px;
+  padding: 0 clamp(20px, 4vw, 32px);
+}
+
+/* ---------- Tips ---------- */
+section.managing-section {
+  margin-top: 0;
+  padding: clamp(56px, 9vw, 112px) 0;
+  background-color: var(--color-bg);
+}
+
+.managing-section .container {
+  max-width: 1200px;
+  padding: 0 clamp(20px, 4vw, 32px);
+}
+
+/* ---------- Dark mode ---------- */
+/* The pencil sketch has a white background: invert it to light lines on
+   black, then screen-blend so the black drops out into the panel. */
+:host-context(.dark-theme) .hero-image {
+  filter: invert(1);
+  mix-blend-mode: screen;
+  opacity: 0.9;
 }

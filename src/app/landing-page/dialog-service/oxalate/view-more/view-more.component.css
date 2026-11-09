@@ -43,12 +43,7 @@
   overflow: hidden;
   display: flex;
   flex-direction: column;
-  font-family:
-    "DM Sans",
-    system-ui,
-    -apple-system,
-    "Segoe UI",
-    sans-serif;
+  font-family: var(--font-family-sans);
 }
 
 .oxalate-card {

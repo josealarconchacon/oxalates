@@ -27,6 +27,7 @@
             ],
             "assets": [
               "src/favicon.ico",
+              "src/favicon.svg",
               "src/assets",
               "src/manifest.json",
               "src/robots.txt",
@@ -105,7 +106,7 @@
             "polyfills": ["zone.js", "zone.js/testing"],
             "tsConfig": "tsconfig.spec.json",
             "codeCoverage": true,
-            "assets": ["src/favicon.ico", "src/assets", "src/robots.txt"],
+            "assets": ["src/favicon.ico", "src/favicon.svg", "src/assets", "src/robots.txt"],
             "styles": [
               "@angular/material/prebuilt-themes/indigo-pink.css",
               "src/styles.css"

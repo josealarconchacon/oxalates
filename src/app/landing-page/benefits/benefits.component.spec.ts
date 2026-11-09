@@ -22,7 +22,7 @@ describe('BeCautiousComponent', () => {
   });
 
   it('should render the main heading', () => {
-    const headingDe: DebugElement = fixture.debugElement.query(By.css('h2'));
+    const headingDe: DebugElement = fixture.debugElement.query(By.css('h3'));
 
     expect(headingDe).toBeTruthy();
     expect(headingDe.nativeElement.textContent).toContain('Be Cautious');

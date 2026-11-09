@@ -1,16 +1,25 @@
 import { Router, ActivatedRoute, RouterLink } from '@angular/router';
-import { Component, HostListener, OnInit } from '@angular/core';
+import {
+  Component,
+  ElementRef,
+  HostListener,
+  OnInit,
+  ViewChild,
+} from '@angular/core';
 import { AuthService } from 'src/app/user-auth/service/auth-service.service';
 import { NavigationService } from 'src/app/user-auth/service/navigation.service';
-import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
+import { BreakpointObserver } from '@angular/cdk/layout';
 import { map, Observable } from 'rxjs';
-import { MatIconModule } from '@angular/material/icon';
 import { CommonModule } from '@angular/common';
 import { ThemeService } from '../../shared/services/theme.service';
 import { AuthMessageService } from '../../shared/services/auth-message.service';
 import { ClickableDirective } from '../../shared/directives/clickable.directive';
 import { showDefaultAvatar } from '../../shared/utils/avatar';
 import { ProfileImageService } from '../../user-auth/service/profile-image.service';
+import { IconComponent } from '../../shared/components/icon/icon.component';
+
+/** Below 860px the text links move into the slide-out menu. */
+export const HEADER_MOBILE_QUERY = '(max-width: 859.98px)';
 
 @Component({
   selector: 'app-header',
@@ -18,9 +27,9 @@ import { ProfileImageService } from '../../user-auth/service/profile-image.servi
   styleUrls: ['./header.component.css'],
   imports: [
     CommonModule,
-    MatIconModule,
     RouterLink,
     ClickableDirective,
+    IconComponent,
   ],
 })
 export class HeaderComponent implements OnInit {
@@ -35,6 +44,9 @@ export class HeaderComponent implements OnInit {
   activeSection$: Observable<string>;
   isMobile$: Observable<boolean>;
   isDarkTheme$ = this.themeService.isDarkTheme$;
+
+  @ViewChild('menuButton') menuButton?: ElementRef<HTMLButtonElement>;
+  @ViewChild('closeButton') closeButton?: ElementRef<HTMLButtonElement>;
 
   private scrollThreshold = 50;
   private lastScrollPosition = 0;
@@ -52,8 +64,9 @@ export class HeaderComponent implements OnInit {
     private profileImageService: ProfileImageService
   ) {
     this.activeSection$ = this.navigationService.activeSection$;
+    // Must match the max-width in header.component.css.
     this.isMobile$ = this.breakpointObserver
-      .observe(Breakpoints.Handset)
+      .observe(HEADER_MOBILE_QUERY)
       .pipe(map((result) => result.matches));
   }
 
@@ -76,6 +89,18 @@ export class HeaderComponent implements OnInit {
 
   toggleNav() {
     this.isNavOpen = !this.isNavOpen;
+    if (this.isNavOpen) {
+      // Wait a frame for the drawer to become visible, then move focus in.
+      requestAnimationFrame(() => this.closeButton?.nativeElement.focus());
+    }
+  }
+
+  /** Escape closes the slide-out menu and returns focus to the menu button. */
+  @HostListener('document:keydown.escape')
+  onEscape(): void {
+    if (!this.isNavOpen) return;
+    this.closeNav();
+    this.menuButton?.nativeElement.focus();
   }
 
   closeNav(): void {

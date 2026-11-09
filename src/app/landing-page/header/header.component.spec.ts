@@ -92,6 +92,33 @@ describe('HeaderComponent', () => {
     });
   });
 
+  describe('Escape key', () => {
+    it('closes the open menu and returns focus to the menu button', () => {
+      const menuButton = document.createElement('button');
+      document.body.appendChild(menuButton);
+      component.menuButton = { nativeElement: menuButton };
+      component.isNavOpen = true;
+
+      document.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape' }));
+
+      expect(component.isNavOpen).toBeFalse();
+      expect(document.activeElement).toBe(menuButton);
+      menuButton.remove();
+    });
+
+    it('does nothing when the menu is already closed', () => {
+      const focusSpy = jasmine.createSpy('focus');
+      component.menuButton = {
+        nativeElement: { focus: focusSpy } as unknown as HTMLButtonElement,
+      };
+
+      document.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape' }));
+
+      expect(component.isNavOpen).toBeFalse();
+      expect(focusSpy).not.toHaveBeenCalled();
+    });
+  });
+
   describe('search', () => {
     it('should call router navigate when search is called', () => {
       const navigateSpy = spyOn(router, 'navigate').and.callThrough();

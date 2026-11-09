@@ -1,7 +1,7 @@
 import { HSLA, HSVA, RGBA } from 'ngx-color';
 
 export const presetColors: string[] = [
-  '#1da1f2',
+  '#17603F', // brand green (the default banner colour)
   '#4267B2',
   '#E1306C',
   '#2ECC71',

@@ -1,7 +1,7 @@
-<div class="container" id="benefits">
+<div class="reasons-inner" id="benefits">
   <div class="header">
     <div class="header-text">
-      <h2>Reasons to <br />Reduce Oxalate Intake</h2>
+      <h2>Reasons to Reduce Oxalate Intake</h2>
       <p>
         High dietary oxalate increases oxidative stress and can worsen chronic
         health issues, including (but not limited to) digestive issues, joint
@@ -24,16 +24,19 @@
     <app-be-cautious></app-be-cautious>
   </div>
 
-  <div class="steps">
-    @for (benefit of benefits; track benefit; let i = $index) {
-      <div class="step">
-        <div class="step-number">{{ i + 1 }}</div>
-        <div class="benefits-item">
-          <img [src]="benefit.icon" [alt]="benefit.title" />
-          <h3>{{ benefit.title }}</h3>
-          <p>{{ benefit.description }}</p>
+  <ol class="steps">
+    @for (benefit of benefits; track benefit.title; let i = $index) {
+      <li class="step">
+        <div class="step-top">
+          <span class="step-icon" aria-hidden="true">
+            <app-icon [name]="iconFor(benefit.title)" [size]="20" />
+          </span>
+          <!-- The <ol> already gives the order to screen readers -->
+          <span class="step-number" aria-hidden="true">{{ cardNumber(i) }}</span>
         </div>
-      </div>
+        <h3>{{ benefit.title }}</h3>
+        <p>{{ benefit.description }}</p>
+      </li>
     }
-  </div>
+  </ol>
 </div>

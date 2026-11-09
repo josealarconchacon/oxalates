@@ -25,7 +25,7 @@ export class ProfileComponent implements OnInit {
   userProfile: any;
   isChangePasswordVisible: boolean = false;
   isColorPickerVisible: boolean = false;
-  currentHeaderColor: string = '#1da1f2';
+  currentHeaderColor: string = '#17603f'; // brand green
   selectedColor: string = this.currentHeaderColor;
   firstName: string = '';
   lastName: string = '';

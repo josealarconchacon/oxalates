@@ -4,12 +4,13 @@ import { Subscription } from 'rxjs';
 import { AuthService } from '../../user-auth/service/auth-service.service';
 
 import { AuthMessageService } from '../../shared/services/auth-message.service';
+import { IconComponent } from '../../shared/components/icon/icon.component';
 
 @Component({
   selector: 'app-footer',
   templateUrl: './footer.component.html',
   styleUrls: ['./footer.component.css'],
-  imports: [RouterLink],
+  imports: [RouterLink, IconComponent],
 })
 export class FooterComponent implements OnInit, OnDestroy {
   showBackToHome: boolean = false;

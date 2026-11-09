@@ -1,49 +1,37 @@
-<section class="managing-oxalate" id="frq">
-  <div class="container">
-    <!-- Header Section -->
-    <div class="section-header">
-      <h2>{{ content?.title }}</h2>
-      @if (content?.description) {
-        <p class="section-description">
-          {{ content?.description }}
-        </p>
-      }
-    </div>
+<div class="managing-oxalate" id="frq">
+  <h2 class="tips-heading">{{ content?.title }}</h2>
+  @if (content?.description) {
+    <p class="section-description">
+      {{ content?.description }}
+    </p>
+  }
 
-    <!-- Tips Grid -->
-    <div class="tips-container">
-      <div class="tips-grid">
-        @for (tip of content?.tips; track tip; let i = $index) {
-          <div
-            class="tip-card"
-            [class.community-card]="tip.title === 'Community Support'"
-            >
-            <div class="tip-icon-wrapper">
-              <div class="tip-icon" [ngClass]="tip.iconClass">
-                <mat-icon>{{ tip.icon }}</mat-icon>
-              </div>
-              <div class="tip-number">{{ i + 1 }}</div>
-            </div>
-            <div class="tip-content">
-              <h3 class="tip-title">{{ tip.title }}</h3>
-              <p class="tip-description">
-                {{ tip.description }}
-                @if (tip.title === 'Community Support') {
-                  <a
-                    [href]="content?.link"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    class="community-link"
-                    >
-                    Join our community
-                    <mat-icon class="link-icon">arrow_forward</mat-icon>
-                  </a>
-                }
-              </p>
-            </div>
-          </div>
+  <ol class="tips-grid">
+    @for (tip of content?.tips; track tip.title; let i = $index) {
+      @let isCommunity = tip.title === 'Community Support';
+      <li class="tip-card" [class.community-card]="isCommunity">
+        <div class="tip-top">
+          <span class="tip-icon" aria-hidden="true">
+            <app-icon [name]="lineIconFor(tip.title)" [size]="20" />
+          </span>
+          <!-- The <ol> already gives the order to screen readers -->
+          <span class="tip-number" aria-hidden="true">{{ cardNumber(i) }}</span>
+        </div>
+        <h3 class="tip-title">{{ tip.title }}</h3>
+        <p class="tip-description">{{ tip.description }}</p>
+        @if (isCommunity) {
+          <a
+            [href]="content?.link"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="community-link"
+          >
+            Join our community
+            <span class="sr-only">(opens in a new tab)</span>
+            <app-icon name="arrow-right" [size]="16" />
+          </a>
         }
-      </div>
-    </div>
-  </div>
-</section>
+      </li>
+    }
+  </ol>
+</div>
