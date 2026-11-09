@@ -67,20 +67,8 @@
   }
 }
 
-/* Interim dark values until step 12: a dark amber note. */
-:host-context(.dark-theme) .caution-box {
-  background-color: #2b2118;
-  border-color: #5c4026;
-  color: #f6dcc0;
-}
-
+/* ---------- Dark mode ---------- */
 :host-context(.dark-theme) .caution-icon,
 :host-context(.dark-theme) .highlight {
   background-color: rgba(255, 255, 255, 0.08);
-  color: #f6dcc0;
-}
-
-:host-context(.dark-theme) .title-group h2,
-:host-context(.dark-theme) .caution-text {
-  color: #f6dcc0;
 }

@@ -58,7 +58,7 @@
   height: 48px;
   border-radius: 12px;
   background-color: var(--color-accent-soft);
-  color: var(--color-accent);
+  color: var(--color-accent-fg);
 }
 
 .tip-number {
@@ -115,7 +115,7 @@
   padding: 0 18px;
   border-radius: 12px;
   background-color: #ffffff;
-  color: var(--color-ink);
+  color: #111a15; /* fixed: the button stays white in both themes */
   font-size: 0.9375rem;
   font-weight: 700;
   text-decoration: none;
@@ -136,34 +136,6 @@
   outline-offset: 3px;
 }
 
-/* Interim dark values until step 12 */
-:host-context(.dark-theme) .tips-heading {
-  color: var(--text-primary);
-}
-
-:host-context(.dark-theme) .section-description {
-  color: var(--text-secondary);
-}
-
-:host-context(.dark-theme) .tip-card:not(.community-card) {
-  background-color: var(--card-background);
-  border-color: var(--border-color);
-}
-
-:host-context(.dark-theme) .tip-card:not(.community-card) .tip-icon {
-  background-color: rgba(255, 255, 255, 0.08);
-  color: var(--text-primary);
-}
-
-:host-context(.dark-theme) .tip-card:not(.community-card) .tip-title {
-  color: var(--text-primary);
-}
-
-:host-context(.dark-theme) .tip-card:not(.community-card) .tip-description,
-:host-context(.dark-theme) .tip-card:not(.community-card) .tip-number {
-  color: var(--text-secondary);
-}
-
 @media (max-width: 480px) {
   .tip-card {
     padding: 24px;
@@ -180,4 +152,11 @@
   .community-link:hover {
     transform: none;
   }
+}
+
+/* ---------- Dark mode ---------- */
+/* The dark accent is a touch lighter, so its body text goes white (5.3:1). */
+:host-context(.dark-theme) .community-card .tip-description,
+:host-context(.dark-theme) .community-card .tip-number {
+  color: #ffffff;
 }

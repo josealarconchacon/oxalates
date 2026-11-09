@@ -20,7 +20,7 @@
 }
 
 .search-input-container:focus-within {
-  border-color: var(--color-accent);
+  border-color: var(--color-accent-fg);
   /* The input inside has outline: none, so the ring goes on the field */
   outline: var(--focus-ring);
   outline-offset: var(--focus-ring-offset);
@@ -53,7 +53,7 @@
   line-height: 1.5;
   padding: 0;
   min-width: 0;
-  caret-color: var(--color-accent);
+  caret-color: var(--color-accent-fg);
   -webkit-appearance: none;
   appearance: none;
 }

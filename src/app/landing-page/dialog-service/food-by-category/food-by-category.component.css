@@ -10,10 +10,6 @@
   color: var(--color-ink);
 }
 
-:host-context(.dark-theme) .by-category {
-  color: var(--text-primary);
-}
-
 .cards-wrapper {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(min(300px, 100%), 1fr));
@@ -83,7 +79,7 @@
 
 .tint-green {
   background-color: var(--color-accent-soft);
-  color: var(--color-accent);
+  color: var(--color-accent-fg);
 }
 
 .tint-brown {
@@ -109,21 +105,6 @@
   transform: translateX(3px);
 }
 
-/* Interim dark values until step 12 */
-:host-context(.dark-theme) .category-card {
-  background-color: var(--card-background);
-  border-color: var(--border-color);
-  color: var(--text-primary);
-}
-
-:host-context(.dark-theme) .category-arrow {
-  color: var(--text-secondary);
-}
-
-:host-context(.dark-theme) .category-card:hover .category-arrow {
-  color: var(--text-primary);
-}
-
 @media (prefers-reduced-motion: reduce) {
   .category-card,
   .category-arrow {
@@ -134,4 +115,35 @@
   .category-card:hover .category-arrow {
     transform: none;
   }
+}
+
+/* ---------- Dark mode ---------- */
+:host-context(.dark-theme) .tint-rose {
+  background-color: rgba(229, 115, 115, 0.16);
+  color: #f2a7a7;
+}
+
+:host-context(.dark-theme) .tint-orange {
+  background-color: rgba(230, 150, 80, 0.16);
+  color: #f0bb8a;
+}
+
+:host-context(.dark-theme) .tint-gold {
+  background-color: rgba(220, 185, 80, 0.16);
+  color: #e6cf85;
+}
+
+:host-context(.dark-theme) .tint-violet {
+  background-color: rgba(150, 125, 230, 0.18);
+  color: #c4b5f5;
+}
+
+:host-context(.dark-theme) .tint-brown {
+  background-color: rgba(190, 150, 110, 0.16);
+  color: #d9bfa3;
+}
+
+:host-context(.dark-theme) .category-card:hover {
+  border-color: #3a4741;
+  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.4);
 }

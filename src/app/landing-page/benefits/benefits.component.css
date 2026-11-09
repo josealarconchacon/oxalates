@@ -53,23 +53,6 @@
   margin-top: clamp(40px, 5vw, 64px);
 }
 
-:host-context(.dark-theme) .header-text h2 {
-  color: var(--text-primary);
-}
-
-:host-context(.dark-theme) .header-text p {
-  color: var(--text-secondary);
-}
-
-:host-context(.dark-theme) .header-image {
-  background-color: var(--background-color);
-}
-
-:host-context(.dark-theme) .header-image img {
-  mix-blend-mode: normal;
-  border-radius: 16px;
-}
-
 @media (max-width: 859.98px) {
   .header {
     grid-template-columns: 1fr;
@@ -122,7 +105,7 @@
   border: 1px solid var(--color-line);
   border-radius: 12px;
   background-color: var(--color-surface);
-  color: var(--color-accent);
+  color: var(--color-accent-fg);
 }
 
 .step-number {
@@ -164,27 +147,6 @@
   }
 }
 
-/* Interim dark values until step 12 */
-:host-context(.dark-theme) .step {
-  background-color: var(--background-color);
-  border-color: var(--border-color);
-}
-
-:host-context(.dark-theme) .step-icon {
-  background-color: var(--card-background);
-  border-color: var(--border-color);
-  color: var(--text-primary);
-}
-
-:host-context(.dark-theme) .step h3 {
-  color: var(--text-primary);
-}
-
-:host-context(.dark-theme) .step p,
-:host-context(.dark-theme) .step-number {
-  color: var(--text-secondary);
-}
-
 @media (prefers-reduced-motion: reduce) {
   .step {
     transition: none;
@@ -193,4 +155,14 @@
   .step:hover {
     transform: none;
   }
+}
+
+:host-context(.dark-theme) .header-image {
+  background-color: var(--color-hero-panel);
+}
+
+:host-context(.dark-theme) .header-image img {
+  filter: invert(1);
+  mix-blend-mode: screen;
+  opacity: 0.9;
 }

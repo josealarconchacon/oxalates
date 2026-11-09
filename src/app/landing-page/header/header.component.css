@@ -19,12 +19,6 @@
   box-shadow: 0 4px 16px rgba(17, 26, 21, 0.06);
 }
 
-/* Interim dark values; the dark token set comes in step 12. */
-:host-context(.dark-theme) .header {
-  background-color: rgba(26, 26, 26, 0.85);
-  border-bottom-color: var(--border-color);
-}
-
 .header-content {
   display: flex;
   align-items: center;
@@ -50,10 +44,6 @@
   background: none;
   color: var(--color-ink);
   cursor: pointer;
-}
-
-:host-context(.dark-theme) .logo-container {
-  color: var(--text-primary);
 }
 
 .logo-tile {
@@ -105,14 +95,6 @@
   background-color: rgba(17, 26, 21, 0.06);
 }
 
-:host-context(.dark-theme) .header-link {
-  color: var(--text-primary);
-}
-
-:host-context(.dark-theme) .header-link:hover {
-  background-color: var(--hover-background);
-}
-
 .support-pill {
   display: inline-flex;
   align-items: center;
@@ -122,7 +104,7 @@
   padding: 0 20px;
   border-radius: 999px;
   background-color: var(--color-ink);
-  color: #ffffff;
+  color: var(--color-on-ink);
   font-size: 0.9375rem;
   font-weight: 700;
   text-decoration: none;
@@ -131,13 +113,8 @@
 }
 
 .support-pill:hover {
-  background-color: #000000;
+  opacity: 0.88;
   transform: translateY(-1px);
-}
-
-/* Keeps the pill visible on the dark page until step 12. */
-:host-context(.dark-theme) .support-pill {
-  border: 1px solid rgba(255, 255, 255, 0.2);
 }
 
 /* 44×44 bordered icon buttons: theme toggle, account, menu */
@@ -161,16 +138,6 @@
 .icon-btn:hover {
   border-color: #c9d0ca;
   background-color: var(--color-bg);
-}
-
-:host-context(.dark-theme) .icon-btn {
-  background-color: transparent;
-  border-color: var(--border-color);
-  color: var(--text-primary);
-}
-
-:host-context(.dark-theme) .icon-btn:hover {
-  background-color: var(--hover-background);
 }
 
 .profile-btn .user-image {
@@ -267,11 +234,6 @@
     transition: right 0.25s ease, visibility 0s;
   }
 
-  :host-context(.dark-theme) .nav {
-    background-color: var(--background-color);
-    border-left-color: var(--border-color);
-  }
-
   .nav-close {
     display: flex;
     position: absolute;
@@ -307,15 +269,6 @@
     transform: rotate(-45deg);
   }
 
-  :host-context(.dark-theme) .nav-close {
-    border-color: var(--border-color);
-  }
-
-  :host-context(.dark-theme) .nav-close::before,
-  :host-context(.dark-theme) .nav-close::after {
-    background-color: var(--text-primary);
-  }
-
   .mobile-sidebar-nav {
     display: flex;
     flex-direction: column;
@@ -341,25 +294,12 @@
   }
 
   .nav-link app-icon {
-    color: var(--color-accent);
+    color: var(--color-accent-fg);
   }
 
   .nav-link:hover,
   .nav-link.active {
     background-color: var(--color-accent-soft);
-  }
-
-  :host-context(.dark-theme) .nav-link {
-    color: var(--text-primary);
-  }
-
-  :host-context(.dark-theme) .nav-link app-icon {
-    color: currentColor;
-  }
-
-  :host-context(.dark-theme) .nav-link:hover,
-  :host-context(.dark-theme) .nav-link.active {
-    background-color: var(--hover-background);
   }
 
   .logout {
@@ -381,10 +321,6 @@
     border: 1px solid var(--color-line);
     border-radius: 16px;
     cursor: pointer;
-  }
-
-  :host-context(.dark-theme) .profile-info-container {
-    border-color: var(--border-color);
   }
 
   .profile-info-container .user-image {
@@ -413,14 +349,6 @@
 
   .profile-image-upload-label:hover {
     background-color: var(--color-accent-soft);
-  }
-
-  :host-context(.dark-theme) .profile-image-upload-label {
-    color: var(--text-secondary);
-  }
-
-  :host-context(.dark-theme) .profile-image-upload-label:hover {
-    background-color: var(--hover-background);
   }
 }
 
@@ -451,4 +379,21 @@
   .support-pill:hover {
     transform: none;
   }
+}
+
+/* ---------- Dark mode: only what the tokens can't flip ---------- */
+:host-context(.dark-theme) .header {
+  background-color: rgba(15, 21, 18, 0.85);
+}
+
+:host-context(.dark-theme) .header-link:hover {
+  background-color: rgba(255, 255, 255, 0.06);
+}
+
+:host-context(.dark-theme) .icon-btn:hover {
+  border-color: #3a4741;
+}
+
+:host-context(.dark-theme) .nav {
+  box-shadow: -16px 0 40px rgba(0, 0, 0, 0.5);
 }

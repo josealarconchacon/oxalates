@@ -52,10 +52,6 @@ body {
   background-color: var(--color-bg);
 }
 
-:host-context(.dark-theme) .hero {
-  background-color: transparent;
-}
-
 .hero-inner {
   max-width: 1200px;
   margin: 0 auto;
@@ -86,14 +82,6 @@ body {
   color: var(--color-muted);
 }
 
-:host-context(.dark-theme) .hero-text h1 {
-  color: var(--text-primary);
-}
-
-:host-context(.dark-theme) .hero-text p {
-  color: var(--text-secondary);
-}
-
 .hero-search {
   max-width: 560px;
 }
@@ -107,21 +95,12 @@ body {
   background-color: var(--color-hero-panel);
 }
 
-:host-context(.dark-theme) .hero-art {
-  background-color: var(--card-background);
-}
-
 .hero-image {
   width: 100%;
   height: 100%;
   object-fit: contain;
   /* The sketch has a white background; multiply lets the panel show through. */
   mix-blend-mode: multiply;
-}
-
-:host-context(.dark-theme) .hero-image {
-  mix-blend-mode: normal;
-  border-radius: 16px;
 }
 
 @media (max-width: 859.98px) {
@@ -714,10 +693,6 @@ section.categories-section {
   background-color: var(--color-bg);
 }
 
-:host-context(.dark-theme) section.categories-section {
-  background-color: transparent;
-}
-
 .categories-section .container {
   max-width: 1200px;
   padding: 0 clamp(20px, 4vw, 32px);
@@ -732,20 +707,11 @@ section.reasons-section {
   border-bottom: 1px solid var(--color-line);
 }
 
-:host-context(.dark-theme) section.reasons-section {
-  background-color: var(--card-background);
-  border-color: var(--border-color);
-}
-
 /* ---------- Common Foods ---------- */
 section.resources-section {
   margin-top: 0;
   padding: clamp(56px, 9vw, 112px) 0 0;
   background-color: var(--color-bg);
-}
-
-:host-context(.dark-theme) section.resources-section {
-  background-color: transparent;
 }
 
 .resources-section .container {
@@ -760,11 +726,16 @@ section.managing-section {
   background-color: var(--color-bg);
 }
 
-:host-context(.dark-theme) section.managing-section {
-  background-color: transparent;
-}
-
 .managing-section .container {
   max-width: 1200px;
   padding: 0 clamp(20px, 4vw, 32px);
+}
+
+/* ---------- Dark mode ---------- */
+/* The pencil sketch has a white background: invert it to light lines on
+   black, then screen-blend so the black drops out into the panel. */
+:host-context(.dark-theme) .hero-image {
+  filter: invert(1);
+  mix-blend-mode: screen;
+  opacity: 0.9;
 }

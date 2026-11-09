@@ -1,6 +1,6 @@
-/* Dark band in both themes, so it uses the ink token directly. */
+/* Dark band in both themes: its own token, the darkest band in dark mode. */
 .footer {
-  background-color: var(--color-ink);
+  background-color: var(--color-footer-bg);
   color: var(--color-footer-text);
   padding: 48px 0 32px;
   width: 100%;

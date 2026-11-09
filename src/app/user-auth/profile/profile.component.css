@@ -659,18 +659,19 @@
 
 /* Dark theme styles */
 :host-context(.dark-theme) {
-  --background-color: #2d2d2d;
-  --card-background: #3d3d3d;
-  --text-color: #e1e1e1;
-  /* Secondary text sits on the #3d3d3d cards: #a1a1a1 was 4.2:1 there. */
-  --text-secondary: #b0b0b0;
-  --border-color: #3d3d3d;
-  --gray-100: #3d3d3d;
-  --gray-50: #2d2d2d;
-  --gray-500: #b0b0b0;
-  --gray-600: #b0b0b0;
-  --gray-700: #e1e1e1;
-  --gray-900: #e1e1e1;
+  /* One step up from the page, in the green-black dark palette. */
+  --background-color: #161e1a;
+  --card-background: #1f2a24;
+  --text-color: #dfe6e2;
+  /* Secondary text on the #1f2a24 cards: 10.6:1. */
+  --text-secondary: #c9d3cd;
+  --border-color: #28332d;
+  --gray-100: #1f2a24;
+  --gray-50: #161e1a;
+  --gray-500: #a3b0a9;
+  --gray-600: #a3b0a9;
+  --gray-700: #dfe6e2;
+  --gray-900: #dfe6e2;
   --primary-50: #1a365d;
   --primary-color: #5fa8e6;
   --primary-light: #2d4a7c;
