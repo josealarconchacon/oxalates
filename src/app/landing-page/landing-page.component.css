@@ -64,7 +64,8 @@ body {
 
 .hero-grid {
   display: grid;
-  grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr);
+  /* 1.2 : 1 keeps "What are Oxalates?" on one line from 1280px up */
+  grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr);
   align-items: center;
   gap: clamp(40px, 6vw, 80px);
 }
@@ -132,8 +133,10 @@ body {
     max-width: none;
   }
 
+  /* Stacked: a wide, capped panel so categories stay near the fold */
   .hero-art {
-    aspect-ratio: 4 / 3;
+    aspect-ratio: 16 / 10;
+    max-height: 360px;
   }
 }
 

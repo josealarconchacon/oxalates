@@ -47,7 +47,9 @@
   color: var(--color-text);
   /* 16px minimum: anything smaller makes iOS Safari zoom the page on focus */
   font-size: 1.0625rem;
-  min-height: 0;
+  /* Fill the field's height so the whole 48px row takes taps, not a 24px strip */
+  align-self: stretch;
+  min-height: 48px;
   line-height: 1.5;
   padding: 0;
   min-width: 0;
