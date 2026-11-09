@@ -719,3 +719,17 @@ section.categories-section {
   max-width: 1200px;
   padding: 0 clamp(20px, 4vw, 32px);
 }
+
+/* ---------- Reasons + dumping warning + benefits ---------- */
+/* Full-width white band between two hairlines. */
+section.reasons-section {
+  padding: 0;
+  background-color: var(--color-surface);
+  border-top: 1px solid var(--color-line);
+  border-bottom: 1px solid var(--color-line);
+}
+
+:host-context(.dark-theme) section.reasons-section {
+  background-color: var(--card-background);
+  border-color: var(--border-color);
+}
