@@ -1,21 +1,19 @@
-<section class="resources" id="resources">
+<div class="resources" id="resources">
   <h2 class="resource-title">Common Foods High in Oxalate</h2>
-  <div class="resource-content">
-    @for (resource of foodResources; track resource) {
-      <div class="resource-info">
+  <ul class="resource-content">
+    @for (resource of foodResources; track resource.name; let i = $index) {
+      <li class="resource-info">
         <div class="resource-header">
-          <img
-            [src]="resource.image"
-            alt="{{ resource.name }}"
-            class="resource-image"
-            loading="lazy"
-            width="60"
-            height="60"
-            />
-          <h3 class="resource-text">{{ resource.name }}</h3>
+          <span
+            class="resource-badge"
+            [ngClass]="tintFor(resource.name, i)"
+            aria-hidden="true"
+            >{{ initial(resource.name) }}</span
+          >
+          <h3 class="resource-name">{{ resource.name }}</h3>
         </div>
         <p class="resource-text">{{ resource.description }}</p>
-      </div>
+      </li>
     }
-  </div>
-</section>
+  </ul>
+</div>
