@@ -89,18 +89,6 @@
   color: #ffffff;
 }
 
-/* Lucide-style line icons */
-.icon {
-  width: 18px;
-  height: 18px;
-  flex-shrink: 0;
-  fill: none;
-  stroke: currentColor;
-  stroke-width: 1.8;
-  stroke-linecap: round;
-  stroke-linejoin: round;
-}
-
 /* --- Bottom row: copyright | legal --- */
 .footer-bottom {
   display: flex;

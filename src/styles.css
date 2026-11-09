@@ -103,6 +103,14 @@
   --navbar-height: 72px;
 }
 
+/* The header grows to 72px where it shows the full nav (see
+   HEADER_MOBILE_QUERY in header.component.ts). */
+@media (min-width: 860px) {
+  :root {
+    --header-height: 72px;
+  }
+}
+
 /* Dark theme variables (colors live in src/styles/tokens/colors.css) */
 .dark-theme {
   /* Shadows for dark theme */
