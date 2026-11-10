@@ -4,15 +4,12 @@ import {
   HttpTestingController,
   provideHttpClientTesting,
 } from '@angular/common/http/testing';
-import { of, BehaviorSubject } from 'rxjs';
 
 import { FoodByCategoryComponent } from './food-by-category.component';
 import { CategoryCard } from '../../model/category-card';
 import { CategoryService } from '../oxalate/service/category.service';
 import { FilterService } from '../oxalate/service/filter.service';
-import { SvgService } from './service/svg.service';
-import { ThemeService } from '../../../shared/services/theme.service';
-import { Router, provideRouter } from '@angular/router';
+import { provideRouter } from '@angular/router';
 
 describe('FoodByCategoryComponent', () => {
   let component: FoodByCategoryComponent;
@@ -20,29 +17,16 @@ describe('FoodByCategoryComponent', () => {
   let httpMock: HttpTestingController;
   let categoryService: jasmine.SpyObj<CategoryService>;
   let filterService: jasmine.SpyObj<FilterService>;
-  let router: jasmine.SpyObj<Router>;
-  let svgService: jasmine.SpyObj<SvgService>;
-  let themeService: jasmine.SpyObj<ThemeService>;
   let consoleWarnSpy: jasmine.Spy;
   let consoleErrorSpy: jasmine.Spy;
-  let isDarkThemeSubject: BehaviorSubject<boolean>;
 
   beforeEach(async () => {
-    isDarkThemeSubject = new BehaviorSubject<boolean>(false);
-
     const categoryServiceSpy = jasmine.createSpyObj('CategoryService', [
       'changeCategory',
     ]);
     const filterServiceSpy = jasmine.createSpyObj('FilterService', [
       'updateFilter',
     ]);
-    const routerSpy = jasmine.createSpyObj('Router', ['navigate']);
-    const svgServiceSpy = jasmine.createSpyObj('SvgService', [
-      'sanitizeAndPrepareSvg',
-    ]);
-    const themeServiceSpy = jasmine.createSpyObj('ThemeService', [], {
-      isDarkTheme$: isDarkThemeSubject.asObservable(),
-    });
 
     await TestBed.configureTestingModule({
       imports: [FoodByCategoryComponent],
@@ -52,9 +36,6 @@ describe('FoodByCategoryComponent', () => {
         provideRouter([]),
         { provide: CategoryService, useValue: categoryServiceSpy },
         { provide: FilterService, useValue: filterServiceSpy },
-        { provide: Router, useValue: routerSpy },
-        { provide: SvgService, useValue: svgServiceSpy },
-        { provide: ThemeService, useValue: themeServiceSpy },
       ],
     }).compileComponents();
 
@@ -67,11 +48,6 @@ describe('FoodByCategoryComponent', () => {
     filterService = TestBed.inject(
       FilterService
     ) as jasmine.SpyObj<FilterService>;
-    router = TestBed.inject(Router) as jasmine.SpyObj<Router>;
-    svgService = TestBed.inject(SvgService) as jasmine.SpyObj<SvgService>;
-    themeService = TestBed.inject(ThemeService) as jasmine.SpyObj<ThemeService>;
-
-    svgService.sanitizeAndPrepareSvg.and.returnValue('<svg>sanitized</svg>');
     consoleWarnSpy = spyOn(console, 'warn');
     consoleErrorSpy = spyOn(console, 'error');
   });
@@ -128,7 +104,7 @@ describe('FoodByCategoryComponent', () => {
   it('should skip cards without title when populating cardsMap', () => {
     const cardsWithoutTitle = [
       ...mockCards,
-      { title: '', iconSvg: '<svg></svg>', overlayText: '' } as CategoryCard,
+      { title: '', overlayText: '' } as CategoryCard,
     ];
 
     component.populateCardsMap(cardsWithoutTitle);
@@ -150,83 +126,29 @@ describe('FoodByCategoryComponent', () => {
     expect(cardsArray).toContain(mockCards[2]);
   });
 
-  it('should validate SVGs correctly in development', () => {
-    spyOn<any>(component, 'isProduction').and.returnValue(false);
-    component.populateCardsMap(mockCards);
-    component.validateSvgs();
-
-    expect(consoleWarnSpy).toHaveBeenCalledTimes(2);
-    expect(consoleWarnSpy.calls.argsFor(0)).toEqual([
-      'Missing SVG for category: Vegetables',
-    ]);
-    expect(consoleWarnSpy.calls.argsFor(1)).toEqual([
-      'Invalid SVG format for category: Meat',
-    ]);
-  });
-
-  it('should not validate SVGs in production', () => {
-    spyOn<any>(component, 'isProduction').and.returnValue(true);
-    component.populateCardsMap(mockCards);
-    component.validateSvgs();
-
-    expect(consoleWarnSpy).not.toHaveBeenCalled();
-  });
-
-  it('should validate SVG format correctly', () => {
-    expect(component.isSvgValid('<svg></svg>')).toBeTrue();
-    expect(component.isSvgValid('<svg>content</svg>')).toBeTrue();
-    expect(component.isSvgValid('invalid-svg')).toBeFalse();
-    expect(component.isSvgValid('<svg>missing closing tag')).toBeFalse();
-    expect(component.isSvgValid('missing opening tag</svg>')).toBeFalse();
-  });
-
-  it('should navigate to /oxalate on card click with valid category', () => {
-    component.populateCardsMap(mockCards);
-    component.onCardClick('Fruits');
+  it('sets the search filters when a card is chosen', () => {
+    component.selectCategory('Fruits');
 
     expect(categoryService.changeCategory).toHaveBeenCalledWith('Fruits');
     expect(filterService.updateFilter).toHaveBeenCalledWith({
       category: 'Fruits',
       calc_level: '',
     });
-    expect(router.navigate).toHaveBeenCalledWith(['/oxalate'], {
-      queryParams: {
-        category: 'Fruits',
-      },
+  });
+
+  it('gives each category its icon and tint, and a leaf for unknown ones', () => {
+    expect(component.styleFor('Fruits')).toEqual({
+      icon: 'apple',
+      tint: 'tint-rose',
     });
-  });
-
-  it('should warn when clicking on non-existent category', () => {
-    component.populateCardsMap(mockCards);
-    component.onCardClick('NonExistent');
-
-    expect(consoleWarnSpy).toHaveBeenCalledWith(
-      'Category "NonExistent" not found in cardsMap.'
-    );
-    expect(categoryService.changeCategory).not.toHaveBeenCalled();
-    expect(filterService.updateFilter).not.toHaveBeenCalled();
-    expect(router.navigate).not.toHaveBeenCalled();
-  });
-
-  it('should sanitize and prepare SVG', () => {
-    const result = component.getSanitizedIcon('<svg>...</svg>');
-
-    expect(svgService.sanitizeAndPrepareSvg).toHaveBeenCalledWith(
-      '<svg>...</svg>'
-    );
-    expect(result).toBe('<svg>sanitized</svg>');
-  });
-
-  it('should expose isDarkTheme$ from ThemeService', () => {
-    expect(component.isDarkTheme$).toBe(themeService.isDarkTheme$);
-  });
-
-  it('should detect production environment correctly', () => {
-    expect(component['isProduction']('localhost')).toBeFalse();
-    expect(component['isProduction']('127.0.0.1')).toBeFalse();
-    expect(component['isProduction']('dev.127.0.0.1')).toBeFalse();
-    expect(component['isProduction']('example.com')).toBeTrue();
-    expect(component['isProduction']('www.myapp.com')).toBeTrue();
+    expect(component.styleFor('Nuts and Seeds')).toEqual({
+      icon: 'nut',
+      tint: 'tint-brown',
+    });
+    expect(component.styleFor('Something New')).toEqual({
+      icon: 'leaf',
+      tint: 'tint-green',
+    });
   });
 
   it('should unsubscribe on destroy', () => {
@@ -247,11 +169,7 @@ describe('FoodByCategoryComponent', () => {
 });
 
 const mockCards: CategoryCard[] = [
-  {
-    title: 'Fruits',
-    iconSvg: '<svg>...</svg>',
-    overlayText: '',
-  },
-  { title: 'Vegetables', iconSvg: '', overlayText: '' },
-  { title: 'Meat', iconSvg: 'invalid-svg', overlayText: '' },
+  { title: 'Fruits', overlayText: '' },
+  { title: 'Vegetables', overlayText: '' },
+  { title: 'Meat', overlayText: '' },
 ];
