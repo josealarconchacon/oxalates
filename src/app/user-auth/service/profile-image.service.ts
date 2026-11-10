@@ -4,12 +4,9 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { firstValueFrom } from 'rxjs';
 import { AuthService } from './auth-service.service';
 
-/**
- * The one way to change a profile photo. The file goes to Firebase Storage and
- * only its download URL is saved on the profile: Firebase Auth rejects a photo
- * URL longer than a couple of kilobytes, so a base64 copy of the image can
- * never be stored there.
- */
+/** Must match the size limit in storage.rules. */
+export const MAX_PROFILE_IMAGE_BYTES = 5 * 1024 * 1024;
+
 @Injectable({
   providedIn: 'root',
 })
@@ -17,22 +14,28 @@ export class ProfileImageService {
   constructor(
     private storage: AngularFireStorage,
     private authService: AuthService,
-    private snackBar: MatSnackBar
+    private snackBar: MatSnackBar,
   ) {}
 
-  /**
-   * Returns true when the new photo is saved; otherwise tells the user and
-   * returns false. The message is a snackbar because this runs from the header
-   * and the profile page, and neither hosts an <app-alert>.
-   */
   async upload(file: File): Promise<boolean> {
     if (!file.type.startsWith('image/')) {
       this.notify('Choose an image file (JPG, PNG, WebP or GIF).');
       return false;
     }
+    if (file.size >= MAX_PROFILE_IMAGE_BYTES) {
+      this.notify('Choose an image smaller than 5 MB.');
+      return false;
+    }
 
     try {
-      const path = `profile-images/${Date.now()}_${file.name}`;
+      const user = await this.authService.getCurrentUser();
+      if (!user) {
+        this.notify('Sign in again to change your photo.');
+        return false;
+      }
+      // Each user's photos live under their own ID, so storage.rules can let
+      // only the owner upload there.
+      const path = `profile-images/${user.uid}/${Date.now()}_${file.name}`;
       await this.storage.upload(path, file);
       const url = await firstValueFrom(this.storage.ref(path).getDownloadURL());
       await this.authService.updateProfileImage(url);
@@ -40,7 +43,7 @@ export class ProfileImageService {
     } catch (error) {
       console.error('Error updating profile image:', error);
       this.notify(
-        "We couldn't update your photo. Check your connection and try again."
+        "We couldn't update your photo. Check your connection and try again.",
       );
       return false;
     }
