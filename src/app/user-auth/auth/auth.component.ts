@@ -1,5 +1,11 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import {
+  AbstractControl,
+  FormBuilder,
+  FormGroup,
+  ValidationErrors,
+  Validators,
+} from '@angular/forms';
 import { AuthService } from '../service/auth-service.service';
 import { AlertService } from 'src/app/shared/alert-service/alert.service';
 import { Subscription } from 'rxjs';
@@ -38,16 +44,17 @@ export class AuthComponent implements OnInit, OnDestroy {
   }
 
   initializeForm(): void {
-    this.authForm = this.fb.group(
-      {
-        email: ['', [Validators.required, Validators.email]],
-        password: ['', Validators.required],
-        confirmPassword: [''], // Only needed in sign-up mode
-      },
-      { validators: this.passwordMatchValidator }
-    );
+    this.authForm = this.fb.group({
+      email: ['', [Validators.required, Validators.email]],
+      password: ['', Validators.required],
+      confirmPassword: [''], // Only needed in sign-up mode
+    });
 
     if (!this.isSignInMode) {
+      // Only sign-up has a "confirm password" box. On the sign-in form this
+      // check compared the password with an empty field, so the form was
+      // never valid and Sign In silently did nothing.
+      this.authForm.addValidators(this.passwordMatchValidator);
       this.authForm.controls['confirmPassword'].setValidators(
         Validators.required
       );
@@ -66,9 +73,8 @@ export class AuthComponent implements OnInit, OnDestroy {
     this.authForm.controls['password'].updateValueAndValidity();
   }
 
-  passwordMatchValidator(formGroup: FormGroup) {
-    const { password, confirmPassword } = formGroup.controls;
-    return password.value === confirmPassword.value
+  passwordMatchValidator(form: AbstractControl): ValidationErrors | null {
+    return form.get('password')?.value === form.get('confirmPassword')?.value
       ? null
       : { passwordMismatch: true };
   }
