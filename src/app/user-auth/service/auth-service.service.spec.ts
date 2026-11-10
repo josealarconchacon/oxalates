@@ -3,7 +3,7 @@ import { TestBed } from '@angular/core/testing';
 import { AngularFireAuth } from '@angular/fire/compat/auth';
 import { AngularFirestore } from '@angular/fire/compat/firestore';
 import { Router } from '@angular/router';
-import { of } from 'rxjs';
+import { firstValueFrom, of } from 'rxjs';
 import { AlertService } from 'src/app/shared/alert-service/alert.service';
 import { AuthService, GOOGLE_REDIRECT_PENDING_KEY } from './auth-service.service';
 
@@ -169,5 +169,53 @@ describe('AuthService Google sign-in', () => {
       expect(alertService.showAlert).toHaveBeenCalledWith('Failed to sign in with Google.');
       expect(router.navigate).not.toHaveBeenCalled();
     });
+  });
+});
+
+describe('AuthService.isSignedInAndVerifiedAsync', () => {
+  function serviceWith(user: { uid: string; emailVerified: boolean } | null) {
+    const afAuth = jasmine.createSpyObj('AngularFireAuth', ['getRedirectResult'], {
+      authState: of(user),
+      currentUser: Promise.resolve(user),
+    });
+    afAuth.getRedirectResult.and.resolveTo({ user: null });
+
+    // The service loads the profile on start-up; a missing doc is enough here.
+    const fakeFirestore = {
+      collection: () => {
+        inject(EnvironmentInjector);
+        return {
+          doc: () => {
+            inject(EnvironmentInjector);
+            return { get: () => of({ exists: false }) };
+          },
+        };
+      },
+    };
+
+    TestBed.configureTestingModule({
+      providers: [
+        { provide: AngularFireAuth, useValue: afAuth },
+        { provide: AngularFirestore, useValue: fakeFirestore },
+        { provide: Router, useValue: jasmine.createSpyObj('Router', ['navigate']) },
+        { provide: AlertService, useValue: jasmine.createSpyObj('AlertService', ['showAlert']) },
+      ],
+    });
+    return TestBed.inject(AuthService);
+  }
+
+  it('is true for a signed-in user with a verified email', async () => {
+    const service = serviceWith({ uid: 'u1', emailVerified: true });
+    expect(await firstValueFrom(service.isSignedInAndVerifiedAsync())).toBeTrue();
+  });
+
+  it('is false for a signed-in user who has not verified their email', async () => {
+    const service = serviceWith({ uid: 'u1', emailVerified: false });
+    expect(await firstValueFrom(service.isSignedInAndVerifiedAsync())).toBeFalse();
+  });
+
+  it('is false when nobody is signed in', async () => {
+    const service = serviceWith(null);
+    expect(await firstValueFrom(service.isSignedInAndVerifiedAsync())).toBeFalse();
   });
 });

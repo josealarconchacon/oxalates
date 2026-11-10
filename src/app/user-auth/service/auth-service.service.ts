@@ -250,6 +250,18 @@ export class AuthService {
     );
   }
 
+  /**
+   * True once a user has a session *and* a verified email (Google accounts
+   * always are). Email sign-ups that haven't verified yet stay signed in to
+   * Firebase but should still see the sign-in page and its "verify" message.
+   */
+  isSignedInAndVerifiedAsync(): Observable<boolean> {
+    return this.afAuth.authState.pipe(
+      take(1),
+      map((user) => !!user && user.emailVerified)
+    );
+  }
+
   async signOut(): Promise<void> {
     try {
       await this.afAuth.signOut();

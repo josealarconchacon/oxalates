@@ -18,3 +18,18 @@ export const authGuard: CanActivateFn = () => {
     })
   );
 };
+
+/**
+ * For the sign-in page: someone already signed in (with a verified email)
+ * goes straight to the food search, where signing in would have taken them.
+ */
+export const signedOutGuard: CanActivateFn = () => {
+  const authService = inject(AuthService);
+  const router = inject(Router);
+
+  return authService
+    .isSignedInAndVerifiedAsync()
+    .pipe(
+      map((signedIn) => (signedIn ? router.createUrlTree(['/oxalate']) : true))
+    );
+};

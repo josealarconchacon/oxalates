@@ -4,7 +4,7 @@ import { OxalateComponent } from './landing-page/dialog-service/oxalate/oxalate.
 import { LandingPageComponent } from './landing-page/landing-page.component';
 import { ViewMoreComponent } from './landing-page/dialog-service/oxalate/view-more/view-more.component';
 import { AuthComponent } from './user-auth/auth/auth.component';
-import { authGuard } from './user-auth/service/auth.guard';
+import { authGuard, signedOutGuard } from './user-auth/service/auth.guard';
 import { ContributionComponent } from './landing-page/contribution/contribution.component';
 import { SuggestionsComponent } from './landing-page/suggestions/suggestions.component';
 import { NotFoundComponent } from './landing-page/not-found/not-found.component';
@@ -13,6 +13,7 @@ export const routes: Routes = [
   {
     path: 'auth',
     component: AuthComponent,
+    canActivate: [signedOutGuard],
     title: 'Sign in or create an account',
   },
   {
