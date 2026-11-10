@@ -19,11 +19,11 @@ Angular Material · Fuse.js · jsPDF · EmailJS · Karma + Jasmine
 
 ## Scripts
 
-| Command         | What it does                                                                          |
-| --------------- | ------------------------------------------------------------------------------------- |
+| Command         | What it does                                                                           |
+| --------------- | -------------------------------------------------------------------------------------- |
 | `npm start`     | Dev server on port 4200. **Must be 4200**: the Firebase API key only accepts that port |
-| `npm test`      | Unit tests (Karma). Add `-- --watch=false --browsers=ChromeHeadless` for a single run |
-| `npm run build` | Production build into `dist/oxalates`                                                 |
+| `npm test`      | Unit tests (Karma). Add `-- --watch=false --browsers=ChromeHeadless` for a single run  |
+| `npm run build` | Production build into `dist/oxalates`                                                  |
 
 ## Project structure
 
@@ -50,7 +50,7 @@ tests (on pull requests) and CodeQL security scans. To publish:
 
 ```bash
 npm run build                      # needs the real food data and environment files
-firebase deploy --only hosting     # project: oxalates-c85a4
+firebase deploy --only hosting     # project: oxalates-
 ```
 
 Then hard-reload oxalate.info and check sign-in and the daily log. If something is wrong, roll back in the
