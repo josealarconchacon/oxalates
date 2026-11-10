@@ -1,13 +1,10 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { Router, RouterLink } from '@angular/router';
+import { RouterLink } from '@angular/router';
 import { CategoryCard } from '../../model/category-card';
 import { CategoryService } from '../oxalate/service/category.service';
 import { FilterService } from '../oxalate/service/filter.service';
 import { CommonModule } from '@angular/common';
-import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import { HttpClient } from '@angular/common/http';
-import { SvgService } from './service/svg.service';
-import { ThemeService } from '../../../shared/services/theme.service';
 import { Subscription } from 'rxjs';
 import {
   IconComponent,
@@ -42,16 +39,12 @@ const DEFAULT_CATEGORY_STYLE: CategoryStyle = {
 })
 export class FoodByCategoryComponent implements OnInit, OnDestroy {
   cardsMap: Map<string, CategoryCard> = new Map();
-  isDarkTheme$ = this.themeService.isDarkTheme$;
   private subscriptions: Subscription[] = [];
 
   constructor(
-    private router: Router,
     private http: HttpClient,
     private categoryService: CategoryService,
-    private filterService: FilterService,
-    private svgService: SvgService,
-    private themeService: ThemeService
+    private filterService: FilterService
   ) {}
 
   ngOnInit(): void {
@@ -73,22 +66,12 @@ export class FoodByCategoryComponent implements OnInit, OnDestroy {
           '../../../../assets/mock-oxalate/food-by-catejory.json'
         )
         .subscribe({
-          next: (data) => {
-            this.populateCardsMap(data);
-            // Only validate SVGs in development mode
-            if (!this.isProduction()) {
-              this.validateSvgs();
-            }
-          },
+          next: (data) => this.populateCardsMap(data),
           error: (error) => {
             console.error('Error loading category data:', error);
           },
         })
     );
-  }
-
-  private isProduction(hostname: string = window.location.hostname): boolean {
-    return hostname !== 'localhost' && !hostname.includes('127.0.0.1');
   }
 
   populateCardsMap(data: CategoryCard[]): void {
@@ -101,41 +84,6 @@ export class FoodByCategoryComponent implements OnInit, OnDestroy {
     });
   }
 
-  validateSvgs(): void {
-    // Only validate in development to avoid performance impact in production
-    if (this.isProduction()) return;
-
-    this.cardsMap.forEach((card, title) => {
-      if (!card.iconSvg) {
-        console.warn(`Missing SVG for category: ${title}`);
-      } else if (!this.isSvgValid(card.iconSvg)) {
-        console.warn(`Invalid SVG format for category: ${title}`);
-      }
-    });
-  }
-
-  isSvgValid(svg: string): boolean {
-    return svg.startsWith('<svg') && svg.endsWith('</svg>');
-  }
-
-  onCardClick(category: string): void {
-    console.log('Category selected:', category);
-    if (this.cardsMap.has(category)) {
-      this.categoryService.changeCategory(category);
-      this.filterService.updateFilter({
-        category: category,
-        calc_level: '',
-      });
-      this.router.navigate(['/oxalate'], {
-        queryParams: {
-          category: category,
-        },
-      });
-    } else {
-      console.warn(`Category "${category}" not found in cardsMap.`);
-    }
-  }
-
   /** Sets the search filters; the card's routerLink does the navigation. */
   selectCategory(category: string): void {
     this.categoryService.changeCategory(category);
@@ -144,10 +92,5 @@ export class FoodByCategoryComponent implements OnInit, OnDestroy {
 
   styleFor(category: string): CategoryStyle {
     return CATEGORY_STYLES[category] ?? DEFAULT_CATEGORY_STYLE;
-  }
-
-  getSanitizedIcon(iconSvg: string): SafeHtml {
-    const processed = this.svgService.sanitizeAndPrepareSvg(iconSvg);
-    return processed;
   }
 }

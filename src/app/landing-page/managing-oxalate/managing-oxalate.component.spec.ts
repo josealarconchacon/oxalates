@@ -49,21 +49,6 @@ describe('ManagingOxalateComponent', () => {
       expect(component.content?.title).toBe('Tips for Managing Oxalate Intake');
     });
 
-    it('should add icons and iconClass to existing tips', () => {
-      fixture.detectChanges();
-      const stayHydratedTip = component.content?.tips.find(
-        (tip) => tip.title === 'Stay Hydrated'
-      );
-      expect(stayHydratedTip?.icon).toBe('water_drop');
-      expect(stayHydratedTip?.iconClass).toBe('icon-water');
-
-      const goSlowlyTip = component.content?.tips.find(
-        (tip) => tip.title === 'Go Slowly'
-      );
-      expect(goSlowlyTip?.icon).toBe('speed');
-      expect(goSlowlyTip?.iconClass).toBe('icon-speed');
-    });
-
     it('should add Community Support as 6th tip', () => {
       fixture.detectChanges();
       expect(component.content?.tips.length).toBe(6);
@@ -72,8 +57,6 @@ describe('ManagingOxalateComponent', () => {
 
       if (communitySupportTip) {
         expect(communitySupportTip.title).toBe('Community Support');
-        expect(communitySupportTip.icon).toBe('group');
-        expect(communitySupportTip.iconClass).toBe('icon-community');
       }
     });
 
@@ -114,47 +97,24 @@ describe('ManagingOxalateComponent', () => {
     });
   });
 
-  describe('Tip Icon Mapping', () => {
-    beforeEach(() => {
-      fixture.detectChanges();
+  describe('card icons and numbers', () => {
+    it('gives each tip its line icon', () => {
+      expect(component.lineIconFor('Stay Hydrated')).toBe('droplet');
+      expect(component.lineIconFor('Mineral Intake')).toBe('gem');
+      expect(component.lineIconFor('Go Slowly')).toBe('gauge');
+      expect(component.lineIconFor('Regular Monitoring')).toBe('clipboard-list');
+      expect(component.lineIconFor('Consultation')).toBe('user');
+      expect(component.lineIconFor('Community Support')).toBe('users');
     });
 
-    it('should map Stay Hydrated with water icon', () => {
-      const tip = component.content?.tips.find(
-        (t) => t.title === 'Stay Hydrated'
-      );
-      expect(tip?.icon).toBe('water_drop');
-      expect(tip?.iconClass).toBe('icon-water');
+    it('falls back to a leaf for a tip it does not know', () => {
+      expect(component.lineIconFor('Some New Tip')).toBe('leaf');
     });
 
-    it('should map Mineral Intake with default icon when not in mapping', () => {
-      const tip = component.content?.tips.find(
-        (t) => t.title === 'Mineral Intake'
-      );
-      expect(tip?.icon).toBe('tips_and_updates');
-      expect(tip?.iconClass).toBe('icon-default');
-    });
-
-    it('should map Go Slowly with speed icon', () => {
-      const tip = component.content?.tips.find((t) => t.title === 'Go Slowly');
-      expect(tip?.icon).toBe('speed');
-      expect(tip?.iconClass).toBe('icon-speed');
-    });
-
-    it('should map Regular Monitoring with monitoring icon', () => {
-      const tip = component.content?.tips.find(
-        (t) => t.title === 'Regular Monitoring'
-      );
-      expect(tip?.icon).toBe('monitoring');
-      expect(tip?.iconClass).toBe('icon-monitoring');
-    });
-
-    it('should map Consultation with person icon', () => {
-      const tip = component.content?.tips.find(
-        (t) => t.title === 'Consultation'
-      );
-      expect(tip?.icon).toBe('person');
-      expect(tip?.iconClass).toBe('icon-consultation');
+    it('numbers the cards 01, 02, …', () => {
+      expect(component.cardNumber(0)).toBe('01');
+      expect(component.cardNumber(5)).toBe('06');
+      expect(component.cardNumber(11)).toBe('12');
     });
   });
 
@@ -181,8 +141,6 @@ describe('ManagingOxalateComponent', () => {
       component.content?.tips.forEach((tip) => {
         expect(tip.title).toBeDefined();
         expect(tip.description).toBeDefined();
-        expect(tip.icon).toBeDefined();
-        expect(tip.iconClass).toBeDefined();
       });
     });
   });
