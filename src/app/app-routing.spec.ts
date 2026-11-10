@@ -1,5 +1,5 @@
 import { routes } from './app-routing.module';
-import { authGuard } from './user-auth/service/auth.guard';
+import { authGuard, signedOutGuard } from './user-auth/service/auth.guard';
 import { ProfileModule } from './user-auth/profile/profile.module';
 import { FoodEntryComponent } from './user-auth/profile/food-entry/food-entry.component';
 
@@ -30,5 +30,12 @@ describe('app routes for signed-in pages', () => {
     expect(await (entry.loadComponent as () => Promise<unknown>)()).toBe(
       FoodEntryComponent
     );
+  });
+});
+
+describe('app route for the sign-in page', () => {
+  it('skips the sign-in page for people who are already signed in', () => {
+    const auth = routes.find((r) => r.path === 'auth')!;
+    expect(auth.canActivate).toEqual([signedOutGuard]);
   });
 });

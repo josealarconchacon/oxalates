@@ -5,8 +5,9 @@ import {
   RouterStateSnapshot,
 } from '@angular/router';
 import { firstValueFrom, Observable, of } from 'rxjs';
+import { UrlTree } from '@angular/router';
 import { AuthService } from './auth-service.service';
-import { authGuard } from './auth.guard';
+import { authGuard, signedOutGuard } from './auth.guard';
 
 describe('authGuard', () => {
   let router: jasmine.SpyObj<Router>;
@@ -41,5 +42,45 @@ describe('authGuard', () => {
   it('blocks a signed-out user and sends them to the sign-in page', async () => {
     expect(await runGuard(false)).toBeFalse();
     expect(router.navigate).toHaveBeenCalledOnceWith(['/auth']);
+  });
+});
+
+describe('signedOutGuard (the sign-in page)', () => {
+  const homeTree = {} as UrlTree;
+  let router: jasmine.SpyObj<Router>;
+
+  const runGuard = (signedInAndVerified: boolean) => {
+    TestBed.configureTestingModule({
+      providers: [
+        {
+          provide: AuthService,
+          useValue: {
+            isSignedInAndVerifiedAsync: () => of(signedInAndVerified),
+          },
+        },
+        { provide: Router, useValue: router },
+      ],
+    });
+
+    return firstValueFrom(
+      TestBed.runInInjectionContext(() =>
+        signedOutGuard({} as ActivatedRouteSnapshot, {} as RouterStateSnapshot)
+      ) as Observable<boolean | UrlTree>
+    );
+  };
+
+  beforeEach(() => {
+    router = jasmine.createSpyObj<Router>('Router', ['createUrlTree']);
+    router.createUrlTree.and.returnValue(homeTree);
+  });
+
+  it('sends a signed-in, verified user to the food search instead', async () => {
+    expect(await runGuard(true)).toBe(homeTree);
+    expect(router.createUrlTree).toHaveBeenCalledOnceWith(['/oxalate']);
+  });
+
+  it('shows the sign-in page to everyone else (signed out or unverified)', async () => {
+    expect(await runGuard(false)).toBeTrue();
+    expect(router.createUrlTree).not.toHaveBeenCalled();
   });
 });
