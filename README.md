@@ -1,49 +1,57 @@
-# Oxalates Tracker
+# Oxalate Info
 
-A comprehensive web application for tracking and managing oxalate intake in your diet. Built with Angular and Firebase, this application helps users monitor their oxalate consumption and make informed dietary choices.
-
-## Overview
-
-Oxalates are naturally occurring compounds found in many foods, particularly plant-based ones. While they can be part of a healthy diet, some individuals need to monitor their oxalate intake due to various health conditions. This application provides tools and information to help users track and manage their oxalate consumption effectively.
+Look up how much oxalate is in everyday foods and keep a daily log of your intake.
+Live at **[oxalate.info](https://oxalate.info)**.
 
 ## Features
 
-### 1. Oxalate Content Database
+- **Food search**: fuzzy search over about 3,600 foods, filtered by category and oxalate level
+- **Food details**: total and soluble oxalate (per 100 g and per serving), serving size, level and notes
+- **Daily log**: add foods to breakfast, lunch, dinner and snacks, and see daily totals
+- **Reports**: download a day's breakdown as a PDF, or share it
+- **Saved foods and profile**: Google or email sign-in, saved items, profile photo
+- **Light and dark themes**, keyboard and screen-reader friendly
 
-- Extensive database of foods with their oxalate content
-- Detailed information including:
-  - Total oxalate content per 100g
-  - Soluble oxalate content
-  - Serving sizes
-  - Categories
-  - Calculation levels (Low to Extremely High)
+## Tech stack
 
-### 2. Calculation Tools
+Angular 21 · AngularFire 21 (compat API) · Firebase (Auth, Firestore, Storage, Analytics, Hosting) ·
+Angular Material · Fuse.js · jsPDF · EmailJS · Karma + Jasmine
 
-- Calculate oxalate intake per meal
-- Track daily oxalate consumption
-- Customize serving sizes
-- Save frequently consumed meals
-- View historical intake data
+## Scripts
 
-### 3. User Features
+| Command         | What it does                                                                          |
+| --------------- | ------------------------------------------------------------------------------------- |
+| `npm start`     | Dev server on port 4200. **Must be 4200**: the Firebase API key only accepts that port |
+| `npm test`      | Unit tests (Karma). Add `-- --watch=false --browsers=ChromeHeadless` for a single run |
+| `npm run build` | Production build into `dist/oxalates`                                                 |
 
-- Personal profile management
-- Save favorite foods and meals
-- Track daily intake history
-- Password management
-- Customizable settings
+## Project structure
 
-### 4. Educational Resources
+```
+src/
+├── app/
+│   ├── landing-page/   Homepage sections, header, footer, food search (/oxalate), legal pages
+│   ├── user-auth/      Sign-in, profile, saved items, daily log (/food-entry), calculator
+│   └── shared/         Icon component, services (theme, alerts), directives, utils
+├── assets/mock-oxalate/  Food database and homepage content (JSON)
+├── environments/         Firebase + EmailJS config (example file only in git)
+└── styles/tokens/        Design tokens: colors for light and dark themes
+```
 
-- Information about oxalates
-- Tips for managing oxalate intake
-- Community support links
-- Best practices for dietary management
+**Firestore:** `users/{uid}`, `foodEntries/{uid}/entries/{yyyy-mm-dd}`, `savedOxalates/{uid}/oxalates/{id}`.
 
-### 5. Search and Filter
+**Styling:** all colors come from `src/styles/tokens/colors.css` (`--color-*` tokens; dark mode is the
+`.dark-theme` class on `<html>`). Icons use the shared `<app-icon name="…">` component.
 
-- Search foods by name
-- Filter by categories
-- Sort by oxalate levels
-- View similar food alternatives
+## Deploying
+
+Deploys are **manual**: merging to `master` does not publish anything. GitHub Actions only runs the unit
+tests (on pull requests) and CodeQL security scans. To publish:
+
+```bash
+npm run build                      # needs the real food data and environment files
+firebase deploy --only hosting     # project: oxalates-c85a4
+```
+
+Then hard-reload oxalate.info and check sign-in and the daily log. If something is wrong, roll back in the
+Firebase console under **Hosting → Release history**.
