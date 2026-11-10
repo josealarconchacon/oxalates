@@ -3,7 +3,10 @@ import { AngularFireStorage } from '@angular/fire/compat/storage';
 import { of, throwError } from 'rxjs';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { AuthService } from './auth-service.service';
-import { ProfileImageService } from './profile-image.service';
+import {
+  MAX_PROFILE_IMAGE_BYTES,
+  ProfileImageService,
+} from './profile-image.service';
 
 describe('ProfileImageService', () => {
   const DOWNLOAD_URL = 'https://storage.example.com/profile-images/1_photo.png';
@@ -14,7 +17,7 @@ describe('ProfileImageService', () => {
     ref: jasmine.Spy;
   };
   let getDownloadURL: jasmine.Spy;
-  let authService: { updateProfileImage: jasmine.Spy };
+  let authService: { updateProfileImage: jasmine.Spy; getCurrentUser: jasmine.Spy };
   let snackBar: { open: jasmine.Spy };
 
   const image = (name = 'photo.png', type = 'image/png') =>
@@ -32,6 +35,9 @@ describe('ProfileImageService', () => {
       updateProfileImage: jasmine
         .createSpy('updateProfileImage')
         .and.resolveTo(undefined),
+      getCurrentUser: jasmine
+        .createSpy('getCurrentUser')
+        .and.resolveTo({ uid: 'user-123' }),
     };
     snackBar = { open: jasmine.createSpy('open') };
     spyOn(console, 'error');
@@ -47,13 +53,14 @@ describe('ProfileImageService', () => {
   });
 
   describe('a valid image', () => {
-    it('is stored under profile-images and reported as saved', async () => {
+    it("is stored under the user's own folder and reported as saved", async () => {
       const file = image('me.png');
 
       const saved = await service.upload(file);
 
       const path = storage.upload.calls.mostRecent().args[0] as string;
-      expect(path).toMatch(/^profile-images\/\d+_me\.png$/);
+      // storage.rules only lets the owner write to profile-images/{uid}/…
+      expect(path).toMatch(/^profile-images\/user-123\/\d+_me\.png$/);
       expect(storage.upload.calls.mostRecent().args[1]).toBe(file);
       expect(saved).toBeTrue();
       expect(snackBar.open).not.toHaveBeenCalled();
@@ -93,6 +100,39 @@ describe('ProfileImageService', () => {
         'Choose an image file (JPG, PNG, WebP or GIF).'
       );
       expect(snackBar.open.calls.mostRecent().args[1]).toBe('Dismiss');
+    });
+  });
+
+  describe('an image that is too big', () => {
+    it('is refused with a message and nothing is uploaded', async () => {
+      const big = image('huge.png');
+      Object.defineProperty(big, 'size', { value: MAX_PROFILE_IMAGE_BYTES });
+
+      const saved = await service.upload(big);
+
+      expect(saved).toBeFalse();
+      expect(storage.upload).not.toHaveBeenCalled();
+      expect(snackBar.open.calls.mostRecent().args[0]).toBe(
+        'Choose an image smaller than 5 MB.'
+      );
+    });
+
+    it('matches the 5 MB limit in storage.rules', () => {
+      expect(MAX_PROFILE_IMAGE_BYTES).toBe(5 * 1024 * 1024);
+    });
+  });
+
+  describe('when nobody is signed in', () => {
+    it('asks the person to sign in again and uploads nothing', async () => {
+      authService.getCurrentUser.and.resolveTo(null);
+
+      const saved = await service.upload(image());
+
+      expect(saved).toBeFalse();
+      expect(storage.upload).not.toHaveBeenCalled();
+      expect(snackBar.open.calls.mostRecent().args[0]).toBe(
+        'Sign in again to change your photo.'
+      );
     });
   });
 

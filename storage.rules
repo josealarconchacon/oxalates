@@ -1,0 +1,23 @@
+rules_version = '2';
+
+// Profile photos only: profile-images/{uid}/{file}. The owner can read and
+// upload images under 5 MB (see MAX_PROFILE_IMAGE_BYTES in
+// profile-image.service.ts). Anything not matched below is denied.
+//
+// Photos shown in the app use download URLs, which carry their own token and
+// keep working whatever these rules say.
+service firebase.storage {
+  match /b/{bucket}/o {
+    function isOwner(uid) {
+      return request.auth != null && request.auth.uid == uid;
+    }
+
+    match /profile-images/{uid}/{fileName} {
+      allow read: if isOwner(uid);
+      allow create, update: if isOwner(uid)
+        && request.resource.size < 5 * 1024 * 1024
+        && request.resource.contentType.matches('image/.*');
+      allow delete: if isOwner(uid);
+    }
+  }
+}
