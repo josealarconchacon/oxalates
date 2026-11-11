@@ -1,4 +1,3 @@
-import { BreakpointObserver } from '@angular/cdk/layout';
 import {
   IconComponent,
   IconName,
@@ -66,24 +65,15 @@ export class FoodEntryComponent implements OnInit, OnDestroy {
    * expandable per-row details (max-width: 768px). Only then is a food's name
    * a real expand/collapse control.
    */
-  isCompact = false;
-  private layoutSubscription: Subscription | null = null;
 
   constructor(
     private foodEntryService: FoodEntryService,
     private themeService: ThemeService,
     private authService: AuthService,
-    private afAuth: AngularFireAuth,
-    private breakpointObserver: BreakpointObserver
+    private afAuth: AngularFireAuth
   ) {}
 
   ngOnInit() {
-    this.layoutSubscription = this.breakpointObserver
-      .observe('(max-width: 768px)')
-      .subscribe((state) => {
-        this.isCompact = state.matches;
-      });
-
     // Subscribe to theme changes
     this.themeService.isDarkTheme$.subscribe((isDark) => {
       this.isDarkTheme = isDark;
@@ -113,7 +103,6 @@ export class FoodEntryComponent implements OnInit, OnDestroy {
     if (this.authSubscription) {
       this.authSubscription.unsubscribe();
     }
-    this.layoutSubscription?.unsubscribe();
   }
 
   fetchFoodEntries() {

@@ -65,11 +65,7 @@
 }
 
 .daily-food-log {
-  max-width: 1000px;
   margin: 0 auto;
-  padding: var(--spacing-1);
-  background: var(--background-color);
-  transition: all var(--transition-base);
 }
 
 .daily-food-log.shrink {
@@ -79,23 +75,50 @@
 .food-table-container {
   display: flex;
   flex-direction: column;
-  gap: 1rem;
+  gap: 16px;
 }
 
+/* Desktop: the date pill on top, then the totals in a 360px column that
+   stays in view while scrolling, next to the meals in a 2×2 grid. */
+@media (min-width: 1100px) {
+  .daily-food-log {
+    display: grid;
+    grid-template-columns: 360px minmax(0, 1fr);
+    grid-template-areas:
+      'date date'
+      'breakdown meals';
+    align-items: start;
+    column-gap: 24px;
+  }
+
+  app-date-switcher {
+    grid-area: date;
+  }
+
+  .breakdown-col,
+  .results-skeleton {
+    grid-area: breakdown;
+  }
+
+  .breakdown-col {
+    position: sticky;
+    top: 96px;
+  }
+
+  .food-table-container {
+    display: grid;
+    grid-area: meals;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    align-items: start; /* an empty meal doesn't stretch to its neighbour */
+  }
+}
+
+/* The list sits inside the meal card, so no second card around it. */
 .food-table {
   width: 100%;
   border-collapse: collapse;
-  background: var(--card-background);
-  border-radius: 0.75rem;
+  border-radius: 12px;
   overflow: hidden;
-  box-shadow: var(--shadow-sm);
-  transition: all 0.3s ease;
-}
-
-:host-context(.dark-theme) .food-table {
-  background: var(--hover-background);
-  border: 1px solid var(--border-color);
-  box-shadow: var(--shadow-sm);
 }
 
 thead .header-detail th {
@@ -179,10 +202,6 @@ thead .header-detail th {
 :host-context(.dark-theme) button.food-name-btn:hover {
   background-color: rgba(255, 255, 255, 0.05);
   color: var(--action-color);
-}
-
-.food-name-static {
-  cursor: default;
 }
 
 .expand-icon {
@@ -471,62 +490,42 @@ thead .header-detail th {
   margin-bottom: 16px;
 }
 
-@media (max-width: 768px) {
-  .content-area {
-    max-width: 100%;
-  }
-  .hide-mobile {
-    display: none;
-  }
+/* Food rows: the meal cards are narrow at every width, so only the name
+   and the delete button show; the name expands to show the details. */
+.hide-mobile {
+  display: none;
+}
 
-  .expand-icon {
-    display: inline-block;
-  }
+.expand-icon {
+  display: inline-block;
+}
 
-  .mobile-details {
-    display: block;
-  }
+.mobile-details {
+  display: block;
+}
 
-  .oxalate-mobile,
-  .soluble-mobile {
-    display: inline-block;
-  }
+.oxalate-mobile,
+.soluble-mobile {
+  display: inline-block;
+  font-size: var(--font-size-xs);
+}
 
-  .meal-section {
-    padding: 1rem;
-  }
+.food-table th,
+.food-table td {
+  padding: 0.75rem;
+}
 
-  .food-table th,
-  .food-table td {
-    padding: 0.75rem;
-  }
+.food-name-btn {
+  padding: 0.375rem;
+}
 
-  .food-name-btn {
-    padding: 0.375rem;
-  }
+:host-context(.dark-theme) .mobile-details {
+  background: var(--hover-background);
+  border-color: var(--border-color);
+}
 
-  :host-context(.dark-theme) .mobile-details {
-    background: var(--hover-background);
-    border-color: var(--border-color);
-  }
-
-  :host-context(.dark-theme) .detail-row {
-    border-color: var(--border-color);
-  }
-
-
-  .food-name-btn {
-    font-size: var(--font-size-xs);
-  }
-
-  .detail-label {
-    font-size: var(--font-size-xs);
-  }
-
-  .oxalate-mobile,
-  .soluble-mobile {
-    font-size: var(--font-size-xs);
-  }
+:host-context(.dark-theme) .detail-row {
+  border-color: var(--border-color);
 }
 
 @media (prefers-reduced-motion: reduce) {

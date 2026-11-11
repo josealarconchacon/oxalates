@@ -117,9 +117,8 @@ describe('FoodEntryComponent', () => {
       ];
     });
 
-    describe('at the compact (phone) width', () => {
+    describe('in the meal cards (narrow at every width)', () => {
       beforeEach(() => {
-        component.isCompact = true;
         fixture.detectChanges();
       });
 
@@ -146,18 +145,6 @@ describe('FoodEntryComponent', () => {
 
       it('has a button type so it can never submit a form', () => {
         expect(el('button.food-name-btn')!.getAttribute('type')).toBe('button');
-      });
-    });
-
-    describe('at the wide (desktop) width', () => {
-      beforeEach(() => {
-        component.isCompact = false;
-        fixture.detectChanges();
-      });
-
-      it('shows the name as plain text, because there is nothing to expand', () => {
-        expect(el('button.food-name-btn')).toBeNull();
-        expect(el('.food-name-static')!.textContent!.trim()).toBe('Almonds');
       });
     });
   });

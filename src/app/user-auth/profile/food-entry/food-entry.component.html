@@ -26,7 +26,7 @@
             <span class="skeleton-line skeleton-line--short"></span>
           </div>
         } @else {
-          <div>
+          <div class="breakdown-col">
             <app-results-section
               [breakfastItems]="breakfastItems"
               [lunchItems]="lunchItems"
@@ -77,23 +77,18 @@
                         class="food-row"
                         >
                         <td class="food-name-col">
-                          @if (isCompact) {
-                            <button
-                              type="button"
-                              class="food-name-btn"
-                              [attr.aria-expanded]="!!food.isExpanded"
-                              (click)="food.isExpanded = !food.isExpanded"
-                              >
-                              {{ food.foodName }}
-                              <span class="expand-icon" aria-hidden="true">{{
-                                food.isExpanded ? "−" : "+"
-                              }}</span>
-                            </button>
-                          } @else {
-                            <span class="food-name-btn food-name-static">{{ food.foodName }}</span>
-                          }
-                          <!-- Wider than 768px the details are already table columns, so there is
-                          nothing to expand: show the name as text, not a button that does nothing. -->
+                          <!-- The meal cards are narrow at every width, so details open from the name. -->
+                          <button
+                            type="button"
+                            class="food-name-btn"
+                            [attr.aria-expanded]="!!food.isExpanded"
+                            (click)="food.isExpanded = !food.isExpanded"
+                            >
+                            {{ food.foodName }}
+                            <span class="expand-icon" aria-hidden="true">{{
+                              food.isExpanded ? "−" : "+"
+                            }}</span>
+                          </button>
                           @if (food.isExpanded) {
                             <div class="mobile-details">
                               <div class="detail-row">
