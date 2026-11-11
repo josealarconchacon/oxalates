@@ -13,6 +13,7 @@ import { ViewMoreComponent } from './view-more/view-more.component';
 import { SearchInputComponent } from './search-input/search-input.component';
 import { AlertComponent } from './shared/alert/alert.component';
 import { ClickableDirective } from 'src/app/shared/directives/clickable.directive';
+import { IconComponent } from 'src/app/shared/components/icon/icon.component';
 
 describe('OxalateComponent', () => {
   let component: OxalateComponent;
@@ -28,6 +29,7 @@ describe('OxalateComponent', () => {
         SearchInputComponent,
         AlertComponent,
         ClickableDirective,
+        IconComponent,
       ],
       declarations: [OxalateComponent, FilterComponent, ViewMoreComponent],
       providers: [
