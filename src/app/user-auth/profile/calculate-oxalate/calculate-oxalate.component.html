@@ -4,7 +4,9 @@
 
 <div class="app-container" [class.dark-theme]="isDarkTheme">
   <div class="content-wrapper">
-    <header class="app-header">
+    <!-- A div, not <header>: inside a dialog a header would count as a second
+         page banner for screen readers. -->
+    <div class="app-header">
       <div class="header-content">
         <div class="header-title">
           <!-- The dialog around this form is labelled by this heading. -->
@@ -18,7 +20,7 @@
           </p>
         </div>
       </div>
-    </header>
+    </div>
 
     <div class="main-content">
       <div class="left-column">
