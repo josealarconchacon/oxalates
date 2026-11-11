@@ -1,3 +1,4 @@
+import { IconComponent } from '../../../../shared/components/icon/icon.component';
 import { CommonModule } from '@angular/common';
 import {
   Component,
@@ -13,7 +14,7 @@ import { GetReportComponent } from '../get-report/get-report.component';
 
 @Component({
   selector: 'app-results-section',
-  imports: [CommonModule, ShareMenuComponent, GetReportComponent],
+  imports: [CommonModule, ShareMenuComponent, GetReportComponent, IconComponent],
   templateUrl: './results-section.component.html',
   styleUrls: ['./results-section.component.css'],
 })

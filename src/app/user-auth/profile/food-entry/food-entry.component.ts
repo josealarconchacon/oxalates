@@ -1,4 +1,7 @@
-import { BreakpointObserver } from '@angular/cdk/layout';
+import {
+  IconComponent,
+  IconName,
+} from '../../../shared/components/icon/icon.component';
 import { CommonModule } from '@angular/common';
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { FormsModule } from '@angular/forms';
@@ -26,6 +29,8 @@ export interface FoodItem {
   isExpanded?: boolean;
 }
 
+type MealKey = 'breakfast' | 'lunch' | 'dinner' | 'snacks';
+
 @Component({
   selector: 'app-food-entry',
   imports: [
@@ -35,6 +40,7 @@ export interface FoodItem {
     ResultsSectionComponent,
     DateSwitcherComponent,
     DialogDirective,
+    IconComponent,
   ],
   templateUrl: './food-entry.component.html',
   styleUrls: ['./food-entry.component.css'],
@@ -51,7 +57,7 @@ export class FoodEntryComponent implements OnInit, OnDestroy {
   showCalculationResult: boolean = false;
   private subscription: Subscription | null = null;
   private authSubscription: Subscription | null = null;
-  selectedMealType: 'breakfast' | 'lunch' | 'dinner' | 'snacks' = 'breakfast';
+  selectedMealType: MealKey = 'breakfast';
   isDarkTheme: boolean = false;
   isLoading: boolean = true;
   /**
@@ -59,24 +65,15 @@ export class FoodEntryComponent implements OnInit, OnDestroy {
    * expandable per-row details (max-width: 768px). Only then is a food's name
    * a real expand/collapse control.
    */
-  isCompact = false;
-  private layoutSubscription: Subscription | null = null;
 
   constructor(
     private foodEntryService: FoodEntryService,
     private themeService: ThemeService,
     private authService: AuthService,
-    private afAuth: AngularFireAuth,
-    private breakpointObserver: BreakpointObserver
+    private afAuth: AngularFireAuth
   ) {}
 
   ngOnInit() {
-    this.layoutSubscription = this.breakpointObserver
-      .observe('(max-width: 768px)')
-      .subscribe((state) => {
-        this.isCompact = state.matches;
-      });
-
     // Subscribe to theme changes
     this.themeService.isDarkTheme$.subscribe((isDark) => {
       this.isDarkTheme = isDark;
@@ -106,7 +103,6 @@ export class FoodEntryComponent implements OnInit, OnDestroy {
     if (this.authSubscription) {
       this.authSubscription.unsubscribe();
     }
-    this.layoutSubscription?.unsubscribe();
   }
 
   fetchFoodEntries() {
@@ -172,6 +168,21 @@ export class FoodEntryComponent implements OnInit, OnDestroy {
     this.lunchItems = [];
     this.dinnerItems = [];
     this.snackItems = [];
+  }
+
+  /** The four meal cards, in page order. */
+  get meals(): {
+    key: MealKey;
+    title: string;
+    icon: IconName;
+    items: FoodItem[];
+  }[] {
+    return [
+      { key: 'breakfast', title: 'Breakfast', icon: 'sunrise', items: this.breakfastItems },
+      { key: 'lunch', title: 'Lunch', icon: 'sun', items: this.lunchItems },
+      { key: 'dinner', title: 'Dinner', icon: 'moon', items: this.dinnerItems },
+      { key: 'snacks', title: 'Snacks', icon: 'cookie', items: this.snackItems },
+    ];
   }
 
   openCalculator(mealType: string) {

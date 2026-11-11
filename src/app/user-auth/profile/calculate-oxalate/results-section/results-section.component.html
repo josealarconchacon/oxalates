@@ -3,32 +3,44 @@
     <h2 class="title">Daily Oxalate Breakdown</h2>
     <div class="action-buttons">
       <button
-        class="share-icon"
+        type="button"
+        class="action-btn share-icon"
         (click)="openShareMenu()"
         [disabled]="!hasFoodItems()"
         [attr.aria-label]="'Share daily oxalate breakdown'"
         >
-        <i class="material-icons icon-inline" aria-hidden="true">share</i>
+        <app-icon name="share-2" [size]="18" />
       </button>
       <button
-        class="download-icon"
+        type="button"
+        class="action-btn download-icon"
         (click)="openReport()"
         [disabled]="!hasFoodItems()"
         [attr.aria-label]="'Download oxalate report'"
         >
-        <i class="material-icons icon-inline" aria-hidden="true">download</i>
+        <app-icon name="download" [size]="18" />
       </button>
     </div>
   </div>
 
   <div class="content-container">
-    <div class="total-oxalates">
-      <span>Total Oxalate: {{ totalOxalate | number : "1.1-1" }} mg</span>
-      <span
-        >Total Soluble Oxalate:
-        {{ totalSolubleOxalate | number : "1.1-1" }} mg</span
-        >
+    <!-- Same text and values as before, split into a label and a big number. -->
+    <dl class="total-oxalates">
+      <div class="stat-tile">
+        <dt class="stat-label">Total Oxalate:</dt>
+        <dd class="stat-value">
+          <span class="stat-number">{{ totalOxalate | number : "1.1-1" }}</span>
+          <span class="unit"> mg</span>
+        </dd>
       </div>
+      <div class="stat-tile">
+        <dt class="stat-label">Total Soluble Oxalate:</dt>
+        <dd class="stat-value">
+          <span class="stat-number">{{ totalSolubleOxalate | number : "1.1-1" }}</span>
+          <span class="unit"> mg</span>
+        </dd>
+      </div>
+    </dl>
 
       <!-- <div class="indicators-and-totals">
       <div class="oxalate-level-indicators">

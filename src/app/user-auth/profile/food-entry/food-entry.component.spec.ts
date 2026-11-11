@@ -117,9 +117,8 @@ describe('FoodEntryComponent', () => {
       ];
     });
 
-    describe('at the compact (phone) width', () => {
+    describe('in the meal cards (narrow at every width)', () => {
       beforeEach(() => {
-        component.isCompact = true;
         fixture.detectChanges();
       });
 
@@ -148,17 +147,75 @@ describe('FoodEntryComponent', () => {
         expect(el('button.food-name-btn')!.getAttribute('type')).toBe('button');
       });
     });
+  });
 
-    describe('at the wide (desktop) width', () => {
-      beforeEach(() => {
-        component.isCompact = false;
-        fixture.detectChanges();
-      });
+  it('names the page like the header link, for screen readers', () => {
+    const h1 = fixture.nativeElement.querySelector('h1') as HTMLElement;
+    expect(h1.textContent!.trim()).toBe('Calculate Daily Intake');
+  });
 
-      it('shows the name as plain text, because there is nothing to expand', () => {
-        expect(el('button.food-name-btn')).toBeNull();
-        expect(el('.food-name-static')!.textContent!.trim()).toBe('Almonds');
+  describe('meal cards', () => {
+    beforeEach(() => {
+      component.isLoading = false;
+      fixture.detectChanges();
+    });
+
+    it('shows the four meals in order as h3 headings', () => {
+      const titles = Array.from(
+        fixture.nativeElement.querySelectorAll('h3.meal-title')
+      ).map((h) => (h as HTMLElement).textContent!.trim());
+      expect(titles).toEqual(['Breakfast', 'Lunch', 'Dinner', 'Snacks']);
+    });
+
+    it('gives each meal its own icon tile', () => {
+      const tiles = Array.from(
+        fixture.nativeElement.querySelectorAll('.meal-icon')
+      ) as HTMLElement[];
+      expect(tiles.map((t) => t.dataset['meal'])).toEqual([
+        'breakfast',
+        'lunch',
+        'dinner',
+        'snacks',
+      ]);
+      expect(tiles.every((t) => t.getAttribute('aria-hidden') === 'true')).toBeTrue();
+    });
+
+    it('shows the same empty text in each empty meal', () => {
+      const empties = Array.from(
+        fixture.nativeElement.querySelectorAll('.empty-state')
+      ) as HTMLElement[];
+      expect(empties.map((e) => e.textContent!.trim())).toEqual([
+        'No foods added yet',
+        'No foods added yet',
+        'No foods added yet',
+        'No foods added yet',
+      ]);
+    });
+
+    it('tells screen readers which meal each Add Food belongs to', () => {
+      const buttons = Array.from(
+        fixture.nativeElement.querySelectorAll('.add-button')
+      ) as HTMLButtonElement[];
+      const meals = buttons.map((b) => {
+        const id = b.getAttribute('aria-describedby')!;
+        return fixture.nativeElement.querySelector('#' + id).textContent.trim();
       });
+      expect(meals).toEqual(['Breakfast', 'Lunch', 'Dinner', 'Snacks']);
+    });
+
+    it('opens the calculator for the meal whose Add Food was clicked', () => {
+      const buttons = Array.from(
+        fixture.nativeElement.querySelectorAll('.add-button')
+      ) as HTMLButtonElement[];
+      expect(buttons.map((b) => b.textContent!.trim())).toEqual([
+        'Add Food',
+        'Add Food',
+        'Add Food',
+        'Add Food',
+      ]);
+      buttons[2].click();
+      expect(component.selectedMealType).toBe('dinner');
     });
   });
 });
+

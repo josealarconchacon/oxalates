@@ -1,6 +1,6 @@
 <div class="app-container">
   <div class="app-main">
-    <h1 class="sr-only">Daily oxalate log</h1>
+    <h1 class="sr-only">Calculate Daily Intake</h1>
     <section class="content-area">
       <div
         class="daily-food-log"
@@ -26,7 +26,7 @@
             <span class="skeleton-line skeleton-line--short"></span>
           </div>
         } @else {
-          <div>
+          <div class="breakdown-col">
             <app-results-section
               [breakfastItems]="breakfastItems"
               [lunchItems]="lunchItems"
@@ -38,30 +38,28 @@
         }
 
           <div class="food-table-container">
+            <!-- One card per meal; the four used to be copies of the same markup. -->
+            @for (meal of meals; track meal.key) {
             <section class="meal-section">
               <div class="title-and-button">
-                <h2 class="meal-title">Breakfast</h2>
-                <button class="add-button ui-btn ui-btn--tonal" [disabled]="isLoading" (click)="openCalculator('breakfast')">
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    width="20"
-                    height="20"
-                    viewBox="0 0 20 20"
-                    fill="none"
-                    class="svg-icon"
-                    >
-                    <g
-                      stroke-width="1.5"
-                      stroke-linecap="round"
-                      [attr.stroke]="isDarkTheme ? '#6fcf9c' : '#17603f'"
-                      >
-                      <path d="M10 2v16M2 10h16" />
-                    </g>
-                  </svg>
+                <div class="meal-heading">
+                  <span class="meal-icon" [attr.data-meal]="meal.key" aria-hidden="true">
+                    <app-icon [name]="meal.icon" [size]="22" />
+                  </span>
+                  <h3 class="meal-title" [id]="'meal-title-' + meal.key">{{ meal.title }}</h3>
+                </div>
+                <button
+                  type="button"
+                  class="add-button"
+                  [attr.aria-describedby]="'meal-title-' + meal.key"
+                  [disabled]="isLoading"
+                  (click)="openCalculator(meal.key)"
+                  >
+                  <app-icon name="plus" [size]="18" />
                   <span class="label">Add Food</span>
                 </button>
               </div>
-              @if (!isLoading && breakfastItems.length > 0) {
+              @if (!isLoading && meal.items.length > 0) {
                 <table class="food-table">
                   <thead>
                     <tr class="header-detail">
@@ -75,28 +73,23 @@
                     </tr>
                   </thead>
                   <tbody>
-                    @for (food of breakfastItems; track food; let i = $index) {
+                    @for (food of meal.items; track food; let i = $index) {
                       <tr
                         class="food-row"
                         >
                         <td class="food-name-col">
-                          @if (isCompact) {
-                            <button
-                              type="button"
-                              class="food-name-btn"
-                              [attr.aria-expanded]="!!food.isExpanded"
-                              (click)="food.isExpanded = !food.isExpanded"
-                              >
-                              {{ food.foodName }}
-                              <span class="expand-icon" aria-hidden="true">{{
-                                food.isExpanded ? "−" : "+"
-                              }}</span>
-                            </button>
-                          } @else {
-                            <span class="food-name-btn food-name-static">{{ food.foodName }}</span>
-                          }
-                          <!-- Wider than 768px the details are already table columns, so there is
-                          nothing to expand: show the name as text, not a button that does nothing. -->
+                          <!-- The meal cards are narrow at every width, so details open from the name. -->
+                          <button
+                            type="button"
+                            class="food-name-btn"
+                            [attr.aria-expanded]="!!food.isExpanded"
+                            (click)="food.isExpanded = !food.isExpanded"
+                            >
+                            {{ food.foodName }}
+                            <span class="expand-icon" aria-hidden="true">{{
+                              food.isExpanded ? "−" : "+"
+                            }}</span>
+                          </button>
                           @if (food.isExpanded) {
                             <div class="mobile-details">
                               <div class="detail-row">
@@ -152,7 +145,7 @@
                               <td class="action-col">
                                 <button
                                   class="delete-btn"
-                                  (click)="deleteFood('breakfast', i)"
+                                  (click)="deleteFood(meal.key, i)"
                                   [attr.aria-label]="'Delete ' + food.foodName"
                                   >
                                   <i class="material-icons" aria-hidden="true">close</i>
@@ -165,13 +158,13 @@
                               Total
                               <span class="oxalate-mobile">
                                 {{
-                                calculateTotalOxalate(breakfastItems) | number : "1.2-2"
+                                calculateTotalOxalate(meal.items) | number : "1.2-2"
                                 }}
                                 mg
                               </span>
                               <span class="soluble-mobile">
                                 {{
-                                calculateTotalSolubleOxalate(breakfastItems)
+                                calculateTotalSolubleOxalate(meal.items)
                                 | number : "1.2-2"
                                 }}
                                 mg
@@ -180,13 +173,13 @@
                             <td class="serving-col hide-mobile"></td>
                             <td class="oxalate-col hide-mobile">
                               {{
-                              calculateTotalOxalate(breakfastItems) | number : "1.2-2"
+                              calculateTotalOxalate(meal.items) | number : "1.2-2"
                               }}
                               mg
                             </td>
                             <td class="soluble-col hide-mobile">
                               {{
-                              calculateTotalSolubleOxalate(breakfastItems)
+                              calculateTotalSolubleOxalate(meal.items)
                               | number : "1.2-2"
                               }}
                               mg
@@ -201,509 +194,14 @@
                         <span class="skeleton-line"></span>
                         <span class="skeleton-line skeleton-line--short"></span>
                       </div>
-                    } @else if (breakfastItems.length === 0) {
+                    } @else if (meal.items.length === 0) {
                       <div class="empty-state">
+                        <app-icon name="utensils" [size]="22" aria-hidden="true" />
                         <span>No foods added yet</span>
                       </div>
                     }
                   </section>
-                  <section class="meal-section">
-                    <div class="title-and-button">
-                      <h2 class="meal-title">Lunch</h2>
-                      <button class="add-button ui-btn ui-btn--tonal" [disabled]="isLoading" (click)="openCalculator('lunch')">
-                        <svg
-                          xmlns="http://www.w3.org/2000/svg"
-                          width="20"
-                          height="20"
-                          viewBox="0 0 20 20"
-                          fill="none"
-                          class="svg-icon"
-                          >
-                          <g
-                            stroke-width="1.5"
-                            stroke-linecap="round"
-                            [attr.stroke]="isDarkTheme ? '#6fcf9c' : '#17603f'"
-                            >
-                            <path d="M10 2v16M2 10h16" />
-                          </g>
-                        </svg>
-                        <span class="label">Add Food</span>
-                      </button>
-                    </div>
-                    @if (!isLoading && lunchItems.length > 0) {
-                      <table class="food-table">
-                        <thead>
-                          <tr class="header-detail">
-                            <th class="food-name-col">Food Name</th>
-                            <th class="serving-col hide-mobile">Serving Info</th>
-                            <th class="oxalate-col hide-mobile">Total Oxalate</th>
-                            <th class="soluble-col hide-mobile">Soluble Oxalate</th>
-                            <th class="action-col">
-                              <span class="sr-only">Actions</span>
-                            </th>
-                          </tr>
-                        </thead>
-                        <tbody>
-                          @for (food of lunchItems; track food; let i = $index) {
-                            <tr
-                              class="food-row"
-                              >
-                              <td class="food-name-col">
-                                @if (isCompact) {
-                                  <button
-                                    type="button"
-                                    class="food-name-btn"
-                                    [attr.aria-expanded]="!!food.isExpanded"
-                                    (click)="food.isExpanded = !food.isExpanded"
-                                    >
-                                    {{ food.foodName }}
-                                    <span class="expand-icon" aria-hidden="true">{{
-                                      food.isExpanded ? "−" : "+"
-                                    }}</span>
-                                  </button>
-                                } @else {
-                                  <span class="food-name-btn food-name-static">{{ food.foodName }}</span>
-                                }
-                                <!-- Wider than 768px the details are already table columns, so there is
-                                nothing to expand: show the name as text, not a button that does nothing. -->
-                                @if (food.isExpanded) {
-                                  <div class="mobile-details">
-                                    <div class="detail-row">
-                                      <span class="detail-label">Serving:</span>
-                                      <span
-                                        >{{ food.numberOfServings }} {{ food.servingSize }}
-                                        {{
-                                        food.numberOfServings <= 1 ? "serving" : "servings"
-                                        }}</span
-                                        >
-                                      </div>
-                                      <div class="detail-row">
-                                        <span class="detail-label">Total Oxalate:</span>
-                                        <span
-                                          >{{
-                                          food.oxalatePerServing * food.numberOfServings
-                                          | number : "1.2-2"
-                                          }}
-                                          mg</span
-                                          >
-                                        </div>
-                                        <div class="detail-row">
-                                          <span class="detail-label">Soluble Oxalate:</span>
-                                          <span
-                                            >{{
-                                            food.solubleOxalatePerServing *
-                                            food.numberOfServings | number : "1.2-2"
-                                            }}
-                                            mg</span
-                                            >
-                                          </div>
-                                        </div>
-                                      }
-                                    </td>
-                                    <td class="serving-col hide-mobile">
-                                      {{ food.numberOfServings }} {{ food.servingSize }}
-                                      {{ food.numberOfServings <= 1 ? "serving" : "servings" }}
-                                    </td>
-                                    <td class="oxalate-col hide-mobile">
-                                      {{
-                                      food.oxalatePerServing * food.numberOfServings
-                                      | number : "1.2-2"
-                                      }}
-                                      mg
-                                    </td>
-                                    <td class="soluble-col hide-mobile">
-                                      {{
-                                      food.solubleOxalatePerServing * food.numberOfServings
-                                      | number : "1.2-2"
-                                      }}
-                                      mg
-                                    </td>
-                                    <td class="action-col">
-                                      <button
-                                        class="delete-btn"
-                                        (click)="deleteFood('lunch', i)"
-                                        [attr.aria-label]="'Delete ' + food.foodName"
-                                        >
-                                        <i class="material-icons" aria-hidden="true">close</i>
-                                      </button>
-                                    </td>
-                                  </tr>
-                                }
-                                <tr class="total-row">
-                                  <td class="food-name-col">
-                                    Total
-                                    <span class="oxalate-mobile">
-                                      {{ calculateTotalOxalate(lunchItems) | number : "1.2-2" }}
-                                      mg
-                                    </span>
-                                    <span class="soluble-mobile">
-                                      {{
-                                      calculateTotalSolubleOxalate(lunchItems)
-                                      | number : "1.2-2"
-                                      }}
-                                      mg
-                                    </span>
-                                  </td>
-                                  <td class="serving-col hide-mobile"></td>
-                                  <td class="oxalate-col hide-mobile">
-                                    {{ calculateTotalOxalate(lunchItems) | number : "1.2-2" }}
-                                    mg
-                                  </td>
-                                  <td class="soluble-col hide-mobile">
-                                    {{
-                                    calculateTotalSolubleOxalate(lunchItems)
-                                    | number : "1.2-2"
-                                    }}
-                                    mg
-                                  </td>
-                                  <td class="action-col"></td>
-                                </tr>
-                              </tbody>
-                            </table>
-                          }
-                          @if (isLoading) {
-                      <div class="meal-skeleton" aria-hidden="true">
-                        <span class="skeleton-line"></span>
-                        <span class="skeleton-line skeleton-line--short"></span>
-                      </div>
-                    } @else if (lunchItems.length === 0) {
-                            <div class="empty-state">
-                              <span>No foods added yet</span>
-                            </div>
-                          }
-                        </section>
-                        <section class="meal-section">
-                          <div class="title-and-button">
-                            <h2 class="meal-title">Dinner</h2>
-                            <button class="add-button ui-btn ui-btn--tonal" [disabled]="isLoading" (click)="openCalculator('dinner')">
-                              <svg
-                                xmlns="http://www.w3.org/2000/svg"
-                                width="20"
-                                height="20"
-                                viewBox="0 0 20 20"
-                                fill="none"
-                                class="svg-icon"
-                                >
-                                <g
-                                  stroke-width="1.5"
-                                  stroke-linecap="round"
-                                  [attr.stroke]="isDarkTheme ? '#6fcf9c' : '#17603f'"
-                                  >
-                                  <path d="M10 2v16M2 10h16" />
-                                </g>
-                              </svg>
-                              <span class="label">Add Food</span>
-                            </button>
-                          </div>
-                          @if (!isLoading && dinnerItems.length > 0) {
-                            <table class="food-table">
-                              <thead>
-                                <tr class="header-detail">
-                                  <th class="food-name-col">Food Name</th>
-                                  <th class="serving-col hide-mobile">Serving Info</th>
-                                  <th class="oxalate-col hide-mobile">Total Oxalate</th>
-                                  <th class="soluble-col hide-mobile">Soluble Oxalate</th>
-                                  <th class="action-col">
-                                    <span class="sr-only">Actions</span>
-                                  </th>
-                                </tr>
-                              </thead>
-                              <tbody>
-                                @for (food of dinnerItems; track food; let i = $index) {
-                                  <tr
-                                    class="food-row"
-                                    >
-                                    <td class="food-name-col">
-                                      @if (isCompact) {
-                                        <button
-                                          type="button"
-                                          class="food-name-btn"
-                                          [attr.aria-expanded]="!!food.isExpanded"
-                                          (click)="food.isExpanded = !food.isExpanded"
-                                          >
-                                          {{ food.foodName }}
-                                          <span class="expand-icon" aria-hidden="true">{{
-                                            food.isExpanded ? "−" : "+"
-                                          }}</span>
-                                        </button>
-                                      } @else {
-                                        <span class="food-name-btn food-name-static">{{ food.foodName }}</span>
-                                      }
-                                      <!-- Wider than 768px the details are already table columns, so there is
-                                      nothing to expand: show the name as text, not a button that does nothing. -->
-                                      @if (food.isExpanded) {
-                                        <div class="mobile-details">
-                                          <div class="detail-row">
-                                            <span class="detail-label">Serving:</span>
-                                            <span
-                                              >{{ food.numberOfServings }} {{ food.servingSize }}
-                                              {{
-                                              food.numberOfServings <= 1 ? "serving" : "servings"
-                                              }}</span
-                                              >
-                                            </div>
-                                            <div class="detail-row">
-                                              <span class="detail-label">Total Oxalate:</span>
-                                              <span
-                                                >{{
-                                                food.oxalatePerServing * food.numberOfServings
-                                                | number : "1.2-2"
-                                                }}
-                                                mg</span
-                                                >
-                                              </div>
-                                              <div class="detail-row">
-                                                <span class="detail-label">Soluble Oxalate:</span>
-                                                <span
-                                                  >{{
-                                                  food.solubleOxalatePerServing *
-                                                  food.numberOfServings | number : "1.2-2"
-                                                  }}
-                                                  mg</span
-                                                  >
-                                                </div>
-                                              </div>
-                                            }
-                                          </td>
-                                          <td class="serving-col hide-mobile">
-                                            {{ food.numberOfServings }} {{ food.servingSize }}
-                                            {{ food.numberOfServings <= 1 ? "serving" : "servings" }}
-                                          </td>
-                                          <td class="oxalate-col hide-mobile">
-                                            {{
-                                            food.oxalatePerServing * food.numberOfServings
-                                            | number : "1.2-2"
-                                            }}
-                                            mg
-                                          </td>
-                                          <td class="soluble-col hide-mobile">
-                                            {{
-                                            food.solubleOxalatePerServing * food.numberOfServings
-                                            | number : "1.2-2"
-                                            }}
-                                            mg
-                                          </td>
-                                          <td class="action-col">
-                                            <button
-                                              class="delete-btn"
-                                              (click)="deleteFood('dinner', i)"
-                                              [attr.aria-label]="'Delete ' + food.foodName"
-                                              >
-                                              <i class="material-icons" aria-hidden="true">close</i>
-                                            </button>
-                                          </td>
-                                        </tr>
-                                      }
-                                      <tr class="total-row">
-                                        <td class="food-name-col">
-                                          Total
-                                          <span class="oxalate-mobile">
-                                            {{
-                                            calculateTotalOxalate(dinnerItems) | number : "1.2-2"
-                                            }}
-                                            mg
-                                          </span>
-                                          <span class="soluble-mobile">
-                                            {{
-                                            calculateTotalSolubleOxalate(dinnerItems)
-                                            | number : "1.2-2"
-                                            }}
-                                            mg
-                                          </span>
-                                        </td>
-                                        <td class="serving-col hide-mobile"></td>
-                                        <td class="oxalate-col hide-mobile">
-                                          {{ calculateTotalOxalate(dinnerItems) | number : "1.2-2" }}
-                                          mg
-                                        </td>
-                                        <td class="soluble-col hide-mobile">
-                                          {{
-                                          calculateTotalSolubleOxalate(dinnerItems)
-                                          | number : "1.2-2"
-                                          }}
-                                          mg
-                                        </td>
-                                        <td class="action-col"></td>
-                                      </tr>
-                                    </tbody>
-                                  </table>
-                                }
-                                @if (isLoading) {
-                      <div class="meal-skeleton" aria-hidden="true">
-                        <span class="skeleton-line"></span>
-                        <span class="skeleton-line skeleton-line--short"></span>
-                      </div>
-                    } @else if (dinnerItems.length === 0) {
-                                  <div class="empty-state">
-                                    <span>No foods added yet</span>
-                                  </div>
-                                }
-                              </section>
-                              <section class="meal-section">
-                                <div class="title-and-button">
-                                  <h2 class="meal-title">Snacks</h2>
-                                  <button class="add-button ui-btn ui-btn--tonal" [disabled]="isLoading" (click)="openCalculator('snacks')">
-                                    <svg
-                                      xmlns="http://www.w3.org/2000/svg"
-                                      width="20"
-                                      height="20"
-                                      viewBox="0 0 20 20"
-                                      fill="none"
-                                      class="svg-icon"
-                                      >
-                                      <g
-                                        stroke-width="1.5"
-                                        stroke-linecap="round"
-                                        [attr.stroke]="isDarkTheme ? '#6fcf9c' : '#17603f'"
-                                        >
-                                        <path d="M10 2v16M2 10h16" />
-                                      </g>
-                                    </svg>
-                                    <span class="label">Add Food</span>
-                                  </button>
-                                </div>
-                                @if (!isLoading && snackItems.length > 0) {
-                                  <table class="food-table">
-                                    <thead>
-                                      <tr class="header-detail">
-                                        <th class="food-name-col">Food Name</th>
-                                        <th class="serving-col hide-mobile">Serving Info</th>
-                                        <th class="oxalate-col hide-mobile">Total Oxalate</th>
-                                        <th class="soluble-col hide-mobile">Soluble Oxalate</th>
-                                        <th class="action-col">
-                                          <span class="sr-only">Actions</span>
-                                        </th>
-                                      </tr>
-                                    </thead>
-                                    <tbody>
-                                      @for (food of snackItems; track food; let i = $index) {
-                                        <tr
-                                          class="food-row"
-                                          >
-                                          <td class="food-name-col">
-                                            @if (isCompact) {
-                                              <button
-                                                type="button"
-                                                class="food-name-btn"
-                                                [attr.aria-expanded]="!!food.isExpanded"
-                                                (click)="food.isExpanded = !food.isExpanded"
-                                                >
-                                                {{ food.foodName }}
-                                                <span class="expand-icon" aria-hidden="true">{{
-                                                  food.isExpanded ? "−" : "+"
-                                                }}</span>
-                                              </button>
-                                            } @else {
-                                              <span class="food-name-btn food-name-static">{{ food.foodName }}</span>
-                                            }
-                                            <!-- Wider than 768px the details are already table columns, so there is
-                                            nothing to expand: show the name as text, not a button that does nothing. -->
-                                            @if (food.isExpanded) {
-                                              <div class="mobile-details">
-                                                <div class="detail-row">
-                                                  <span class="detail-label">Serving:</span>
-                                                  <span
-                                                    >{{ food.numberOfServings }} {{ food.servingSize }}
-                                                    {{
-                                                    food.numberOfServings <= 1 ? "serving" : "servings"
-                                                    }}</span
-                                                    >
-                                                  </div>
-                                                  <div class="detail-row">
-                                                    <span class="detail-label">Total Oxalate:</span>
-                                                    <span
-                                                      >{{
-                                                      food.oxalatePerServing * food.numberOfServings
-                                                      | number : "1.2-2"
-                                                      }}
-                                                      mg</span
-                                                      >
-                                                    </div>
-                                                    <div class="detail-row">
-                                                      <span class="detail-label">Soluble Oxalate:</span>
-                                                      <span
-                                                        >{{
-                                                        food.solubleOxalatePerServing *
-                                                        food.numberOfServings | number : "1.2-2"
-                                                        }}
-                                                        mg</span
-                                                        >
-                                                      </div>
-                                                    </div>
-                                                  }
-                                                </td>
-                                                <td class="serving-col hide-mobile">
-                                                  {{ food.numberOfServings }} {{ food.servingSize }}
-                                                  {{ food.numberOfServings <= 1 ? "serving" : "servings" }}
-                                                </td>
-                                                <td class="oxalate-col hide-mobile">
-                                                  {{
-                                                  food.oxalatePerServing * food.numberOfServings
-                                                  | number : "1.2-2"
-                                                  }}
-                                                  mg
-                                                </td>
-                                                <td class="soluble-col hide-mobile">
-                                                  {{
-                                                  food.solubleOxalatePerServing * food.numberOfServings
-                                                  | number : "1.2-2"
-                                                  }}
-                                                  mg
-                                                </td>
-                                                <td class="action-col">
-                                                  <button
-                                                    class="delete-btn"
-                                                    (click)="deleteFood('snacks', i)"
-                                                    [attr.aria-label]="'Delete ' + food.foodName"
-                                                    >
-                                                    <i class="material-icons" aria-hidden="true">close</i>
-                                                  </button>
-                                                </td>
-                                              </tr>
-                                            }
-                                            <tr class="total-row">
-                                              <td class="food-name-col">
-                                                Total
-                                                <span class="oxalate-mobile">
-                                                  {{ calculateTotalOxalate(snackItems) | number : "1.2-2" }}
-                                                  mg
-                                                </span>
-                                                <span class="soluble-mobile">
-                                                  {{
-                                                  calculateTotalSolubleOxalate(snackItems)
-                                                  | number : "1.2-2"
-                                                  }}
-                                                  mg
-                                                </span>
-                                              </td>
-                                              <td class="serving-col hide-mobile"></td>
-                                              <td class="oxalate-col hide-mobile">
-                                                {{ calculateTotalOxalate(snackItems) | number : "1.2-2" }}
-                                                mg
-                                              </td>
-                                              <td class="soluble-col hide-mobile">
-                                                {{
-                                                calculateTotalSolubleOxalate(snackItems)
-                                                | number : "1.2-2"
-                                                }}
-                                                mg
-                                              </td>
-                                              <td class="action-col"></td>
-                                            </tr>
-                                          </tbody>
-                                        </table>
-                                      }
-                                      @if (isLoading) {
-                      <div class="meal-skeleton" aria-hidden="true">
-                        <span class="skeleton-line"></span>
-                        <span class="skeleton-line skeleton-line--short"></span>
-                      </div>
-                    } @else if (snackItems.length === 0) {
-                                        <div class="empty-state">
-                                          <span>No foods added yet</span>
-                                        </div>
-                                      }
-                                    </section>
+            }
                                   </div>
                               </div>
 
