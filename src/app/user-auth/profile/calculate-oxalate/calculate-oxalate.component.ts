@@ -22,6 +22,7 @@ import {
 import { ThemeService } from 'src/app/shared/services/theme.service';
 import { AlertService } from 'src/app/shared/alert-service/alert.service';
 import { AlertComponent } from 'src/app/landing-page/dialog-service/oxalate/shared/alert/alert.component';
+import { IconComponent } from 'src/app/shared/components/icon/icon.component';
 
 @Component({
   selector: 'app-calculate-oxalate',
@@ -31,6 +32,7 @@ import { AlertComponent } from 'src/app/landing-page/dialog-service/oxalate/shar
     SearchSectionComponent,
     ServingPanelComponent,
     AlertComponent,
+    IconComponent,
   ],
   templateUrl: './calculate-oxalate.component.html',
   styleUrls: ['./calculate-oxalate.component.css'],

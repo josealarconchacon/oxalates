@@ -103,6 +103,30 @@ describe('CalculateOxalateComponent', () => {
     });
   });
 
+  describe('Log Food button', () => {
+    const button = () =>
+      fixture.nativeElement.querySelector('.action-button') as HTMLButtonElement;
+
+    beforeEach(() => {
+      component.mealType = 'breakfast';
+      fixture.detectChanges();
+    });
+
+    it('is disabled, and says so, until a food is picked', () => {
+      expect(button().textContent!.trim()).toBe('Log Food');
+      expect(button().disabled).toBeTrue();
+      expect(button().getAttribute('aria-disabled')).toBe('true');
+    });
+
+    it('turns on once a food with a serving size is picked', () => {
+      component.foodName = 'Almonds';
+      component.servingSize = '1';
+      fixture.detectChanges();
+      expect(button().disabled).toBeFalse();
+      expect(button().getAttribute('aria-disabled')).toBe('false');
+    });
+  });
+
   describe('clearSearch', () => {
     it('forgets the picked food so it cannot be logged', () => {
       component.foodName = 'Almonds';

@@ -43,11 +43,13 @@
 
         <div class="button-container">
           <button
-            class="action-button calculate ui-btn ui-btn--primary"
+            type="button"
+            class="action-button calculate"
             [disabled]="isCalculating || !foodName || !servingSize"
+            [attr.aria-disabled]="isCalculating || !foodName || !servingSize"
             (click)="mealType ? logMeal() : calculateOxalate()"
             >
-            <i class="material-icons" aria-hidden="true">{{ mealType ? "add" : "calculate" }}</i>
+            <app-icon [name]="mealType ? 'plus' : 'calculator'" [size]="18" />
             {{
             isCalculating
             ? "Calculating..."
