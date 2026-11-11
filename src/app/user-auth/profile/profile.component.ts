@@ -92,6 +92,14 @@ export class ProfileComponent implements OnInit {
     this.isChangePasswordVisible = !this.isChangePasswordVisible;
   }
 
+  /** "a@b.com" → { name: "a", domain: "@b.com" }, so the card can wrap at the @. */
+  splitEmail(email: string): { name: string; domain: string } {
+    const at = email.lastIndexOf('@');
+    return at > 0
+      ? { name: email.slice(0, at), domain: email.slice(at) }
+      : { name: email, domain: '' };
+  }
+
   /** Falls back to the default avatar when the stored photo can't be shown. */
   onAvatarError = showDefaultAvatar;
 

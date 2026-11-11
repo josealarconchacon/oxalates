@@ -46,7 +46,9 @@
             </h2>
             <p class="profile-email">
               <app-icon name="mail" [size]="16" />
-              <span>{{ userProfile?.email || "username@example.com" }}</span>
+              <!-- <wbr> lets a long address wrap just before the @ -->
+              @let email = splitEmail(userProfile?.email || "username@example.com");
+              <span>{{ email.name }}<wbr />{{ email.domain }}</span>
             </p>
           </div>
         </div>

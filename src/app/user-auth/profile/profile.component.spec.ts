@@ -40,4 +40,29 @@ describe('ProfileComponent', () => {
   it('should create', () => {
     expect(component).toBeTruthy();
   });
+
+  describe('splitEmail', () => {
+    it('splits just before the @', () => {
+      expect(component.splitEmail('jose.chacon@gmail.com')).toEqual({
+        name: 'jose.chacon',
+        domain: '@gmail.com',
+      });
+    });
+
+    it('keeps text without an @ whole', () => {
+      expect(component.splitEmail('username')).toEqual({
+        name: 'username',
+        domain: '',
+      });
+    });
+
+    it('shows the same address in the card', () => {
+      component.userProfile = { email: 'jose.chacon@gmail.com' };
+      fixture.detectChanges();
+      const span = fixture.nativeElement.querySelector('.profile-email span');
+      expect(span.textContent.trim()).toBe('jose.chacon@gmail.com');
+      expect(span.querySelector('wbr')).toBeTruthy();
+    });
+  });
 });
+
