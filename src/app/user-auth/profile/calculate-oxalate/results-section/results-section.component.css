@@ -109,6 +109,7 @@
 
 @media (max-width: 640px) {
   .results-container {
+    margin-bottom: 16px;
     padding: 18px;
   }
 

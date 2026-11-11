@@ -91,6 +91,12 @@
   color: var(--color-ink);
 }
 
+@media (max-width: 640px) {
+  .date-switcher {
+    margin-bottom: 16px;
+  }
+}
+
 .date-input {
   position: absolute;
   width: 1px;

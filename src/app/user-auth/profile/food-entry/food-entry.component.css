@@ -78,6 +78,13 @@
   gap: 16px;
 }
 
+/* Phones: one column, 16px page padding (the meal list is already one column). */
+@media (max-width: 640px) {
+  .content-area {
+    padding: 16px;
+  }
+}
+
 /* iPad: date pill and Breakdown full width (its tiles side by side), then
    the meals in a 2×2 grid. */
 @media (min-width: 641px) and (max-width: 1099.98px) {
