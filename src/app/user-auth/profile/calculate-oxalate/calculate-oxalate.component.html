@@ -29,6 +29,7 @@
           [showSuggestions]="showSuggestions"
           (selectFood)="selectSuggestedFood($event)"
           (clear)="clearSearch()"
+          (dismiss)="clearSuggestions()"
           [isDarkTheme]="isDarkTheme"
         ></app-search-section>
 
