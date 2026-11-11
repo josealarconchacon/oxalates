@@ -121,9 +121,9 @@
 }
 
 .detail-view {
-  background-color: var(--background-color);
-  border-radius: var(--radius-xl);
-  border: 1px solid var(--gray-100);
+  background-color: var(--color-surface);
+  border: 1px solid var(--color-line);
+  border-radius: 22px;
 }
 
 /* No food selected yet: hide the empty card instead of showing a blank box. */
@@ -260,36 +260,76 @@
   color: var(--si-danger);
 }
 
-.detail-item {
+/* Two big number tiles side by side. */
+.stat-tiles {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(10rem, 1fr));
+  gap: var(--spacing-3);
+  margin: 0 0 var(--spacing-5, 1.25rem);
+}
+
+/* Column so the numbers line up even when one label wraps. */
+.stat-tile {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
   padding: var(--spacing-4);
-  border-radius: var(--radius-lg);
-  background-color: var(--gray-50);
-  margin-bottom: var(--spacing-3);
-  transition: all var(--transition-base);
+  border-radius: 16px;
+  background: var(--color-bg);
 }
 
-.detail-item:hover {
-  background-color: var(--gray-100);
+.stat-label {
+  font-size: 0.8125rem;
+  line-height: 1.35;
+  color: var(--color-muted);
 }
 
-.detail-item:last-child {
-  margin-bottom: 0;
+.stat-value {
+  margin: var(--spacing-2) 0 0;
+  font-family: var(--font-family-display);
+  font-size: 2.125rem;
+  font-weight: 700;
+  line-height: 1.1;
+  color: var(--color-ink);
+}
+
+.unit {
+  white-space: nowrap;
+  font-family: var(--font-family-sans);
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--color-muted);
+}
+
+/* Label | value rows with thin lines between them. */
+.detail-list {
+  margin: 0;
+  border-top: 1px solid var(--color-line);
+}
+
+.detail-row {
+  display: grid;
+  grid-template-columns: minmax(7rem, 40%) 1fr;
+  gap: var(--spacing-4);
+  padding: 12px 0;
+  border-bottom: 1px solid var(--color-line);
+}
+
+.detail-row:last-child {
+  border-bottom: 0;
 }
 
 .detail-key {
-  font-size: var(--font-size-xs);
-  font-weight: var(--font-weight-medium);
-  color: var(--gray-600);
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-  margin-bottom: var(--spacing-1);
+  font-size: 0.875rem;
+  color: var(--color-muted);
 }
 
 .detail-value {
-  font-size: var(--font-size-sm);
-  color: var(--gray-900);
-  line-height: var(--line-height-normal);
-  word-break: break-word;
+  margin: 0;
+  font-size: 0.9375rem;
+  font-weight: 500;
+  color: var(--color-ink);
+  overflow-wrap: break-word;
 }
 
 .no-items {
@@ -340,13 +380,16 @@
   }
 }
 
+@media (max-width: 640px) {
+  /* Keeps "48.80 (mg)" on one line in the narrow phone tiles. */
+  .stat-value {
+    font-size: 1.75rem;
+  }
+}
+
 @media (max-width: 768px) {
   .item-details {
     padding: var(--spacing-4);
-  }
-
-  .detail-item {
-    padding: var(--spacing-3);
   }
 
   .no-items {
@@ -364,22 +407,6 @@
     transition-duration: 0.01ms !important;
     scroll-behavior: auto !important;
   }
-}
-
-:host-context(.dark-theme) .detail-item {
-  background-color: var(--card-background);
-}
-
-:host-context(.dark-theme) .detail-item:hover {
-  background-color: var(--hover-background);
-}
-
-:host-context(.dark-theme) .detail-key {
-  color: var(--text-secondary);
-}
-
-:host-context(.dark-theme) .detail-value {
-  color: var(--text-color);
 }
 
 :host-context(.dark-theme) .no-items {

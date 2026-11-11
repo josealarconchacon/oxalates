@@ -5,6 +5,35 @@ import { Oxalate } from 'src/app/landing-page/model/oxalate';
 import { OxalateService } from 'src/app/landing-page/dialog-service/service/oxalate.service';
 import { AuthService } from '../../service/auth-service.service';
 
+/** One label/value pair shown in the detail card. */
+export interface DetailField {
+  key: string;
+  label: string;
+  value: unknown;
+  isMg: boolean;
+}
+
+/** Shown as the two big number tiles, when the food has them. */
+const TILE_KEYS = [
+  'total_oxalate_mg_per_100g',
+  'calc_soluble_mg_oxalate_per_serving',
+];
+
+/** Order of the label/value list; any other field follows, A to Z. */
+const FIELD_ORDER = [
+  'item',
+  'category',
+  'level',
+  'soluble_oxalate',
+  'serving_size',
+  'serving_g',
+  'calc_oxalate_per_serving',
+  'total_soluble_oxalate_mg_per_100g',
+];
+
+/** Not listed as fields: the id, and Calc Level (it's in the header). */
+const HIDDEN_KEYS = ['id', 'calc_level'];
+
 export type LevelTone = 'high' | 'medium' | 'low' | 'very-low' | 'neutral';
 
 @Component({
@@ -135,6 +164,43 @@ export class SaveItemsComponent implements OnInit {
       'calc_soluble_mg_oxalate_per_serving',
     ];
     return measurementKeys.includes(key);
+  }
+
+  /** The big number tiles this food has (none, one or both). */
+  statTiles(oxalate: object): DetailField[] {
+    return TILE_KEYS.filter((key) => this.hasValue(oxalate, key)).map((key) =>
+      this.toField(oxalate, key)
+    );
+  }
+
+  /** Every other field the food has, in a fixed order. Nothing is dropped. */
+  detailFields(oxalate: object): DetailField[] {
+    const rank = (key: string) => {
+      const i = FIELD_ORDER.indexOf(key);
+      return i === -1 ? FIELD_ORDER.length : i;
+    };
+    return Object.keys(oxalate)
+      .filter(
+        (key) =>
+          !HIDDEN_KEYS.includes(key) &&
+          !TILE_KEYS.includes(key) &&
+          this.hasValue(oxalate, key)
+      )
+      .sort((a, b) => rank(a) - rank(b) || a.localeCompare(b))
+      .map((key) => this.toField(oxalate, key));
+  }
+
+  private hasValue(oxalate: object, key: string): boolean {
+    return !!(oxalate as Record<string, unknown>)[key];
+  }
+
+  private toField(oxalate: object, key: string): DetailField {
+    return {
+      key,
+      label: this.formatKey(key),
+      value: (oxalate as Record<string, unknown>)[key],
+      isMg: this.isMeasurementKey(key),
+    };
   }
 
   /** Which badge color a Calc Level gets; same groups as the search page. */

@@ -27,23 +27,9 @@
                     <ng-container
                       *ngTemplateOutlet="detailHeader; context: { $implicit: oxalate }"
                     ></ng-container>
-                    @for (detail of oxalate | keyvalue; track detail) {
-                      <div>
-                        @if (detail.key !== 'id' && detail.key !== 'calc_level' && detail.value) {
-                          <p
-                            class="detail-item"
-                            >
-                            <span class="detail-key">{{ formatKey(detail.key) }}:</span>
-                            <span class="detail-value">
-                              {{ detail.value }}
-                              @if (isMeasurementKey(detail.key)) {
-                                <span> (mg)</span>
-                              }
-                            </span>
-                          </p>
-                        }
-                      </div>
-                    }
+                    <ng-container
+                      *ngTemplateOutlet="detailBody; context: { $implicit: oxalate }"
+                    ></ng-container>
                   </div>
                 </div>
               }
@@ -71,23 +57,9 @@
                   <ng-container
                     *ngTemplateOutlet="detailHeader; context: { $implicit: oxalate }"
                   ></ng-container>
-                  @for (detail of oxalate | keyvalue; track detail) {
-                    <div>
-                      @if (detail.key !== 'id' && detail.key !== 'calc_level' && detail.value) {
-                        <p
-                          class="detail-item"
-                          >
-                          <span class="detail-key">{{ formatKey(detail.key) }}:</span>
-                          <span class="detail-value">
-                            {{ detail.value }}
-                            @if (isMeasurementKey(detail.key)) {
-                              <span> (mg)</span>
-                            }
-                          </span>
-                        </p>
-                      }
-                    </div>
-                  }
+                  <ng-container
+                    *ngTemplateOutlet="detailBody; context: { $implicit: oxalate }"
+                  ></ng-container>
                 </div>
               }
             </div>
@@ -157,4 +129,32 @@ trash button that asks for confirmation inline before deleting. -->
       ></ng-container>
     </div>
   </div>
+</ng-template>
+
+<!-- The big number tiles, then every other field as label | value rows. -->
+<ng-template #detailBody let-oxalate>
+  @if (statTiles(oxalate); as tiles) {
+    @if (tiles.length) {
+      <dl class="stat-tiles">
+        @for (tile of tiles; track tile.key) {
+          <div class="stat-tile">
+            <dt class="stat-label">{{ tile.label }}</dt>
+            <dd class="stat-value">
+              {{ tile.value }}<span class="unit"> (mg)</span>
+            </dd>
+          </div>
+        }
+      </dl>
+    }
+  }
+  <dl class="detail-list">
+    @for (field of detailFields(oxalate); track field.key) {
+      <div class="detail-row">
+        <dt class="detail-key">{{ field.label }}</dt>
+        <dd class="detail-value">
+          {{ field.value }}@if (field.isMg) {<span class="unit"> (mg)</span>}
+        </dd>
+      </div>
+    }
+  </dl>
 </ng-template>

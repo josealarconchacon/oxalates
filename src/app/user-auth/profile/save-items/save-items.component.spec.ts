@@ -126,8 +126,8 @@ describe('SaveItemsComponent', () => {
       const keys = Array.from(detail().querySelectorAll('.detail-key')).map(
         (k) => k.textContent?.trim()
       );
-      expect(keys).not.toContain('Calc Level:');
-      expect(keys).toContain('Category:');
+      expect(keys).not.toContain('Calc Level');
+      expect(keys).toContain('Category');
     });
 
     it('keeps the delete button label', () => {
@@ -150,6 +150,58 @@ describe('SaveItemsComponent', () => {
 
     it('gives anything else a neutral badge', () => {
       expect(component.levelTone('50.90')).toBe('neutral');
+    });
+  });
+
+  describe('stat tiles and field list', () => {
+    const food = {
+      id: 'x',
+      soluble_oxalate: '0',
+      serving_g: '1.50',
+      total_oxalate_mg_per_100g: '48.80',
+      item: 'Pero Coffee Substitute',
+      calc_level: 'Very Low',
+      level: '1',
+      calc_soluble_mg_oxalate_per_serving: '0.73',
+      category: 'Beverages',
+      zz_extra: 'kept',
+    };
+
+    it('puts the two mg totals in tiles', () => {
+      expect(component.statTiles(food).map((t) => [t.label, t.value])).toEqual([
+        ['Total Oxalate Mg Per 100g', '48.80'],
+        ['Calc Soluble Mg Oxalate Per Serving', '0.73'],
+      ]);
+    });
+
+    it('skips a tile the food has no value for', () => {
+      const { total_oxalate_mg_per_100g, ...rest } = food;
+      expect(component.statTiles(rest).map((t) => t.key)).toEqual([
+        'calc_soluble_mg_oxalate_per_serving',
+      ]);
+    });
+
+    it('lists every other field in a fixed order, unknown ones last', () => {
+      expect(component.detailFields(food).map((f) => f.key)).toEqual([
+        'item',
+        'category',
+        'level',
+        'soluble_oxalate',
+        'serving_g',
+        'zz_extra',
+      ]);
+    });
+
+    it('keeps the values exactly as saved', () => {
+      const values = component.detailFields(food).map((f) => f.value);
+      expect(values).toEqual([
+        'Pero Coffee Substitute',
+        'Beverages',
+        '1',
+        '0',
+        '1.50',
+        'kept',
+      ]);
     });
   });
 });
