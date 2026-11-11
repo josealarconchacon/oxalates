@@ -38,48 +38,13 @@
 
   @if (!isLoading && showSearchPrompt()) {
     <div class="preview-section" #resultsList>
-      <div class="results-list">
-        @for (oxalate of browseItems; track oxalate; let last = $last) {
-          <div
-            class="result-item"
-            [class.result-item-last]="last"
-            appClickable
-            (click)="viewMore(oxalate, $event)"
-            >
-            <div class="result-left">
-              <p class="result-category-breadcrumb">{{ oxalate.category }}</p>
-              <h2 class="result-title">{{ oxalate.item }}</h2>
-              <p class="result-meta-line">
-                Oxalate per serving: {{ withUnit(oxalate.calc_oxalate_per_serving) }}
-                <span class="meta-sep">·</span>
-                Soluble: {{ withUnit(oxalate.calc_soluble_mg_oxalate_per_serving) }}
-                @if (oxalate.serving_size) {
-                  <span class="meta-sep">·</span>
-                }
-                @if (oxalate.serving_size) {
-                  <span class="serving-chip">{{ oxalate.serving_size }}</span>
-                }
-                @if (oxalate.calc_level) {
-                  <span class="meta-sep level-badge-inline-sep">·</span>
-                }
-                @if (oxalate.calc_level) {
-                  <span
-                    class="level-badge level-badge-inline"
-                    [class.badge-high]="oxalate.calc_level === 'High' || oxalate.calc_level === 'Very High' || oxalate.calc_level === 'Extremely High'"
-                    [class.badge-medium]="oxalate.calc_level === 'Medium'"
-                    [class.badge-low]="oxalate.calc_level === 'Low'"
-                    [class.badge-very-low]="oxalate.calc_level === 'Very Low'"
-                  ><span class="level-dot" aria-hidden="true"></span>{{ oxalate.calc_level }}</span>
-                }
-              </p>
-            </div>
-            <div class="result-right">
-              <span class="result-oxalate-value">{{ withUnit(oxalate.calc_oxalate_per_serving) }} per serving</span>
-              <span class="result-soluble-value">Soluble: {{ withUnit(oxalate.calc_soluble_mg_oxalate_per_serving) }}</span>
-            </div>
-          </div>
+      <ul class="results-list">
+        @for (oxalate of browseItems; track oxalate) {
+          <ng-container
+            *ngTemplateOutlet="resultRow; context: { $implicit: oxalate }"
+          ></ng-container>
         }
-      </div>
+      </ul>
     </div>
   }
 
@@ -111,48 +76,13 @@
           }
         </div>
       }
-      <div class="results-list">
-        @for (oxalate of displayedOxalates; track oxalate; let last = $last) {
-          <div
-            class="result-item"
-            [class.result-item-last]="last"
-            appClickable
-            (click)="viewMore(oxalate, $event)"
-            >
-            <div class="result-left">
-              <p class="result-category-breadcrumb">{{ oxalate.category }}</p>
-              <h2 class="result-title">{{ oxalate.item }}</h2>
-              <p class="result-meta-line">
-                Oxalate per serving: {{ withUnit(oxalate.calc_oxalate_per_serving) }}
-                <span class="meta-sep">·</span>
-                Soluble: {{ withUnit(oxalate.calc_soluble_mg_oxalate_per_serving) }}
-                @if (oxalate.serving_size) {
-                  <span class="meta-sep">·</span>
-                }
-                @if (oxalate.serving_size) {
-                  <span class="serving-chip">{{ oxalate.serving_size }}</span>
-                }
-                @if (oxalate.calc_level) {
-                  <span class="meta-sep level-badge-inline-sep">·</span>
-                }
-                @if (oxalate.calc_level) {
-                  <span
-                    class="level-badge level-badge-inline"
-                    [class.badge-high]="oxalate.calc_level === 'High' || oxalate.calc_level === 'Very High' || oxalate.calc_level === 'Extremely High'"
-                    [class.badge-medium]="oxalate.calc_level === 'Medium'"
-                    [class.badge-low]="oxalate.calc_level === 'Low'"
-                    [class.badge-very-low]="oxalate.calc_level === 'Very Low'"
-                  ><span class="level-dot" aria-hidden="true"></span>{{ oxalate.calc_level }}</span>
-                }
-              </p>
-            </div>
-            <div class="result-right">
-              <span class="result-oxalate-value">{{ withUnit(oxalate.calc_oxalate_per_serving) }} per serving</span>
-              <span class="result-soluble-value">Soluble: {{ withUnit(oxalate.calc_soluble_mg_oxalate_per_serving) }}</span>
-            </div>
-          </div>
+      <ul class="results-list">
+        @for (oxalate of displayedOxalates; track oxalate) {
+          <ng-container
+            *ngTemplateOutlet="resultRow; context: { $implicit: oxalate }"
+          ></ng-container>
         }
-      </div>
+      </ul>
     </div>
   }
 
@@ -214,3 +144,44 @@
     </div>
   }
 </div>
+
+<!-- One result row, used by both the default list and the search results.
+     The food name is the button (so screen readers hear just the name); its
+     ::after covers the whole row, so clicking anywhere on it opens the same
+     details popup as before. -->
+<ng-template #resultRow let-oxalate>
+  <li class="result-item">
+    <div class="result-left">
+      <p class="result-category-breadcrumb">{{ oxalate.category }}</p>
+      <h2 class="result-title">
+        <button
+          type="button"
+          class="result-button"
+          (click)="viewMore(oxalate, $event)"
+        >{{ oxalate.item }}</button>
+      </h2>
+      @if (oxalate.serving_size || oxalate.calc_level) {
+        <p class="result-chips">
+          @if (oxalate.serving_size) {
+            <span class="serving-chip">{{ oxalate.serving_size }}</span>
+          }
+          @if (oxalate.calc_level) {
+            <span
+              class="level-badge"
+              [class.badge-high]="oxalate.calc_level === 'High' || oxalate.calc_level === 'Very High' || oxalate.calc_level === 'Extremely High'"
+              [class.badge-medium]="oxalate.calc_level === 'Medium'"
+              [class.badge-low]="oxalate.calc_level === 'Low'"
+              [class.badge-very-low]="oxalate.calc_level === 'Very Low'"
+            ><span class="level-dot" aria-hidden="true"></span>{{ oxalate.calc_level }}</span>
+          }
+        </p>
+      }
+    </div>
+    <!-- The per-serving numbers, shown once (they used to repeat under the name). -->
+    <p class="result-right">
+      <span class="result-oxalate-value"><span class="value-number">{{ withUnit(oxalate.calc_oxalate_per_serving) }}</span>&ngsp;<span class="value-unit">per serving</span></span>&ngsp;
+      <span class="result-soluble-value">Soluble: {{ withUnit(oxalate.calc_soluble_mg_oxalate_per_serving) }}</span>
+    </p>
+    <app-icon class="result-chevron" name="chevron-right" [size]="18" />
+  </li>
+</ng-template>

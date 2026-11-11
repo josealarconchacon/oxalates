@@ -65,5 +65,56 @@ describe('OxalateComponent', () => {
       expect(component.withUnit('')).toBe('');
     });
   });
+
+  describe('result rows', () => {
+    const food = {
+      category: 'Baking Items',
+      item: 'Gelatin',
+      serving_size: '1 tsp',
+      calc_level: 'Very Low',
+      calc_oxalate_per_serving: '0',
+      calc_soluble_mg_oxalate_per_serving: 'uncalculated',
+    } as any;
+    const el = () => fixture.nativeElement as HTMLElement;
+    const text = (e: Element | null) =>
+      (e?.textContent ?? '').replace(/\s+/g, ' ').trim();
+
+    beforeEach(() => {
+      spyOn(component, 'showSearchPrompt').and.returnValue(true);
+      component.isLoading = false;
+      component.browseItems = [food];
+      fixture.detectChanges();
+    });
+
+    it('is a list of rows inside one card', () => {
+      expect(el().querySelectorAll('ul.results-list > li.result-item').length).toBe(1);
+    });
+
+    it('shows each number once, in the right column', () => {
+      const row = el().querySelector('.result-item')!;
+      expect(text(row.querySelector('.result-right'))).toBe(
+        '0 mg per serving Soluble: uncalculated'
+      );
+      expect(text(row).match(/per serving/g)!.length).toBe(1);
+      expect(text(row).match(/Soluble/g)!.length).toBe(1);
+    });
+
+    it('keeps category, name, serving size and level', () => {
+      const row = el().querySelector('.result-item')!;
+      expect(text(row.querySelector('.result-category-breadcrumb'))).toBe('Baking Items');
+      expect(text(row.querySelector('h2'))).toBe('Gelatin');
+      expect(text(row.querySelector('.serving-chip'))).toBe('1 tsp');
+      expect(text(row.querySelector('.level-badge'))).toBe('Very Low');
+    });
+
+    it('opens the same details popup from the name button', () => {
+      const spy = spyOn(component, 'viewMore');
+      const button = el().querySelector('.result-button') as HTMLButtonElement;
+      expect(button.getAttribute('type')).toBe('button');
+      expect(text(button)).toBe('Gelatin');
+      button.click();
+      expect(spy).toHaveBeenCalledWith(food, jasmine.any(Event));
+    });
+  });
 });
 
