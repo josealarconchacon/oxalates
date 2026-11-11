@@ -535,6 +535,108 @@
   }
 }
 
+/* Phones: a compact version of the iPad card, and a 3-column tab bar with
+   the icons above the labels. */
+@media (max-width: 640px) {
+  .sidebar {
+    position: static;
+    gap: 0;
+    overflow: hidden;
+    background: var(--color-surface);
+    border: 1px solid var(--color-line);
+    border-radius: 20px;
+  }
+
+  .profile-card {
+    position: relative;
+    display: flex;
+    align-items: center;
+    min-height: 88px;
+    padding: 14px 68px 14px 88px;
+    border: 0;
+    border-radius: 0;
+  }
+
+  .profile-header {
+    position: absolute;
+    inset: 0;
+    height: auto;
+  }
+
+  .profile-picture {
+    top: 50%;
+    bottom: auto;
+    left: 16px;
+    width: 56px;
+    height: 56px;
+    border-width: 3px;
+    transform: translateY(-50%);
+  }
+
+  .edit-avatar {
+    top: 50%;
+    bottom: auto;
+    left: 50px;
+    width: 28px;
+    height: 28px;
+    transform: translateY(4px);
+  }
+
+  .color-picker-toggle {
+    top: 50%;
+    right: 12px;
+    transform: translateY(-50%);
+  }
+
+  .profile-info {
+    position: relative; /* above the banner */
+    min-width: 0;
+    padding: 0;
+  }
+
+  .profile-name {
+    font-size: 1.25rem;
+  }
+
+  .profile-email {
+    margin-top: 2px;
+    font-size: 0.8125rem;
+  }
+
+  .profile-email app-icon {
+    display: none;
+  }
+
+  .profile-card--dark-banner .profile-name,
+  .profile-card--dark-banner .profile-email {
+    color: #ffffff;
+  }
+
+  .sidebar-nav {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 4px;
+    padding: 6px;
+    border: 0;
+    border-top: 1px solid var(--color-line);
+    border-radius: 0;
+  }
+
+  .sidebar-nav a {
+    flex-direction: column;
+    justify-content: center;
+    gap: 4px;
+    min-height: 56px;
+    padding: 6px 4px;
+    font-size: 0.8125rem;
+    text-align: center;
+  }
+
+  .nav-divider {
+    display: none;
+  }
+}
+
 /* iPad: one horizontal card. The banner color fills the top part, with the
    avatar, name and email on it, and the menu becomes a tab row underneath. */
 @media (min-width: 641px) and (max-width: 1099.98px) {

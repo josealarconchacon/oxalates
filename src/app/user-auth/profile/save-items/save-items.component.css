@@ -408,6 +408,77 @@
   }
 }
 
+/* Phones: an accordion. Each food is its own card and opens in place; the
+   separate detail card is hidden. */
+@media (max-width: 640px) {
+  .detail-view {
+    display: none;
+  }
+
+  .mobile-detail-dropdown {
+    display: block;
+  }
+
+  .sidebar {
+    background: none;
+    border: 0;
+    border-radius: 0;
+  }
+
+  .sidebar-content {
+    gap: var(--spacing-3);
+    padding: 0;
+  }
+
+  .item-wrapper {
+    overflow: hidden;
+    background: var(--color-surface);
+    border: 1px solid var(--color-line);
+    border-radius: 20px;
+  }
+
+  .item-wrapper.open {
+    border-color: var(--si-selected-border);
+  }
+
+  .list-item {
+    min-height: 64px;
+    padding: 14px 16px;
+    border: 0;
+    border-radius: 0;
+  }
+
+  .item-wrapper.open .item-chevron {
+    transform: rotate(180deg);
+  }
+
+  .mobile-detail-dropdown .item-details {
+    padding: var(--spacing-4);
+  }
+
+  /* The name is already on the button above. */
+  .mobile-detail-dropdown .item-name {
+    display: none;
+  }
+
+  .mobile-detail-dropdown .item-header {
+    align-items: center;
+    margin-bottom: var(--spacing-4);
+  }
+
+  .mobile-detail-dropdown .calc-level {
+    margin-top: 0;
+  }
+
+  .detail-row {
+    grid-template-columns: auto 1fr;
+  }
+
+  .detail-value {
+    text-align: right;
+  }
+}
+
 /* Reduced Motion */
 @media (prefers-reduced-motion: reduce) {
   *,

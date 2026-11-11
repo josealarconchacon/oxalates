@@ -1,7 +1,6 @@
 <div class="app-container">
   <div class="app-main">
     <h1 class="sr-only">Your profile</h1>
-    @if ((isMobile$ | async) === false) {
       <aside class="sidebar">
         <div class="profile-card" [class.profile-card--dark-banner]="bannerIsDark">
           <div
@@ -74,7 +73,6 @@
           </a>
         </nav>
       </aside>
-    }
     <section
       class="content-area"
       [class.content-area--flat]="(activeSection$ | async) === 'saveItem'"

@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { AuthService } from '../service/auth-service.service';
 import { ProfileImageService } from '../service/profile-image.service';
-import { map } from 'rxjs/operators';
 import { Router } from '@angular/router';
 import { fadeInOut } from 'src/app/shared/animations/fadeInOut';
 import {
@@ -13,7 +12,6 @@ import { HSLA, HSVA, RGBA } from 'ngx-color';
 import { HeaderComponent } from 'src/app/landing-page/header/header.component';
 import { Observable } from 'rxjs';
 import { NavigationService } from '../service/navigation.service';
-import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
 import { ThemeService } from '../../shared/services/theme.service';
 
 import { showDefaultAvatar } from 'src/app/shared/utils/avatar';
@@ -41,7 +39,6 @@ export class ProfileComponent implements OnInit {
   lastName: string = '';
 
   activeSection$: Observable<string> | undefined;
-  isMobile$: Observable<boolean> | undefined;
   isDarkTheme$: Observable<boolean>;
 
   presetColors: string[] = presetColors;
@@ -51,13 +48,9 @@ export class ProfileComponent implements OnInit {
     private profileImageService: ProfileImageService,
     private router: Router,
     private navigationService: NavigationService,
-    private breakpointObserver: BreakpointObserver,
     private themeService: ThemeService
   ) {
     this.activeSection$ = this.navigationService.activeSection$;
-    this.isMobile$ = this.breakpointObserver
-      .observe(Breakpoints.Handset)
-      .pipe(map((result) => result.matches));
     this.isDarkTheme$ = this.themeService.isDarkTheme$;
   }
 

@@ -5,23 +5,35 @@
       @if (savedOxalates$ | async; as savedOxalates) {
         @if (savedOxalates.length > 0) {
           @for (oxalate of savedOxalates; track oxalate) {
-            <div class="item-wrapper">
+            <div
+              class="item-wrapper"
+              [class.open]="expandedCardId === oxalate.id"
+              >
+              <!-- Phones: an accordion (aria-expanded). Wider: picks the food
+                   shown in the detail card (aria-pressed). -->
               <button
                 type="button"
                 class="list-item"
                 [class.selected]="expandedCardId === oxalate.id"
-                [attr.aria-pressed]="expandedCardId === oxalate.id"
+                [attr.aria-pressed]="isPhone() ? null : expandedCardId === oxalate.id"
+                [attr.aria-expanded]="isPhone() ? expandedCardId === oxalate.id : null"
+                [attr.aria-controls]="isPhone() ? 'saved-food-' + oxalate.id : null"
                 (click)="handleCardClick(oxalate.id)"
                 >
                 <div class="item-content">
                   <div class="item-title">{{ oxalate.item }}</div>
                   <div class="item-subtitle">{{ getSubtitle(oxalate) }}</div>
                 </div>
-                <app-icon class="item-chevron" name="chevron-right" [size]="18" />
+                <app-icon
+                  class="item-chevron"
+                  [name]="isPhone() ? 'chevron-down' : 'chevron-right'"
+                  [size]="18"
+                />
               </button>
               @if (expandedCardId === oxalate.id) {
                 <div
                   class="mobile-detail-dropdown"
+                  [id]="'saved-food-' + oxalate.id"
                   >
                   <div class="item-details">
                     <ng-container

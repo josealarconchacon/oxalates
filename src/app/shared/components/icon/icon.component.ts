@@ -14,6 +14,7 @@ export type IconName =
   | 'pencil'
   | 'arrow-right'
   | 'chevron-right'
+  | 'chevron-down'
   | 'trash-2'
   | 'palette'
   | 'camera'
@@ -94,6 +95,9 @@ export type IconName =
         }
         @case ('chevron-right') {
           <svg:path d="m9 18 6-6-6-6" />
+        }
+        @case ('chevron-down') {
+          <svg:path d="m6 9 6 6 6-6" />
         }
         @case ('trash-2') {
           <svg:path d="M3 6h18M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2M10 11v6M14 11v6" />

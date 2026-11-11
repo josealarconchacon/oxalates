@@ -1,9 +1,14 @@
-import { Component, ElementRef, OnInit } from '@angular/core';
+import { Component, ElementRef, OnInit, inject } from '@angular/core';
+import { toSignal } from '@angular/core/rxjs-interop';
+import { BreakpointObserver } from '@angular/cdk/layout';
 import { Observable, of, from } from 'rxjs';
 import { catchError, map, switchMap, tap } from 'rxjs/operators';
 import { Oxalate } from 'src/app/landing-page/model/oxalate';
 import { OxalateService } from 'src/app/landing-page/dialog-service/service/oxalate.service';
 import { AuthService } from '../../service/auth-service.service';
+
+/** Must match the phone media queries in the CSS. */
+export const PHONE_QUERY = '(max-width: 640px)';
 
 /** One label/value pair shown in the detail card. */
 export interface DetailField {
@@ -46,6 +51,14 @@ export class SaveItemsComponent implements OnInit {
   savedOxalates$: Observable<Omit<Oxalate, 'notes' | 'reference'>[]> = of([]);
   expandedCardId: string | null = null;
   pendingDeleteId: string | null = null;
+
+  /** Phones (≤640px) show the list as an accordion. Matches the CSS. */
+  readonly isPhone = toSignal(
+    inject(BreakpointObserver)
+      .observe(PHONE_QUERY)
+      .pipe(map((result) => result.matches)),
+    { initialValue: false }
+  );
 
   constructor(
     private oxalateService: OxalateService,

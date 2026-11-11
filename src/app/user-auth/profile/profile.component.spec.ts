@@ -9,6 +9,7 @@ import { ColorSketchModule } from 'ngx-color/sketch';
 import { ChangePasswordComponent } from '../change-password/change-password.component';
 import { SaveItemsComponent } from './save-items/save-items.component';
 import { ClickableDirective } from 'src/app/shared/directives/clickable.directive';
+import { IconComponent } from 'src/app/shared/components/icon/icon.component';
 import { AlertComponent } from 'src/app/landing-page/dialog-service/oxalate/shared/alert/alert.component';
 
 describe('ProfileComponent', () => {
@@ -26,6 +27,7 @@ describe('ProfileComponent', () => {
         ColorSketchModule,
         ClickableDirective,
         AlertComponent,
+        IconComponent,
       ],
       providers: [provideRouter([])],
     });

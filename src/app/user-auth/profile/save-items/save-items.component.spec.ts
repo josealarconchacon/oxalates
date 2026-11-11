@@ -5,6 +5,7 @@ import { SaveItemsComponent } from './save-items.component';
 import { AngularFireModule } from '@angular/fire/compat';
 import { AngularFirestore } from '@angular/fire/compat/firestore';
 import { of } from 'rxjs';
+import { signal } from '@angular/core';
 import { IconComponent } from 'src/app/shared/components/icon/icon.component';
 
 // Mock db configuration
@@ -202,6 +203,49 @@ describe('SaveItemsComponent', () => {
         '1.50',
         'kept',
       ]);
+    });
+  });
+
+  describe('phone accordion', () => {
+    const rows = () =>
+      Array.from(
+        fixture.nativeElement.querySelectorAll('.list-item')
+      ) as HTMLButtonElement[];
+
+    beforeEach(() => {
+      (component as any).isPhone = signal(true);
+      component.savedOxalates$ = of([
+        { id: 'a', item: 'Baking Powder', category: 'Baking Items' },
+        { id: 'b', item: 'Pero Coffee Substitute', category: 'Beverages' },
+      ] as any);
+      fixture.detectChanges();
+    });
+
+    it('uses aria-expanded instead of aria-pressed', () => {
+      expect(rows()[0].getAttribute('aria-expanded')).toBe('false');
+      expect(rows()[0].hasAttribute('aria-pressed')).toBeFalse();
+    });
+
+    it('opens the details inside the tapped card and points to them', () => {
+      rows()[1].click();
+      fixture.detectChanges();
+
+      const button = rows()[1];
+      expect(button.getAttribute('aria-expanded')).toBe('true');
+      const panel = fixture.nativeElement.querySelector(
+        '#' + button.getAttribute('aria-controls')
+      ) as HTMLElement;
+      expect(panel).toBeTruthy();
+      expect(button.parentElement!.contains(panel)).toBeTrue();
+      expect(panel.textContent).toContain('Beverages');
+    });
+
+    it('closes the card when tapped again', () => {
+      rows()[0].click();
+      fixture.detectChanges();
+      rows()[0].click();
+      fixture.detectChanges();
+      expect(rows()[0].getAttribute('aria-expanded')).toBe('false');
     });
   });
 });
