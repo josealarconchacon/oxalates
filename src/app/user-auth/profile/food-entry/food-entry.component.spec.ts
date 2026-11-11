@@ -161,4 +161,10 @@ describe('FoodEntryComponent', () => {
       });
     });
   });
+
+  it('names the page like the header link, for screen readers', () => {
+    const h1 = fixture.nativeElement.querySelector('h1') as HTMLElement;
+    expect(h1.textContent!.trim()).toBe('Calculate Daily Intake');
+  });
 });
+
