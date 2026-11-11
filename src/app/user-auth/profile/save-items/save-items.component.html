@@ -49,9 +49,15 @@
           }
         } @else {
           <div class="no-items">
-            <i class="material-icons icon-inline" aria-hidden="true">bookmark</i>
-            <h3>No saved items yet</h3>
-            <p>Items you save will appear here</p>
+            <span class="no-items-icon" aria-hidden="true">
+              <app-icon name="bookmark" [size]="24" />
+            </span>
+            <h3>No saved foods yet</h3>
+            <p>Search for a food, open it and tap “Add to Favorite” to keep it here.</p>
+            <a class="no-items-action" routerLink="/oxalate">
+              <app-icon name="search" [size]="18" />
+              Search for foods
+            </a>
           </div>
         }
       }
