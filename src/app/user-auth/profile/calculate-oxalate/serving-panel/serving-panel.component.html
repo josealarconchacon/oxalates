@@ -22,15 +22,37 @@
 
   <div class="servings-row">
     <label for="number-of-servings">Number of Servings</label>
-    <input
-      id="number-of-servings"
-      type="text"
-      inputmode="decimal"
-      autocomplete="off"
-      [ngModel]="numberOfServings"
-      (ngModelChange)="onNumberOfServingsChange($event)"
-      placeholder="Enter number of servings"
-      class="input-field"
-    />
+    <!-- −/+ change it by 1; typing still works (decimals too). -->
+    <div class="stepper">
+      <button
+        type="button"
+        class="step-button"
+        aria-label="Decrease servings"
+        aria-controls="number-of-servings"
+        [disabled]="!canDecrease"
+        (click)="step(-1)"
+      >
+        <app-icon name="minus" [size]="18" />
+      </button>
+      <input
+        id="number-of-servings"
+        type="text"
+        inputmode="decimal"
+        autocomplete="off"
+        [ngModel]="numberOfServings"
+        (ngModelChange)="onNumberOfServingsChange($event)"
+        placeholder="Enter number of servings"
+        class="input-field"
+      />
+      <button
+        type="button"
+        class="step-button"
+        aria-label="Increase servings"
+        aria-controls="number-of-servings"
+        (click)="step(1)"
+      >
+        <app-icon name="plus" [size]="18" />
+      </button>
+    </div>
   </div>
 </div>

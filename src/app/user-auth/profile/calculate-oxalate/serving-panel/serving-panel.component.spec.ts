@@ -69,5 +69,44 @@ describe('ServingPanelComponent', () => {
     input.dispatchEvent(new Event('input'));
     expect(emitted).toEqual(['2.5']);
   });
+
+  describe('servings stepper', () => {
+    const emitted: string[] = [];
+    const buttons = () =>
+      Array.from(el().querySelectorAll('.step-button')) as HTMLButtonElement[];
+
+    beforeEach(() => {
+      emitted.length = 0;
+      component.numberOfServingsChange.subscribe((v) => emitted.push(v));
+    });
+
+    it('labels the buttons for screen readers', () => {
+      expect(buttons().map((b) => b.getAttribute('aria-label'))).toEqual([
+        'Decrease servings',
+        'Increase servings',
+      ]);
+    });
+
+    it('adds one serving', () => {
+      component.numberOfServings = '2';
+      fixture.detectChanges();
+      buttons()[1].click();
+      expect(emitted).toEqual(['3']);
+    });
+
+    it('removes one serving, keeping decimals', () => {
+      component.numberOfServings = '2.5';
+      fixture.detectChanges();
+      buttons()[0].click();
+      expect(emitted).toEqual(['1.5']);
+    });
+
+    it('cannot go below 1 with the buttons', () => {
+      component.numberOfServings = '1';
+      fixture.detectChanges();
+      expect(buttons()[0].disabled).toBeTrue();
+      expect(buttons()[1].disabled).toBeFalse();
+    });
+  });
 });
 
