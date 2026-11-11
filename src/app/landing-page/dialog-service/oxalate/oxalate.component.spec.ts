@@ -175,5 +175,30 @@ describe('OxalateComponent', () => {
       expect([next.disabled, last.disabled, first.disabled]).toEqual([true, true, false]);
     });
   });
+
+  describe('isFarPage (compact phone pager)', () => {
+    const far = (current: number, pages: number[]) => {
+      spyOnProperty(component, 'currentPage').and.returnValue(current);
+      spyOnProperty(component, 'totalPages').and.returnValue(300);
+      return pages.filter((p) => !component.isFarPage(p));
+    };
+
+    it('keeps 1 2 3 and the last page on page 1', () => {
+      expect(far(1, [1, 2, 3, 4, 5, 300])).toEqual([1, 2, 3, 300]);
+    });
+
+    it('keeps the neighbours of a middle page, plus first and last', () => {
+      expect(far(5, [1, 3, 4, 5, 6, 7, 300])).toEqual([1, 4, 5, 6, 300]);
+    });
+
+    it('keeps the last three pages at the end', () => {
+      expect(far(300, [1, 296, 297, 298, 299, 300])).toEqual([1, 298, 299, 300]);
+    });
+
+    it('never hides "…"', () => {
+      spyOnProperty(component, 'currentPage').and.returnValue(5);
+      expect(component.isFarPage('...')).toBeFalse();
+    });
+  });
 });
 

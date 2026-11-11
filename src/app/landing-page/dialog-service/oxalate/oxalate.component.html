@@ -116,6 +116,7 @@
           <button
             type="button"
             class="pagination-page"
+            [class.page-far]="isFarPage(page)"
             (click)="changePage(page)"
             [class.active]="page === currentPage"
             [attr.aria-current]="page === currentPage ? 'page' : null"
