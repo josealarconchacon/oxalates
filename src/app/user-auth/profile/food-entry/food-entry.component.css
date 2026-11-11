@@ -10,6 +10,36 @@
    --mdc-theme-primary -> --primary-color, --mdc-elevation-1/2 ->
    --shadow-sm/--shadow-md. */
 
+/* Calculate Daily Intake tokens. The shared ones (--color-bg, --color-ink,
+   --color-accent…) come from tokens/colors.css; these only exist on this page.
+   Custom properties inherit, so the date switcher and the breakdown card
+   (child components) can use them too. */
+:host {
+  --di-dash: #d3dbd5;
+  --di-icon: #26312b; /* 14:1 on white */
+  --di-breakfast-bg: #fff0e0;
+  --di-breakfast-fg: #9a4a0b;
+  --di-lunch-bg: #fbf3d9;
+  --di-lunch-fg: #7a5a00;
+  --di-dinner-bg: #ede9fb;
+  --di-dinner-fg: #5b3fb5;
+  --di-snacks-bg: var(--color-accent-soft);
+  --di-snacks-fg: var(--color-accent-fg);
+  display: block;
+  font-family: var(--font-family-sans);
+}
+
+:host-context(.dark-theme) {
+  --di-dash: #3a4741;
+  --di-icon: #d5ddd8;
+  --di-breakfast-bg: #3a2614;
+  --di-breakfast-fg: #ffb877;
+  --di-lunch-bg: #352c10;
+  --di-lunch-fg: #f2cf5b;
+  --di-dinner-bg: #2a2442;
+  --di-dinner-fg: #c4b5fd;
+}
+
 .app-container {
   display: flex;
   flex-direction: column;
@@ -202,8 +232,9 @@ thead .header-detail th {
 }
 
 .meal-title {
+  font-family: var(--font-family-display);
   font-size: var(--font-size-lg);
-  font-weight: 600;
+  font-weight: 700;
   color: var(--action-color);
   margin-bottom: 1rem;
   letter-spacing: -0.02em;
