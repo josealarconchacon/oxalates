@@ -6,6 +6,7 @@ import { AngularFireModule } from '@angular/fire/compat';
 import { AngularFirestore } from '@angular/fire/compat/firestore';
 import { of } from 'rxjs';
 import { signal } from '@angular/core';
+import { RouterLink, provideRouter } from '@angular/router';
 import { IconComponent } from 'src/app/shared/components/icon/icon.component';
 
 // Mock db configuration
@@ -38,9 +39,11 @@ describe('SaveItemsComponent', () => {
       imports: [
         AngularFireModule.initializeApp(firebaseConfig),
         IconComponent,
+        RouterLink,
       ],
       providers: [
         provideHttpClient(),
+        provideRouter([]),
         provideHttpClientTesting(),
         { provide: AngularFirestore, useValue: angularFirestoreMock },
       ],
@@ -248,4 +251,60 @@ describe('SaveItemsComponent', () => {
       expect(rows()[0].getAttribute('aria-expanded')).toBe('false');
     });
   });
+
+  describe('selectFirstOnWideScreens', () => {
+    const list = [{ id: 'a' }, { id: 'b' }];
+
+    it('opens the first food on iPad and desktop', () => {
+      (component as any).isPhone = signal(false);
+      component.expandedCardId = null;
+      component.selectFirstOnWideScreens(list);
+      expect(component.expandedCardId as string | null).toBe('a');
+    });
+
+    it('keeps the food the user already picked', () => {
+      (component as any).isPhone = signal(false);
+      component.expandedCardId = 'b';
+      component.selectFirstOnWideScreens(list);
+      expect(component.expandedCardId).toBe('b');
+    });
+
+    it('leaves every card closed on phones', () => {
+      (component as any).isPhone = signal(true);
+      component.expandedCardId = null;
+      component.selectFirstOnWideScreens(list);
+      expect(component.expandedCardId).toBeNull();
+    });
+
+    it('does nothing when there are no saved foods', () => {
+      (component as any).isPhone = signal(false);
+      component.expandedCardId = null;
+      component.selectFirstOnWideScreens([]);
+      expect(component.expandedCardId).toBeNull();
+    });
+  });
+
+  describe('empty state', () => {
+    beforeEach(() => {
+      component.savedOxalates$ = of([]);
+      fixture.detectChanges();
+    });
+
+    it('explains how to save a food', () => {
+      const empty = fixture.nativeElement.querySelector('.no-items');
+      expect(empty.querySelector('h3').textContent.trim()).toBe(
+        'No saved foods yet'
+      );
+      expect(empty.textContent).toContain('Add to Favorite');
+    });
+
+    it('links to the food search', () => {
+      const link = fixture.nativeElement.querySelector(
+        '.no-items-action'
+      ) as HTMLAnchorElement;
+      expect(link.textContent?.trim()).toBe('Search for foods');
+      expect(link.getAttribute('href')).toBe('/oxalate');
+    });
+  });
 });
+

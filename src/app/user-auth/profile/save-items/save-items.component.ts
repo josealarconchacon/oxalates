@@ -97,9 +97,7 @@ export class SaveItemsComponent implements OnInit {
                 return filteredOxalate as Omit<Oxalate, 'notes' | 'reference'>;
               })
             ),
-            tap((data) => {
-              console.log('Fetched saved oxalates: .......');
-            })
+            tap((list) => this.selectFirstOnWideScreens(list))
           );
         } else {
           return of([]);
@@ -110,6 +108,16 @@ export class SaveItemsComponent implements OnInit {
         return of([]);
       })
     );
+  }
+
+  /**
+   * On iPad and desktop, open the first food when none is picked, so the
+   * detail card isn't empty. Phones keep every accordion card closed.
+   */
+  selectFirstOnWideScreens(list: { id: string }[]): void {
+    if (!this.expandedCardId && !this.isPhone() && list.length > 0) {
+      this.expandedCardId = list[0].id;
+    }
   }
 
   handleCardClick(id: string): void {

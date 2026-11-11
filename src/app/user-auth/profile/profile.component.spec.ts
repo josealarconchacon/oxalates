@@ -40,4 +40,54 @@ describe('ProfileComponent', () => {
   it('should create', () => {
     expect(component).toBeTruthy();
   });
+
+  describe('splitEmail', () => {
+    it('splits just before the @', () => {
+      expect(component.splitEmail('jose.chacon@gmail.com')).toEqual({
+        name: 'jose.chacon',
+        domain: '@gmail.com',
+      });
+    });
+
+    it('keeps text without an @ whole', () => {
+      expect(component.splitEmail('username')).toEqual({
+        name: 'username',
+        domain: '',
+      });
+    });
+
+    it('shows the same address in the card', () => {
+      component.userProfile = { email: 'jose.chacon@gmail.com' };
+      fixture.detectChanges();
+      const span = fixture.nativeElement.querySelector('.profile-email span');
+      expect(span.textContent.trim()).toBe('jose.chacon@gmail.com');
+      expect(span.querySelector('wbr')).toBeTruthy();
+    });
+  });
+
+  describe('banner color', () => {
+    afterEach(() => localStorage.removeItem('headerColor'));
+
+    it('saves a picked color', () => {
+      component.selectedColor = '#17603F';
+      component.saveColor();
+      expect(component.currentHeaderColor).toBe('#17603F');
+      expect(localStorage.getItem('headerColor')).toBe('#17603F');
+      expect(component.bannerIsDark).toBeTrue();
+    });
+
+    it('goes back to the theme default when the default swatch is saved', () => {
+      localStorage.setItem('headerColor', '#17603F');
+      component.currentHeaderColor = '#17603F';
+      component.bannerIsDark = true;
+
+      component.onColorSelect('#EAEFE9');
+      component.saveColor();
+
+      expect(component.currentHeaderColor).toBeNull();
+      expect(component.bannerIsDark).toBeFalse();
+      expect(localStorage.getItem('headerColor')).toBeNull();
+    });
+  });
 });
+
