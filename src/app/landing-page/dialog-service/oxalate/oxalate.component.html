@@ -57,7 +57,7 @@
                   <span class="meta-sep">·</span>
                 }
                 @if (oxalate.serving_size) {
-                  <span>{{ oxalate.serving_size }}</span>
+                  <span class="serving-chip">{{ oxalate.serving_size }}</span>
                 }
                 @if (oxalate.calc_level) {
                   <span class="meta-sep level-badge-inline-sep">·</span>
@@ -69,7 +69,7 @@
                     [class.badge-medium]="oxalate.calc_level === 'Medium'"
                     [class.badge-low]="oxalate.calc_level === 'Low'"
                     [class.badge-very-low]="oxalate.calc_level === 'Very Low'"
-                  >{{ oxalate.calc_level }}</span>
+                  ><span class="level-dot" aria-hidden="true"></span>{{ oxalate.calc_level }}</span>
                 }
               </p>
             </div>
@@ -130,7 +130,7 @@
                   <span class="meta-sep">·</span>
                 }
                 @if (oxalate.serving_size) {
-                  <span>{{ oxalate.serving_size }}</span>
+                  <span class="serving-chip">{{ oxalate.serving_size }}</span>
                 }
                 @if (oxalate.calc_level) {
                   <span class="meta-sep level-badge-inline-sep">·</span>
@@ -142,7 +142,7 @@
                     [class.badge-medium]="oxalate.calc_level === 'Medium'"
                     [class.badge-low]="oxalate.calc_level === 'Low'"
                     [class.badge-very-low]="oxalate.calc_level === 'Very Low'"
-                  >{{ oxalate.calc_level }}</span>
+                  ><span class="level-dot" aria-hidden="true"></span>{{ oxalate.calc_level }}</span>
                 }
               </p>
             </div>
