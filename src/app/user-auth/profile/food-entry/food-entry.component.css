@@ -271,20 +271,25 @@ thead .header-detail th {
   color: var(--color-ink);
 }
 
+/* Empty meal: dashed box with a muted utensils icon above the text. */
 .empty-state {
-  color: var(--text-muted);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  padding: 28px;
+  border: 1.5px dashed var(--di-dash);
+  border-radius: 16px;
+  color: var(--color-muted);
+  font-size: 0.9375rem;
   text-align: center;
-  padding: 2rem;
-  background: rgba(0, 0, 0, 0.02);
-  border-radius: 0.75rem;
-  border: 1px dashed rgba(0, 0, 0, 0.1);
-  transition: all 0.3s ease;
+  --icon-stroke: 1.75;
 }
 
-:host-context(.dark-theme) .empty-state {
-  color: rgba(255, 255, 255, 0.6);
-  background: rgba(255, 255, 255, 0.02);
-  border-color: rgba(255, 255, 255, 0.1);
+@media (max-width: 640px) {
+  .empty-state {
+    padding: 18px;
+  }
 }
 
 .add-button {

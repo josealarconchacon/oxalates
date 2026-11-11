@@ -193,6 +193,18 @@ describe('FoodEntryComponent', () => {
       expect(tiles.every((t) => t.getAttribute('aria-hidden') === 'true')).toBeTrue();
     });
 
+    it('shows the same empty text in each empty meal', () => {
+      const empties = Array.from(
+        fixture.nativeElement.querySelectorAll('.empty-state')
+      ) as HTMLElement[];
+      expect(empties.map((e) => e.textContent!.trim())).toEqual([
+        'No foods added yet',
+        'No foods added yet',
+        'No foods added yet',
+        'No foods added yet',
+      ]);
+    });
+
     it('opens the calculator for the meal whose Add Food was clicked', () => {
       const buttons = Array.from(
         fixture.nativeElement.querySelectorAll('.add-button')
