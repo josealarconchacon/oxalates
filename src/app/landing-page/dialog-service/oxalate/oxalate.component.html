@@ -62,7 +62,7 @@
       </div>
       @if (displayedOxalates.length === 0) {
         <div class="no-results">
-          <i class="material-icons icon-inline no-results-icon" aria-hidden="true">search</i>
+          <app-icon class="no-results-icon" name="search" [size]="40" />
           <h2 class="no-results-heading">No results found</h2>
           @if (filterService.getCurrentFilter().category) {
             <p class="no-results-text">
