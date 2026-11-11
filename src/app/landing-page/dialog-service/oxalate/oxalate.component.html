@@ -9,7 +9,6 @@
       (searchQueryChange)="onSearchQueryChange($event)"
       (input)="onInputChange($event)"
       (searchSubmitted)="onEnterPressed()"
-      [value]="searchQuery"
     ></app-search-input>
 
     @if (errorState) {
@@ -38,48 +37,13 @@
 
   @if (!isLoading && showSearchPrompt()) {
     <div class="preview-section" #resultsList>
-      <div class="results-list">
-        @for (oxalate of browseItems; track oxalate; let last = $last) {
-          <div
-            class="result-item"
-            [class.result-item-last]="last"
-            appClickable
-            (click)="viewMore(oxalate, $event)"
-            >
-            <div class="result-left">
-              <p class="result-category-breadcrumb">{{ oxalate.category }}</p>
-              <h2 class="result-title">{{ oxalate.item }}</h2>
-              <p class="result-meta-line">
-                Oxalate per serving: {{ oxalate.calc_oxalate_per_serving }}{{ oxalate.calc_oxalate_per_serving !== 'n/a' ? ' mg' : '' }}
-                <span class="meta-sep">·</span>
-                Soluble: {{ oxalate.calc_soluble_mg_oxalate_per_serving }}{{ oxalate.calc_soluble_mg_oxalate_per_serving !== 'n/a' ? ' mg' : '' }}
-                @if (oxalate.serving_size) {
-                  <span class="meta-sep">·</span>
-                }
-                @if (oxalate.serving_size) {
-                  <span>{{ oxalate.serving_size }}</span>
-                }
-                @if (oxalate.calc_level) {
-                  <span class="meta-sep level-badge-inline-sep">·</span>
-                }
-                @if (oxalate.calc_level) {
-                  <span
-                    class="level-badge level-badge-inline"
-                    [class.badge-high]="oxalate.calc_level === 'High' || oxalate.calc_level === 'Very High' || oxalate.calc_level === 'Extremely High'"
-                    [class.badge-medium]="oxalate.calc_level === 'Medium'"
-                    [class.badge-low]="oxalate.calc_level === 'Low'"
-                    [class.badge-very-low]="oxalate.calc_level === 'Very Low'"
-                  >{{ oxalate.calc_level }}</span>
-                }
-              </p>
-            </div>
-            <div class="result-right">
-              <span class="result-oxalate-value">{{ oxalate.calc_oxalate_per_serving }}{{ oxalate.calc_oxalate_per_serving !== 'n/a' ? ' mg' : '' }} per serving</span>
-              <span class="result-soluble-value">Soluble: {{ oxalate.calc_soluble_mg_oxalate_per_serving }}{{ oxalate.calc_soluble_mg_oxalate_per_serving !== 'n/a' ? ' mg' : '' }}</span>
-            </div>
-          </div>
+      <ul class="results-list">
+        @for (oxalate of browseItems; track oxalate) {
+          <ng-container
+            *ngTemplateOutlet="resultRow; context: { $implicit: oxalate }"
+          ></ng-container>
         }
-      </div>
+      </ul>
     </div>
   }
 
@@ -97,95 +61,93 @@
       </div>
       @if (displayedOxalates.length === 0) {
         <div class="no-results">
-          <i class="material-icons icon-inline no-results-icon" aria-hidden="true">search</i>
+          <app-icon class="no-results-icon" name="search" [size]="40" />
           <h2 class="no-results-heading">No results found</h2>
-          @if (filterService.getCurrentFilter().category) {
+          @if ((searchQuery || "").trim()) {
+            <!-- The message the red popup used to show for a text search. -->
+            <p class="no-results-text">
+              Try different keywords or check your spelling.
+            </p>
+          } @else if (filterService.getCurrentFilter().category) {
             <p class="no-results-text">
               No items found in {{ filterService.getCurrentFilter().category }}
             </p>
-          }
-          @if (!filterService.getCurrentFilter().category) {
+          } @else {
             <p class="no-results-text">
               Try different category or food level
             </p>
           }
         </div>
       }
-      <div class="results-list">
-        @for (oxalate of displayedOxalates; track oxalate; let last = $last) {
-          <div
-            class="result-item"
-            [class.result-item-last]="last"
-            appClickable
-            (click)="viewMore(oxalate, $event)"
-            >
-            <div class="result-left">
-              <p class="result-category-breadcrumb">{{ oxalate.category }}</p>
-              <h2 class="result-title">{{ oxalate.item }}</h2>
-              <p class="result-meta-line">
-                Oxalate per serving: {{ oxalate.calc_oxalate_per_serving }}{{ oxalate.calc_oxalate_per_serving !== 'n/a' ? ' mg' : '' }}
-                <span class="meta-sep">·</span>
-                Soluble: {{ oxalate.calc_soluble_mg_oxalate_per_serving }}{{ oxalate.calc_soluble_mg_oxalate_per_serving !== 'n/a' ? ' mg' : '' }}
-                @if (oxalate.serving_size) {
-                  <span class="meta-sep">·</span>
-                }
-                @if (oxalate.serving_size) {
-                  <span>{{ oxalate.serving_size }}</span>
-                }
-                @if (oxalate.calc_level) {
-                  <span class="meta-sep level-badge-inline-sep">·</span>
-                }
-                @if (oxalate.calc_level) {
-                  <span
-                    class="level-badge level-badge-inline"
-                    [class.badge-high]="oxalate.calc_level === 'High' || oxalate.calc_level === 'Very High' || oxalate.calc_level === 'Extremely High'"
-                    [class.badge-medium]="oxalate.calc_level === 'Medium'"
-                    [class.badge-low]="oxalate.calc_level === 'Low'"
-                    [class.badge-very-low]="oxalate.calc_level === 'Very Low'"
-                  >{{ oxalate.calc_level }}</span>
-                }
-              </p>
-            </div>
-            <div class="result-right">
-              <span class="result-oxalate-value">{{ oxalate.calc_oxalate_per_serving }}{{ oxalate.calc_oxalate_per_serving !== 'n/a' ? ' mg' : '' }} per serving</span>
-              <span class="result-soluble-value">Soluble: {{ oxalate.calc_soluble_mg_oxalate_per_serving }}{{ oxalate.calc_soluble_mg_oxalate_per_serving !== 'n/a' ? ' mg' : '' }}</span>
-            </div>
-          </div>
+      <ul class="results-list">
+        @for (oxalate of displayedOxalates; track oxalate) {
+          <ng-container
+            *ngTemplateOutlet="resultRow; context: { $implicit: oxalate }"
+          ></ng-container>
         }
-      </div>
+      </ul>
     </div>
   }
 
   @if (displayedOxalates.length > 0 || (browseItems.length > 0 && !hasSearched)) {
-    <div class="pagination">
-      <button class="pagination-nav" (click)="changePage(1)" [disabled]="currentPage === 1" title="First page">
-        <i class="material-icons icon-inline pagination-icon" aria-hidden="true">first_page</i>
-        <span class="pagination-nav-text">First</span>
+    <!-- Same pages and clicks as before. "…" is plain text, not a button.
+         Previous/Next keep their names when only the icon shows (phones). -->
+    <nav class="pagination" aria-label="Pagination">
+      <button
+        type="button"
+        class="pagination-nav pagination-edge"
+        (click)="changePage(1)"
+        [disabled]="currentPage === 1"
+        [attr.aria-disabled]="currentPage === 1"
+        >
+        First
       </button>
-      <button class="pagination-nav" (click)="changePage(currentPage - 1)" [disabled]="currentPage === 1" title="Previous">
-        <i class="material-icons icon-inline pagination-icon" aria-hidden="true">chevron_left</i>
+      <button
+        type="button"
+        class="pagination-nav"
+        (click)="changePage(currentPage - 1)"
+        [disabled]="currentPage === 1"
+        [attr.aria-disabled]="currentPage === 1"
+        >
+        <app-icon class="pagination-icon" name="chevron-left" [size]="18" />
         <span class="pagination-nav-text">Previous</span>
       </button>
-      @for (page of getPages(); track page) {
-        <button
-          class="pagination-page"
-          (click)="changePage(page)"
-          [class.active]="page === currentPage"
-          [attr.aria-current]="page === currentPage ? 'page' : null"
-          [disabled]="page === '...'"
-          >
-          {{ page }}
-        </button>
+      @for (page of getPages(); track $index) {
+        @if (page === '...') {
+          <span class="pagination-ellipsis" aria-hidden="true">…</span>
+        } @else {
+          <button
+            type="button"
+            class="pagination-page"
+            [class.page-far]="isFarPage(page)"
+            (click)="changePage(page)"
+            [class.active]="page === currentPage"
+            [attr.aria-current]="page === currentPage ? 'page' : null"
+            >
+            {{ page }}
+          </button>
+        }
       }
-      <button class="pagination-nav" (click)="changePage(currentPage + 1)" [disabled]="currentPage === totalPages" title="Next">
-        <i class="material-icons icon-inline pagination-icon" aria-hidden="true">chevron_right</i>
+      <button
+        type="button"
+        class="pagination-nav"
+        (click)="changePage(currentPage + 1)"
+        [disabled]="currentPage === totalPages"
+        [attr.aria-disabled]="currentPage === totalPages"
+        >
         <span class="pagination-nav-text">Next</span>
+        <app-icon class="pagination-icon" name="chevron-right" [size]="18" />
       </button>
-      <button class="pagination-nav" (click)="changePage(totalPages)" [disabled]="currentPage === totalPages" title="Last page">
-        <i class="material-icons icon-inline pagination-icon" aria-hidden="true">last_page</i>
-        <span class="pagination-nav-text">Last</span>
+      <button
+        type="button"
+        class="pagination-nav pagination-edge"
+        (click)="changePage(totalPages)"
+        [disabled]="currentPage === totalPages"
+        [attr.aria-disabled]="currentPage === totalPages"
+        >
+        Last
       </button>
-    </div>
+    </nav>
   }
 
   <!-- ViewMore Modal -->
@@ -214,3 +176,44 @@
     </div>
   }
 </div>
+
+<!-- One result row, used by both the default list and the search results.
+     The food name is the button (so screen readers hear just the name); its
+     ::after covers the whole row, so clicking anywhere on it opens the same
+     details popup as before. -->
+<ng-template #resultRow let-oxalate>
+  <li class="result-item">
+    <div class="result-left">
+      <p class="result-category-breadcrumb">{{ oxalate.category }}</p>
+      <h2 class="result-title">
+        <button
+          type="button"
+          class="result-button"
+          (click)="viewMore(oxalate, $event)"
+        >{{ oxalate.item }}</button>
+      </h2>
+      @if (oxalate.serving_size || oxalate.calc_level) {
+        <p class="result-chips">
+          @if (oxalate.serving_size) {
+            <span class="serving-chip">{{ oxalate.serving_size }}</span>
+          }
+          @if (oxalate.calc_level) {
+            <span
+              class="level-badge"
+              [class.badge-high]="oxalate.calc_level === 'High' || oxalate.calc_level === 'Very High' || oxalate.calc_level === 'Extremely High'"
+              [class.badge-medium]="oxalate.calc_level === 'Medium'"
+              [class.badge-low]="oxalate.calc_level === 'Low'"
+              [class.badge-very-low]="oxalate.calc_level === 'Very Low'"
+            ><span class="level-dot" aria-hidden="true"></span>{{ oxalate.calc_level }}</span>
+          }
+        </p>
+      }
+    </div>
+    <!-- The per-serving numbers, shown once (they used to repeat under the name). -->
+    <p class="result-right">
+      <span class="result-oxalate-value"><span class="value-number">{{ withUnit(oxalate.calc_oxalate_per_serving) }}</span>&ngsp;<span class="value-unit">per serving</span></span>&ngsp;
+      <span class="result-soluble-value">Soluble: {{ withUnit(oxalate.calc_soluble_mg_oxalate_per_serving) }}</span>
+    </p>
+    <app-icon class="result-chevron" name="chevron-right" [size]="18" />
+  </li>
+</ng-template>

@@ -6,6 +6,7 @@ import { FilterService } from '../service/filter.service';
 import { ThemeService } from 'src/app/shared/services/theme.service';
 import { Subject } from 'rxjs';
 import { Filter } from './model/filter';
+import { IconComponent } from 'src/app/shared/components/icon/icon.component';
 
 describe('FilterComponent', () => {
   let component: FilterComponent;
@@ -41,7 +42,7 @@ describe('FilterComponent', () => {
 
     TestBed.configureTestingModule({
       declarations: [FilterComponent],
-      imports: [FormsModule],
+      imports: [FormsModule, IconComponent],
       providers: [
         { provide: CategoryService, useValue: categoryService },
         { provide: FilterService, useValue: filterService },
@@ -516,4 +517,34 @@ describe('FilterComponent', () => {
       expect(component.isDarkTheme).toBeFalse();
     });
   });
+
+  describe('filters row markup', () => {
+    beforeEach(() => fixture.detectChanges());
+    const el = () => fixture.nativeElement as HTMLElement;
+
+    it('labels both selects with hidden labels (same names as before)', () => {
+      const labelFor = (id: string) =>
+        el().querySelector(`label[for="${id}"]`) as HTMLElement;
+      expect(labelFor('time').textContent!.trim()).toBe('Filter by category');
+      expect(labelFor('results').textContent!.trim()).toBe(
+        'Filter by oxalate level'
+      );
+      expect(labelFor('time').classList).toContain('sr-only');
+    });
+
+    it('keeps the default option texts', () => {
+      const firstOptions = Array.from(el().querySelectorAll('select')).map(
+        (s) => s.options[0].textContent!.trim()
+      );
+      expect(firstOptions).toEqual(['Any Category', 'All Levels']);
+    });
+
+    it('keeps Clear, now with a line icon', () => {
+      const clear = el().querySelector('.btn-clear-inline') as HTMLButtonElement;
+      expect(clear.textContent!.trim()).toBe('Clear');
+      expect(clear.querySelector('app-icon')).toBeTruthy();
+      expect(clear.querySelector('.material-icons')).toBeNull();
+    });
+  });
 });
+

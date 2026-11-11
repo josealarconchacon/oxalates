@@ -1,9 +1,10 @@
 import { Component, Input } from '@angular/core';
+import { IconComponent } from 'src/app/shared/components/icon/icon.component';
 
 
 @Component({
   selector: 'app-alert',
-  imports: [],
+  imports: [IconComponent],
   templateUrl: './alert.component.html',
   styleUrls: ['./alert.component.css'],
 })

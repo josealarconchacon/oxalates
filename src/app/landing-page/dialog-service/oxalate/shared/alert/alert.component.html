@@ -1,8 +1,17 @@
 @if (isVisible) {
+  <!-- role="alert": screen readers read the message as soon as it appears. -->
   <div class="alert-container">
-    <div class="alert-box">
+    <div class="alert-box" role="alert">
+      <app-icon class="alert-icon" name="triangle-alert" [size]="20" />
       <p class="alert-message">{{ message }}</p>
-      <button class="close-alert-btn" (click)="closeAlert()">×</button>
+      <button
+        type="button"
+        class="close-alert-btn"
+        aria-label="Close"
+        (click)="closeAlert()"
+      >
+        <app-icon name="x" [size]="18" />
+      </button>
     </div>
   </div>
 }

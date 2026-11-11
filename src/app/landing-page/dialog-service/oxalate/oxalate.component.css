@@ -1,18 +1,41 @@
+/* Search page tokens. Everything else uses the shared --color-* tokens from
+   tokens/colors.css; these two only exist on this page. Custom properties
+   inherit, so the search bar and filters inside can use them too. */
+:host {
+  --sp-surface-2: #f1f4f0; /* row hover */
+  --sp-disabled: #9aa5a0; /* dimmed pagination buttons */
+  display: block;
+}
+
+:host-context(.dark-theme) {
+  --sp-surface-2: #1d2621;
+  --sp-disabled: #5e6b64;
+}
+
 .search-container {
-  max-width: min(50rem, 100%);
+  max-width: min(60rem, 100%); /* 960px */
   margin: 0 auto;
   padding: clamp(2rem, 8vw, 7.5rem) clamp(1rem, 4vw, 1.5rem);
   /* Clear the fixed header first; on phones 8vw alone sat under it. */
   padding-top: calc(var(--header-height) + clamp(1.5rem, 4vw, 3rem));
-  font-family: var(--font-family-sans, "Roboto", Arial, sans-serif);
+  font-family: var(--font-family-sans);
 }
 
 .search-title {
-  font-size: clamp(1.5rem, 4vw, 2.2rem);
+  margin: 0 0 20px;
+  font-family: var(--font-family-display);
+  font-size: 2.75rem; /* 44px */
   font-weight: 700;
-  color: var(--color-text);
-  text-align: center;
-  margin: 0 0 24px;
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+  color: var(--color-ink);
+  text-align: left;
+}
+
+@media (max-width: 640px) {
+  .search-title {
+    font-size: 1.875rem; /* 30px */
+  }
 }
 
 .loading-container {
@@ -56,7 +79,7 @@
 }
 
 .filter-component {
-  display: inline-flex;
+  display: block;
   margin-top: 16px;
 }
 
@@ -74,8 +97,7 @@
 
 .preview-section {
   width: 100%;
-  max-width: 720px;
-  margin: 0 auto;
+  margin-top: 24px;
   animation: welcomeFadeUp 0.35s ease forwards;
 }
 
@@ -85,275 +107,171 @@
   }
 }
 
-.preview-grid {
-  display: block;
-  width: 100%;
-}
-
-.preview-item {
-  display: grid;
-  grid-template-columns: 1fr auto;
-  align-items: center;
-  gap: 24px;
-  padding: 14px 0;
-  border-bottom: 1px solid var(--color-border);
-  background: transparent;
-  cursor: pointer;
-  transition: color 0.15s ease;
-}
-
-.preview-item:last-child {
-  border-bottom: none;
-}
-
-.preview-item:hover .preview-name {
-  color: var(--action-color);
-  text-decoration: underline;
-}
-
-.preview-item-left {
-  display: flex;
-  flex-direction: column;
-  gap: 2px;
-  overflow: hidden;
-  min-width: 0;
-}
-
-.preview-category {
-  font-size: 0.78rem;
-  color: var(--category-text);
-  font-weight: 400;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  margin-bottom: 2px;
-}
-
-.preview-name {
-  font-size: 1rem;
-  font-weight: 600;
-  color: var(--action-color);
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  transition:
-    color 0.15s ease,
-    text-decoration 0.15s ease;
-}
-
-.preview-item-right {
-  flex-shrink: 0;
-  display: flex;
-  flex-direction: column;
-  align-items: flex-end;
-  gap: 0.25rem;
-  min-width: min(6.25rem, 25vw);
-}
-
-.preview-badge {
-  font-size: 0.75rem;
-  font-weight: 600;
-  padding: 3px 10px;
-  border-radius: 999px;
-  white-space: nowrap;
-  border: 1px solid transparent;
-}
-
-/* Colors come from the --level-* tokens, which change with the theme. */
-.preview-badge.level-high,
-.preview-badge.level-very-high,
-.preview-badge.level-extremely-high {
-  background: var(--level-high-surface);
-  color: var(--level-high-text);
-  border-color: var(--level-high-border);
-}
-
-.preview-badge.level-medium {
-  background: var(--level-medium-surface);
-  color: var(--level-medium-text);
-  border-color: var(--level-medium-border);
-}
-
-.preview-badge.level-low {
-  background: var(--level-low-surface);
-  color: var(--level-low-text);
-  border-color: var(--level-low-border);
-}
-
-.preview-badge.level-very-low {
-  background: var(--level-very-low-surface);
-  color: var(--level-very-low-text);
-  border-color: var(--level-very-low-border);
-}
-
-.preview-badge.level-trace {
-  background: var(--level-trace-surface);
-  color: var(--level-trace-text);
-  border-color: var(--level-trace-border);
-}
-
-@media screen and (max-width: 767px) {
-  .preview-item {
-    grid-template-columns: 1fr auto;
-    gap: 12px;
-  }
-
-  .preview-name {
-    font-size: 0.9rem;
-  }
-
-  .preview-category {
-    font-size: 0.75rem;
-  }
-}
-
-@media screen and (min-width: 1024px) {
-  .preview-section {
-    max-width: 720px;
-    margin: 0 auto;
-  }
-}
-
 .search-results {
-  margin-top: 24px;
   width: 100%;
+  margin-top: 24px;
 }
 
-/* Google-style results list - no cards */
+/* Results: one rounded card holding the list; thin lines between rows. */
 .results-list {
-  display: flex;
-  flex-direction: column;
-  gap: 0;
-  padding-left: 0;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+  list-style: none;
+  background: var(--color-surface);
+  border: 1px solid var(--color-line);
+  border-radius: 20px;
 }
 
-/* Mobile (< 768px): single column stacked */
+.results-list:empty {
+  display: none;
+}
+
 .result-item {
-  padding: 12px 0;
-  border-bottom: 1px solid var(--color-border);
-  cursor: pointer;
-  background: transparent;
+  position: relative;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto auto;
+  align-items: center;
+  gap: 4px 20px;
+  min-height: 44px;
+  padding: 14px 16px 14px 20px;
   transition: background-color 0.15s ease;
 }
 
-.result-item-last {
-  border-bottom: none;
+.result-item + .result-item {
+  border-top: 1px solid var(--color-line);
 }
 
 .result-item:hover {
-  background: transparent;
+  background: var(--sp-surface-2);
 }
 
-.result-item:hover .result-title {
-  filter: brightness(1.15);
-  text-decoration: underline;
+/* Keyboard focus is on the name button; show it on the whole row. */
+.result-item:has(.result-button:focus-visible) {
+  outline: var(--focus-ring);
+  outline-offset: -3px;
 }
 
-.result-title {
-  transition:
-    color 0.15s ease,
-    text-decoration 0.15s ease,
-    filter 0.15s ease;
-}
-
-/* Desktop (>= 768px): two-column layout */
-@media screen and (min-width: 768px) {
-  .result-item {
-    display: grid;
-    grid-template-columns: 1fr auto;
-    align-items: center;
-    gap: 24px;
-    padding: 14px 0;
-    border-bottom: 1px solid var(--color-border);
-  }
-
-  .result-left {
-    min-width: 0;
-  }
-
-  .result-right {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-end;
-    text-align: right;
-    min-width: 130px;
-    max-width: 180px;
-  }
-
-  .level-badge-inline,
-  .level-badge-inline-sep {
-    display: none;
-  }
-}
-
-/* Mobile: single column, hide right column, show inline badge */
-@media screen and (max-width: 767px) {
-  .result-item {
-    display: block;
-    padding: 12px 0;
-  }
-
-  .result-right {
-    display: none;
-  }
-
-  .level-badge-inline {
-    display: inline;
-  }
+.result-left {
+  min-width: 0;
 }
 
 .result-category-breadcrumb {
-  font-size: 0.78rem;
-  font-weight: 400;
-  color: var(--category-text);
-  letter-spacing: 0.02em;
-  margin: 0 0 4px 0;
-}
-
-/* #0d7a4e is 2.56:1 on the dark card; this green is 5.55:1 */
-.result-title {
-  font-size: 1rem;
-  font-weight: 600;
-  color: var(--action-color);
-  margin: 0 0 2px 0;
-  cursor: pointer;
-  text-decoration: none;
-}
-
-.result-meta-line {
-  font-size: 0.875rem;
-  font-weight: 400;
+  margin: 0 0 2px;
+  font-size: 0.78125rem; /* 12.5px */
   color: var(--color-muted);
-  margin: 4px 0 0 0;
-  line-height: 1.4;
 }
 
-.meta-sep {
-  margin: 0 0.25em;
+.result-title {
+  margin: 0;
+  font-size: 1.03125rem; /* 16.5px */
+  font-weight: 700;
+  line-height: 1.35;
+  color: var(--color-ink);
 }
 
-/* Inline badge (mobile) */
-.level-badge {
-  display: inline;
-  font-size: 0.75rem;
-  padding: 2px 8px;
-  border-radius: 999px;
-  font-weight: 600;
-  margin-left: 0.25em;
+/* The name is the button; ::after stretches it over the whole row. */
+.result-button {
+  /* The whole row (via ::after) is the tap target, so the global 44px
+     button minimum isn't needed on the text itself. */
+  min-height: 0;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: inherit;
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+
+.result-button::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+}
+
+.result-button:focus-visible {
+  outline: none;
+}
+
+.result-chips {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px;
+  margin: 6px 0 0;
+}
+
+.result-right {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 2px;
+  margin: 0;
+  text-align: right;
+  white-space: nowrap;
 }
 
 .result-oxalate-value {
-  font-size: 0.875rem;
-  font-weight: 600;
-  color: var(--color-text);
-  white-space: nowrap;
+  color: var(--color-ink);
+}
+
+.value-number {
+  font-family: var(--font-family-display);
+  font-size: 1.125rem; /* 18px */
+  font-weight: 700;
+}
+
+.value-unit {
+  font-size: 0.8125rem;
+  color: var(--color-muted);
 }
 
 .result-soluble-value {
-  font-size: 0.8rem;
-  font-weight: 400;
+  font-size: 0.8125rem;
   color: var(--color-muted);
-  white-space: nowrap;
+}
+
+.result-chevron {
+  color: var(--color-muted);
+  --icon-stroke: 2;
+}
+
+/* Level badge: a pill with a dot; colors come from the --level-* tokens
+   (the rules below). The serving size is an outlined, muted chip. */
+.level-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 2px 10px;
+  /* Neutral grey for any level without its own colors (e.g. "uncalculated"). */
+  border: 1px solid var(--color-line);
+  border-radius: 999px;
+  color: var(--color-muted);
+  font-size: 0.75rem;
+  font-weight: 600;
+  line-height: 1.5;
+  vertical-align: middle;
+}
+
+.level-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: currentColor;
+}
+
+.serving-chip {
+  display: inline-flex;
+  align-items: center;
+  padding: 2px 10px;
+  border: 1px solid var(--color-line);
+  border-radius: 999px;
+  color: var(--color-muted);
+  font-size: 0.75rem;
+  font-weight: 500;
+  line-height: 1.5;
+  vertical-align: middle;
 }
 
 .level-badge.badge-high {
@@ -388,9 +306,9 @@
 }
 
 .no-results-icon {
-  font-size: 3rem;
-  color: var(--color-primary);
+  display: inline-flex;
   margin-bottom: 16px;
+  color: var(--color-accent-fg);
 }
 
 @media (prefers-reduced-motion: no-preference) {
@@ -423,82 +341,70 @@
 }
 
 /* Pagination */
+/* Pagination: 44px outlined buttons; the current page is solid green. */
 .pagination {
   display: flex;
-  justify-content: center;
-  align-items: center;
-  margin-top: 24px;
   flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
   gap: 8px;
+  margin-top: 24px;
 }
 
 .pagination button {
-  min-width: 2.75rem;
-  min-height: 2.75rem;
-  padding: 0 var(--spacing-2);
-  border: none;
-  background: transparent;
-  color: var(--color-muted);
-  cursor: pointer;
-  font-size: 0.875rem;
-  border-radius: 50%;
   display: inline-flex;
   align-items: center;
   justify-content: center;
+  gap: 4px;
+  min-width: 44px;
+  height: 44px;
+  padding: 0 12px;
+  border: 1px solid var(--color-line);
+  border-radius: 12px;
+  background: var(--color-surface);
+  color: var(--color-ink);
+  font: inherit;
+  font-size: 0.9375rem;
+  font-weight: 600;
+  cursor: pointer;
+  --icon-stroke: 2;
   transition:
-    color 0.2s ease,
-    background-color 0.2s ease,
-    border-color 0.2s ease;
-}
-
-.pagination-page {
-  font-weight: 500;
-}
-
-.pagination-page:hover:not(:disabled):not(.active) {
-  border: 1.5px solid var(--color-border);
-  color: var(--color-text);
-}
-
-/* Needs the extra .pagination button: with Angular's scoping attributes,
-   ".pagination button" (above) outranks ".pagination-page.active", so the
-   current page was never highlighted. */
-.pagination button.pagination-page.active {
-  background: var(--action-color);
-  color: var(--on-action);
-}
-
-.pagination-nav {
-  border-radius: 50%;
-  min-width: 2.75rem;
-  min-height: 2.75rem;
-}
-
-.pagination-nav .pagination-icon {
-  display: none;
-}
-
-.pagination-nav .pagination-nav-text {
-  display: inline;
-}
-
-@media (max-width: 480px) {
-  .pagination-nav .pagination-icon {
-    display: inline;
-  }
-
-  .pagination-nav .pagination-nav-text {
-    display: none;
-  }
+    background-color 0.15s ease,
+    border-color 0.15s ease;
 }
 
 .pagination button:hover:not(:disabled) {
-  color: var(--action-color);
+  border-color: var(--color-muted);
 }
 
+.pagination button:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: 2px;
+}
+
+/* Extra .pagination button so this outranks the rule above. */
+.pagination button.pagination-page.active {
+  border-color: var(--color-accent);
+  background: var(--color-accent);
+  color: #ffffff; /* 7.3:1 light, 5.3:1 dark */
+}
+
+/* First/Previous on page 1, Next/Last on the last page. */
 .pagination button:disabled {
-  opacity: 0.4;
+  border-color: transparent;
+  background: transparent;
+  color: var(--sp-disabled);
   cursor: not-allowed;
+}
+
+.pagination-ellipsis {
+  padding: 0 2px;
+  color: var(--color-muted);
+}
+
+/* Icons only show on phones (step 8); wider screens show the words. */
+.pagination-icon {
+  display: none;
 }
 
 /* Modal overlay - smooth open/close transition */
@@ -599,6 +505,94 @@
   .search-container {
     padding-inline: 16px;
     padding-bottom: 32px;
+  }
+}
+
+/* Phones: each result stacks as category, name, numbers, then chips (no
+   chevron); the pager turns compact: ‹ 1 2 3 … 300 ›. */
+@media (max-width: 640px) {
+  .result-item {
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-areas:
+      'category'
+      'name'
+      'values'
+      'chips';
+    gap: 4px;
+    padding: 14px 16px;
+  }
+
+  .result-left {
+    display: contents;
+  }
+
+  .result-category-breadcrumb {
+    grid-area: category;
+    margin: 0;
+  }
+
+  .result-title {
+    grid-area: name;
+  }
+
+  .result-right {
+    grid-area: values;
+    flex-direction: row;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: 2px 10px;
+    text-align: left;
+    white-space: normal;
+  }
+
+  .value-number {
+    font-size: 1rem;
+  }
+
+  .result-chips {
+    grid-area: chips;
+    margin: 4px 0 0;
+  }
+
+  .result-chevron {
+    display: none;
+  }
+}
+
+/* The full pager (First … Last) needs about 650px; below 720px use the
+   compact one: ‹ 1 2 3 … 300 ›. */
+@media (max-width: 719.98px) {
+  .pagination {
+    gap: 4px;
+  }
+
+  /* .pagination button sets display, so match its weight to hide these. */
+  .pagination button.pagination-edge,
+  .pagination button.page-far {
+    display: none;
+  }
+
+  .pagination button {
+    padding: 0;
+  }
+
+  .pagination-icon {
+    display: inline-flex;
+  }
+
+  /* Previous/Next show just the arrow; the word stays for screen readers. */
+  .pagination-nav-text {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+  }
+
+  .pagination-ellipsis {
+    padding: 0;
+    font-size: 0.75rem;
   }
 }
 

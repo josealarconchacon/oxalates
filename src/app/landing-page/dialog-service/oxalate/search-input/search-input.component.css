@@ -176,3 +176,17 @@
     transition: none;
   }
 }
+
+/* Search for Foods page (/oxalate) only: the homepage hero keeps the look
+   above. One flat card with 18px corners and a 44px clear button. */
+:host-context(app-oxalate) .search-input-container {
+  border-radius: 18px;
+  box-shadow: none;
+}
+
+:host-context(app-oxalate) .search-clear-button {
+  width: 44px;
+  height: 44px;
+  margin-right: 6px;
+  border-radius: 12px;
+}

@@ -1,9 +1,9 @@
 <div class="filter-inline-container" [ngClass]="{ 'dark-theme': isDarkTheme }">
-  <!-- Category Dropdown -->
+  <!-- Category Dropdown (same names as before, now as hidden labels) -->
+  <label class="sr-only" for="time">Filter by category</label>
   <select
     id="time"
     name="time"
-    aria-label="Filter by category"
     [(ngModel)]="filters.category"
     (ngModelChange)="applyFilters()"
     class="filter-inline-select"
@@ -18,10 +18,10 @@
   </select>
 
   <!-- Level Dropdown -->
+  <label class="sr-only" for="results">Filter by oxalate level</label>
   <select
     id="results"
     name="results"
-    aria-label="Filter by oxalate level"
     [(ngModel)]="filters.calc_level"
     (ngModelChange)="applyFilters()"
     class="filter-inline-select"
@@ -37,6 +37,7 @@
 
   <!-- Clear Filters Button -->
   <button type="button" class="btn-clear-inline" (click)="clearFilters()">
-    <i class="material-icons icon-inline" aria-hidden="true">close</i> Clear
+    <app-icon name="x" [size]="16" />
+    <span>Clear</span>
   </button>
 </div>

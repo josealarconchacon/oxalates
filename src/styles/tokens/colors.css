@@ -102,12 +102,14 @@
   --level-medium-surface: #fffbeb;
   --level-medium-border: #fde68a;
   --level-medium-text: #92400e;
-  --level-low-surface: #f0fdf4;
-  --level-low-border: #bbf7d0;
-  --level-low-text: #15803d;
-  --level-very-low-surface: #f0f9ff;
-  --level-very-low-border: #bae6fd;
-  --level-very-low-text: #0369a1;
+  /* Very Low uses the brand green (search redesign); Low moved to teal so
+     the two stay easy to tell apart. */
+  --level-low-surface: #e6f4f2;
+  --level-low-border: #b3dcd6;
+  --level-low-text: #0f6b63; /* 5.9:1 on its surface */
+  --level-very-low-surface: #e6f0ea;
+  --level-very-low-border: #b9d3c3;
+  --level-very-low-text: #17603f; /* 6.5:1 on its surface */
   --level-trace-surface: #f5f3ff;
   --level-trace-border: #ddd6fe;
   --level-trace-text: #7c3aed;
@@ -249,12 +251,12 @@
   --level-medium-surface: rgba(255, 251, 235, 0.15);
   --level-medium-border: rgba(253, 230, 138, 0.3);
   --level-medium-text: #fbbf24;
-  --level-low-surface: rgba(240, 253, 244, 0.15);
-  --level-low-border: rgba(187, 247, 208, 0.3);
-  --level-low-text: #4ade80;
-  --level-very-low-surface: rgba(240, 249, 255, 0.15);
-  --level-very-low-border: rgba(186, 230, 253, 0.3);
-  --level-very-low-text: #38bdf8;
+  --level-low-surface: rgba(45, 212, 191, 0.12);
+  --level-low-border: rgba(45, 212, 191, 0.3);
+  --level-low-text: #5eead4;
+  --level-very-low-surface: #1b3328;
+  --level-very-low-border: rgba(127, 217, 170, 0.3);
+  --level-very-low-text: #7fd9aa;
   --level-trace-surface: rgba(245, 243, 255, 0.15);
   --level-trace-border: rgba(221, 214, 254, 0.3);
   --level-trace-text: #a78bfa;

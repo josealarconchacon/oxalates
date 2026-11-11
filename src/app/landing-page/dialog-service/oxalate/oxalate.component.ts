@@ -481,9 +481,9 @@ export class OxalateComponent implements OnInit, OnDestroy {
         next: (data) => {
           this.lastSearchQuery = this.searchQuery;
           if (data.length === 0) {
-            this.showAlert = true;
-            this.alertMessage =
-              'No results found. Try different keywords or check your spelling.';
+            // "No results" isn't an error: the inline empty state says it
+            // (with the same words), so no red popup here.
+            this.showAlert = false;
             this.applySearchResults([]);
           } else {
             const sorted = this.sortBySearchTerm(data, this.searchQuery);
@@ -733,6 +733,35 @@ export class OxalateComponent implements OnInit, OnDestroy {
     this.displayedOxalates = this.paginationService.updateDisplayedItems(
       this.oxalates,
     );
+  }
+
+  /**
+   * Adds " mg" only after a number. Words like "n/a" or "uncalculated" show
+   * as they are ("Soluble: uncalculated", not "uncalculated mg").
+   */
+  withUnit(value: unknown): string {
+    const text = value == null ? '' : String(value).trim();
+    const isNumber = text !== '' && !isNaN(Number(text));
+    return isNumber ? `${text} mg` : text;
+  }
+
+  /**
+   * Display only, for the compact phone pager: true for page numbers far from
+   * the current page (CSS hides them under 641px). The first and last pages
+   * always stay; at either end three pages stay so it reads "1 2 3 … 300".
+   */
+  isFarPage(page: number | string): boolean {
+    if (typeof page !== 'number') return false;
+    const current = this.currentPage;
+    const last = this.totalPages;
+    if (page === 1 || page === last) return false;
+    const [low, high] =
+      current <= 2
+        ? [1, 3]
+        : current >= last - 1
+          ? [last - 2, last]
+          : [current - 1, current + 1];
+    return page < low || page > high;
   }
 
   getPages(): (number | string)[] {

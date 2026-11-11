@@ -1,50 +1,65 @@
+/* Shared alert (search, Add Food, Download Report, Sign in, Change Password).
+   A soft red card with dark red text, readable in light and dark mode: the
+   --error-* tokens already switch for dark mode. The tinted surface is laid
+   over the page surface so the card stays opaque. */
 .alert-container {
   position: fixed;
-  top: var(--spacing-4);
+  top: 16px;
   left: 50%;
-  transform: translateX(-50%);
   z-index: 1000;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  width: min(25rem, calc(100vw - 2rem));
-  max-width: 100%;
-  padding: 0 var(--spacing-4);
+  width: min(28rem, calc(100vw - 32px));
+  transform: translateX(-50%);
 }
 
 .alert-box {
-  background-color: var(--text-error);
-  color: var(--text-inverse);
-  padding: var(--spacing-4) var(--spacing-6);
-  border-radius: var(--radius-lg);
-  box-shadow: var(--shadow-md);
   display: flex;
-  align-items: center;
-  justify-content: space-between;
+  align-items: flex-start;
+  gap: 12px;
   width: 100%;
+  padding: 12px 8px 12px 16px;
+  border: 1px solid var(--error-border);
+  border-radius: 14px;
+  background:
+    linear-gradient(var(--error-surface), var(--error-surface)),
+    var(--color-surface);
+  color: var(--error-on-surface);
+  box-shadow: 0 12px 32px rgba(17, 26, 21, 0.18);
+  font-family: var(--font-family-sans);
+  --icon-stroke: 2;
+}
+
+.alert-icon {
+  margin-top: 12px; /* line up with the first line of text */
 }
 
 .alert-message {
-  margin: 0;
-  font-size: var(--font-size-base);
   flex: 1;
+  margin: 0;
+  padding: 10px 0;
+  font-size: 0.9375rem;
+  font-weight: 500;
+  line-height: 1.45;
 }
 
 .close-alert-btn {
-  background: none;
-  border: none;
-  color: var(--text-inverse);
-  font-size: 1.25rem;
-  cursor: pointer;
-  min-width: 2.75rem;
-  min-height: 2.75rem;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  display: grid;
+  flex-shrink: 0;
+  place-items: center;
+  width: 44px;
+  height: 44px;
   padding: 0;
+  border: 0;
+  border-radius: 10px;
+  background: transparent;
+  color: inherit;
+  cursor: pointer;
+}
+
+.close-alert-btn:hover {
+  background: var(--error-surface);
 }
 
 .close-alert-btn:focus-visible {
-  outline: 2px solid var(--text-inverse);
+  outline: 2px solid currentColor;
   outline-offset: 2px;
 }
