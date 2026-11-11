@@ -1,13 +1,28 @@
+/* Search page tokens. Everything else uses the shared --color-* tokens from
+   tokens/colors.css; these two only exist on this page. Custom properties
+   inherit, so the search bar and filters inside can use them too. */
+:host {
+  --sp-surface-2: #f1f4f0; /* row hover */
+  --sp-disabled: #9aa5a0; /* dimmed pagination buttons */
+  display: block;
+}
+
+:host-context(.dark-theme) {
+  --sp-surface-2: #1d2621;
+  --sp-disabled: #5e6b64;
+}
+
 .search-container {
   max-width: min(50rem, 100%);
   margin: 0 auto;
   padding: clamp(2rem, 8vw, 7.5rem) clamp(1rem, 4vw, 1.5rem);
   /* Clear the fixed header first; on phones 8vw alone sat under it. */
   padding-top: calc(var(--header-height) + clamp(1.5rem, 4vw, 3rem));
-  font-family: var(--font-family-sans, "Roboto", Arial, sans-serif);
+  font-family: var(--font-family-sans);
 }
 
 .search-title {
+  font-family: var(--font-family-display);
   font-size: clamp(1.5rem, 4vw, 2.2rem);
   font-weight: 700;
   color: var(--color-text);
