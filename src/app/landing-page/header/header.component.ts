@@ -18,6 +18,14 @@ import { showDefaultAvatar } from '../../shared/utils/avatar';
 import { ProfileImageService } from '../../user-auth/service/profile-image.service';
 import { IconComponent } from '../../shared/components/icon/icon.component';
 
+/** Things Tab can land on inside the slide-out menu. */
+const MENU_FOCUSABLE = [
+  'a[href]',
+  'button:not([disabled])',
+  'input:not([disabled]):not([type="hidden"])',
+  '[tabindex]:not([tabindex="-1"])',
+].join(',');
+
 /** Below 860px the text links move into the slide-out menu. */
 export const HEADER_MOBILE_QUERY = '(max-width: 859.98px)';
 
@@ -47,6 +55,7 @@ export class HeaderComponent implements OnInit {
 
   @ViewChild('menuButton') menuButton?: ElementRef<HTMLButtonElement>;
   @ViewChild('closeButton') closeButton?: ElementRef<HTMLButtonElement>;
+  @ViewChild('navPanel') navPanel?: ElementRef<HTMLElement>;
 
   private scrollThreshold = 50;
   private lastScrollPosition = 0;
@@ -101,6 +110,34 @@ export class HeaderComponent implements OnInit {
     if (!this.isNavOpen) return;
     this.closeNav();
     this.menuButton?.nativeElement.focus();
+  }
+
+  /**
+   * Focus trap: while the menu covers the page, Tab and Shift+Tab cycle
+   * through the menu's own items instead of reaching the hidden page behind.
+   */
+  @HostListener('document:keydown', ['$event'])
+  onMenuTab(event: KeyboardEvent): void {
+    const panel = this.navPanel?.nativeElement;
+    if (!this.isNavOpen || event.key !== 'Tab' || !panel) return;
+
+    const items = Array.from(
+      panel.querySelectorAll<HTMLElement>(MENU_FOCUSABLE)
+    ).filter((el) => el.getClientRects().length > 0); // skip hidden ones
+    if (items.length === 0) return;
+
+    const first = items[0];
+    const last = items[items.length - 1];
+    const active = document.activeElement as HTMLElement | null;
+    const outside = !active || !panel.contains(active);
+
+    if (event.shiftKey && (active === first || outside)) {
+      event.preventDefault();
+      last.focus();
+    } else if (!event.shiftKey && (active === last || outside)) {
+      event.preventDefault();
+      first.focus();
+    }
   }
 
   closeNav(): void {
