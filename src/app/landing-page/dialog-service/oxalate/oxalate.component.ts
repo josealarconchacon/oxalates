@@ -735,6 +735,16 @@ export class OxalateComponent implements OnInit, OnDestroy {
     );
   }
 
+  /**
+   * Adds " mg" only after a number. Words like "n/a" or "uncalculated" show
+   * as they are ("Soluble: uncalculated", not "uncalculated mg").
+   */
+  withUnit(value: unknown): string {
+    const text = value == null ? '' : String(value).trim();
+    const isNumber = text !== '' && !isNaN(Number(text));
+    return isNumber ? `${text} mg` : text;
+  }
+
   getPages(): (number | string)[] {
     const total = this.hasSearched ? this.oxalates.length : this.fullDatasetLength;
     return this.paginationService.getPages(total);

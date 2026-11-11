@@ -45,4 +45,23 @@ describe('OxalateComponent', () => {
   it('should create', () => {
     expect(component).toBeTruthy();
   });
+
+  describe('withUnit', () => {
+    it('adds mg after numbers, including 0', () => {
+      expect(component.withUnit('0.11')).toBe('0.11 mg');
+      expect(component.withUnit('0')).toBe('0 mg');
+      expect(component.withUnit(0.46)).toBe('0.46 mg');
+    });
+
+    it('shows words as they are, without mg', () => {
+      expect(component.withUnit('uncalculated')).toBe('uncalculated');
+      expect(component.withUnit('n/a')).toBe('n/a');
+    });
+
+    it('shows nothing for a missing value', () => {
+      expect(component.withUnit(null)).toBe('');
+      expect(component.withUnit('')).toBe('');
+    });
+  });
 });
+

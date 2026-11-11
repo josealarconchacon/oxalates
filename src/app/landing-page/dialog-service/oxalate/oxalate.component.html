@@ -50,9 +50,9 @@
               <p class="result-category-breadcrumb">{{ oxalate.category }}</p>
               <h2 class="result-title">{{ oxalate.item }}</h2>
               <p class="result-meta-line">
-                Oxalate per serving: {{ oxalate.calc_oxalate_per_serving }}{{ oxalate.calc_oxalate_per_serving !== 'n/a' ? ' mg' : '' }}
+                Oxalate per serving: {{ withUnit(oxalate.calc_oxalate_per_serving) }}
                 <span class="meta-sep">·</span>
-                Soluble: {{ oxalate.calc_soluble_mg_oxalate_per_serving }}{{ oxalate.calc_soluble_mg_oxalate_per_serving !== 'n/a' ? ' mg' : '' }}
+                Soluble: {{ withUnit(oxalate.calc_soluble_mg_oxalate_per_serving) }}
                 @if (oxalate.serving_size) {
                   <span class="meta-sep">·</span>
                 }
@@ -74,8 +74,8 @@
               </p>
             </div>
             <div class="result-right">
-              <span class="result-oxalate-value">{{ oxalate.calc_oxalate_per_serving }}{{ oxalate.calc_oxalate_per_serving !== 'n/a' ? ' mg' : '' }} per serving</span>
-              <span class="result-soluble-value">Soluble: {{ oxalate.calc_soluble_mg_oxalate_per_serving }}{{ oxalate.calc_soluble_mg_oxalate_per_serving !== 'n/a' ? ' mg' : '' }}</span>
+              <span class="result-oxalate-value">{{ withUnit(oxalate.calc_oxalate_per_serving) }} per serving</span>
+              <span class="result-soluble-value">Soluble: {{ withUnit(oxalate.calc_soluble_mg_oxalate_per_serving) }}</span>
             </div>
           </div>
         }
@@ -123,9 +123,9 @@
               <p class="result-category-breadcrumb">{{ oxalate.category }}</p>
               <h2 class="result-title">{{ oxalate.item }}</h2>
               <p class="result-meta-line">
-                Oxalate per serving: {{ oxalate.calc_oxalate_per_serving }}{{ oxalate.calc_oxalate_per_serving !== 'n/a' ? ' mg' : '' }}
+                Oxalate per serving: {{ withUnit(oxalate.calc_oxalate_per_serving) }}
                 <span class="meta-sep">·</span>
-                Soluble: {{ oxalate.calc_soluble_mg_oxalate_per_serving }}{{ oxalate.calc_soluble_mg_oxalate_per_serving !== 'n/a' ? ' mg' : '' }}
+                Soluble: {{ withUnit(oxalate.calc_soluble_mg_oxalate_per_serving) }}
                 @if (oxalate.serving_size) {
                   <span class="meta-sep">·</span>
                 }
@@ -147,8 +147,8 @@
               </p>
             </div>
             <div class="result-right">
-              <span class="result-oxalate-value">{{ oxalate.calc_oxalate_per_serving }}{{ oxalate.calc_oxalate_per_serving !== 'n/a' ? ' mg' : '' }} per serving</span>
-              <span class="result-soluble-value">Soluble: {{ oxalate.calc_soluble_mg_oxalate_per_serving }}{{ oxalate.calc_soluble_mg_oxalate_per_serving !== 'n/a' ? ' mg' : '' }}</span>
+              <span class="result-oxalate-value">{{ withUnit(oxalate.calc_oxalate_per_serving) }} per serving</span>
+              <span class="result-soluble-value">Soluble: {{ withUnit(oxalate.calc_soluble_mg_oxalate_per_serving) }}</span>
             </div>
           </div>
         }
