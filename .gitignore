@@ -64,8 +64,8 @@ src/environments/environment.prod.ts
 .github/workflows/*
 !.github/workflows/test.yml
 
-# Ignore Firebase configuration file
-firebase.json
+# firebase.json is tracked: it holds no secrets, only hosting settings and the
+# paths to firestore.rules and storage.rules, so deploys work from any machine.
 
 # Ignore build-related or temporary folders (e.g., 'y' if it's not needed)
 y/
