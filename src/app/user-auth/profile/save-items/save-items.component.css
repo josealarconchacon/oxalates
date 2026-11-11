@@ -19,61 +19,58 @@
   display: block;
 }
 
+.section-title {
+  font-family: var(--font-family-display);
+  font-size: 2.25rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  color: var(--color-ink);
+  margin: 0 0 var(--spacing-6);
+  line-height: 1.1;
+}
+
 .master-detail-container {
   display: grid;
-  grid-template-columns: 320px 1fr;
+  grid-template-columns: 340px minmax(0, 1fr);
   gap: var(--spacing-6);
   align-items: start;
 }
 
+/* The list: one white card, rows inside it. */
 .sidebar {
-  display: flex;
-  flex-direction: column;
-  background-color: var(--background-color);
-  border-radius: var(--radius-xl);
-  border: 1px solid var(--gray-100);
-}
-
-.sidebar-header {
-  padding: var(--spacing-6);
-  border-bottom: 1px solid var(--gray-100);
-}
-
-.section-title {
-  font-family: var(--font-family-display);
-  font-size: var(--font-size-lg);
-  font-weight: 700;
-  color: var(--gray-900);
-  margin: 0;
-  line-height: var(--line-height-tight);
+  background-color: var(--color-surface);
+  border: 1px solid var(--color-line);
+  border-radius: 20px;
 }
 
 .sidebar-content {
-  padding: var(--spacing-4);
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: var(--spacing-2);
 }
 
 .list-item {
   display: flex;
   align-items: center;
-  gap: var(--spacing-4);
-  padding: var(--spacing-4);
+  gap: var(--spacing-3);
   width: 100%;
-  border: none;
+  min-height: 44px;
+  padding: 12px 14px;
+  border: 1px solid transparent;
+  border-radius: 14px;
   background: none;
+  color: var(--color-ink);
+  font: inherit;
   text-align: left;
   cursor: pointer;
-  border-radius: var(--radius-lg);
-  transition: all var(--transition-base);
-  margin-bottom: var(--spacing-2);
-}
-
-.list-item:last-child {
-  margin-bottom: 0;
+  transition:
+    background-color var(--transition-base),
+    border-color var(--transition-base);
 }
 
 .list-item:hover {
-  background-color: var(--gray-50);
-  transform: translateX(4px);
+  background-color: var(--si-hover);
 }
 
 .list-item:focus-visible {
@@ -83,8 +80,8 @@
 }
 
 .list-item.selected {
-  background-color: var(--primary-50);
-  color: var(--action-color);
+  background-color: var(--color-accent-soft);
+  border-color: var(--si-selected-border);
 }
 
 .item-content {
@@ -92,22 +89,35 @@
   min-width: 0;
 }
 
+/* Long names wrap; only a third line gets cut. */
 .item-title {
-  font-size: var(--font-size-sm);
-  font-weight: var(--font-weight-medium);
-  color: var(--gray-900);
-  margin: 0;
-  white-space: nowrap;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
   overflow: hidden;
-  text-overflow: ellipsis;
-  line-height: var(--line-height-snug);
+  font-size: 0.9375rem;
+  font-weight: 600;
+  line-height: 1.35;
+  color: var(--color-ink);
+  overflow-wrap: anywhere;
 }
 
 .item-subtitle {
-  font-size: var(--font-size-xs);
-  color: var(--gray-600);
-  margin-top: var(--spacing-1);
-  line-height: var(--line-height-normal);
+  margin-top: 2px;
+  font-size: 0.8125rem;
+  line-height: 1.4;
+  color: var(--color-muted);
+}
+
+.item-chevron {
+  display: inline-flex;
+  flex-shrink: 0;
+  color: var(--color-muted);
+}
+
+.list-item.selected .item-chevron {
+  color: var(--color-accent-fg);
 }
 
 .detail-view {
@@ -261,7 +271,6 @@
 }
 
 @media (max-width: 768px) {
-  .sidebar-header,
   .item-details {
     padding: var(--spacing-4);
   }
@@ -284,10 +293,6 @@
     width: 32px;
     height: 32px;
   }
-
-  .list-item {
-    padding: var(--spacing-3);
-  }
 }
 
 /* Reduced Motion */
@@ -300,27 +305,6 @@
     transition-duration: 0.01ms !important;
     scroll-behavior: auto !important;
   }
-}
-
-:host-context(.dark-theme) .list-item {
-  color: var(--text-color);
-}
-
-:host-context(.dark-theme) .list-item:hover {
-  background-color: var(--hover-background);
-}
-
-:host-context(.dark-theme) .list-item.selected {
-  background-color: var(--nav-active);
-  color: var(--action-color);
-}
-
-:host-context(.dark-theme) .item-title {
-  color: var(--text-color);
-}
-
-:host-context(.dark-theme) .item-subtitle {
-  color: var(--text-secondary);
 }
 
 :host-context(.dark-theme) .detail-item {

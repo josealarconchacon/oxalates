@@ -5,6 +5,7 @@ import { SaveItemsComponent } from './save-items.component';
 import { AngularFireModule } from '@angular/fire/compat';
 import { AngularFirestore } from '@angular/fire/compat/firestore';
 import { of } from 'rxjs';
+import { IconComponent } from 'src/app/shared/components/icon/icon.component';
 
 // Mock db configuration
 const firebaseConfig = {
@@ -35,6 +36,7 @@ describe('SaveItemsComponent', () => {
       declarations: [SaveItemsComponent],
       imports: [
         AngularFireModule.initializeApp(firebaseConfig),
+        IconComponent,
       ],
       providers: [
         provideHttpClient(),
@@ -49,5 +51,45 @@ describe('SaveItemsComponent', () => {
 
   it('should create', () => {
     expect(component).toBeTruthy();
+  });
+
+  describe('saved foods list', () => {
+    const rows = () =>
+      Array.from(
+        fixture.nativeElement.querySelectorAll('.list-item')
+      ) as HTMLButtonElement[];
+
+    beforeEach(() => {
+      component.savedOxalates$ = of([
+        { id: 'a', item: 'Baking Powder', total_oxalate_mg_per_100g: '0.00' },
+        { id: 'b', item: 'Pero Coffee Substitute' },
+      ] as any);
+      fixture.detectChanges();
+    });
+
+    it('marks only the chosen food as pressed', () => {
+      expect(rows().map((r) => r.getAttribute('aria-pressed'))).toEqual([
+        'false',
+        'false',
+      ]);
+
+      rows()[1].click();
+      fixture.detectChanges();
+
+      expect(rows().map((r) => r.getAttribute('aria-pressed'))).toEqual([
+        'false',
+        'true',
+      ]);
+      expect(rows()[1].classList).toContain('selected');
+    });
+
+    it('keeps the food name and subtitle text as they are', () => {
+      expect(rows()[0].querySelector('.item-title')?.textContent?.trim()).toBe(
+        'Baking Powder'
+      );
+      expect(
+        rows()[0].querySelector('.item-subtitle')?.textContent?.trim()
+      ).toBe(component.getSubtitle({ total_oxalate_mg_per_100g: '0.00' } as any));
+    });
   });
 });

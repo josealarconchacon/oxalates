@@ -1,25 +1,23 @@
+<h2 class="section-title">Saved Foods</h2>
 <div class="master-detail-container">
   <div class="sidebar">
-    <div class="sidebar-header">
-      <h2 class="section-title">Saved Foods</h2>
-    </div>
     <div class="sidebar-content">
       @if (savedOxalates$ | async; as savedOxalates) {
         @if (savedOxalates.length > 0) {
           @for (oxalate of savedOxalates; track oxalate) {
             <div class="item-wrapper">
               <button
+                type="button"
                 class="list-item"
                 [class.selected]="expandedCardId === oxalate.id"
+                [attr.aria-pressed]="expandedCardId === oxalate.id"
                 (click)="handleCardClick(oxalate.id)"
                 >
                 <div class="item-content">
                   <div class="item-title">{{ oxalate.item }}</div>
                   <div class="item-subtitle">{{ getSubtitle(oxalate) }}</div>
                 </div>
-                <i class="material-icons icon-inline" aria-hidden="true">{{
-                  expandedCardId === oxalate.id ? "expand_more" : "chevron_right"
-                }}</i>
+                <app-icon class="item-chevron" name="chevron-right" [size]="18" />
               </button>
               @if (expandedCardId === oxalate.id) {
                 <div
