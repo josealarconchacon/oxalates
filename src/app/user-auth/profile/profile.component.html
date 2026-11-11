@@ -3,7 +3,7 @@
     <h1 class="sr-only">Your profile</h1>
     @if ((isMobile$ | async) === false) {
       <aside class="sidebar">
-        <div class="profile-card">
+        <div class="profile-card" [class.profile-card--dark-banner]="bannerIsDark">
           <div
             class="profile-header"
             [style.backgroundColor]="currentHeaderColor"

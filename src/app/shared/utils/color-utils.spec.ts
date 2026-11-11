@@ -1,4 +1,4 @@
-import { colorToHex, presetColors } from './color-utils'; // Adjust path as needed
+import { colorToHex, isDarkColor, presetColors } from './color-utils'; // Adjust path as needed
 
 describe('Color Utility Functions', () => {
   describe('presetColors', () => {
@@ -94,3 +94,22 @@ const mockHSVA = { h: 60, s: 100, v: 100, a: 0.8 };
 const mockHSVA_noAlpha = { h: 60, s: 100, v: 100 };
 const mockRGBA = { r: 255, g: 0, b: 0, a: 0.3 };
 const mockRGBA_noAlpha = { r: 255, g: 0, b: 0 };
+
+describe('isDarkColor', () => {
+  it('treats dark banners as dark', () => {
+    expect(isDarkColor('#17603F')).toBeTrue();
+    expect(isDarkColor('#34495E')).toBeTrue();
+    expect(isDarkColor('rgba(0, 0, 0, 1)')).toBeTrue();
+  });
+
+  it('treats light banners as light', () => {
+    expect(isDarkColor('#eaefe9')).toBeFalse();
+    expect(isDarkColor('#F1C40F')).toBeFalse();
+    expect(isDarkColor('#2ECC71')).toBeFalse();
+  });
+
+  it('treats an unknown value as light', () => {
+    expect(isDarkColor('not-a-color')).toBeFalse();
+  });
+});
+

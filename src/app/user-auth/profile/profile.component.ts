@@ -4,7 +4,11 @@ import { ProfileImageService } from '../service/profile-image.service';
 import { map } from 'rxjs/operators';
 import { Router } from '@angular/router';
 import { fadeInOut } from 'src/app/shared/animations/fadeInOut';
-import { presetColors, colorToHex } from '../../shared/utils/color-utils';
+import {
+  presetColors,
+  colorToHex,
+  isDarkColor,
+} from '../../shared/utils/color-utils';
 import { HSLA, HSVA, RGBA } from 'ngx-color';
 import { HeaderComponent } from 'src/app/landing-page/header/header.component';
 import { Observable } from 'rxjs';
@@ -31,6 +35,8 @@ export class ProfileComponent implements OnInit {
   /** The banner color the user picked; null shows the theme's soft green. */
   currentHeaderColor: string | null = null;
   selectedColor: string = DEFAULT_HEADER_COLOR;
+  /** The picked banner is dark, so text drawn on it (iPad card) goes white. */
+  bannerIsDark = false;
   firstName: string = '';
   lastName: string = '';
 
@@ -65,6 +71,7 @@ export class ProfileComponent implements OnInit {
     if (savedColor) {
       this.currentHeaderColor = savedColor;
       this.selectedColor = savedColor;
+      this.bannerIsDark = isDarkColor(savedColor);
     }
   }
   setActiveSection(section: string): void {
@@ -122,6 +129,7 @@ export class ProfileComponent implements OnInit {
 
   saveColor(): void {
     this.currentHeaderColor = this.selectedColor;
+    this.bannerIsDark = isDarkColor(this.selectedColor);
     localStorage.setItem('headerColor', this.currentHeaderColor);
     this.isColorPickerVisible = false;
   }
