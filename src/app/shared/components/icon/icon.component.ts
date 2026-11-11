@@ -17,6 +17,9 @@ export type IconName =
   | 'chevron-down'
   | 'share-2'
   | 'download'
+  | 'sunrise'
+  | 'cookie'
+  | 'plus'
   | 'trash-2'
   | 'palette'
   | 'camera'
@@ -109,6 +112,16 @@ export type IconName =
         }
         @case ('download') {
           <svg:path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3" />
+        }
+        @case ('sunrise') {
+          <svg:path d="M12 2v8M4.93 10.93l1.41 1.41M2 18h2M20 18h2M19.07 10.93l-1.41 1.41M22 22H2M8 6l4-4 4 4M16 18a4 4 0 0 0-8 0" />
+        }
+        @case ('cookie') {
+          <svg:path d="M12 2a10 10 0 1 0 10 10 4 4 0 0 1-5-5 4 4 0 0 1-5-5" />
+          <svg:path d="M8.5 8.5v.01M16 15.5v.01M12 12v.01M11 17v.01M7 14v.01" />
+        }
+        @case ('plus') {
+          <svg:path d="M5 12h14M12 5v14" />
         }
         @case ('trash-2') {
           <svg:path d="M3 6h18M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2M10 11v6M14 11v6" />

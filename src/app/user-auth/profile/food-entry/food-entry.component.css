@@ -216,33 +216,59 @@ thead .header-detail th {
 }
 
 .meal-section {
-  background: var(--card-background);
-  border-radius: 1rem;
-  padding: 1.5rem;
-  box-shadow: var(--shadow-sm);
-  border: 1px solid rgba(0, 0, 0, 0.1);
   position: relative;
-  transition: all 0.3s ease;
+  padding: 20px;
+  background: var(--color-surface);
+  border: 1px solid var(--color-line);
+  border-radius: 22px;
 }
 
-:host-context(.dark-theme) .meal-section {
-  background: var(--card-background);
-  border-color: rgba(255, 255, 255, 0.1);
-  box-shadow: var(--shadow-sm);
+/* Meal header: colored icon tile + name on the left, Add Food on the right. */
+.meal-heading {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-width: 0;
+}
+
+.meal-icon {
+  display: grid;
+  flex-shrink: 0;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  border-radius: 12px;
+  --icon-stroke: 2;
+}
+
+.meal-icon[data-meal='breakfast'] {
+  background: var(--di-breakfast-bg);
+  color: var(--di-breakfast-fg);
+}
+
+.meal-icon[data-meal='lunch'] {
+  background: var(--di-lunch-bg);
+  color: var(--di-lunch-fg);
+}
+
+.meal-icon[data-meal='dinner'] {
+  background: var(--di-dinner-bg);
+  color: var(--di-dinner-fg);
+}
+
+.meal-icon[data-meal='snacks'] {
+  background: var(--di-snacks-bg);
+  color: var(--di-snacks-fg);
 }
 
 .meal-title {
+  margin: 0;
   font-family: var(--font-family-display);
-  font-size: var(--font-size-lg);
+  font-size: 1.25rem;
   font-weight: 700;
-  color: var(--action-color);
-  margin-bottom: 1rem;
-  letter-spacing: -0.02em;
-  transition: color 0.3s ease;
-}
-
-:host-context(.dark-theme) .meal-title {
-  color: var(--text-primary);
+  line-height: 1.2;
+  letter-spacing: -0.015em;
+  color: var(--color-ink);
 }
 
 .empty-state {
@@ -261,9 +287,32 @@ thead .header-detail th {
   border-color: rgba(255, 255, 255, 0.1);
 }
 
-/* The look comes from .ui-btn--tonal. */
 .add-button {
-  margin: 0.25rem;
+  display: inline-flex;
+  flex-shrink: 0;
+  align-items: center;
+  gap: 8px;
+  min-height: 44px;
+  padding: 0 16px;
+  border: 0;
+  border-radius: 12px;
+  background: var(--color-accent);
+  color: #ffffff; /* 7.3:1 light, 5.3:1 dark */
+  font: inherit;
+  font-size: 0.9375rem;
+  font-weight: 600;
+  cursor: pointer;
+  --icon-stroke: 2.25;
+  transition: filter var(--transition-base);
+}
+
+.add-button:hover:not(:disabled) {
+  filter: brightness(1.12);
+}
+
+.add-button:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
 }
 
 .delete-btn {
@@ -413,8 +462,8 @@ thead .header-detail th {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin-bottom: 1rem;
-  gap: 1rem;
+  gap: 12px;
+  margin-bottom: 16px;
 }
 
 @media (max-width: 768px) {
@@ -460,9 +509,6 @@ thead .header-detail th {
     border-color: var(--border-color);
   }
 
-  .meal-title {
-    font-size: var(--font-size-base);
-  }
 
   .food-name-btn {
     font-size: var(--font-size-xs);

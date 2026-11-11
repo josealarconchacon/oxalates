@@ -166,5 +166,46 @@ describe('FoodEntryComponent', () => {
     const h1 = fixture.nativeElement.querySelector('h1') as HTMLElement;
     expect(h1.textContent!.trim()).toBe('Calculate Daily Intake');
   });
+
+  describe('meal cards', () => {
+    beforeEach(() => {
+      component.isLoading = false;
+      fixture.detectChanges();
+    });
+
+    it('shows the four meals in order as h3 headings', () => {
+      const titles = Array.from(
+        fixture.nativeElement.querySelectorAll('h3.meal-title')
+      ).map((h) => (h as HTMLElement).textContent!.trim());
+      expect(titles).toEqual(['Breakfast', 'Lunch', 'Dinner', 'Snacks']);
+    });
+
+    it('gives each meal its own icon tile', () => {
+      const tiles = Array.from(
+        fixture.nativeElement.querySelectorAll('.meal-icon')
+      ) as HTMLElement[];
+      expect(tiles.map((t) => t.dataset['meal'])).toEqual([
+        'breakfast',
+        'lunch',
+        'dinner',
+        'snacks',
+      ]);
+      expect(tiles.every((t) => t.getAttribute('aria-hidden') === 'true')).toBeTrue();
+    });
+
+    it('opens the calculator for the meal whose Add Food was clicked', () => {
+      const buttons = Array.from(
+        fixture.nativeElement.querySelectorAll('.add-button')
+      ) as HTMLButtonElement[];
+      expect(buttons.map((b) => b.textContent!.trim())).toEqual([
+        'Add Food',
+        'Add Food',
+        'Add Food',
+        'Add Food',
+      ]);
+      buttons[2].click();
+      expect(component.selectedMealType).toBe('dinner');
+    });
+  });
 });
 
