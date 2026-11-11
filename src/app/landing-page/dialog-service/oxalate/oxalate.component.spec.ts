@@ -200,5 +200,35 @@ describe('OxalateComponent', () => {
       expect(component.isFarPage('...')).toBeFalse();
     });
   });
+
+  describe('no results', () => {
+    const el = () => fixture.nativeElement as HTMLElement;
+    const message = () =>
+      el().querySelector('.no-results-text')?.textContent?.trim();
+
+    beforeEach(() => {
+      spyOn(component, 'showSearchPrompt').and.returnValue(false);
+      component.isLoading = false;
+      component.oxalates = [];
+      component.displayedOxalates = [];
+    });
+
+    it('shows the keyword hint inline (no red popup) after a text search', () => {
+      component.searchQuery = 'fjasldf';
+      component.showAlert = false;
+      fixture.detectChanges();
+      expect(el().querySelector('.no-results-heading')!.textContent!.trim()).toBe(
+        'No results found'
+      );
+      expect(message()).toBe('Try different keywords or check your spelling.');
+      expect(el().querySelector('app-alert')).toBeNull();
+    });
+
+    it('keeps the filter hint when there is no search text', () => {
+      component.searchQuery = '';
+      fixture.detectChanges();
+      expect(message()).toBe('Try different category or food level');
+    });
+  });
 });
 

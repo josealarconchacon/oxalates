@@ -9,7 +9,6 @@
       (searchQueryChange)="onSearchQueryChange($event)"
       (input)="onInputChange($event)"
       (searchSubmitted)="onEnterPressed()"
-      [value]="searchQuery"
     ></app-search-input>
 
     @if (errorState) {
@@ -64,12 +63,16 @@
         <div class="no-results">
           <app-icon class="no-results-icon" name="search" [size]="40" />
           <h2 class="no-results-heading">No results found</h2>
-          @if (filterService.getCurrentFilter().category) {
+          @if ((searchQuery || "").trim()) {
+            <!-- The message the red popup used to show for a text search. -->
+            <p class="no-results-text">
+              Try different keywords or check your spelling.
+            </p>
+          } @else if (filterService.getCurrentFilter().category) {
             <p class="no-results-text">
               No items found in {{ filterService.getCurrentFilter().category }}
             </p>
-          }
-          @if (!filterService.getCurrentFilter().category) {
+          } @else {
             <p class="no-results-text">
               Try different category or food level
             </p>

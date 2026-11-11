@@ -481,9 +481,9 @@ export class OxalateComponent implements OnInit, OnDestroy {
         next: (data) => {
           this.lastSearchQuery = this.searchQuery;
           if (data.length === 0) {
-            this.showAlert = true;
-            this.alertMessage =
-              'No results found. Try different keywords or check your spelling.';
+            // "No results" isn't an error: the inline empty state says it
+            // (with the same words), so no red popup here.
+            this.showAlert = false;
             this.applySearchResults([]);
           } else {
             const sorted = this.sortBySearchTerm(data, this.searchQuery);
