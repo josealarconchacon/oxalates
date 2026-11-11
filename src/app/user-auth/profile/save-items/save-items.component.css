@@ -17,18 +17,13 @@
 
 :host {
   display: block;
-  background-color: var(--gray-50);
-  min-height: 100vh;
 }
 
 .master-detail-container {
   display: grid;
   grid-template-columns: 320px 1fr;
   gap: var(--spacing-6);
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: var(--spacing-6);
-  height: calc(100vh - 120px);
+  align-items: start;
 }
 
 .sidebar {
@@ -37,17 +32,11 @@
   background-color: var(--background-color);
   border-radius: var(--radius-xl);
   border: 1px solid var(--gray-100);
-  overflow: hidden;
 }
 
 .sidebar-header {
   padding: var(--spacing-6);
   border-bottom: 1px solid var(--gray-100);
-  background-color: var(--background-color);
-  position: sticky;
-  top: 0;
-  z-index: 10;
-  backdrop-filter: blur(8px);
 }
 
 .section-title {
@@ -60,24 +49,7 @@
 }
 
 .sidebar-content {
-  flex: 1;
-  overflow-y: auto;
   padding: var(--spacing-4);
-  scrollbar-width: thin;
-  scrollbar-color: var(--gray-300) transparent;
-}
-
-.sidebar-content::-webkit-scrollbar {
-  width: 4px;
-}
-
-.sidebar-content::-webkit-scrollbar-track {
-  background: transparent;
-}
-
-.sidebar-content::-webkit-scrollbar-thumb {
-  background-color: var(--gray-300);
-  border-radius: var(--radius-full);
 }
 
 .list-item {
@@ -142,27 +114,15 @@
   background-color: var(--background-color);
   border-radius: var(--radius-xl);
   border: 1px solid var(--gray-100);
-  overflow-y: auto;
-  scrollbar-width: thin;
-  scrollbar-color: var(--gray-300) transparent;
 }
 
-.detail-view::-webkit-scrollbar {
-  width: 4px;
-}
-
-.detail-view::-webkit-scrollbar-track {
-  background: transparent;
-}
-
-.detail-view::-webkit-scrollbar-thumb {
-  background-color: var(--gray-300);
-  border-radius: var(--radius-full);
+/* No food selected yet: hide the empty card instead of showing a blank box. */
+.detail-view:not(:has(.item-details)) {
+  display: none;
 }
 
 .item-details {
   padding: var(--spacing-6);
-  height: 100%;
 }
 
 .item-header {
@@ -253,7 +213,6 @@
 }
 
 .no-items {
-  height: 100%;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -297,25 +256,11 @@
 @media (max-width: 992px) {
   .master-detail-container {
     grid-template-columns: 1fr;
-    height: auto;
     gap: var(--spacing-4);
-  }
-
-  .sidebar {
-    height: auto;
-    max-height: 400px;
-  }
-
-  .detail-view {
-    height: auto;
   }
 }
 
 @media (max-width: 768px) {
-  .master-detail-container {
-    padding: var(--spacing-4);
-  }
-
   .sidebar-header,
   .item-details {
     padding: var(--spacing-4);
@@ -335,10 +280,6 @@
 }
 
 @media (max-width: 576px) {
-  .master-detail-container {
-    padding: var(--spacing-3);
-  }
-
   .action-button {
     width: 32px;
     height: 32px;

@@ -71,7 +71,10 @@
         </nav>
       </aside>
     }
-    <section class="content-area">
+    <section
+      class="content-area"
+      [class.content-area--flat]="(activeSection$ | async) === 'saveItem'"
+    >
       @switch (activeSection$ | async) {
         @case ('profile') {
           <div class="profile-details">
