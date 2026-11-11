@@ -7,6 +7,7 @@ import {
 } from '@angular/fire/compat/firestore';
 import { environment } from 'src/environments/environment';
 import { of } from 'rxjs';
+import { provideNoopAnimations } from '@angular/platform-browser/animations';
 
 class MockAngularFirestore {
   collection() {
@@ -30,6 +31,7 @@ describe('FoodEntryComponent', () => {
       ],
       providers: [
         { provide: AngularFirestore, useClass: MockAngularFirestore },
+        provideNoopAnimations(),
       ],
     }).compileComponents();
 
@@ -215,6 +217,34 @@ describe('FoodEntryComponent', () => {
       ]);
       buttons[2].click();
       expect(component.selectedMealType).toBe('dinner');
+    });
+  });
+
+  describe('Add Food dialog', () => {
+    beforeEach(() => {
+      component.isLoading = false;
+      fixture.detectChanges();
+      component.openCalculator('lunch');
+      fixture.detectChanges();
+    });
+
+    it('is a modal dialog named by its visible title', () => {
+      const dialog = fixture.nativeElement.querySelector(
+        '.dialog-content'
+      ) as HTMLElement;
+      expect(dialog.getAttribute('role')).toBe('dialog');
+      expect(dialog.getAttribute('aria-modal')).toBe('true');
+      const title = fixture.nativeElement.querySelector(
+        '#' + dialog.getAttribute('aria-labelledby')
+      ) as HTMLElement;
+      expect(title.textContent!.trim()).toBe('Add to Lunch');
+    });
+
+    it('has a 44px close button labelled "Close"', () => {
+      const close = fixture.nativeElement.querySelector(
+        '.dialog-close'
+      ) as HTMLButtonElement;
+      expect(close.getAttribute('aria-label')).toBe('Close');
     });
   });
 });

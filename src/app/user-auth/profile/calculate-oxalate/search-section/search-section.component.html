@@ -1,48 +1,73 @@
 <div class="search-section" [ngClass]="{ 'dark-theme': isDarkTheme }">
   <div class="search-wrapper">
-    <i class="material-icons" aria-hidden="true">search</i>
+    <label class="sr-only" for="food-search">Search foods</label>
+    <app-icon class="search-icon" name="search" [size]="20" />
+    <!-- Combobox: the list below is announced, ↑/↓ move the highlight,
+         Enter picks it, Esc closes the list (then the dialog). -->
     <input
+      #searchInput
+      id="food-search"
       type="text"
-      aria-label="Search foods"
       autocomplete="off"
-      [ngModel]="foodName"
+      role="combobox"
+      aria-autocomplete="list"
+      aria-controls="food-results"
+      [attr.aria-expanded]="isOpen"
+      [attr.aria-activedescendant]="isOpen && activeIndex >= 0 ? 'food-result-' + activeIndex : null"
+      [(ngModel)]="query"
       (ngModelChange)="onFoodNameChange($event)"
+      (keydown)="onKeydown($event)"
       placeholder="Search foods..."
       class="search-input"
+      [class.has-clear]="!!query"
       />
+    @if (query) {
+      <button
+        type="button"
+        class="clear-button"
+        aria-label="Clear search"
+        (click)="onClear(searchInput)"
+        >
+        <app-icon name="x" [size]="16" />
+      </button>
+    }
   </div>
 
-  @if (showSuggestions && similarFoods.length > 0) {
-    <div
+  @if (isOpen) {
+    <ul
+      #resultsList
+      id="food-results"
       class="suggestions-panel"
+      role="listbox"
+      aria-label="Search foods"
       >
-      @for (food of similarFoods; track food) {
-        <div
+      @for (food of similarFoods; track $index; let i = $index) {
+        <!-- mousedown is prevented so the click doesn't take focus out of
+             the search box; the click itself picks the food. -->
+        <li
           class="food-card"
-          appClickable
+          role="option"
+          [id]="'food-result-' + i"
+          [class.active]="i === activeIndex"
+          [attr.aria-selected]="i === activeIndex"
+          (mousedown)="$event.preventDefault()"
+          (mouseenter)="activeIndex = i"
           (click)="onSelectFood(food)"
           >
-          <div class="food-header">
-            <div class="food-info">
-              <span class="food-name">{{ food.name }}</span>
-            </div>
-            <div class="oxalate-info">
-              <div class="info-item">
-                <span class="label">Oxalate Per Serving:</span>
-                <span class="value"
-                  >{{ food.totalOxalate | number : "1.2-2" }} mg</span
-                  >
-                </div>
-                <div class="info-item">
-                  <span class="label">Soluble Oxalate Per Serving:</span>
-                  <span class="value"
-                    >{{ food.solubleOxalate | number : "1.2-2" }} mg</span
-                    >
-                  </div>
-                </div>
-              </div>
-            </div>
-          }
-        </div>
+          <!-- &ngsp; keeps the spaces screen readers need between the parts. -->
+          <span class="food-name">{{ food.name }}</span>&ngsp;
+          <span class="oxalate-info">
+            <span class="info-item">
+              <span class="label">Oxalate Per Serving:</span>&ngsp;
+              <span class="value">{{ food.totalOxalate | number : "1.2-2" }} mg</span>
+            </span>&ngsp;
+            <span class="info-item">
+              <span class="label">Soluble Oxalate Per Serving:</span>&ngsp;
+              <span class="value">{{ food.solubleOxalate | number : "1.2-2" }} mg</span>
+            </span>
+          </span>
+        </li>
       }
-    </div>
+    </ul>
+  }
+</div>

@@ -4,10 +4,13 @@
 
 <div class="app-container" [class.dark-theme]="isDarkTheme">
   <div class="content-wrapper">
-    <header class="app-header">
+    <!-- A div, not <header>: inside a dialog a header would count as a second
+         page banner for screen readers. -->
+    <div class="app-header">
       <div class="header-content">
         <div class="header-title">
-          <h2>{{ mealType ? "Add to " + (mealType | titlecase) : "Oxalate" }}</h2>
+          <!-- The dialog around this form is labelled by this heading. -->
+          <h2 id="add-food-title">{{ mealType ? "Add to " + (mealType | titlecase) : "Oxalate" }}</h2>
           <p class="subtitle">
             {{
             mealType
@@ -17,7 +20,7 @@
           </p>
         </div>
       </div>
-    </header>
+    </div>
 
     <div class="main-content">
       <div class="left-column">
@@ -27,6 +30,8 @@
           [similarFoods]="similarFoods"
           [showSuggestions]="showSuggestions"
           (selectFood)="selectSuggestedFood($event)"
+          (clear)="clearSearch()"
+          (dismiss)="clearSuggestions()"
           [isDarkTheme]="isDarkTheme"
         ></app-search-section>
 
@@ -41,11 +46,13 @@
 
         <div class="button-container">
           <button
-            class="action-button calculate ui-btn ui-btn--primary"
+            type="button"
+            class="action-button calculate"
             [disabled]="isCalculating || !foodName || !servingSize"
+            [attr.aria-disabled]="isCalculating || !foodName || !servingSize"
             (click)="mealType ? logMeal() : calculateOxalate()"
             >
-            <i class="material-icons" aria-hidden="true">{{ mealType ? "add" : "calculate" }}</i>
+            <app-icon [name]="mealType ? 'plus' : 'calculator'" [size]="18" />
             {{
             isCalculating
             ? "Calculating..."

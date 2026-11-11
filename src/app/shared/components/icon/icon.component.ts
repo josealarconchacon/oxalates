@@ -22,6 +22,8 @@ export type IconName =
   | 'sunrise'
   | 'cookie'
   | 'plus'
+  | 'minus'
+  | 'x'
   | 'utensils'
   | 'trash-2'
   | 'palette'
@@ -132,6 +134,12 @@ export type IconName =
         }
         @case ('utensils') {
           <svg:path d="M3 2v7c0 1.1.9 2 2 2h4a2 2 0 0 0 2-2V2M7 2v20M21 15V2a5 5 0 0 0-5 5v6c0 1.1.9 2 2 2h3Zm0 0v7" />
+        }
+        @case ('x') {
+          <svg:path d="M18 6 6 18M6 6l12 12" />
+        }
+        @case ('minus') {
+          <svg:path d="M5 12h14" />
         }
         @case ('plus') {
           <svg:path d="M5 12h14M12 5v14" />
