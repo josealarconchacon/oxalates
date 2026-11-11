@@ -1,56 +1,47 @@
+<h2 class="section-title">Saved Foods</h2>
 <div class="master-detail-container">
   <div class="sidebar">
-    <div class="sidebar-header">
-      <h2 class="section-title">Saved Foods</h2>
-    </div>
     <div class="sidebar-content">
       @if (savedOxalates$ | async; as savedOxalates) {
         @if (savedOxalates.length > 0) {
           @for (oxalate of savedOxalates; track oxalate) {
-            <div class="item-wrapper">
+            <div
+              class="item-wrapper"
+              [class.open]="expandedCardId === oxalate.id"
+              >
+              <!-- Phones: an accordion (aria-expanded). Wider: picks the food
+                   shown in the detail card (aria-pressed). -->
               <button
+                type="button"
                 class="list-item"
                 [class.selected]="expandedCardId === oxalate.id"
+                [attr.aria-pressed]="isPhone() ? null : expandedCardId === oxalate.id"
+                [attr.aria-expanded]="isPhone() ? expandedCardId === oxalate.id : null"
+                [attr.aria-controls]="isPhone() ? 'saved-food-' + oxalate.id : null"
                 (click)="handleCardClick(oxalate.id)"
                 >
                 <div class="item-content">
                   <div class="item-title">{{ oxalate.item }}</div>
                   <div class="item-subtitle">{{ getSubtitle(oxalate) }}</div>
                 </div>
-                <i class="material-icons icon-inline" aria-hidden="true">{{
-                  expandedCardId === oxalate.id ? "expand_more" : "chevron_right"
-                }}</i>
+                <app-icon
+                  class="item-chevron"
+                  [name]="isPhone() ? 'chevron-down' : 'chevron-right'"
+                  [size]="18"
+                />
               </button>
               @if (expandedCardId === oxalate.id) {
                 <div
                   class="mobile-detail-dropdown"
+                  [id]="'saved-food-' + oxalate.id"
                   >
                   <div class="item-details">
-                    <div class="item-header">
-                      <h3>{{ oxalate.item }}</h3>
-                      <div class="item-actions">
-                        <ng-container
-                          *ngTemplateOutlet="deleteControls; context: { $implicit: oxalate }"
-                        ></ng-container>
-                      </div>
-                    </div>
-                    @for (detail of oxalate | keyvalue; track detail) {
-                      <div>
-                        @if (detail.key !== 'id' && detail.value) {
-                          <p
-                            class="detail-item"
-                            >
-                            <span class="detail-key">{{ formatKey(detail.key) }}:</span>
-                            <span class="detail-value">
-                              {{ detail.value }}
-                              @if (isMeasurementKey(detail.key)) {
-                                <span> (mg)</span>
-                              }
-                            </span>
-                          </p>
-                        }
-                      </div>
-                    }
+                    <ng-container
+                      *ngTemplateOutlet="detailHeader; context: { $implicit: oxalate }"
+                    ></ng-container>
+                    <ng-container
+                      *ngTemplateOutlet="detailBody; context: { $implicit: oxalate }"
+                    ></ng-container>
                   </div>
                 </div>
               }
@@ -75,31 +66,12 @@
             <div>
               @if (oxalate.id === expandedCardId) {
                 <div class="item-details">
-                  <div class="item-header">
-                    <h3>{{ oxalate.item }}</h3>
-                    <div class="item-actions">
-                      <ng-container
-                        *ngTemplateOutlet="deleteControls; context: { $implicit: oxalate }"
-                      ></ng-container>
-                    </div>
-                  </div>
-                  @for (detail of oxalate | keyvalue; track detail) {
-                    <div>
-                      @if (detail.key !== 'id' && detail.value) {
-                        <p
-                          class="detail-item"
-                          >
-                          <span class="detail-key">{{ formatKey(detail.key) }}:</span>
-                          <span class="detail-value">
-                            {{ detail.value }}
-                            @if (isMeasurementKey(detail.key)) {
-                              <span> (mg)</span>
-                            }
-                          </span>
-                        </p>
-                      }
-                    </div>
-                  }
+                  <ng-container
+                    *ngTemplateOutlet="detailHeader; context: { $implicit: oxalate }"
+                  ></ng-container>
+                  <ng-container
+                    *ngTemplateOutlet="detailBody; context: { $implicit: oxalate }"
+                  ></ng-container>
                 </div>
               }
             </div>
@@ -144,7 +116,57 @@ trash button that asks for confirmation inline before deleting. -->
       [attr.aria-label]="'Delete ' + oxalate.item"
       (click)="askDelete(oxalate.id)"
       >
-      <i class="material-icons icon-inline" aria-hidden="true">delete</i>
+      <app-icon name="trash-2" [size]="18" />
     </button>
   }
+</ng-template>
+
+<!-- Food name, its Calc Level badge and the delete control. -->
+<ng-template #detailHeader let-oxalate>
+  <div class="item-header">
+    <div class="item-heading">
+      <h3 class="item-name">{{ oxalate.item }}</h3>
+      @if (oxalate.calc_level) {
+        <p class="calc-level">
+          <span class="calc-level-label">{{ formatKey('calc_level') }}</span>
+          <span class="level-badge" [attr.data-tone]="levelTone(oxalate.calc_level)">
+            <span class="level-dot" aria-hidden="true"></span>{{ oxalate.calc_level }}
+          </span>
+        </p>
+      }
+    </div>
+    <div class="item-actions">
+      <ng-container
+        *ngTemplateOutlet="deleteControls; context: { $implicit: oxalate }"
+      ></ng-container>
+    </div>
+  </div>
+</ng-template>
+
+<!-- The big number tiles, then every other field as label | value rows. -->
+<ng-template #detailBody let-oxalate>
+  @if (statTiles(oxalate); as tiles) {
+    @if (tiles.length) {
+      <dl class="stat-tiles">
+        @for (tile of tiles; track tile.key) {
+          <div class="stat-tile">
+            <dt class="stat-label">{{ tile.label }}</dt>
+            <dd class="stat-value">
+              {{ tile.value }}<span class="unit"> (mg)</span>
+            </dd>
+          </div>
+        }
+      </dl>
+    }
+  }
+  <dl class="detail-list">
+    @for (field of detailFields(oxalate); track field.key) {
+      <div class="detail-row">
+        <dt class="detail-key">{{ field.label }}</dt>
+        <dd class="detail-value">
+          {{ field.value }}@if (field.isMg) {<span class="unit"> (mg)</span>}
+        </dd>
+      </div>
+    }
+  </dl>
 </ng-template>
