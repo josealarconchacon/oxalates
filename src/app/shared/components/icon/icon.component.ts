@@ -15,6 +15,8 @@ export type IconName =
   | 'arrow-right'
   | 'chevron-right'
   | 'chevron-down'
+  | 'share-2'
+  | 'download'
   | 'trash-2'
   | 'palette'
   | 'camera'
@@ -98,6 +100,15 @@ export type IconName =
         }
         @case ('chevron-down') {
           <svg:path d="m6 9 6 6 6-6" />
+        }
+        @case ('share-2') {
+          <svg:circle cx="18" cy="5" r="3" />
+          <svg:circle cx="6" cy="12" r="3" />
+          <svg:circle cx="18" cy="19" r="3" />
+          <svg:path d="m8.59 13.51 6.83 3.98M15.41 6.51l-6.82 3.98" />
+        }
+        @case ('download') {
+          <svg:path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3" />
         }
         @case ('trash-2') {
           <svg:path d="M3 6h18M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2M10 11v6M14 11v6" />
