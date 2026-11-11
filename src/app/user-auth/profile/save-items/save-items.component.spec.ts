@@ -248,4 +248,37 @@ describe('SaveItemsComponent', () => {
       expect(rows()[0].getAttribute('aria-expanded')).toBe('false');
     });
   });
+
+  describe('selectFirstOnWideScreens', () => {
+    const list = [{ id: 'a' }, { id: 'b' }];
+
+    it('opens the first food on iPad and desktop', () => {
+      (component as any).isPhone = signal(false);
+      component.expandedCardId = null;
+      component.selectFirstOnWideScreens(list);
+      expect(component.expandedCardId as string | null).toBe('a');
+    });
+
+    it('keeps the food the user already picked', () => {
+      (component as any).isPhone = signal(false);
+      component.expandedCardId = 'b';
+      component.selectFirstOnWideScreens(list);
+      expect(component.expandedCardId).toBe('b');
+    });
+
+    it('leaves every card closed on phones', () => {
+      (component as any).isPhone = signal(true);
+      component.expandedCardId = null;
+      component.selectFirstOnWideScreens(list);
+      expect(component.expandedCardId).toBeNull();
+    });
+
+    it('does nothing when there are no saved foods', () => {
+      (component as any).isPhone = signal(false);
+      component.expandedCardId = null;
+      component.selectFirstOnWideScreens([]);
+      expect(component.expandedCardId).toBeNull();
+    });
+  });
 });
+
