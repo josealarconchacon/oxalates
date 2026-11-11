@@ -1,3 +1,20 @@
+/* Saved Items tokens. The shared ones (--color-bg, --color-ink, --color-accent…)
+   come from tokens/colors.css; these four only exist here. */
+:host {
+  --si-selected-border: #b9d3c3;
+  --si-hover: #f1f4f0;
+  --si-danger: #b42318; /* 6.4:1 on --si-danger-bg */
+  --si-danger-bg: #fdecec;
+  font-family: var(--font-family-sans);
+}
+
+:host-context(.dark-theme) {
+  --si-selected-border: #2f5a45;
+  --si-hover: #1c2621;
+  --si-danger: #ffb3b3;
+  --si-danger-bg: rgba(255, 107, 107, 0.12);
+}
+
 :host {
   display: block;
   background-color: var(--gray-50);
@@ -34,8 +51,9 @@
 }
 
 .section-title {
+  font-family: var(--font-family-display);
   font-size: var(--font-size-lg);
-  font-weight: var(--font-weight-semibold);
+  font-weight: 700;
   color: var(--gray-900);
   margin: 0;
   line-height: var(--line-height-tight);
