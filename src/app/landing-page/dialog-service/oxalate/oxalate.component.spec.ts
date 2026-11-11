@@ -116,5 +116,64 @@ describe('OxalateComponent', () => {
       expect(spy).toHaveBeenCalledWith(food, jasmine.any(Event));
     });
   });
+
+  describe('pagination', () => {
+    const el = () => fixture.nativeElement as HTMLElement;
+    const setPage = (current: number, pages: (number | string)[]) => {
+      spyOnProperty(component, 'currentPage').and.returnValue(current);
+      spyOnProperty(component, 'totalPages').and.returnValue(300);
+      spyOn(component, 'getPages').and.returnValue(pages);
+      component.browseItems = [{ item: 'Salt' } as any];
+      component.hasSearched = false;
+      fixture.detectChanges();
+    };
+    const navButtons = () =>
+      Array.from(el().querySelectorAll('.pagination-nav')) as HTMLButtonElement[];
+
+    it('is a labelled nav with the same words', () => {
+      setPage(1, [1, 2, 3, 4, 5, '...', 300]);
+      const nav = el().querySelector('nav.pagination')!;
+      expect(nav.getAttribute('aria-label')).toBe('Pagination');
+      expect(navButtons().map((b) => b.textContent!.trim())).toEqual([
+        'First',
+        'Previous',
+        'Next',
+        'Last',
+      ]);
+    });
+
+    it('marks the current page and dims First/Previous on page 1', () => {
+      setPage(1, [1, 2, 3, 4, 5, '...', 300]);
+      const current = el().querySelector('[aria-current="page"]')!;
+      expect(current.textContent!.trim()).toBe('1');
+      const [first, prev, next, last] = navButtons();
+      expect([first.disabled, prev.disabled]).toEqual([true, true]);
+      expect(first.getAttribute('aria-disabled')).toBe('true');
+      expect([next.disabled, last.disabled]).toEqual([false, false]);
+    });
+
+    it('shows "…" as text, not as a button', () => {
+      setPage(1, [1, 2, 3, 4, 5, '...', 300]);
+      const pageButtons = Array.from(el().querySelectorAll('.pagination-page')).map(
+        (b) => b.textContent!.trim()
+      );
+      expect(pageButtons).toEqual(['1', '2', '3', '4', '5', '300']);
+      expect(el().querySelector('.pagination-ellipsis')!.textContent).toBe('…');
+    });
+
+    it('goes to the clicked page through the same changePage', () => {
+      setPage(1, [1, 2, 3]);
+      const spy = spyOn(component, 'changePage');
+      (el().querySelectorAll('.pagination-page')[2] as HTMLButtonElement).click();
+      navButtons()[3].click();
+      expect(spy.calls.allArgs()).toEqual([[3], [300]]);
+    });
+
+    it('dims Next/Last on the last page', () => {
+      setPage(300, [1, '...', 296, 297, 298, 299, 300]);
+      const [first, , next, last] = navButtons();
+      expect([next.disabled, last.disabled, first.disabled]).toEqual([true, true, false]);
+    });
+  });
 });
 

@@ -336,82 +336,70 @@
 }
 
 /* Pagination */
+/* Pagination: 44px outlined buttons; the current page is solid green. */
 .pagination {
   display: flex;
-  justify-content: center;
-  align-items: center;
-  margin-top: 24px;
   flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
   gap: 8px;
+  margin-top: 24px;
 }
 
 .pagination button {
-  min-width: 2.75rem;
-  min-height: 2.75rem;
-  padding: 0 var(--spacing-2);
-  border: none;
-  background: transparent;
-  color: var(--color-muted);
-  cursor: pointer;
-  font-size: 0.875rem;
-  border-radius: 50%;
   display: inline-flex;
   align-items: center;
   justify-content: center;
+  gap: 4px;
+  min-width: 44px;
+  height: 44px;
+  padding: 0 12px;
+  border: 1px solid var(--color-line);
+  border-radius: 12px;
+  background: var(--color-surface);
+  color: var(--color-ink);
+  font: inherit;
+  font-size: 0.9375rem;
+  font-weight: 600;
+  cursor: pointer;
+  --icon-stroke: 2;
   transition:
-    color 0.2s ease,
-    background-color 0.2s ease,
-    border-color 0.2s ease;
-}
-
-.pagination-page {
-  font-weight: 500;
-}
-
-.pagination-page:hover:not(:disabled):not(.active) {
-  border: 1.5px solid var(--color-border);
-  color: var(--color-text);
-}
-
-/* Needs the extra .pagination button: with Angular's scoping attributes,
-   ".pagination button" (above) outranks ".pagination-page.active", so the
-   current page was never highlighted. */
-.pagination button.pagination-page.active {
-  background: var(--action-color);
-  color: var(--on-action);
-}
-
-.pagination-nav {
-  border-radius: 50%;
-  min-width: 2.75rem;
-  min-height: 2.75rem;
-}
-
-.pagination-nav .pagination-icon {
-  display: none;
-}
-
-.pagination-nav .pagination-nav-text {
-  display: inline;
-}
-
-@media (max-width: 480px) {
-  .pagination-nav .pagination-icon {
-    display: inline;
-  }
-
-  .pagination-nav .pagination-nav-text {
-    display: none;
-  }
+    background-color 0.15s ease,
+    border-color 0.15s ease;
 }
 
 .pagination button:hover:not(:disabled) {
-  color: var(--action-color);
+  border-color: var(--color-muted);
 }
 
+.pagination button:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: 2px;
+}
+
+/* Extra .pagination button so this outranks the rule above. */
+.pagination button.pagination-page.active {
+  border-color: var(--color-accent);
+  background: var(--color-accent);
+  color: #ffffff; /* 7.3:1 light, 5.3:1 dark */
+}
+
+/* First/Previous on page 1, Next/Last on the last page. */
 .pagination button:disabled {
-  opacity: 0.4;
+  border-color: transparent;
+  background: transparent;
+  color: var(--sp-disabled);
   cursor: not-allowed;
+}
+
+.pagination-ellipsis {
+  padding: 0 2px;
+  color: var(--color-muted);
+}
+
+/* Icons only show on phones (step 8); wider screens show the words. */
+.pagination-icon {
+  display: none;
 }
 
 /* Modal overlay - smooth open/close transition */
