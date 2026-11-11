@@ -13,9 +13,7 @@ import {
   MatDatepicker,
 } from '@angular/material/datepicker';
 import { MatNativeDateModule } from '@angular/material/core';
-import { MatButtonModule } from '@angular/material/button';
-import { MatIconModule } from '@angular/material/icon';
-import { MatRippleModule } from '@angular/material/core';
+import { IconComponent } from 'src/app/shared/components/icon/icon.component';
 
 @Component({
   selector: 'app-date-switcher',
@@ -24,9 +22,7 @@ import { MatRippleModule } from '@angular/material/core';
     FormsModule,
     MatDatepickerModule,
     MatNativeDateModule,
-    MatButtonModule,
-    MatIconModule,
-    MatRippleModule,
+    IconComponent,
   ],
   templateUrl: './date-switcher.component.html',
   styleUrls: ['./date-switcher.component.css'],

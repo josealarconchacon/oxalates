@@ -14,6 +14,8 @@ export type IconName =
   | 'pencil'
   | 'arrow-right'
   | 'chevron-right'
+  | 'chevron-left'
+  | 'calendar'
   | 'chevron-down'
   | 'share-2'
   | 'download'
@@ -101,6 +103,13 @@ export type IconName =
         }
         @case ('chevron-right') {
           <svg:path d="m9 18 6-6-6-6" />
+        }
+        @case ('chevron-left') {
+          <svg:path d="m15 18-6-6 6-6" />
+        }
+        @case ('calendar') {
+          <svg:rect width="18" height="18" x="3" y="4" rx="2" />
+          <svg:path d="M8 2v4M16 2v4M3 10h18" />
         }
         @case ('chevron-down') {
           <svg:path d="m6 9 6 6 6-6" />
