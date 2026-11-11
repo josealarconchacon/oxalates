@@ -192,6 +192,17 @@ describe('FoodEntryComponent', () => {
       ]);
     });
 
+    it('tells screen readers which meal each Add Food belongs to', () => {
+      const buttons = Array.from(
+        fixture.nativeElement.querySelectorAll('.add-button')
+      ) as HTMLButtonElement[];
+      const meals = buttons.map((b) => {
+        const id = b.getAttribute('aria-describedby')!;
+        return fixture.nativeElement.querySelector('#' + id).textContent.trim();
+      });
+      expect(meals).toEqual(['Breakfast', 'Lunch', 'Dinner', 'Snacks']);
+    });
+
     it('opens the calculator for the meal whose Add Food was clicked', () => {
       const buttons = Array.from(
         fixture.nativeElement.querySelectorAll('.add-button')

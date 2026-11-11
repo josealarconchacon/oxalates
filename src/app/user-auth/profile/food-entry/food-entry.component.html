@@ -46,11 +46,12 @@
                   <span class="meal-icon" [attr.data-meal]="meal.key" aria-hidden="true">
                     <app-icon [name]="meal.icon" [size]="22" />
                   </span>
-                  <h3 class="meal-title">{{ meal.title }}</h3>
+                  <h3 class="meal-title" [id]="'meal-title-' + meal.key">{{ meal.title }}</h3>
                 </div>
                 <button
                   type="button"
                   class="add-button"
+                  [attr.aria-describedby]="'meal-title-' + meal.key"
                   [disabled]="isLoading"
                   (click)="openCalculator(meal.key)"
                   >
