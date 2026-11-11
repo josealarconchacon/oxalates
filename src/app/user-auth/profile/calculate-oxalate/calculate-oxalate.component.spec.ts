@@ -103,6 +103,26 @@ describe('CalculateOxalateComponent', () => {
     });
   });
 
+  describe('clearSearch', () => {
+    it('forgets the picked food so it cannot be logged', () => {
+      component.foodName = 'Almonds';
+      component.servingSize = '1';
+      component.totalOxalatePerServing = 122;
+      component.totalSolubleOxalatePerServing = 30;
+      component.similarFoods = [{} as any];
+      component.showSuggestions = true;
+
+      component.clearSearch();
+
+      expect(component.foodName).toBe('');
+      expect(component.servingSize).toBe('');
+      expect(component.totalOxalatePerServing).toBe(0);
+      expect(component.totalSolubleOxalatePerServing).toBe(0);
+      expect(component.similarFoods).toEqual([]);
+      expect(component.showSuggestions).toBeFalse();
+    });
+  });
+
   describe('clearResults', () => {
     it('should reset all relevant properties', () => {
       component.foodName = 'Carrot';

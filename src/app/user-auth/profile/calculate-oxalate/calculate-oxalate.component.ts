@@ -206,6 +206,19 @@ export class CalculateOxalateComponent implements OnInit, OnDestroy {
     this.showSuggestions = false;
   }
 
+  /**
+   * "Clear search": the same as deleting the text, plus forgetting the picked
+   * food, so Log Food can't save a food that is no longer named.
+   */
+  clearSearch(): void {
+    this.foodName = '';
+    this.servingSize = '';
+    this.totalOxalatePerServing = 0;
+    this.totalSolubleOxalatePerServing = 0;
+    this.foodInputSubject.next('');
+    this.clearSuggestions();
+  }
+
   clearSuggestions(): void {
     this.similarFoods = [];
     this.showSuggestions = false;

@@ -1,15 +1,28 @@
 <div class="search-section" [ngClass]="{ 'dark-theme': isDarkTheme }">
   <div class="search-wrapper">
-    <i class="material-icons" aria-hidden="true">search</i>
+    <label class="sr-only" for="food-search">Search foods</label>
+    <app-icon class="search-icon" name="search" [size]="20" />
     <input
+      #searchInput
+      id="food-search"
       type="text"
-      aria-label="Search foods"
       autocomplete="off"
-      [ngModel]="foodName"
+      [(ngModel)]="query"
       (ngModelChange)="onFoodNameChange($event)"
       placeholder="Search foods..."
       class="search-input"
+      [class.has-clear]="!!query"
       />
+    @if (query) {
+      <button
+        type="button"
+        class="clear-button"
+        aria-label="Clear search"
+        (click)="onClear(searchInput)"
+        >
+        <app-icon name="x" [size]="16" />
+      </button>
+    }
   </div>
 
   @if (showSuggestions && similarFoods.length > 0) {
