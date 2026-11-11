@@ -424,6 +424,11 @@
   position: relative;
 }
 
+/* The default swatch is very pale, so outline it to keep its edge visible. */
+.color-preset:first-child:not(.selected) {
+  box-shadow: inset 0 0 0 1px rgba(17, 26, 21, 0.35);
+}
+
 .color-preset:hover {
   transform: scale(1.1);
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);

@@ -1,7 +1,11 @@
 import { HSLA, HSVA, RGBA } from 'ngx-color';
 
+/** The banner color before anyone picks one (light --color-hero-panel). */
+export const DEFAULT_BANNER_COLOR = '#EAEFE9';
+
 export const presetColors: string[] = [
-  '#17603F', // brand green (the default banner colour)
+  DEFAULT_BANNER_COLOR, // picking it goes back to the default banner
+  '#17603F', // brand green
   '#4267B2',
   '#E1306C',
   '#2ECC71',

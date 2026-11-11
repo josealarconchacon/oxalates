@@ -64,5 +64,30 @@ describe('ProfileComponent', () => {
       expect(span.querySelector('wbr')).toBeTruthy();
     });
   });
+
+  describe('banner color', () => {
+    afterEach(() => localStorage.removeItem('headerColor'));
+
+    it('saves a picked color', () => {
+      component.selectedColor = '#17603F';
+      component.saveColor();
+      expect(component.currentHeaderColor).toBe('#17603F');
+      expect(localStorage.getItem('headerColor')).toBe('#17603F');
+      expect(component.bannerIsDark).toBeTrue();
+    });
+
+    it('goes back to the theme default when the default swatch is saved', () => {
+      localStorage.setItem('headerColor', '#17603F');
+      component.currentHeaderColor = '#17603F';
+      component.bannerIsDark = true;
+
+      component.onColorSelect('#EAEFE9');
+      component.saveColor();
+
+      expect(component.currentHeaderColor).toBeNull();
+      expect(component.bannerIsDark).toBeFalse();
+      expect(localStorage.getItem('headerColor')).toBeNull();
+    });
+  });
 });
 

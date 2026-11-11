@@ -163,7 +163,9 @@
               (click)="onColorSelect(color)"
               role="option"
               [attr.aria-selected]="selectedColor === color"
-              [attr.aria-label]="'Color: ' + color"
+              [attr.aria-label]="
+                (color === defaultBannerColor ? 'Default color: ' : 'Color: ') + color
+              "
               >
               <span class="sr-only">{{ color }}</span>
             </button>

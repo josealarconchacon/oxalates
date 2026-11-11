@@ -7,6 +7,7 @@ import {
   presetColors,
   colorToHex,
   isDarkColor,
+  DEFAULT_BANNER_COLOR,
 } from '../../shared/utils/color-utils';
 import { HSLA, HSVA, RGBA } from 'ngx-color';
 import { HeaderComponent } from 'src/app/landing-page/header/header.component';
@@ -15,9 +16,6 @@ import { NavigationService } from '../service/navigation.service';
 import { ThemeService } from '../../shared/services/theme.service';
 
 import { showDefaultAvatar } from 'src/app/shared/utils/avatar';
-
-/** Banner color until the user picks one (light theme's --color-hero-panel). */
-const DEFAULT_HEADER_COLOR = '#eaefe9';
 
 @Component({
   selector: 'app-profile',
@@ -32,7 +30,8 @@ export class ProfileComponent implements OnInit {
   isColorPickerVisible: boolean = false;
   /** The banner color the user picked; null shows the theme's soft green. */
   currentHeaderColor: string | null = null;
-  selectedColor: string = DEFAULT_HEADER_COLOR;
+  selectedColor: string = DEFAULT_BANNER_COLOR;
+  readonly defaultBannerColor = DEFAULT_BANNER_COLOR;
   /** The picked banner is dark, so text drawn on it (iPad card) goes white. */
   bannerIsDark = false;
   firstName: string = '';
@@ -116,7 +115,7 @@ export class ProfileComponent implements OnInit {
   toggleColorPicker(): void {
     this.isColorPickerVisible = !this.isColorPickerVisible;
     if (this.isColorPickerVisible) {
-      this.selectedColor = this.currentHeaderColor ?? DEFAULT_HEADER_COLOR;
+      this.selectedColor = this.currentHeaderColor ?? DEFAULT_BANNER_COLOR;
     }
   }
 
@@ -129,14 +128,22 @@ export class ProfileComponent implements OnInit {
   }
 
   saveColor(): void {
-    this.currentHeaderColor = this.selectedColor;
-    this.bannerIsDark = isDarkColor(this.selectedColor);
-    localStorage.setItem('headerColor', this.currentHeaderColor);
+    if (this.selectedColor.toUpperCase() === DEFAULT_BANNER_COLOR) {
+      // Back to the default: forget the pick so the banner follows the theme
+      // (soft green in light mode, dark green-grey in dark mode).
+      this.currentHeaderColor = null;
+      this.bannerIsDark = false;
+      localStorage.removeItem('headerColor');
+    } else {
+      this.currentHeaderColor = this.selectedColor;
+      this.bannerIsDark = isDarkColor(this.selectedColor);
+      localStorage.setItem('headerColor', this.currentHeaderColor);
+    }
     this.isColorPickerVisible = false;
   }
 
   cancelColor(): void {
-    this.selectedColor = this.currentHeaderColor ?? DEFAULT_HEADER_COLOR;
+    this.selectedColor = this.currentHeaderColor ?? DEFAULT_BANNER_COLOR;
     this.isColorPickerVisible = false;
   }
 
