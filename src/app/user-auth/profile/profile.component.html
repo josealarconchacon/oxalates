@@ -3,7 +3,7 @@
     <h1 class="sr-only">Your profile</h1>
     @if ((isMobile$ | async) === false) {
       <aside class="sidebar">
-        <div class="profile-card ui-card">
+        <div class="profile-card">
           <div
             class="profile-header"
             [style.backgroundColor]="currentHeaderColor"
@@ -30,14 +30,15 @@
               appClickable
               aria-label="Change profile photo"
               >
-              <i class="material-icons icon-inline" aria-hidden="true">photo_camera</i>
+              <app-icon name="camera" [size]="16" />
             </label>
             <button
+              type="button"
               class="color-picker-toggle"
               (click)="toggleColorPicker()"
               aria-label="Open color picker"
               >
-              <i class="material-icons icon-inline picker-icon" aria-hidden="true">palette</i>
+              <app-icon name="palette" [size]="18" />
             </button>
           </div>
           <div class="profile-info">
@@ -45,28 +46,31 @@
               {{ userProfile?.displayName || "Username" }}
             </h2>
             <p class="profile-email">
-              <i class="material-icons icon-inline" aria-hidden="true">mail</i>
-              {{ userProfile?.email || "username@example.com" }}
+              <app-icon name="mail" [size]="16" />
+              <span>{{ userProfile?.email || "username@example.com" }}</span>
             </p>
           </div>
         </div>
-        <nav class="sidebar-nav">
+        <nav class="sidebar-nav" aria-label="Account">
           <a
             [class.active]="(activeSection$ | async) === 'profile'"
+            [attr.aria-current]="(activeSection$ | async) === 'profile' ? 'page' : null"
             appClickable
             (click)="setActiveSection('profile')"
             >
-            <i class="material-icons icon-inline" aria-hidden="true">person</i> Profile Info
+            <app-icon name="user" /> Profile Info
           </a>
           <a
             [class.active]="(activeSection$ | async) === 'saveItem'"
+            [attr.aria-current]="(activeSection$ | async) === 'saveItem' ? 'page' : null"
             appClickable
             (click)="setActiveSection('saveItem')"
             >
-            <i class="material-icons icon-inline" aria-hidden="true">bookmark</i> Saved Items
+            <app-icon name="bookmark" /> Saved Items
           </a>
+          <hr class="nav-divider" />
           <a appClickable (click)="onLogout()" class="logout">
-            <i class="material-icons icon-inline" aria-hidden="true">logout</i> Logout
+            <app-icon name="log-out" /> Logout
           </a>
         </nav>
       </aside>

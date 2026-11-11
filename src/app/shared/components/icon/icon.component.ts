@@ -15,6 +15,9 @@ export type IconName =
   | 'arrow-right'
   | 'chevron-right'
   | 'trash-2'
+  | 'palette'
+  | 'camera'
+  | 'mail'
   | 'apple'
   | 'carrot'
   | 'wheat'
@@ -95,6 +98,21 @@ export type IconName =
         @case ('trash-2') {
           <svg:path d="M3 6h18M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2M10 11v6M14 11v6" />
         }
+        @case ('palette') {
+          <svg:circle cx="13.5" cy="6.5" r=".5" />
+          <svg:circle cx="17.5" cy="10.5" r=".5" />
+          <svg:circle cx="8.5" cy="7.5" r=".5" />
+          <svg:circle cx="6.5" cy="12.5" r=".5" />
+          <svg:path d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10c.926 0 1.648-.746 1.648-1.688 0-.437-.18-.835-.437-1.125-.29-.289-.438-.652-.438-1.125a1.64 1.64 0 0 1 1.668-1.668h1.996c3.051 0 5.555-2.503 5.555-5.554C21.965 6.012 17.461 2 12 2z" />
+        }
+        @case ('camera') {
+          <svg:path d="M14.5 4h-5L7 7H4a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-3l-2.5-3z" />
+          <svg:circle cx="12" cy="13" r="3" />
+        }
+        @case ('mail') {
+          <svg:rect width="20" height="16" x="2" y="4" rx="2" />
+          <svg:path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7" />
+        }
         @case ('apple') {
           <svg:path d="M12 20.94c1.5 0 2.75 1.06 4 1.06 3 0 6-8 6-12.22A4.91 4.91 0 0 0 17 5c-2.22 0-4 1.44-5 2-1-.56-2.78-2-5-2a4.9 4.9 0 0 0-5 4.78C2 14 5 22 8 22c1.25 0 2.5-1.06 4-1.06Z" />
           <svg:path d="M10 2c1 .5 2 2 2 5" />
@@ -169,7 +187,7 @@ export type IconName =
       line-height: 0;
     }
     svg {
-      fill: none;
+      fill: var(--icon-fill, none);
       stroke: currentColor;
       stroke-width: var(--icon-stroke, 1.8);
       stroke-linecap: round;

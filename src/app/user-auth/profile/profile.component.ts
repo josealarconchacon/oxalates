@@ -14,6 +14,9 @@ import { ThemeService } from '../../shared/services/theme.service';
 
 import { showDefaultAvatar } from 'src/app/shared/utils/avatar';
 
+/** Banner color until the user picks one (light theme's --color-hero-panel). */
+const DEFAULT_HEADER_COLOR = '#eaefe9';
+
 @Component({
   selector: 'app-profile',
   templateUrl: './profile.component.html',
@@ -25,8 +28,9 @@ export class ProfileComponent implements OnInit {
   userProfile: any;
   isChangePasswordVisible: boolean = false;
   isColorPickerVisible: boolean = false;
-  currentHeaderColor: string = '#17603f'; // brand green
-  selectedColor: string = this.currentHeaderColor;
+  /** The banner color the user picked; null shows the theme's soft green. */
+  currentHeaderColor: string | null = null;
+  selectedColor: string = DEFAULT_HEADER_COLOR;
   firstName: string = '';
   lastName: string = '';
 
@@ -104,7 +108,7 @@ export class ProfileComponent implements OnInit {
   toggleColorPicker(): void {
     this.isColorPickerVisible = !this.isColorPickerVisible;
     if (this.isColorPickerVisible) {
-      this.selectedColor = this.currentHeaderColor;
+      this.selectedColor = this.currentHeaderColor ?? DEFAULT_HEADER_COLOR;
     }
   }
 
@@ -123,7 +127,7 @@ export class ProfileComponent implements OnInit {
   }
 
   cancelColor(): void {
-    this.selectedColor = this.currentHeaderColor;
+    this.selectedColor = this.currentHeaderColor ?? DEFAULT_HEADER_COLOR;
     this.isColorPickerVisible = false;
   }
 
