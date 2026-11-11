@@ -150,6 +150,20 @@
   }
 }
 
+/* Phones (bottom sheet): Log Food stays pinned to the bottom of the sheet
+   while the content above scrolls. The negative margins reach the sheet's
+   24px side padding so the white bar spans the full width. */
+@media (max-width: 640px) {
+  .button-container {
+    position: sticky;
+    bottom: 0;
+    z-index: 2;
+    margin: 0 -24px;
+    padding: 0 24px calc(16px + env(safe-area-inset-bottom));
+    background: var(--color-surface);
+  }
+}
+
 /* Reduced motion */
 @media (prefers-reduced-motion: reduce) {
   *,
