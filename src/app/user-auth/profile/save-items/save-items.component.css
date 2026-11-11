@@ -448,6 +448,11 @@
     border-radius: 0;
   }
 
+  /* The card clips its edges, so draw the focus ring inside it. */
+  .list-item:focus-visible {
+    outline-offset: -4px;
+  }
+
   .item-wrapper.open .item-chevron {
     transform: rotate(180deg);
   }
