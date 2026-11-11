@@ -7,7 +7,8 @@
     <header class="app-header">
       <div class="header-content">
         <div class="header-title">
-          <h2>{{ mealType ? "Add to " + (mealType | titlecase) : "Oxalate" }}</h2>
+          <!-- The dialog around this form is labelled by this heading. -->
+          <h2 id="add-food-title">{{ mealType ? "Add to " + (mealType | titlecase) : "Oxalate" }}</h2>
           <p class="subtitle">
             {{
             mealType
