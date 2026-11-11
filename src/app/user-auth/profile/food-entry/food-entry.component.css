@@ -122,6 +122,13 @@
     top: 96px;
   }
 
+  /* Sticky makes this column its own layer, which traps the share and
+     download popups (drawn inside it) under the meal cards. While one is
+     open, lift the column to the popups' own level (1000, like the header). */
+  .breakdown-col:has(app-share-menu, app-get-report) {
+    z-index: 1000;
+  }
+
   .food-table-container {
     display: grid;
     grid-area: meals;
