@@ -14,6 +14,7 @@ export type IconName =
   | 'pencil'
   | 'arrow-right'
   | 'chevron-right'
+  | 'trash-2'
   | 'apple'
   | 'carrot'
   | 'wheat'
@@ -90,6 +91,9 @@ export type IconName =
         }
         @case ('chevron-right') {
           <svg:path d="m9 18 6-6-6-6" />
+        }
+        @case ('trash-2') {
+          <svg:path d="M3 6h18M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2M10 11v6M14 11v6" />
         }
         @case ('apple') {
           <svg:path d="M12 20.94c1.5 0 2.75 1.06 4 1.06 3 0 6-8 6-12.22A4.91 4.91 0 0 0 17 5c-2.22 0-4 1.44-5 2-1-.56-2.78-2-5-2a4.9 4.9 0 0 0-5 4.78C2 14 5 22 8 22c1.25 0 2.5-1.06 4-1.06Z" />

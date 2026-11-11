@@ -5,6 +5,8 @@ import { Oxalate } from 'src/app/landing-page/model/oxalate';
 import { OxalateService } from 'src/app/landing-page/dialog-service/service/oxalate.service';
 import { AuthService } from '../../service/auth-service.service';
 
+export type LevelTone = 'high' | 'medium' | 'low' | 'very-low' | 'neutral';
+
 @Component({
   selector: 'app-save-items',
   templateUrl: './save-items.component.html',
@@ -133,6 +135,24 @@ export class SaveItemsComponent implements OnInit {
       'calc_soluble_mg_oxalate_per_serving',
     ];
     return measurementKeys.includes(key);
+  }
+
+  /** Which badge color a Calc Level gets; same groups as the search page. */
+  levelTone(level: string): LevelTone {
+    switch (String(level).trim().toLowerCase()) {
+      case 'high':
+      case 'very high':
+      case 'extremely high':
+        return 'high';
+      case 'medium':
+        return 'medium';
+      case 'low':
+        return 'low';
+      case 'very low':
+        return 'very-low';
+      default:
+        return 'neutral'; // e.g. the few foods with a number here
+    }
   }
 
   getSubtitle(oxalate: Omit<Oxalate, 'notes' | 'reference'>): string {

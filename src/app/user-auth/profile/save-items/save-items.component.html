@@ -24,17 +24,12 @@
                   class="mobile-detail-dropdown"
                   >
                   <div class="item-details">
-                    <div class="item-header">
-                      <h3>{{ oxalate.item }}</h3>
-                      <div class="item-actions">
-                        <ng-container
-                          *ngTemplateOutlet="deleteControls; context: { $implicit: oxalate }"
-                        ></ng-container>
-                      </div>
-                    </div>
+                    <ng-container
+                      *ngTemplateOutlet="detailHeader; context: { $implicit: oxalate }"
+                    ></ng-container>
                     @for (detail of oxalate | keyvalue; track detail) {
                       <div>
-                        @if (detail.key !== 'id' && detail.value) {
+                        @if (detail.key !== 'id' && detail.key !== 'calc_level' && detail.value) {
                           <p
                             class="detail-item"
                             >
@@ -73,17 +68,12 @@
             <div>
               @if (oxalate.id === expandedCardId) {
                 <div class="item-details">
-                  <div class="item-header">
-                    <h3>{{ oxalate.item }}</h3>
-                    <div class="item-actions">
-                      <ng-container
-                        *ngTemplateOutlet="deleteControls; context: { $implicit: oxalate }"
-                      ></ng-container>
-                    </div>
-                  </div>
+                  <ng-container
+                    *ngTemplateOutlet="detailHeader; context: { $implicit: oxalate }"
+                  ></ng-container>
                   @for (detail of oxalate | keyvalue; track detail) {
                     <div>
-                      @if (detail.key !== 'id' && detail.value) {
+                      @if (detail.key !== 'id' && detail.key !== 'calc_level' && detail.value) {
                         <p
                           class="detail-item"
                           >
@@ -142,7 +132,29 @@ trash button that asks for confirmation inline before deleting. -->
       [attr.aria-label]="'Delete ' + oxalate.item"
       (click)="askDelete(oxalate.id)"
       >
-      <i class="material-icons icon-inline" aria-hidden="true">delete</i>
+      <app-icon name="trash-2" [size]="18" />
     </button>
   }
+</ng-template>
+
+<!-- Food name, its Calc Level badge and the delete control. -->
+<ng-template #detailHeader let-oxalate>
+  <div class="item-header">
+    <div class="item-heading">
+      <h3 class="item-name">{{ oxalate.item }}</h3>
+      @if (oxalate.calc_level) {
+        <p class="calc-level">
+          <span class="calc-level-label">{{ formatKey('calc_level') }}</span>
+          <span class="level-badge" [attr.data-tone]="levelTone(oxalate.calc_level)">
+            <span class="level-dot" aria-hidden="true"></span>{{ oxalate.calc_level }}
+          </span>
+        </p>
+      }
+    </div>
+    <div class="item-actions">
+      <ng-container
+        *ngTemplateOutlet="deleteControls; context: { $implicit: oxalate }"
+      ></ng-container>
+    </div>
+  </div>
 </ng-template>

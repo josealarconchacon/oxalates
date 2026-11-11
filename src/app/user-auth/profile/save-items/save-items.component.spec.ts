@@ -92,4 +92,64 @@ describe('SaveItemsComponent', () => {
       ).toBe(component.getSubtitle({ total_oxalate_mg_per_100g: '0.00' } as any));
     });
   });
+
+  describe('detail header', () => {
+    beforeEach(() => {
+      component.savedOxalates$ = of([
+        {
+          id: 'a',
+          item: 'Baking Powder',
+          calc_level: 'Very Low',
+          category: 'Baking Items',
+        },
+      ] as any);
+      component.expandedCardId = 'a';
+      fixture.detectChanges();
+    });
+
+    const detail = () =>
+      fixture.nativeElement.querySelector('.detail-view') as HTMLElement;
+
+    it('shows the food name and its Calc Level as a badge', () => {
+      expect(detail().querySelector('.item-name')?.textContent?.trim()).toBe(
+        'Baking Powder'
+      );
+      expect(
+        detail().querySelector('.calc-level-label')?.textContent?.trim()
+      ).toBe('Calc Level');
+      const badge = detail().querySelector('.level-badge')!;
+      expect(badge.textContent?.trim()).toBe('Very Low');
+      expect(badge.getAttribute('data-tone')).toBe('very-low');
+    });
+
+    it('does not repeat Calc Level in the field list', () => {
+      const keys = Array.from(detail().querySelectorAll('.detail-key')).map(
+        (k) => k.textContent?.trim()
+      );
+      expect(keys).not.toContain('Calc Level:');
+      expect(keys).toContain('Category:');
+    });
+
+    it('keeps the delete button label', () => {
+      expect(
+        detail().querySelector('.delete-button')?.getAttribute('aria-label')
+      ).toBe('Delete Baking Powder');
+    });
+  });
+
+  describe('levelTone', () => {
+    it('groups levels like the search page does', () => {
+      expect(component.levelTone('Extremely High')).toBe('high');
+      expect(component.levelTone('Very High')).toBe('high');
+      expect(component.levelTone('High')).toBe('high');
+      expect(component.levelTone('Medium')).toBe('medium');
+      expect(component.levelTone('Low')).toBe('low');
+      expect(component.levelTone('Very Low')).toBe('very-low');
+      expect(component.levelTone('very low')).toBe('very-low');
+    });
+
+    it('gives anything else a neutral badge', () => {
+      expect(component.levelTone('50.90')).toBe('neutral');
+    });
+  });
 });

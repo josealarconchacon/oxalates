@@ -138,44 +138,114 @@
 .item-header {
   display: flex;
   justify-content: space-between;
-  align-items: center;
+  align-items: flex-start;
+  flex-wrap: wrap;
+  gap: var(--spacing-3) var(--spacing-4);
   margin-bottom: var(--spacing-6);
-  padding-bottom: var(--spacing-4);
-  border-bottom: 1px solid var(--gray-100);
 }
 
-.item-header h3 {
-  font-size: var(--font-size-xl);
-  font-weight: var(--font-weight-semibold);
-  color: var(--gray-900);
+/* The name shares the row with the trash button; the wider delete
+   confirmation gets a row of its own. */
+.item-heading {
+  flex: 1 1 0;
+  min-width: min(100%, 10rem);
+}
+
+.item-actions:has(.delete-confirm) {
+  flex-basis: 100%;
+}
+
+.item-name {
   margin: 0;
-  line-height: var(--line-height-tight);
+  font-family: var(--font-family-display);
+  font-size: 1.75rem;
+  font-weight: 700;
+  line-height: 1.15;
+  letter-spacing: -0.015em;
+  color: var(--color-ink);
+  overflow-wrap: break-word;
+}
+
+.calc-level {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: var(--spacing-2);
+  margin: var(--spacing-3) 0 0;
+}
+
+.calc-level-label {
+  font-size: 0.875rem;
+  color: var(--color-muted);
+}
+
+/* Same level colors as the search results (--level-* tokens). */
+.level-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 3px 10px;
+  border: 1px solid var(--color-line);
+  border-radius: 999px;
+  background: var(--color-bg);
+  color: var(--color-ink);
+  font-size: 0.8125rem;
+  font-weight: 600;
+  line-height: 1.4;
+}
+
+.level-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: currentColor;
+}
+
+.level-badge[data-tone='high'] {
+  background: var(--level-high-surface);
+  border-color: var(--level-high-border);
+  color: var(--level-high-text);
+}
+
+.level-badge[data-tone='medium'] {
+  background: var(--level-medium-surface);
+  border-color: var(--level-medium-border);
+  color: var(--level-medium-text);
+}
+
+.level-badge[data-tone='low'] {
+  background: var(--level-low-surface);
+  border-color: var(--level-low-border);
+  color: var(--level-low-text);
+}
+
+.level-badge[data-tone='very-low'] {
+  background: var(--level-very-low-surface);
+  border-color: var(--level-very-low-border);
+  color: var(--level-very-low-text);
 }
 
 .item-actions {
   display: flex;
+  flex-shrink: 0;
   gap: var(--spacing-2);
 }
 
 .action-button {
-  width: 36px;
-  height: 36px;
-  border-radius: var(--radius-lg);
-  border: 1px solid var(--gray-100);
-  background: var(--background-color);
-  color: var(--gray-600);
-  cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: all var(--transition-base);
-}
-
-.action-button:hover {
-  background-color: var(--gray-50);
-  color: var(--gray-900);
-  border-color: var(--gray-200);
-  transform: translateY(-1px);
+  width: 44px;
+  height: 44px;
+  border: 1px solid var(--color-line);
+  border-radius: 12px;
+  background: var(--color-surface);
+  color: var(--color-muted);
+  cursor: pointer;
+  transition:
+    background-color var(--transition-base),
+    border-color var(--transition-base),
+    color var(--transition-base);
 }
 
 .action-button:focus-visible {
@@ -185,9 +255,9 @@
 }
 
 .action-button.delete-button:hover {
-  background-color: var(--danger-50);
-  color: var(--danger-color);
-  border-color: var(--danger-color);
+  background-color: var(--si-danger-bg);
+  border-color: var(--si-danger);
+  color: var(--si-danger);
 }
 
 .detail-item {
@@ -275,23 +345,12 @@
     padding: var(--spacing-4);
   }
 
-  .item-header {
-    margin-bottom: var(--spacing-4);
-  }
-
   .detail-item {
     padding: var(--spacing-3);
   }
 
   .no-items {
     padding: var(--spacing-6);
-  }
-}
-
-@media (max-width: 576px) {
-  .action-button {
-    width: 32px;
-    height: 32px;
   }
 }
 
@@ -346,19 +405,26 @@
 }
 
 .confirm-button {
-  min-height: 36px;
+  min-height: 44px;
   padding: 0 var(--spacing-4);
-  border-radius: var(--radius-lg);
-  border: 1px solid var(--border-color);
-  background: var(--background-color);
-  color: var(--text-primary);
-  font-size: var(--font-size-sm);
-  font-weight: var(--font-weight-medium);
+  border: 1px solid var(--color-line);
+  border-radius: 12px;
+  background: var(--color-surface);
+  color: var(--color-ink);
+  font: inherit;
+  font-size: 0.875rem;
+  font-weight: 600;
   cursor: pointer;
 }
 
+.confirm-button:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+}
+
+/* Solid red with white text in both themes (6.6:1). */
 .confirm-button.confirm-delete-button {
-  background: var(--danger-color);
-  border-color: var(--danger-color);
-  color: var(--white);
+  background: #b42318;
+  border-color: #b42318;
+  color: #ffffff;
 }
