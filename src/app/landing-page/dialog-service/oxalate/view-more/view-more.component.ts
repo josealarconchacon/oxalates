@@ -42,14 +42,6 @@ export class ViewMoreComponent implements OnInit, OnDestroy {
     // No longer hiding specific fields as we want to show all fields with valid data
   ];
 
-  // Fields that should have special styling/highlighting
-  private highlightFields: string[] = [
-    'total_oxalate_mg_per_100g',
-    'calc_oxalate_per_serving',
-    'total_soluble_oxalate_mg_per_100g',
-    'calc_soluble_mg_oxalate_per_serving',
-  ];
-
   constructor(
     private router: Router,
     private authService: AuthService,
@@ -251,21 +243,56 @@ export class ViewMoreComponent implements OnInit, OnDestroy {
     return match && match[2] ? match[2] : '';
   }
 
-  getFieldClass(field: string): string {
-    if (this.highlightFields.includes(field)) {
-      return 'highlight-row';
-    }
-    return '';
+  /** Shown in the header (category above the name, level as a badge). */
+  private readonly headerFields = ['category', 'calc_level'];
+  /** The two numbers people come for, shown as big tiles. */
+  private readonly tileFields = [
+    'calc_oxalate_per_serving',
+    'calc_soluble_mg_oxalate_per_serving',
+  ];
+
+  /** Per-serving tiles, among the fields this food has. */
+  getTileFields() {
+    return this.getFilteredFields().filter((f) =>
+      this.tileFields.includes(f.field)
+    );
   }
 
-  getValueClass(field: string, value: any): string {
-    if (field === 'level' || field === 'calc_level') {
-      const levelValue = parseInt(value);
-      if (levelValue <= 2) return 'value-low';
-      if (levelValue <= 4) return 'value-medium';
-      return 'value-high';
+  /** Every other field the food has, in the usual order, as label | value. */
+  getListFields() {
+    return this.getFilteredFields().filter(
+      (f) =>
+        !this.headerFields.includes(f.field) &&
+        !this.tileFields.includes(f.field)
+    );
+  }
+
+  /** True when the food has a usable value for this field. */
+  hasField(field: string): boolean {
+    return this.getFilteredFields().some((f) => f.field === field);
+  }
+
+  /** Label for a header field, from the same field list as before. */
+  labelOf(field: string): string {
+    return this.OXALATE_INFO_FIELDS.find((f) => f.field === field)?.label ?? '';
+  }
+
+  /** Badge color for the calculated level; same groups as the search page. */
+  levelTone(level: unknown): string {
+    switch (String(level ?? '').trim().toLowerCase()) {
+      case 'high':
+      case 'very high':
+      case 'extremely high':
+        return 'high';
+      case 'medium':
+        return 'medium';
+      case 'low':
+        return 'low';
+      case 'very low':
+        return 'very-low';
+      default:
+        return 'neutral';
     }
-    return '';
   }
 
   onClose(): void {
