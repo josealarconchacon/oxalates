@@ -1,13 +1,20 @@
 @if (oxalateData) {
-  <div
-    class="view-more-container"
-    [ngClass]="{ 'dark-theme': isDarkTheme }"
-    >
+  <div class="view-more-container" [ngClass]="{ 'dark-theme': isDarkTheme }">
     <div class="oxalate-card" aria-labelledby="oxalate-title">
-      <div class="accent-bar" aria-hidden="true"></div>
       <header class="card-header">
         <div class="header-content">
+          @if (hasField('category')) {
+            <p class="item-category">{{ oxalateData.category }}</p>
+          }
           <h2 class="item-name" id="oxalate-title">{{ oxalateData.item }}</h2>
+          @if (hasField('calc_level')) {
+            <p class="item-level">
+              <span class="level-label">{{ labelOf('calc_level') }}</span>
+              <span class="level-badge" [attr.data-tone]="levelTone(oxalateData.calc_level)">
+                <span class="level-dot" aria-hidden="true"></span>{{ oxalateData.calc_level }}
+              </span>
+            </p>
+          }
         </div>
         <button
           type="button"
@@ -15,79 +22,69 @@
           aria-label="Close details"
           (click)="handleClose($event)"
           >
-          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M18 6L6 18M6 6l12 12" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+          <app-icon name="x" [size]="18" />
         </button>
       </header>
+
       <div class="content-section" role="region" id="details-content" aria-label="Oxalate details">
-        <h3 class="section-label">Oxalate Information</h3>
-        <div class="oxalate-table-container">
-          <table class="oxalate-table" aria-label="Oxalate properties">
-            <tbody>
-              @for (field of getFilteredFields(); track field; let i = $index) {
-                <tr
-                  class="table-row"
-                  [ngClass]="getFieldClass(field.field)"
-                  [attr.data-index]="i"
-                  >
-                  <td class="property-cell">
-                    <div class="property-indicator" aria-hidden="true"></div>
-                    <span class="property-name" [attr.title]="field.label">{{
-                      field.label || "Feature"
-                    }}</span>
-                  </td>
-                  <td class="value-cell">
-                    <span
-                      class="property-value"
-                  [ngClass]="
-                    getValueClass(field.field, oxalateData[field.field])
-                  "
-                  [attr.title]="
-                    oxalateData[field.field] + (field.unit ? field.unit : '')
-                  "
-                      >
-                      {{ oxalateData[field.field] || "N/A" }}
-                      @if (field.unit) {
-                        <span class="value-unit">{{
-                          field.unit
-                        }}</span>
-                      }
-                    </span>
-                  </td>
-                </tr>
-              }
-            </tbody>
-          </table>
-        </div>
-        @if (shouldShowNotes(oxalateData.notes)) {
-          <hr class="section-divider" />
+        <!-- Same fields, labels, values and units as before, grouped: the two
+             per-serving numbers as tiles, everything else as label | value. -->
+        @if (getTileFields().length) {
+          <dl class="stat-tiles">
+            @for (field of getTileFields(); track field.field) {
+              <div class="stat-tile">
+                <dt class="stat-label">{{ field.label }}</dt>
+                <dd class="stat-value">
+                  <span class="stat-number">{{ oxalateData[field.field] }}</span>
+                  @if (field.unit) {
+                    <span class="value-unit"> {{ field.unit }}</span>
+                  }
+                </dd>
+              </div>
+            }
+          </dl>
         }
+
+        @if (getListFields().length) {
+          <dl class="detail-list" aria-label="Oxalate properties">
+            @for (field of getListFields(); track field.field) {
+              <div class="detail-row">
+                <dt class="detail-key">{{ field.label }}</dt>
+                <dd class="detail-value">
+                  {{ oxalateData[field.field] }}
+                  @if (field.unit) {
+                    <span class="value-unit"> {{ field.unit }}</span>
+                  }
+                </dd>
+              </div>
+            }
+          </dl>
+        }
+
         @if (shouldShowNotes(oxalateData.notes)) {
-          <div
-            class="info-note"
-            role="note"
-            >
-            <div class="note-icon" aria-hidden="true">ℹ️</div>
-            <div class="note-text">{{ getCleanedNotes(oxalateData.notes) }}</div>
+          <div class="info-note" role="note">
+            <app-icon class="note-icon" name="info" [size]="18" />
+            <p class="note-text">{{ getCleanedNotes(oxalateData.notes) }}</p>
           </div>
         }
       </div>
+
       <footer class="card-actions">
         <button
-          class="action-button save-button ui-btn ui-btn--primary"
+          type="button"
+          class="save-button"
           [disabled]="isSaving"
           (click)="onSave(); onClose()"
           aria-live="polite"
           >
-          <span class="button-content">
-            <span
-              class="button-icon"
-              [ngClass]="{ spinner: isSaving, 'heart-icon': !isSaving }"
-              aria-hidden="true"
-            ></span>
-            <span class="button-text">{{
-              isSaving ? "Saving..." : "Add to Favorite"
-            }}</span>
-          </span>
+          @if (isSaving) {
+            <span class="spinner" aria-hidden="true"></span>
+          } @else {
+            <app-icon name="heart" [size]="18" />
+          }
+          <span class="button-text">{{
+            isSaving ? "Saving..." : "Add to Favorite"
+          }}</span>
         </button>
       </footer>
     </div>
