@@ -18,6 +18,23 @@ import { isStrongPassword } from 'src/app/shared/utils/password-validator';
  */
 export const GOOGLE_REDIRECT_PENDING_KEY = 'googleRedirectPending';
 
+/** The longest name someone can save on their profile. */
+export const DISPLAY_NAME_MAX_LENGTH = 50;
+
+/** Trims a typed name and squeezes runs of spaces into one. */
+export function cleanDisplayName(input: string): string {
+  return input.trim().replace(/\s+/g, ' ');
+}
+
+/** Why a (cleaned) name can't be saved, or null when it's fine. */
+export function displayNameError(name: string): string | null {
+  if (!name) return 'Please enter a name.';
+  if (name.length > DISPLAY_NAME_MAX_LENGTH) {
+    return `Use ${DISPLAY_NAME_MAX_LENGTH} characters or fewer.`;
+  }
+  return null;
+}
+
 @Injectable({
   providedIn: 'root',
 })
@@ -356,6 +373,30 @@ export class AuthService {
 
   redirectToSignIn(): void {
     this.router.navigate(['/auth']);
+  }
+
+  /**
+   * Saves the name shown on the profile and returns it, cleaned up.
+   *
+   * It goes to the Auth profile first, then the users/{uid} document, then
+   * the cached profile so the page updates at once. Auth comes first because
+   * every login copies the Auth name into the document (updateUserData), so
+   * the two can't drift apart for long even if the second write fails.
+   */
+  async updateDisplayName(input: string): Promise<string> {
+    const name = cleanDisplayName(input);
+    const error = displayNameError(name);
+    if (error) throw new Error(error);
+
+    const user = await this.getCurrentUser();
+    if (!user) throw new Error('Please sign in again to change your name.');
+
+    await user.updateProfile({ displayName: name });
+    // set + merge also works for an account whose document is missing.
+    await this.usersDoc(user.uid).set({ displayName: name }, { merge: true });
+
+    this.setUserProfile({ ...this.userProfileSubject.value, displayName: name });
+    return name;
   }
 
   async updateProfileImage(imageUrl: string): Promise<void> {

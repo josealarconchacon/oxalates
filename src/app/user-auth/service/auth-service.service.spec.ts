@@ -5,7 +5,12 @@ import { AngularFirestore } from '@angular/fire/compat/firestore';
 import { Router } from '@angular/router';
 import { firstValueFrom, of } from 'rxjs';
 import { AlertService } from 'src/app/shared/alert-service/alert.service';
-import { AuthService, GOOGLE_REDIRECT_PENDING_KEY } from './auth-service.service';
+import {
+  AuthService,
+  GOOGLE_REDIRECT_PENDING_KEY,
+  cleanDisplayName,
+  displayNameError,
+} from './auth-service.service';
 
 describe('AuthService Google sign-in', () => {
   const googleUser = {
@@ -217,5 +222,112 @@ describe('AuthService.isSignedInAndVerifiedAsync', () => {
   it('is false when nobody is signed in', async () => {
     const service = serviceWith(null);
     expect(await firstValueFrom(service.isSignedInAndVerifiedAsync())).toBeFalse();
+  });
+});
+
+describe('display name rules', () => {
+  it('trims and squeezes spaces', () => {
+    expect(cleanDisplayName('  Ana   María  Ruiz ')).toBe('Ana María Ruiz');
+  });
+
+  it('needs at least one character', () => {
+    expect(displayNameError('')).toBe('Please enter a name.');
+  });
+
+  it('allows up to 50 characters', () => {
+    expect(displayNameError('a'.repeat(50))).toBeNull();
+    expect(displayNameError('a'.repeat(51))).toBe('Use 50 characters or fewer.');
+  });
+});
+
+describe('AuthService.updateDisplayName', () => {
+  let user: { uid: string; updateProfile: jasmine.Spy } | null;
+  let docWrites: { data: unknown; options: unknown }[];
+  let failDocWrite: boolean;
+
+  function createService(): AuthService {
+    const afAuth = jasmine.createSpyObj('AngularFireAuth', ['getRedirectResult'], {
+      authState: of(null), // don't load a profile on start-up
+      currentUser: Promise.resolve(user),
+    });
+    afAuth.getRedirectResult.and.resolveTo({ user: null });
+
+    const fakeFirestore = {
+      collection: () => {
+        inject(EnvironmentInjector);
+        return {
+          doc: () => {
+            inject(EnvironmentInjector);
+            return {
+              set: (data: unknown, options: unknown) => {
+                if (failDocWrite) return Promise.reject(new Error('offline'));
+                docWrites.push({ data, options });
+                return Promise.resolve();
+              },
+            };
+          },
+        };
+      },
+    };
+
+    TestBed.configureTestingModule({
+      providers: [
+        { provide: AngularFireAuth, useValue: afAuth },
+        { provide: AngularFirestore, useValue: fakeFirestore },
+        { provide: Router, useValue: jasmine.createSpyObj('Router', ['navigate']) },
+        { provide: AlertService, useValue: jasmine.createSpyObj('AlertService', ['showAlert']) },
+      ],
+    });
+    return TestBed.inject(AuthService);
+  }
+
+  beforeEach(() => {
+    user = { uid: 'u1', updateProfile: jasmine.createSpy('updateProfile').and.resolveTo() };
+    docWrites = [];
+    failDocWrite = false;
+  });
+
+  afterEach(() => localStorage.removeItem('user'));
+
+  it('saves the cleaned name to Auth, the user document and the cached profile', async () => {
+    const service = createService();
+    service.setUserProfile({ uid: 'u1', email: 'a@b.com', displayName: '' });
+
+    const saved = await service.updateDisplayName('  Ana  Ruiz ');
+
+    expect(saved).toBe('Ana Ruiz');
+    expect(user!.updateProfile).toHaveBeenCalledWith({ displayName: 'Ana Ruiz' });
+    expect(docWrites).toEqual([{ data: { displayName: 'Ana Ruiz' }, options: { merge: true } }]);
+    const profile = await firstValueFrom(service.userProfile$);
+    expect(profile).toEqual({ uid: 'u1', email: 'a@b.com', displayName: 'Ana Ruiz' });
+  });
+
+  it('rejects an empty or too-long name without saving anything', async () => {
+    const service = createService();
+    await expectAsync(service.updateDisplayName('   ')).toBeRejectedWithError('Please enter a name.');
+    await expectAsync(service.updateDisplayName('x'.repeat(51))).toBeRejectedWithError(
+      'Use 50 characters or fewer.'
+    );
+    expect(user!.updateProfile).not.toHaveBeenCalled();
+    expect(docWrites).toEqual([]);
+  });
+
+  it('asks to sign in again when nobody is signed in', async () => {
+    user = null;
+    const service = createService();
+    await expectAsync(service.updateDisplayName('Ana')).toBeRejectedWithError(
+      'Please sign in again to change your name.'
+    );
+  });
+
+  it('leaves the cached profile alone when a save fails', async () => {
+    failDocWrite = true;
+    const service = createService();
+    service.setUserProfile({ uid: 'u1', displayName: 'Old' });
+
+    await expectAsync(service.updateDisplayName('New')).toBeRejected();
+
+    const profile = await firstValueFrom(service.userProfile$);
+    expect(profile.displayName).toBe('Old');
   });
 });
