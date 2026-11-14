@@ -256,8 +256,11 @@
 }
 
 /* No frame around the tab content: each tab draws its own cards. */
+/* No box of its own: the cards inside are the surfaces. Transparent beats
+   the global .content-area background in styles.css for this page only. */
 .content-area {
   min-width: 0;
+  background-color: transparent;
 }
 
 /* Profile Information: one card holding the heading, details and button. */
