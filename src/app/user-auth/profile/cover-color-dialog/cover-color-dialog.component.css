@@ -208,12 +208,16 @@
 /* ---- Body content still to redesign (steps 4–6) ---- */
 
 /* ---- Preset swatches: round radio buttons ---- */
+.cc-swatch-area {
+  position: relative;
+  margin: 20px 0;
+}
+
 .cc-swatches {
   display: grid;
   grid-template-columns: repeat(5, 44px);
   justify-content: space-between;
   row-gap: 12px;
-  margin: 20px 0;
 }
 
 .cc-swatch {
@@ -246,6 +250,30 @@
     inset 0 0 0 1px rgba(0, 0, 0, 0.12),
     0 0 0 3px var(--cc-surface),
     0 0 0 5px var(--cc-ring);
+}
+
+/* "+": the 10th slot (bottom-right of the 5 × 2 grid). Dashed = "not a
+   color yet". Ringed like a selected swatch while its panel is open. */
+.cc-custom-toggle {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  border: 1.5px dashed var(--cc-muted);
+  background: transparent;
+  box-shadow: none;
+  color: var(--cc-ink);
+  --icon-stroke: 2;
+}
+
+.cc-custom-toggle[aria-expanded='true'] {
+  box-shadow:
+    0 0 0 3px var(--cc-surface),
+    0 0 0 5px var(--cc-ring);
+}
+
+/* The panel's own display: flex would beat the hidden attribute. */
+.cc-custom[hidden] {
+  display: none;
 }
 
 /* Keyboard focus sits outside the selected ring, so both can show. */

@@ -50,11 +50,21 @@ export class CoverColorDialogComponent implements OnInit {
   }));
   readonly defaultAvatar = DEFAULT_AVATAR;
   readonly onAvatarError = showDefaultAvatar;
-  readonly titleId = `cover-color-title-${nextId++}`;
+  private readonly uid = nextId++;
+  readonly titleId = `cover-color-title-${this.uid}`;
+  readonly customPanelId = `cover-color-custom-${this.uid}`;
+  /** The custom picker panel is showing. */
+  customOpen = false;
   selectedColor = DEFAULT_BANNER_COLOR;
 
   ngOnInit(): void {
     this.selectedColor = this.color ?? DEFAULT_BANNER_COLOR;
+    // Start open only when the saved color isn't one of the presets.
+    this.customOpen = !this.presets.some((p) => this.isSelected(p.value));
+  }
+
+  toggleCustom(): void {
+    this.customOpen = !this.customOpen;
   }
 
   /**

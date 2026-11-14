@@ -32,7 +32,7 @@ describe('CoverColorDialogComponent', () => {
   });
 
   it('names every preset swatch, in order', () => {
-    const names = [...el().querySelectorAll('.cc-swatch')].map((b) =>
+    const names = [...el().querySelectorAll('[role="radio"]')].map((b) =>
       b.getAttribute('aria-label')
     );
     expect(names).toEqual(presetColorNames);
@@ -110,7 +110,7 @@ describe('CoverColorDialogComponent', () => {
   });
 
   describe('preset radiogroup', () => {
-    const swatches = () => [...el().querySelectorAll<HTMLElement>('.cc-swatch')];
+    const swatches = () => [...el().querySelectorAll<HTMLElement>('[role="radio"]')];
     const key = (target: HTMLElement, k: string) => {
       target.dispatchEvent(new KeyboardEvent('keydown', { key: k, bubbles: true }));
       fixture.detectChanges();
@@ -157,6 +157,41 @@ describe('CoverColorDialogComponent', () => {
     it('uses a white check on dark swatches and an ink check on the pale one', () => {
       expect(swatches()[0].classList).not.toContain('cc-swatch--light-check');
       expect(swatches()[8].classList).toContain('cc-swatch--light-check');
+    });
+  });
+
+  describe('custom color toggle', () => {
+    const toggle = () => el().querySelector<HTMLButtonElement>('.cc-custom-toggle')!;
+    const panel = () => el().querySelector<HTMLElement>('.cc-custom')!;
+
+    it('is a labelled "+" outside the radiogroup that controls the panel', () => {
+      expect(toggle().getAttribute('aria-label')).toBe('Custom color');
+      expect(toggle().closest('[role="radiogroup"]')).toBeNull();
+      expect(toggle().getAttribute('aria-controls')).toBe(panel().id);
+    });
+
+    it('starts closed when the saved color is a preset', () => {
+      expect(toggle().getAttribute('aria-expanded')).toBe('false');
+      expect(panel().hidden).toBeTrue();
+    });
+
+    it('shows and hides the panel', () => {
+      toggle().click();
+      fixture.detectChanges();
+      expect(toggle().getAttribute('aria-expanded')).toBe('true');
+      expect(panel().hidden).toBeFalse();
+      toggle().click();
+      fixture.detectChanges();
+      expect(panel().hidden).toBeTrue();
+    });
+
+    it('starts open when the saved color is not a preset', () => {
+      const f = TestBed.createComponent(CoverColorDialogComponent);
+      f.componentInstance.color = '#123456';
+      f.detectChanges();
+      const t = f.nativeElement.querySelector('.cc-custom-toggle');
+      expect(t.getAttribute('aria-expanded')).toBe('true');
+      expect(f.nativeElement.querySelector('.cc-custom').hidden).toBeFalse();
     });
   });
 });

@@ -35,36 +35,54 @@
           <span class="cc-preview-name">{{ name }}</span>
         </div>
       </div>
-      <!-- Presets as radio buttons: Tab lands on the checked one, arrow keys
-           move between them (see onPresetKeydown). -->
-      <div class="cc-swatches" role="radiogroup" aria-label="Preset colors">
-        @for (preset of presets; track preset.value; let i = $index) {
-          <button
-            type="button"
-            class="cc-swatch"
-            [class.cc-swatch--light-check]="preset.lightCheck"
-            [style.backgroundColor]="preset.value"
-            role="radio"
-            [attr.aria-checked]="isSelected(preset.value)"
-            [attr.aria-label]="preset.name"
-            [tabIndex]="tabIndexFor(i)"
-            (click)="onColorSelect(preset.value)"
-            (keydown)="onPresetKeydown($event, i)"
-            >
-            @if (isSelected(preset.value)) {
-              <app-icon name="check" [size]="20" />
-            }
-          </button>
-        }
+      <!-- The 9 presets, then a 10th "+" that shows the custom picker. The
+           "+" sits outside the radiogroup (it's a toggle, not a color); CSS
+           places it in the empty 10th slot. -->
+      <div class="cc-swatch-area">
+        <!-- Presets as radio buttons: Tab lands on the checked one, arrow
+             keys move between them (see onPresetKeydown). -->
+        <div class="cc-swatches" role="radiogroup" aria-label="Preset colors">
+          @for (preset of presets; track preset.value; let i = $index) {
+            <button
+              type="button"
+              class="cc-swatch"
+              [class.cc-swatch--light-check]="preset.lightCheck"
+              [style.backgroundColor]="preset.value"
+              role="radio"
+              [attr.aria-checked]="isSelected(preset.value)"
+              [attr.aria-label]="preset.name"
+              [tabIndex]="tabIndexFor(i)"
+              (click)="onColorSelect(preset.value)"
+              (keydown)="onPresetKeydown($event, i)"
+              >
+              @if (isSelected(preset.value)) {
+                <app-icon name="check" [size]="20" />
+              }
+            </button>
+          }
+        </div>
+        <button
+          type="button"
+          class="cc-swatch cc-custom-toggle"
+          aria-label="Custom color"
+          [attr.aria-expanded]="customOpen"
+          [attr.aria-controls]="customPanelId"
+          (click)="toggleCustom()"
+          >
+          <app-icon name="plus" [size]="20" />
+        </button>
       </div>
-      <div class="color-input-group">
-        <color-sketch
-          [(color)]="selectedColor"
-          (colorChange)="onColorSelect($event)"
-          aria-label="Color picker"
-        ></color-sketch>
-        <div class="color-value" role="status" aria-live="polite">
-          {{ selectedColor }}
+
+      <div class="cc-custom" [id]="customPanelId" [hidden]="!customOpen">
+        <div class="color-input-group">
+          <color-sketch
+            [(color)]="selectedColor"
+            (colorChange)="onColorSelect($event)"
+            aria-label="Color picker"
+          ></color-sketch>
+          <div class="color-value" role="status" aria-live="polite">
+            {{ selectedColor }}
+          </div>
         </div>
       </div>
     </div>
