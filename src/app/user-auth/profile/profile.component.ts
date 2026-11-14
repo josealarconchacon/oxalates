@@ -1,5 +1,15 @@
-import { Component, OnInit } from '@angular/core';
-import { AuthService } from '../service/auth-service.service';
+import {
+  ChangeDetectorRef,
+  Component,
+  ElementRef,
+  OnInit,
+  ViewChild,
+} from '@angular/core';
+import {
+  AuthService,
+  cleanDisplayName,
+  displayNameError,
+} from '../service/auth-service.service';
 import { ProfileImageService } from '../service/profile-image.service';
 import { Router } from '@angular/router';
 import { fadeInOut } from 'src/app/shared/animations/fadeInOut';
@@ -33,11 +43,20 @@ export class ProfileComponent implements OnInit {
 
   activeSection$: Observable<string> | undefined;
 
+  /** Name row: editing, the text being typed, saving, and what went wrong. */
+  isEditingName = false;
+  nameDraft = '';
+  isSavingName = false;
+  nameError: string | null = null;
+  @ViewChild('nameInput') private nameInput?: ElementRef<HTMLInputElement>;
+  @ViewChild('editNameButton') private editNameButton?: ElementRef<HTMLButtonElement>;
+
   constructor(
     private authService: AuthService,
     private profileImageService: ProfileImageService,
     private router: Router,
-    private navigationService: NavigationService
+    private navigationService: NavigationService,
+    private cdr: ChangeDetectorRef
   ) {
     this.activeSection$ = this.navigationService.activeSection$;
   }
@@ -73,6 +92,57 @@ export class ProfileComponent implements OnInit {
       this.firstName = 'First Name';
       this.lastName = 'Last Name';
     }
+  }
+
+  startEditName(): void {
+    this.nameDraft = this.userProfile?.displayName ?? '';
+    this.nameError = null;
+    this.isEditingName = true;
+    this.focusAfterRender(() => {
+      const input = this.nameInput?.nativeElement;
+      input?.focus();
+      input?.select();
+    });
+  }
+
+  /** Typing clears an old error; it's checked again on Save. */
+  onNameInput(value: string): void {
+    this.nameDraft = value;
+    this.nameError = null;
+  }
+
+  cancelEditName(): void {
+    if (this.isSavingName) return;
+    this.isEditingName = false;
+    this.nameError = null;
+    this.focusAfterRender(() => this.editNameButton?.nativeElement.focus());
+  }
+
+  async saveName(): Promise<void> {
+    if (this.isSavingName) return;
+    // Check here first so a mistake shows at once, without a network call.
+    this.nameError = displayNameError(cleanDisplayName(this.nameDraft));
+    if (this.nameError) {
+      this.focusAfterRender(() => this.nameInput?.nativeElement.focus());
+      return;
+    }
+    this.isSavingName = true;
+    try {
+      // The page updates from the cached profile the service refreshes.
+      await this.authService.updateDisplayName(this.nameDraft);
+      this.isSavingName = false;
+      this.cancelEditName();
+    } catch {
+      this.isSavingName = false;
+      this.nameError = "Couldn't save your name. Please try again.";
+      this.focusAfterRender(() => this.nameInput?.nativeElement.focus());
+    }
+  }
+
+  /** Runs after the template has caught up (the input/button exists). */
+  private focusAfterRender(focus: () => void): void {
+    this.cdr.detectChanges();
+    focus();
   }
 
   toggleChangePassword(): void {
