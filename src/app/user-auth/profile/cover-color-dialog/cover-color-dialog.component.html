@@ -35,18 +35,26 @@
           <span class="cc-preview-name">{{ name }}</span>
         </div>
       </div>
-      <div class="color-grid" role="listbox" aria-label="Preset colors">
-        @for (preset of presets; track preset.value) {
+      <!-- Presets as radio buttons: Tab lands on the checked one, arrow keys
+           move between them (see onPresetKeydown). -->
+      <div class="cc-swatches" role="radiogroup" aria-label="Preset colors">
+        @for (preset of presets; track preset.value; let i = $index) {
           <button
             type="button"
-            class="color-preset"
-            [class.selected]="isSelected(preset.value)"
+            class="cc-swatch"
+            [class.cc-swatch--light-check]="preset.lightCheck"
             [style.backgroundColor]="preset.value"
-            (click)="onColorSelect(preset.value)"
-            role="option"
-            [attr.aria-selected]="isSelected(preset.value)"
+            role="radio"
+            [attr.aria-checked]="isSelected(preset.value)"
             [attr.aria-label]="preset.name"
-          ></button>
+            [tabIndex]="tabIndexFor(i)"
+            (click)="onColorSelect(preset.value)"
+            (keydown)="onPresetKeydown($event, i)"
+            >
+            @if (isSelected(preset.value)) {
+              <app-icon name="check" [size]="20" />
+            }
+          </button>
         }
       </div>
       <div class="color-input-group">

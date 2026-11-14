@@ -11,6 +11,7 @@ import {
   DEFAULT_BANNER_COLOR,
   colorToHex,
   presetColorNames,
+  isDarkColor,
   presetColors,
 } from '../../../shared/utils/color-utils';
 import {
@@ -44,6 +45,8 @@ export class CoverColorDialogComponent implements OnInit {
   readonly presets = presetColors.map((value, i) => ({
     value,
     name: presetColorNames[i],
+    // The check is white on dark swatches and ink-colored on pale ones.
+    lightCheck: isDarkColor(value),
   }));
   readonly defaultAvatar = DEFAULT_AVATAR;
   readonly onAvatarError = showDefaultAvatar;
@@ -65,6 +68,34 @@ export class CoverColorDialogComponent implements OnInit {
 
   isSelected(value: string): boolean {
     return this.selectedColor.toUpperCase() === value.toUpperCase();
+  }
+
+  /**
+   * Roving tabindex: Tab stops once in the group, on the checked swatch
+   * (or the first one when a custom color is in use).
+   */
+  tabIndexFor(index: number): number {
+    const checked = this.presets.findIndex((p) => this.isSelected(p.value));
+    return index === (checked === -1 ? 0 : checked) ? 0 : -1;
+  }
+
+  /** Arrow keys move to the next/previous swatch and pick it, like radios. */
+  onPresetKeydown(event: KeyboardEvent, index: number): void {
+    const last = this.presets.length - 1;
+    const next: Record<string, number> = {
+      ArrowRight: index === last ? 0 : index + 1,
+      ArrowDown: index === last ? 0 : index + 1,
+      ArrowLeft: index === 0 ? last : index - 1,
+      ArrowUp: index === 0 ? last : index - 1,
+      Home: 0,
+      End: last,
+    };
+    if (!(event.key in next)) return;
+    event.preventDefault();
+    const target = next[event.key];
+    this.onColorSelect(this.presets[target].value);
+    const group = (event.currentTarget as HTMLElement).parentElement;
+    (group?.children[target] as HTMLElement | undefined)?.focus();
   }
 
   onColorSelect(color: string | HSLA | HSVA | RGBA): void {

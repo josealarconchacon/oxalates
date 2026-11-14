@@ -32,7 +32,7 @@ describe('CoverColorDialogComponent', () => {
   });
 
   it('names every preset swatch, in order', () => {
-    const names = [...el().querySelectorAll('.color-preset')].map((b) =>
+    const names = [...el().querySelectorAll('.cc-swatch')].map((b) =>
       b.getAttribute('aria-label')
     );
     expect(names).toEqual(presetColorNames);
@@ -40,8 +40,8 @@ describe('CoverColorDialogComponent', () => {
   });
 
   it('starts on the default color when nothing is saved', () => {
-    const first = el().querySelector('.color-preset')!;
-    expect(first.getAttribute('aria-selected')).toBe('true');
+    const first = el().querySelector('.cc-swatch')!;
+    expect(first.getAttribute('aria-checked')).toBe('true');
   });
 
   it('Esc cancels without saving', () => {
@@ -106,6 +106,57 @@ describe('CoverColorDialogComponent', () => {
       (el().querySelector('[aria-label="Blue"]') as HTMLElement).click();
       fixture.detectChanges();
       expect(cover().style.backgroundColor).toBe('rgb(66, 103, 178)');
+    });
+  });
+
+  describe('preset radiogroup', () => {
+    const swatches = () => [...el().querySelectorAll<HTMLElement>('.cc-swatch')];
+    const key = (target: HTMLElement, k: string) => {
+      target.dispatchEvent(new KeyboardEvent('keydown', { key: k, bubbles: true }));
+      fixture.detectChanges();
+    };
+
+    it('is a labelled radiogroup of 9 radios', () => {
+      const group = el().querySelector('[role="radiogroup"]')!;
+      expect(group.getAttribute('aria-label')).toBe('Preset colors');
+      expect(swatches().every((s) => s.getAttribute('role') === 'radio')).toBeTrue();
+      expect(swatches().length).toBe(9);
+    });
+
+    it('only the checked swatch is in the Tab order, and it shows a check', () => {
+      component.onColorSelect('#4267B2');
+      fixture.detectChanges();
+      const tabbable = swatches().filter((s) => s.tabIndex === 0);
+      expect(tabbable.map((s) => s.getAttribute('aria-label'))).toEqual(['Blue']);
+      expect(swatches()[2].querySelector('app-icon')).not.toBeNull();
+      expect(swatches()[0].querySelector('app-icon')).toBeNull();
+    });
+
+    it('the first swatch is tabbable when a custom color is in use', () => {
+      component.onColorSelect('#123456');
+      fixture.detectChanges();
+      expect(swatches()[0].tabIndex).toBe(0);
+      expect(swatches().filter((s) => s.tabIndex === 0).length).toBe(1);
+    });
+
+    it('arrow keys pick the next swatch, wrap around, and move focus', () => {
+      key(swatches()[0], 'ArrowRight');
+      expect(component.selectedColor).toBe('#17603F');
+      expect(document.activeElement).toBe(swatches()[1]);
+
+      key(swatches()[1], 'ArrowLeft');
+      key(swatches()[0], 'ArrowLeft'); // wraps to the last
+      expect(component.selectedColor).toBe('#34495E');
+
+      key(swatches()[8], 'Home');
+      expect(component.selectedColor).toBe('#EAEFE9');
+      key(swatches()[0], 'End');
+      expect(component.selectedColor).toBe('#34495E');
+    });
+
+    it('uses a white check on dark swatches and an ink check on the pale one', () => {
+      expect(swatches()[0].classList).not.toContain('cc-swatch--light-check');
+      expect(swatches()[8].classList).toContain('cc-swatch--light-check');
     });
   });
 });

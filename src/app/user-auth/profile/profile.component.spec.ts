@@ -119,7 +119,7 @@ describe('ProfileComponent', () => {
       component.toggleColorPicker();
       fixture.detectChanges();
       const blue = dialog().querySelector('[aria-label="Blue"]');
-      expect(blue.getAttribute('aria-selected')).toBe('true');
+      expect(blue.getAttribute('aria-checked')).toBe('true');
 
       dialog().querySelector('[aria-label="Purple"]').click();
       dialog().querySelector('.cc-btn--save').click();
