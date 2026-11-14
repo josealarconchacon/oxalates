@@ -4,6 +4,7 @@
   --pf-cover: var(--color-hero-panel); /* banner when no color was picked */
   --pf-surface-2: #f1f4f0; /* secondary buttons */
   --pf-logout: #b42318;
+  --pf-error: #b42318; /* name field errors: 6.5:1 on white */
   display: block;
   background-color: var(--background-color);
   min-height: 100vh;
@@ -14,6 +15,7 @@
   --pf-cover: #1e3a2c;
   --pf-surface-2: #1d2621;
   --pf-logout: #f59b94;
+  --pf-error: #f59b94;
 }
 
 .app-container {
@@ -304,6 +306,128 @@
   font-weight: 600;
   color: var(--color-ink);
   overflow-wrap: anywhere; /* long emails wrap instead of overflowing */
+}
+
+/* ---- Name row: the value with an edit (pencil) button, or the edit form ---- */
+.detail-row--name {
+  align-items: center;
+}
+
+.detail-row--name dd {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  min-width: 0;
+}
+
+.name-value {
+  min-width: 0;
+}
+
+/* 44px to tap, but pulled in so the row is no taller than the Email row. */
+.edit-name {
+  display: grid;
+  flex-shrink: 0;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  margin-block: -10px;
+  padding: 0;
+  border: 1px solid transparent;
+  border-radius: 12px;
+  background: transparent;
+  color: var(--color-muted);
+  cursor: pointer;
+  --icon-stroke: 2;
+}
+
+.edit-name:hover {
+  border-color: var(--color-line);
+  background: var(--pf-surface-2);
+  color: var(--color-ink);
+}
+
+.name-form {
+  display: flex;
+  flex: 1;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px 12px;
+  min-width: 0;
+}
+
+.name-input {
+  flex: 1 1 200px;
+  min-width: 0;
+  height: 44px;
+  padding: 0 12px;
+  border: 1px solid var(--color-line);
+  border-radius: 12px;
+  background: var(--color-bg);
+  color: var(--color-ink);
+  font: inherit;
+  font-size: 1rem;
+  font-weight: 600;
+}
+
+.name-input[aria-invalid='true'] {
+  border-color: var(--pf-error);
+}
+
+.name-actions {
+  display: flex;
+  gap: 8px;
+}
+
+.name-btn {
+  min-height: 44px;
+  padding: 0 16px;
+  border-radius: 12px;
+  font: inherit;
+  font-size: 0.9375rem;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.name-btn:disabled {
+  cursor: progress;
+  opacity: 0.7;
+}
+
+.name-btn--cancel {
+  border: 1px solid var(--color-line);
+  background: transparent;
+  color: var(--color-ink);
+}
+
+.name-btn--cancel:hover:not(:disabled) {
+  border-color: var(--color-muted);
+}
+
+.name-btn--save {
+  border: 1px solid transparent;
+  background: var(--color-accent);
+  color: #ffffff;
+}
+
+.name-btn--save:hover:not(:disabled) {
+  filter: brightness(1.1);
+}
+
+.name-error {
+  flex-basis: 100%;
+  margin: 0;
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--pf-error);
+}
+
+.edit-name:focus-visible,
+.name-input:focus-visible,
+.name-btn:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: 2px;
 }
 
 /* Phones: label above its value. Kept after the rules above so it wins. */

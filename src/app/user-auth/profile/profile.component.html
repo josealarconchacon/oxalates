@@ -82,9 +82,52 @@
           <div class="info-panel">
             <h2 class="section-title">Profile Information</h2>
             <dl class="details">
-              <div class="detail-row">
-                <dt>Name</dt>
-                <dd>{{ userProfile?.displayName || "Username" }}</dd>
+              <div class="detail-row detail-row--name">
+                <dt id="profile-name-term">Name</dt>
+                <dd>
+                  @if (!isEditingName) {
+                    <span class="name-value">{{ userProfile?.displayName || "Username" }}</span>
+                    <button
+                      #editNameButton
+                      type="button"
+                      class="edit-name"
+                      aria-label="Edit name"
+                      (click)="startEditName()"
+                      >
+                      <app-icon name="pencil" [size]="18" />
+                    </button>
+                  } @else {
+                    <!-- Enter saves (form submit), Esc cancels. -->
+                    <form class="name-form" (ngSubmit)="saveName()" novalidate>
+                      <input
+                        #nameInput
+                        class="name-input"
+                        type="text"
+                        name="displayName"
+                        autocomplete="name"
+                        maxlength="50"
+                        aria-labelledby="profile-name-term"
+                        [attr.aria-invalid]="nameError ? true : null"
+                        [attr.aria-describedby]="nameError ? 'profile-name-error' : null"
+                        [value]="nameDraft"
+                        (input)="onNameInput($any($event.target).value)"
+                        (keydown.escape)="cancelEditName()"
+                        [disabled]="isSavingName"
+                      />
+                      <div class="name-actions">
+                        <button type="button" class="name-btn name-btn--cancel" (click)="cancelEditName()" [disabled]="isSavingName">
+                          Cancel
+                        </button>
+                        <button type="submit" class="name-btn name-btn--save" [disabled]="isSavingName">
+                          {{ isSavingName ? "Saving…" : "Save" }}
+                        </button>
+                      </div>
+                      @if (nameError) {
+                        <p id="profile-name-error" class="name-error" role="alert">{{ nameError }}</p>
+                      }
+                    </form>
+                  }
+                </dd>
               </div>
               <div class="detail-row">
                 <dt>Email</dt>
