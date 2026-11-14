@@ -205,7 +205,6 @@
   white-space: nowrap;
 }
 
-/* ---- Body content still to redesign (steps 4–6) ---- */
 
 /* ---- Preset swatches: round radio buttons ---- */
 .cc-swatch-area {
@@ -282,26 +281,18 @@
   outline-offset: 6px;
 }
 
-.color-input-group {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 1rem;
-  padding: 1rem;
+/* ---- Custom picker panel ---- */
+.cc-custom {
+  padding: 16px;
   border: 1px solid var(--cc-line);
   border-radius: 16px;
+  background: var(--cc-surface-2);
 }
 
-.color-value {
-  width: 100%;
-  padding: 0.75rem;
-  border: 1px solid var(--cc-line);
-  border-radius: 12px;
-  background: var(--cc-input);
-  color: var(--cc-ink);
-  font-family: monospace;
-  font-size: 0.875rem;
-  text-align: center;
+@media (max-width: 640px) {
+  .cc-custom {
+    padding: 12px;
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {

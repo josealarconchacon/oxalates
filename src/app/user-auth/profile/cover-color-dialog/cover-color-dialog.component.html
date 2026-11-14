@@ -74,16 +74,7 @@
       </div>
 
       <div class="cc-custom" [id]="customPanelId" [hidden]="!customOpen">
-        <div class="color-input-group">
-          <color-sketch
-            [(color)]="selectedColor"
-            (colorChange)="onColorSelect($event)"
-            aria-label="Color picker"
-          ></color-sketch>
-          <div class="color-value" role="status" aria-live="polite">
-            {{ selectedColor }}
-          </div>
-        </div>
+        <app-color-picker [color]="selectedColor" (colorChange)="onColorSelect($event)" />
       </div>
     </div>
 

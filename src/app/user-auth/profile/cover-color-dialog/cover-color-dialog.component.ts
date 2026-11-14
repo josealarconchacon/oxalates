@@ -6,10 +6,8 @@ import {
   OnInit,
   Output,
 } from '@angular/core';
-import { HSLA, HSVA, RGBA } from 'ngx-color';
 import {
   DEFAULT_BANNER_COLOR,
-  colorToHex,
   presetColorNames,
   isDarkColor,
   presetColors,
@@ -108,9 +106,8 @@ export class CoverColorDialogComponent implements OnInit {
     (group?.children[target] as HTMLElement | undefined)?.focus();
   }
 
-  onColorSelect(color: string | HSLA | HSVA | RGBA): void {
-    this.selectedColor =
-      typeof color === 'string' ? color : colorToHex(color) || '#000000';
+  onColorSelect(color: string): void {
+    this.selectedColor = color;
   }
 
   save(): void {

@@ -7,7 +7,7 @@ import { environment } from 'src/environments/environment';
 import { provideRouter } from '@angular/router';
 import { ReactiveFormsModule } from '@angular/forms';
 import { A11yModule } from '@angular/cdk/a11y';
-import { ColorSketchModule } from 'ngx-color/sketch';
+import { ColorPickerComponent } from './cover-color-dialog/color-picker/color-picker.component';
 import { provideNoopAnimations } from '@angular/platform-browser/animations';
 import { CoverColorDialogComponent } from './cover-color-dialog/cover-color-dialog.component';
 import { ChangePasswordComponent } from '../change-password/change-password.component';
@@ -34,7 +34,7 @@ describe('ProfileComponent', () => {
         AngularFireAuthModule,
         ReactiveFormsModule,
         A11yModule,
-        ColorSketchModule,
+        ColorPickerComponent,
         ClickableDirective,
         AlertComponent,
         IconComponent,

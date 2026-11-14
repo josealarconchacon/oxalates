@@ -1,5 +1,3 @@
-import { HSLA, HSVA, RGBA } from 'ngx-color';
-
 /** The banner color before anyone picks one (light --color-hero-panel). */
 export const DEFAULT_BANNER_COLOR = '#EAEFE9';
 
@@ -27,26 +25,6 @@ export const presetColorNames: string[] = [
   'Yellow',
   'Slate',
 ];
-
-export function colorToHex(color: HSLA | HSVA | RGBA): string {
-  if (!color || typeof color !== 'object') {
-    return '#000000';
-  }
-  if ('h' in color && 's' in color && 'l' in color) {
-    const { h, s, l } = color;
-    const a = color.a !== undefined ? color.a : 1;
-    return `hsla(${h}, ${s}%, ${l}%, ${a})`;
-  } else if ('h' in color && 's' in color && 'v' in color) {
-    const { h, s, v } = color;
-    const a = color.a !== undefined ? color.a : 1;
-    return `hsva(${h}, ${s}%, ${v}%, ${a})`;
-  } else if ('r' in color && 'g' in color && 'b' in color) {
-    const { r, g, b } = color;
-    const a = color.a !== undefined ? color.a : 1;
-    return `rgba(${r}, ${g}, ${b}, ${a})`;
-  }
-  return '#000000';
-}
 
 /**
  * True when white text reads better than near-black on this color, using the

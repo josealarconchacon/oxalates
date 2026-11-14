@@ -1,6 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { A11yModule } from '@angular/cdk/a11y';
-import { ColorSketchModule } from 'ngx-color/sketch';
+import { ColorPickerComponent } from './color-picker/color-picker.component';
 import { CoverColorDialogComponent } from './cover-color-dialog.component';
 import { IconComponent } from 'src/app/shared/components/icon/icon.component';
 import { presetColorNames } from '../../../shared/utils/color-utils';
@@ -13,7 +13,7 @@ describe('CoverColorDialogComponent', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
       declarations: [CoverColorDialogComponent],
-      imports: [A11yModule, ColorSketchModule, IconComponent],
+      imports: [A11yModule, ColorPickerComponent, IconComponent],
     });
     fixture = TestBed.createComponent(CoverColorDialogComponent);
     component = fixture.componentInstance;
