@@ -35,7 +35,7 @@
               type="button"
               class="color-picker-toggle"
               (click)="toggleColorPicker()"
-              aria-label="Open color picker"
+              aria-label="Change cover color"
               >
               <app-icon name="palette" [size]="18" />
             </button>
@@ -75,44 +75,23 @@
           </a>
         </nav>
       </aside>
-    <section
-      class="content-area"
-      [class.content-area--flat]="(activeSection$ | async) === 'saveItem'"
-    >
+    <section class="content-area">
       @switch (activeSection$ | async) {
         @case ('profile') {
-          <div class="profile-details">
-            <!-- Profile details content -->
-            <div class="profile-header-container">
-              <h2 class="section-title">Profile Information</h2>
-              <!-- Need to fix theme   -->
-              <button
-                class="theme-toggle"
-                (click)="toggleTheme()"
-              [attr.aria-label]="
-                (isDarkTheme$ | async)
-                  ? 'Switch to light mode'
-                  : 'Switch to dark mode'
-              "
-                >
-                <i class="material-icons icon-inline" aria-hidden="true">{{
-                  (isDarkTheme$ | async) ? "light_mode" : "dark_mode"
-                }}</i>
-              </button>
+          <!-- One card: heading, details and Change Password. -->
+          <div class="info-panel">
+            <h2 class="section-title">Profile Information</h2>
+            <div class="info-item">
+              <label>Name</label>
+              <p>{{ userProfile?.displayName || "Username" }}</p>
             </div>
-            <div class="info-card ui-card ui-card--padded">
-              <div class="info-item">
-                <label>Name</label>
-                <p>{{ userProfile?.displayName || "Username" }}</p>
-              </div>
-              <div class="info-item">
-                <label>Email</label>
-                <p>{{ userProfile?.email || "username@example.com" }}</p>
-              </div>
-              <button (click)="toggleChangePassword()" class="edit-button ui-btn ui-btn--secondary">
-                <i class="material-icons icon-inline" aria-hidden="true">vpn_key</i> Change Password
-              </button>
+            <div class="info-item">
+              <label>Email</label>
+              <p>{{ userProfile?.email || "username@example.com" }}</p>
             </div>
+            <button (click)="toggleChangePassword()" class="edit-button ui-btn ui-btn--secondary">
+              <i class="material-icons icon-inline" aria-hidden="true">vpn_key</i> Change Password
+            </button>
           </div>
         }
         @case ('saveItem') {

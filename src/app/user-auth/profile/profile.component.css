@@ -1,8 +1,19 @@
+/* Account page tokens (Profile Info + Saved Items). The rest comes from the
+   shared --color-* tokens in tokens/colors.css. */
 :host {
+  --pf-cover: var(--color-hero-panel); /* banner when no color was picked */
+  --pf-surface-2: #f1f4f0; /* secondary buttons */
+  --pf-logout: #b42318;
   display: block;
   background-color: var(--background-color);
   min-height: 100vh;
   color: var(--text-color);
+}
+
+:host-context(.dark-theme) {
+  --pf-cover: #1e3a2c;
+  --pf-surface-2: #1d2621;
+  --pf-logout: #f59b94;
 }
 
 .app-container {
@@ -107,7 +118,7 @@
 .profile-header {
   position: relative;
   height: 96px;
-  background-color: var(--color-hero-panel);
+  background-color: var(--pf-cover);
 }
 
 .profile-picture {
@@ -233,54 +244,48 @@
 }
 
 .sidebar-nav .logout {
-  color: #b42318;
+  color: var(--pf-logout);
 }
 
 .sidebar-nav .logout:hover {
   background-color: #fdecec;
 }
 
-:host-context(.dark-theme) .sidebar-nav .logout {
-  color: #ffb3b3;
-}
-
 :host-context(.dark-theme) .sidebar-nav .logout:hover {
   background-color: rgba(255, 107, 107, 0.12);
 }
 
+/* No frame around the tab content: each tab draws its own cards. */
 .content-area {
-  background-color: var(--background-color);
-  border-radius: var(--radius-xl);
-  padding: var(--spacing-8);
-  border: 1px solid var(--gray-100);
+  min-width: 0;
 }
 
-/* Saved Items draws its own cards, so drop the outer card around it. */
-.content-area.content-area--flat {
-  background-color: transparent;
-  border: 0;
-  padding: 0;
-}
-
-.profile-details {
-  max-width: 800px;
+/* Profile Information: one card holding the heading, details and button. */
+.info-panel {
+  padding: 28px;
+  background: var(--color-surface);
+  border: 1px solid var(--color-line);
+  border-radius: 22px;
 }
 
 .section-title {
-  /* color: var(--text-color); */
-  font-size: var(--font-size-2xl);
-  font-weight: var(--font-weight-semibold);
-  margin-bottom: var(--spacing-8);
-  line-height: 1.2;
+  margin: 0 0 20px;
+  font-family: var(--font-family-display);
+  font-size: 1.875rem; /* 30px */
+  font-weight: 700;
+  line-height: 1.15;
+  letter-spacing: -0.02em;
+  color: var(--color-ink);
 }
 
-.info-card {
-  transition: all 0.3s ease;
-}
+@media (max-width: 640px) {
+  .info-panel {
+    padding: 20px;
+  }
 
-.info-card:hover {
-  border-color: var(--primary-color);
-  box-shadow: 0 0 0 1px var(--primary-color);
+  .section-title {
+    font-size: 1.5rem; /* 24px */
+  }
 }
 
 .info-item {
@@ -733,25 +738,12 @@
     padding-top: 100px;
   }
 
-  .content-area {
-    padding: var(--spacing-6);
-  }
-
-  .section-title {
-    font-size: var(--font-size-xl);
-    margin-bottom: var(--spacing-6);
-  }
 }
 
 @media (max-width: 576px) {
   .app-container {
     padding: var(--spacing-3);
     padding-top: 80px;
-  }
-
-  .content-area,
-  .info-card {
-    padding: var(--spacing-4);
   }
 
   .color-picker-content {
@@ -770,47 +762,6 @@
     transition-duration: 0.01ms !important;
     scroll-behavior: auto !important;
   }
-}
-
-.profile-header-container {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 1.5rem;
-  padding: var(--spacing-4);
-  background-color: var(--card-background);
-  border-radius: var(--radius-lg);
-  border: 1px solid var(--border-color);
-}
-
-.theme-toggle {
-  background: var(--button-background);
-  border: 1px solid var(--border-color);
-  cursor: pointer;
-  padding: 0.5rem;
-  border-radius: 50%;
-  transition: all 0.3s ease;
-  min-width: 2.75rem;
-  min-height: 2.75rem;
-  width: 2.75rem;
-  height: 2.75rem;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.theme-toggle:hover {
-  background-color: var(--hover-background);
-  transform: scale(1.05);
-}
-
-.theme-toggle i {
-  font-size: 1.2rem;
-  transition: transform 0.3s ease;
-}
-
-.theme-toggle:hover i {
-  transform: rotate(15deg);
 }
 
 /* Dark theme styles */
@@ -833,24 +784,6 @@
   --primary-light: #24493a;
   --danger-color: #ff6b6b;
   --danger-50: #2d1a1a;
-}
-
-:host-context(.dark-theme) .theme-toggle {
-  background-color: var(--card-background);
-  color: var(--text-color);
-  border-color: var(--border-color);
-}
-
-:host-context(.dark-theme) .theme-toggle:hover {
-  background-color: var(--hover-background);
-}
-
-:host-context(.dark-theme) .theme-toggle i {
-  color: var(--text-color);
-}
-
-:host-context(.dark-theme) .theme-toggle:hover i {
-  color: var(--action-color);
 }
 
 :host-context(.dark-theme) .color-picker-content {

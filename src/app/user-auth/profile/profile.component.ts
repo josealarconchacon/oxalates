@@ -13,7 +13,6 @@ import { HSLA, HSVA, RGBA } from 'ngx-color';
 import { HeaderComponent } from 'src/app/landing-page/header/header.component';
 import { Observable } from 'rxjs';
 import { NavigationService } from '../service/navigation.service';
-import { ThemeService } from '../../shared/services/theme.service';
 
 import { showDefaultAvatar } from 'src/app/shared/utils/avatar';
 
@@ -38,7 +37,6 @@ export class ProfileComponent implements OnInit {
   lastName: string = '';
 
   activeSection$: Observable<string> | undefined;
-  isDarkTheme$: Observable<boolean>;
 
   presetColors: string[] = presetColors;
 
@@ -46,11 +44,9 @@ export class ProfileComponent implements OnInit {
     private authService: AuthService,
     private profileImageService: ProfileImageService,
     private router: Router,
-    private navigationService: NavigationService,
-    private themeService: ThemeService
+    private navigationService: NavigationService
   ) {
     this.activeSection$ = this.navigationService.activeSection$;
-    this.isDarkTheme$ = this.themeService.isDarkTheme$;
   }
 
   ngOnInit(): void {
@@ -159,7 +155,4 @@ export class ProfileComponent implements OnInit {
     this.authService.signOut();
   }
 
-  toggleTheme(): void {
-    this.themeService.toggleTheme();
-  }
 }
