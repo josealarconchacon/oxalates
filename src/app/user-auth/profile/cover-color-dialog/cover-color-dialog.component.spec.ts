@@ -80,4 +80,32 @@ describe('CoverColorDialogComponent', () => {
     );
     expect(buttons).toEqual(['Cancel', 'Save']);
   });
+
+  describe('preview card', () => {
+    const cover = () => el().querySelector('.cc-preview-cover') as HTMLElement;
+
+    it('is hidden from screen readers and shows the name and photo', () => {
+      component.name = 'Ana Ruiz';
+      component.avatarUrl = 'https://example.com/me.png';
+      fixture.detectChanges();
+      expect(el().querySelector('.cc-preview')!.getAttribute('aria-hidden')).toBe('true');
+      expect(el().querySelector('.cc-preview-name')!.textContent!.trim()).toBe('Ana Ruiz');
+      expect(el().querySelector('.cc-preview-avatar')!.getAttribute('src')).toBe(
+        'https://example.com/me.png'
+      );
+    });
+
+    it('falls back to the default avatar when there is no photo', () => {
+      expect(el().querySelector('.cc-preview-avatar')!.getAttribute('src')).toBe(
+        'assets/images/default-avatar.svg'
+      );
+    });
+
+    it('repaints the cover as you pick, and uses the theme cover for the default', () => {
+      expect(cover().style.backgroundColor).toBe(''); // default: the CSS theme cover
+      (el().querySelector('[aria-label="Blue"]') as HTMLElement).click();
+      fixture.detectChanges();
+      expect(cover().style.backgroundColor).toBe('rgb(66, 103, 178)');
+    });
+  });
 });

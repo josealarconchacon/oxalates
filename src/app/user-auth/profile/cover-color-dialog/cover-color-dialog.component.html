@@ -18,11 +18,23 @@
     </header>
 
     <div class="cc-body">
-      <div
-        class="color-preview"
-        [style.backgroundColor]="selectedColor"
-        aria-hidden="true"
-      ></div>
+      <!-- Live preview: a mini profile card in the color being picked.
+           Decorative (the swatches and inputs say the color), so hidden
+           from screen readers. -->
+      <div class="cc-preview" aria-hidden="true">
+        <div class="cc-preview-cover" [style.backgroundColor]="previewColor"></div>
+        <div class="cc-preview-info">
+          <img
+            class="cc-preview-avatar"
+            [src]="avatarUrl || defaultAvatar"
+            (error)="onAvatarError($event)"
+            alt=""
+            width="56"
+            height="56"
+          />
+          <span class="cc-preview-name">{{ name }}</span>
+        </div>
+      </div>
       <div class="color-grid" role="listbox" aria-label="Preset colors">
         @for (preset of presets; track preset.value) {
           <button

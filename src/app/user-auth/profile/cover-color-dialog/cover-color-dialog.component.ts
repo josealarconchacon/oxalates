@@ -13,6 +13,10 @@ import {
   presetColorNames,
   presetColors,
 } from '../../../shared/utils/color-utils';
+import {
+  DEFAULT_AVATAR,
+  showDefaultAvatar,
+} from '../../../shared/utils/avatar';
 
 let nextId = 0;
 
@@ -29,6 +33,9 @@ let nextId = 0;
 export class CoverColorDialogComponent implements OnInit {
   /** The saved cover color; null means the theme default. */
   @Input() color: string | null = null;
+  /** For the preview card: the person's photo and name, as on their profile. */
+  @Input() avatarUrl: string | null | undefined = null;
+  @Input() name = 'Username';
   /** Save was pressed, with the picked color. */
   @Output() saved = new EventEmitter<string>();
   /** Cancel, the close button, Esc or a backdrop click: nothing changes. */
@@ -38,11 +45,22 @@ export class CoverColorDialogComponent implements OnInit {
     value,
     name: presetColorNames[i],
   }));
+  readonly defaultAvatar = DEFAULT_AVATAR;
+  readonly onAvatarError = showDefaultAvatar;
   readonly titleId = `cover-color-title-${nextId++}`;
   selectedColor = DEFAULT_BANNER_COLOR;
 
   ngOnInit(): void {
     this.selectedColor = this.color ?? DEFAULT_BANNER_COLOR;
+  }
+
+  /**
+   * The preview cover. The default swatch means "follow the theme", so it
+   * shows the profile's own default cover (soft green, or dark green-grey in
+   * dark mode) rather than the light swatch color.
+   */
+  get previewColor(): string | null {
+    return this.isSelected(DEFAULT_BANNER_COLOR) ? null : this.selectedColor;
   }
 
   isSelected(value: string): boolean {

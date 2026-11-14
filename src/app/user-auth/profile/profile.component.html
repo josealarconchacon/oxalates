@@ -111,6 +111,8 @@
     <app-cover-color-dialog
       [@fadeInOut]
       [color]="currentHeaderColor"
+      [avatarUrl]="userProfile?.photoURL"
+      [name]="userProfile?.displayName || 'Username'"
       (saved)="saveColor($event)"
       (closed)="closeColorPicker()"
     />
