@@ -1,0 +1,88 @@
+<div class="cc-backdrop" (click)="onBackdropClick($event)">
+  <!-- cdkTrapFocus keeps Tab inside the dialog; AutoCapture moves focus in
+       on open and back to the palette button on close. -->
+  <div
+    class="cc-dialog"
+    role="dialog"
+    aria-modal="true"
+    [attr.aria-labelledby]="titleId"
+    cdkTrapFocus
+    [cdkTrapFocusAutoCapture]="true"
+    >
+    <!-- Header and footer stay put; only the body scrolls. -->
+    <!-- Phones only (CSS): the bottom-sheet handle. Decorative. -->
+    <span class="cc-handle" aria-hidden="true"></span>
+    <header class="cc-header">
+      <h2 class="cc-title" [id]="titleId">Choose Color</h2>
+      <button type="button" class="cc-close" (click)="cancel()" aria-label="Close">
+        <app-icon name="x" [size]="20" />
+      </button>
+    </header>
+
+    <div class="cc-body">
+      <!-- Live preview: a mini profile card in the color being picked.
+           Decorative (the swatches and inputs say the color), so hidden
+           from screen readers. -->
+      <div class="cc-preview" aria-hidden="true">
+        <div class="cc-preview-cover" [style.backgroundColor]="previewColor"></div>
+        <div class="cc-preview-info">
+          <img
+            class="cc-preview-avatar"
+            [src]="avatarUrl || defaultAvatar"
+            (error)="onAvatarError($event)"
+            alt=""
+            width="56"
+            height="56"
+          />
+          <span class="cc-preview-name">{{ name }}</span>
+        </div>
+      </div>
+      <!-- The 9 presets, then a 10th "+" that shows the custom picker. The
+           "+" sits outside the radiogroup (it's a toggle, not a color); CSS
+           places it in the empty 10th slot. -->
+      <div class="cc-swatch-area">
+        <!-- Presets as radio buttons: Tab lands on the checked one, arrow
+             keys move between them (see onPresetKeydown). -->
+        <div class="cc-swatches" role="radiogroup" aria-label="Preset colors">
+          @for (preset of presets; track preset.value; let i = $index) {
+            <button
+              type="button"
+              class="cc-swatch"
+              [class.cc-swatch--light-check]="preset.lightCheck"
+              [style.backgroundColor]="preset.value"
+              role="radio"
+              [attr.aria-checked]="isSelected(preset.value)"
+              [attr.aria-label]="preset.name"
+              [tabIndex]="tabIndexFor(i)"
+              (click)="onColorSelect(preset.value)"
+              (keydown)="onPresetKeydown($event, i)"
+              >
+              @if (isSelected(preset.value)) {
+                <app-icon name="check" [size]="20" />
+              }
+            </button>
+          }
+        </div>
+        <button
+          type="button"
+          class="cc-swatch cc-custom-toggle"
+          aria-label="Custom color"
+          [attr.aria-expanded]="customOpen"
+          [attr.aria-controls]="customPanelId"
+          (click)="toggleCustom()"
+          >
+          <app-icon name="plus" [size]="20" />
+        </button>
+      </div>
+
+      <div class="cc-custom" [id]="customPanelId" [hidden]="!customOpen">
+        <app-color-picker [color]="selectedColor" (colorChange)="onColorSelect($event)" />
+      </div>
+    </div>
+
+    <footer class="cc-footer">
+      <button type="button" class="cc-btn cc-btn--cancel" (click)="cancel()">Cancel</button>
+      <button type="button" class="cc-btn cc-btn--save" (click)="save()">Save</button>
+    </footer>
+  </div>
+</div>

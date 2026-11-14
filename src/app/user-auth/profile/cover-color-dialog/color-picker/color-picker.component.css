@@ -1,0 +1,181 @@
+/* Colors come from the dialog's --cc-* tokens (inherited), with fallbacks. */
+:host {
+  display: block;
+}
+
+/* ---- Saturation / brightness area ---- */
+.cp-area {
+  position: relative;
+  height: 150px;
+  border-radius: 12px;
+  /* White fades in from the left, black from the bottom, over the hue. */
+  background-image:
+    linear-gradient(to top, #000, transparent),
+    linear-gradient(to right, #fff, transparent);
+  cursor: crosshair;
+  touch-action: none; /* drag instead of scrolling the dialog */
+}
+
+.cp-area-thumb {
+  position: absolute;
+  width: 16px;
+  height: 16px;
+  border: 2px solid #ffffff;
+  border-radius: 50%;
+  box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.35), 0 1px 3px rgba(0, 0, 0, 0.4);
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+}
+
+/* ---- Eyedropper + sliders ---- */
+.cp-controls {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-top: 14px;
+}
+
+.cp-eyedropper {
+  display: grid;
+  flex-shrink: 0;
+  place-items: center;
+  width: 40px;
+  height: 40px;
+  padding: 0;
+  border: 1px solid var(--cc-line, #e3e7e2);
+  border-radius: 10px;
+  background: var(--cc-input, #f6f7f4);
+  color: var(--cc-ink, #111a15);
+  cursor: pointer;
+  --icon-stroke: 2;
+}
+
+.cp-eyedropper:hover {
+  border-color: var(--cc-muted, #4a5550);
+}
+
+.cp-sliders {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: 10px;
+  min-width: 0;
+  padding: 0 9px; /* room for half a thumb at each end */
+}
+
+/* The 12px track; the element is 18px tall so the whole thumb is clickable. */
+.cp-slider {
+  position: relative;
+  height: 18px;
+  cursor: pointer;
+  touch-action: none;
+}
+
+.cp-slider::before {
+  content: '';
+  position: absolute;
+  inset: 3px -9px;
+  border-radius: 999px;
+}
+
+.cp-hue::before {
+  background: linear-gradient(
+    to right,
+    #f00 0%,
+    #ff0 17%,
+    #0f0 33%,
+    #0ff 50%,
+    #00f 67%,
+    #f0f 83%,
+    #f00 100%
+  );
+}
+
+/* Transparent → solid color over a checkerboard. */
+.cp-alpha::before {
+  background:
+    linear-gradient(to right, transparent, var(--cp-solid)),
+    repeating-conic-gradient(#c9cfcb 0% 25%, #ffffff 0% 50%) 0 0 / 8px 8px;
+}
+
+.cp-thumb {
+  position: absolute;
+  top: 0;
+  width: 18px;
+  height: 18px;
+  border: 3px solid #ffffff;
+  border-radius: 50%;
+  box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.3), 0 1px 3px rgba(0, 0, 0, 0.35);
+  transform: translateX(-50%);
+  pointer-events: none;
+}
+
+/* ---- Focus: on the thumb, where your eyes are ---- */
+.cp-area:focus-visible,
+.cp-slider:focus-visible {
+  outline: none;
+}
+
+.cp-area:focus-visible .cp-area-thumb,
+.cp-slider:focus-visible .cp-thumb {
+  box-shadow:
+    0 0 0 1px rgba(0, 0, 0, 0.3),
+    0 0 0 4px var(--cc-ring, #17603f);
+}
+
+.cp-eyedropper:focus-visible,
+.cp-field input:focus-visible {
+  outline: 2px solid var(--cc-ring, #17603f);
+  outline-offset: 2px;
+}
+
+/* ---- Hex · R · G · B · A ---- */
+.cp-fields {
+  display: grid;
+  grid-template-columns: minmax(0, 2fr) repeat(4, minmax(0, 1fr));
+  gap: 8px;
+  margin-top: 16px;
+}
+
+.cp-field label {
+  display: block;
+  margin-bottom: 6px;
+  font-size: 0.75rem;
+  color: var(--cc-muted, #4a5550);
+}
+
+.cp-field input {
+  width: 100%;
+  height: 40px;
+  padding: 0 6px;
+  border: 1px solid var(--cc-line, #e3e7e2);
+  border-radius: 10px;
+  background: var(--cc-input, #f6f7f4);
+  color: var(--cc-ink, #111a15);
+  font: inherit;
+  font-size: 0.875rem;
+  font-variant-numeric: tabular-nums;
+  text-align: center;
+}
+
+.cp-field--hex input {
+  padding: 0 10px;
+  text-align: left;
+  text-transform: uppercase;
+}
+
+/* Phones: tighter fields so "#34495E" and "100" fit without clipping. */
+@media (max-width: 640px) {
+  .cp-fields {
+    gap: 6px;
+  }
+
+  .cp-field input {
+    padding: 0 3px;
+    font-size: 0.8125rem;
+  }
+
+  .cp-field--hex input {
+    padding: 0 8px;
+  }
+}

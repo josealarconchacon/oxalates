@@ -26,6 +26,8 @@ export type IconName =
   | 'x'
   | 'info'
   | 'key'
+  | 'check'
+  | 'pipette'
   | 'utensils'
   | 'trash-2'
   | 'palette'
@@ -140,6 +142,13 @@ export type IconName =
         @case ('info') {
           <svg:circle cx="12" cy="12" r="10" />
           <svg:path d="M12 16v-4M12 8h.01" />
+        }
+        @case ('pipette') {
+          <svg:path d="m2 22 1-1h3l9-9M3 21v-3l9-9" />
+          <svg:path d="m15 6 3.4-3.4a2.1 2.1 0 1 1 3 3L18 9l.4.4a2.1 2.1 0 1 1-3 3l-3.8-3.8a2.1 2.1 0 1 1 3-3l.4.4Z" />
+        }
+        @case ('check') {
+          <svg:path d="M20 6 9 17l-5-5" />
         }
         @case ('key') {
           <svg:path d="m15.5 7.5 2.3 2.3a1 1 0 0 0 1.4 0l2.1-2.1a1 1 0 0 0 0-1.4L19 4M21 2l-9.6 9.6" />

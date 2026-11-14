@@ -1,0 +1,104 @@
+<!-- Saturation (left → right) and brightness (bottom → top) for the hue. -->
+<div
+  class="cp-area"
+  role="slider"
+  tabindex="0"
+  aria-label="Saturation and brightness"
+  aria-valuemin="0"
+  aria-valuemax="100"
+  [attr.aria-valuenow]="round(s * 100)"
+  [attr.aria-valuetext]="'Saturation ' + round(s * 100) + '%, brightness ' + round(v * 100) + '%'"
+  [style.backgroundColor]="hueColor"
+  (pointerdown)="onAreaPointer($event)"
+  (pointermove)="onAreaPointer($event)"
+  (keydown)="onAreaKey($event)"
+  >
+  <span
+    class="cp-area-thumb"
+    [style.left.%]="s * 100"
+    [style.top.%]="(1 - v) * 100"
+    [style.backgroundColor]="solidHex"
+  ></span>
+</div>
+
+<div class="cp-controls">
+  @if (canEyedrop) {
+    <button
+      type="button"
+      class="cp-eyedropper"
+      aria-label="Pick color from screen"
+      (click)="pickFromScreen()"
+      >
+      <app-icon name="pipette" [size]="18" />
+    </button>
+  }
+  <div class="cp-sliders">
+    <div
+      class="cp-slider cp-hue"
+      role="slider"
+      tabindex="0"
+      aria-label="Hue"
+      aria-valuemin="0"
+      aria-valuemax="360"
+      [attr.aria-valuenow]="round(h)"
+      [attr.aria-valuetext]="round(h) + ' degrees'"
+      (pointerdown)="onSliderPointer($event, 'hue')"
+      (pointermove)="onSliderPointer($event, 'hue')"
+      (keydown)="onSliderKey($event, 'hue')"
+      >
+      <span class="cp-thumb" [style.left.%]="(h / 360) * 100" [style.backgroundColor]="hueColor"></span>
+    </div>
+    <div
+      class="cp-slider cp-alpha"
+      role="slider"
+      tabindex="0"
+      aria-label="Opacity"
+      aria-valuemin="0"
+      aria-valuemax="100"
+      [attr.aria-valuenow]="alphaPercent"
+      [attr.aria-valuetext]="alphaPercent + '%'"
+      [style.--cp-solid]="solidHex"
+      (pointerdown)="onSliderPointer($event, 'alpha')"
+      (pointermove)="onSliderPointer($event, 'alpha')"
+      (keydown)="onSliderKey($event, 'alpha')"
+      >
+      <span class="cp-thumb" [style.left.%]="alphaPercent" [style.backgroundColor]="fullHex"></span>
+    </div>
+  </div>
+</div>
+
+<!-- One row: Hex · R · G · B · A. Values apply on Enter or when leaving the field. -->
+<div class="cp-fields">
+  <div class="cp-field cp-field--hex">
+    <label [for]="id + '-hex'">Hex</label>
+    <input
+      [id]="id + '-hex'"
+      type="text"
+      maxlength="9"
+      spellcheck="false"
+      autocomplete="off"
+      [value]="solidHex"
+      (change)="onHexChange($event)"
+    />
+  </div>
+  <div class="cp-field">
+    <label [for]="id + '-r'">R</label>
+    <input [id]="id + '-r'" type="text" inputmode="numeric" maxlength="3" autocomplete="off"
+      [value]="rgb.r" (change)="onChannelChange($event, 'r')" />
+  </div>
+  <div class="cp-field">
+    <label [for]="id + '-g'">G</label>
+    <input [id]="id + '-g'" type="text" inputmode="numeric" maxlength="3" autocomplete="off"
+      [value]="rgb.g" (change)="onChannelChange($event, 'g')" />
+  </div>
+  <div class="cp-field">
+    <label [for]="id + '-b'">B</label>
+    <input [id]="id + '-b'" type="text" inputmode="numeric" maxlength="3" autocomplete="off"
+      [value]="rgb.b" (change)="onChannelChange($event, 'b')" />
+  </div>
+  <div class="cp-field">
+    <label [for]="id + '-a'">A</label>
+    <input [id]="id + '-a'" type="text" inputmode="numeric" maxlength="3" autocomplete="off"
+      [value]="alphaPercent" (change)="onAlphaChange($event)" />
+  </div>
+</div>

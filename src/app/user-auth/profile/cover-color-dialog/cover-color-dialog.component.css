@@ -1,0 +1,375 @@
+/* Choose Color dialog (profile cover color). All colors come from the --cc-*
+   tokens below, so light and dark mode only differ in this one block. */
+:host {
+  display: block;
+
+  --cc-surface: #ffffff;
+  --cc-surface-2: #f1f4f0; /* picker panel, close button */
+  --cc-input: #f6f7f4;
+  --cc-line: #e3e7e2;
+  --cc-ink: #111a15;
+  --cc-muted: #4a5550;
+  --cc-accent: #17603f; /* Save, white text */
+  --cc-ring: #17603f; /* focus and selected rings */
+}
+
+:host-context(.dark-theme) {
+  --cc-surface: #161d19;
+  --cc-surface-2: #1d2621;
+  --cc-input: #0e1411;
+  --cc-line: #2a3530;
+  --cc-ink: #eaf0ec;
+  --cc-muted: #a7b3ac;
+  --cc-accent: #1f7a4d;
+  --cc-ring: #7fd9aa;
+}
+
+/* ---- Frame: backdrop, dialog, pinned header and footer ---- */
+.cc-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 2147483647; /* above the sticky header */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+  background: rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(4px);
+}
+
+.cc-dialog {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  max-width: 480px;
+  max-height: 88vh;
+  overflow: hidden; /* rounded corners clip the scrolling body */
+  background: var(--cc-surface);
+  color: var(--cc-ink);
+  border: 1px solid var(--cc-line);
+  border-radius: 24px;
+  box-shadow: 0 24px 48px -12px rgba(0, 0, 0, 0.35);
+  font-family: var(--font-family-sans);
+  animation: cc-rise 0.25s ease-out;
+}
+
+.cc-header {
+  display: flex;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 24px 24px 16px;
+}
+
+.cc-title {
+  margin: 0;
+  font-family: var(--font-family-display);
+  font-size: 1.5rem; /* 24px */
+  font-weight: 700;
+  line-height: 1.2;
+  letter-spacing: -0.015em;
+  color: var(--cc-ink);
+}
+
+.cc-close {
+  display: grid;
+  flex-shrink: 0;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  padding: 0;
+  border: 1px solid var(--cc-line);
+  border-radius: 12px;
+  background: var(--cc-surface-2);
+  color: var(--cc-ink);
+  cursor: pointer;
+  --icon-stroke: 2;
+}
+
+.cc-close:hover {
+  border-color: var(--cc-muted);
+}
+
+/* The only part that scrolls. min-height: 0 lets it shrink inside the flex column. */
+.cc-body {
+  flex: 1 1 auto;
+  min-height: 0;
+  padding: 8px 24px 24px;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+}
+
+.cc-footer {
+  display: flex;
+  flex-shrink: 0;
+  justify-content: flex-end;
+  gap: 12px;
+  padding: 16px 24px;
+  border-top: 1px solid var(--cc-line);
+  background: var(--cc-surface);
+}
+
+.cc-btn {
+  min-height: 48px;
+  min-width: 112px;
+  padding: 0 24px;
+  border-radius: 12px;
+  font: inherit;
+  font-size: 1rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition:
+    border-color 0.15s ease,
+    filter 0.15s ease;
+}
+
+.cc-btn--cancel {
+  border: 1px solid var(--cc-line);
+  background: transparent;
+  color: var(--cc-ink);
+}
+
+.cc-btn--cancel:hover {
+  border-color: var(--cc-muted);
+}
+
+.cc-btn--save {
+  border: 1px solid transparent;
+  background: var(--cc-accent);
+  color: #ffffff; /* 7.3:1 on light accent, 5.3:1 on dark */
+}
+
+.cc-btn--save:hover {
+  filter: brightness(1.1);
+}
+
+.cc-close:focus-visible,
+.cc-btn:focus-visible {
+  outline: 2px solid var(--cc-ring);
+  outline-offset: 3px;
+}
+
+@keyframes cc-rise {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/* ---- Live preview card ---- */
+.cc-preview {
+  overflow: hidden;
+  border: 1px solid var(--cc-line);
+  border-radius: 16px;
+  background: var(--cc-input);
+}
+
+.cc-preview-cover {
+  height: 88px;
+  /* --pf-cover comes from the profile page: the theme's default cover. */
+  background-color: var(--pf-cover, #eaefe9);
+  transition: background-color 0.2s ease;
+}
+
+.cc-preview-info {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-height: 48px;
+  padding: 0 16px;
+}
+
+.cc-preview-avatar {
+  flex-shrink: 0;
+  width: 56px;
+  height: 56px;
+  margin-top: -28px; /* half over the cover */
+  border: 3px solid var(--cc-input);
+  border-radius: 50%;
+  object-fit: cover;
+  background: var(--cc-surface-2);
+}
+
+.cc-preview-name {
+  min-width: 0;
+  overflow: hidden;
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--cc-ink);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+
+/* ---- Preset swatches: round radio buttons ---- */
+.cc-swatch-area {
+  position: relative;
+  margin: 20px 0;
+}
+
+.cc-swatches {
+  display: grid;
+  grid-template-columns: repeat(5, 44px);
+  justify-content: space-between;
+  row-gap: 12px;
+}
+
+.cc-swatch {
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  /* A faint inner edge so the pale swatch shows on a white dialog. */
+  box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.12);
+  color: var(--cc-ink); /* check on pale swatches */
+  cursor: pointer;
+  --icon-stroke: 3;
+  transition: transform 0.15s ease;
+}
+
+.cc-swatch--light-check {
+  color: #ffffff;
+}
+
+.cc-swatch:hover {
+  transform: scale(1.06);
+}
+
+/* Selected: a 2px ring with a 3px gap (the gap is the dialog surface). */
+.cc-swatch[aria-checked='true'] {
+  box-shadow:
+    inset 0 0 0 1px rgba(0, 0, 0, 0.12),
+    0 0 0 3px var(--cc-surface),
+    0 0 0 5px var(--cc-ring);
+}
+
+/* "+": the 10th slot (bottom-right of the 5 × 2 grid). Dashed = "not a
+   color yet". Ringed like a selected swatch while its panel is open. */
+.cc-custom-toggle {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  border: 1.5px dashed var(--cc-muted);
+  background: transparent;
+  box-shadow: none;
+  color: var(--cc-ink);
+  --icon-stroke: 2;
+}
+
+.cc-custom-toggle[aria-expanded='true'] {
+  box-shadow:
+    0 0 0 3px var(--cc-surface),
+    0 0 0 5px var(--cc-ring);
+}
+
+/* The panel's own display: flex would beat the hidden attribute. */
+.cc-custom[hidden] {
+  display: none;
+}
+
+/* Keyboard focus sits outside the selected ring, so both can show. */
+.cc-swatch:focus-visible {
+  outline: 2px solid var(--cc-ink);
+  outline-offset: 6px;
+}
+
+/* ---- Custom picker panel ---- */
+.cc-custom {
+  padding: 16px;
+  border: 1px solid var(--cc-line);
+  border-radius: 16px;
+  background: var(--cc-surface-2);
+}
+
+@media (max-width: 640px) {
+  .cc-custom {
+    padding: 12px;
+  }
+}
+
+/* ---- Phones: a bottom sheet ---- */
+.cc-handle {
+  display: none;
+}
+
+@media (max-width: 640px) {
+  .cc-backdrop {
+    align-items: flex-end;
+    padding: 0;
+  }
+
+  .cc-dialog {
+    max-width: none;
+    max-height: 92dvh;
+    border-bottom: 0;
+    border-radius: 24px 24px 0 0;
+    animation: cc-sheet-up 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
+  }
+
+  .cc-handle {
+    display: block;
+    flex-shrink: 0;
+    width: 40px;
+    height: 4px;
+    margin: 10px auto 0;
+    border-radius: 999px;
+    background: var(--cc-line);
+  }
+
+  .cc-header {
+    padding: 14px 20px 12px;
+  }
+
+  .cc-body {
+    padding: 8px 20px 20px;
+  }
+
+  /* Five 48px swatches per row; the "+" is 48px too. */
+  .cc-swatches {
+    grid-template-columns: repeat(5, 48px);
+  }
+
+  .cc-swatch {
+    width: 48px;
+    height: 48px;
+  }
+
+  /* Cancel and Save share the width, above the home indicator. */
+  .cc-footer {
+    padding: 12px 20px calc(12px + env(safe-area-inset-bottom));
+  }
+
+  .cc-btn {
+    flex: 1;
+    min-width: 0;
+  }
+}
+
+@keyframes cc-sheet-up {
+  from {
+    transform: translateY(100%);
+  }
+  to {
+    transform: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .cc-dialog {
+    animation: none;
+  }
+
+  .cc-btn,
+  .cc-preview-cover,
+  .cc-swatch {
+    transition: none;
+  }
+}

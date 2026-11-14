@@ -4,12 +4,9 @@ import { ProfileImageService } from '../service/profile-image.service';
 import { Router } from '@angular/router';
 import { fadeInOut } from 'src/app/shared/animations/fadeInOut';
 import {
-  presetColors,
-  colorToHex,
   isDarkColor,
   DEFAULT_BANNER_COLOR,
 } from '../../shared/utils/color-utils';
-import { HSLA, HSVA, RGBA } from 'ngx-color';
 import { HeaderComponent } from 'src/app/landing-page/header/header.component';
 import { Observable } from 'rxjs';
 import { NavigationService } from '../service/navigation.service';
@@ -29,16 +26,12 @@ export class ProfileComponent implements OnInit {
   isColorPickerVisible: boolean = false;
   /** The banner color the user picked; null shows the theme's soft green. */
   currentHeaderColor: string | null = null;
-  selectedColor: string = DEFAULT_BANNER_COLOR;
-  readonly defaultBannerColor = DEFAULT_BANNER_COLOR;
   /** The picked banner is dark, so text drawn on it (iPad card) goes white. */
   bannerIsDark = false;
   firstName: string = '';
   lastName: string = '';
 
   activeSection$: Observable<string> | undefined;
-
-  presetColors: string[] = presetColors;
 
   constructor(
     private authService: AuthService,
@@ -58,7 +51,6 @@ export class ProfileComponent implements OnInit {
     const savedColor = localStorage.getItem('headerColor');
     if (savedColor) {
       this.currentHeaderColor = savedColor;
-      this.selectedColor = savedColor;
       this.bannerIsDark = isDarkColor(savedColor);
     }
   }
@@ -110,45 +102,26 @@ export class ProfileComponent implements OnInit {
 
   toggleColorPicker(): void {
     this.isColorPickerVisible = !this.isColorPickerVisible;
-    if (this.isColorPickerVisible) {
-      this.selectedColor = this.currentHeaderColor ?? DEFAULT_BANNER_COLOR;
-    }
   }
 
-  onColorSelect(color: string | HSLA | HSVA | RGBA): void {
-    if (typeof color === 'string') {
-      this.selectedColor = color;
-    } else {
-      this.selectedColor = colorToHex(color) || '#000000';
-    }
+  closeColorPicker(): void {
+    this.isColorPickerVisible = false;
   }
 
-  saveColor(): void {
-    if (this.selectedColor.toUpperCase() === DEFAULT_BANNER_COLOR) {
+  /** Save from the Choose Color dialog: store the pick and repaint the banner. */
+  saveColor(color: string): void {
+    if (color.toUpperCase() === DEFAULT_BANNER_COLOR) {
       // Back to the default: forget the pick so the banner follows the theme
       // (soft green in light mode, dark green-grey in dark mode).
       this.currentHeaderColor = null;
       this.bannerIsDark = false;
       localStorage.removeItem('headerColor');
     } else {
-      this.currentHeaderColor = this.selectedColor;
-      this.bannerIsDark = isDarkColor(this.selectedColor);
-      localStorage.setItem('headerColor', this.currentHeaderColor);
+      this.currentHeaderColor = color;
+      this.bannerIsDark = isDarkColor(color);
+      localStorage.setItem('headerColor', color);
     }
     this.isColorPickerVisible = false;
-  }
-
-  cancelColor(): void {
-    this.selectedColor = this.currentHeaderColor ?? DEFAULT_BANNER_COLOR;
-    this.isColorPickerVisible = false;
-  }
-
-  onBackdropClick(event: MouseEvent): void {
-    if (
-      (event.target as HTMLElement).classList.contains('color-picker-backdrop')
-    ) {
-      this.cancelColor();
-    }
   }
 
   onLogout(): void {
