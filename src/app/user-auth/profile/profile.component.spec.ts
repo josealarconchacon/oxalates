@@ -108,7 +108,7 @@ describe('ProfileComponent', () => {
       fixture.detectChanges();
       expect(dialog()).not.toBeNull();
 
-      dialog().querySelector('.ui-btn--secondary').click();
+      dialog().querySelector('.cc-btn--cancel').click();
       fixture.detectChanges();
       expect(component.isColorPickerVisible).toBeFalse();
       expect(localStorage.getItem('headerColor')).toBeNull();
@@ -122,7 +122,7 @@ describe('ProfileComponent', () => {
       expect(blue.getAttribute('aria-selected')).toBe('true');
 
       dialog().querySelector('[aria-label="Purple"]').click();
-      dialog().querySelector('.ui-btn--primary').click();
+      dialog().querySelector('.cc-btn--save').click();
       fixture.detectChanges();
       expect(component.currentHeaderColor).toBe('#9B59B6');
       expect(component.isColorPickerVisible).toBeFalse();

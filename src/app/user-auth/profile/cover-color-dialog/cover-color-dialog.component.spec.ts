@@ -2,6 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { A11yModule } from '@angular/cdk/a11y';
 import { ColorSketchModule } from 'ngx-color/sketch';
 import { CoverColorDialogComponent } from './cover-color-dialog.component';
+import { IconComponent } from 'src/app/shared/components/icon/icon.component';
 import { presetColorNames } from '../../../shared/utils/color-utils';
 
 describe('CoverColorDialogComponent', () => {
@@ -12,7 +13,7 @@ describe('CoverColorDialogComponent', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
       declarations: [CoverColorDialogComponent],
-      imports: [A11yModule, ColorSketchModule],
+      imports: [A11yModule, ColorSketchModule, IconComponent],
     });
     fixture = TestBed.createComponent(CoverColorDialogComponent);
     component = fixture.componentInstance;
@@ -27,7 +28,7 @@ describe('CoverColorDialogComponent', () => {
   });
 
   it('labels the close button "Close"', () => {
-    expect(el().querySelector('.close-button')!.getAttribute('aria-label')).toBe('Close');
+    expect(el().querySelector('.cc-close')!.getAttribute('aria-label')).toBe('Close');
   });
 
   it('names every preset swatch, in order', () => {
@@ -56,9 +57,9 @@ describe('CoverColorDialogComponent', () => {
   it('a click inside the dialog does not close it; the backdrop does', () => {
     const closed = jasmine.createSpy('closed');
     component.closed.subscribe(closed);
-    (el().querySelector('.color-picker-title') as HTMLElement).click();
+    (el().querySelector('.cc-title') as HTMLElement).click();
     expect(closed).not.toHaveBeenCalled();
-    (el().querySelector('.color-picker-backdrop') as HTMLElement).click();
+    (el().querySelector('.cc-backdrop') as HTMLElement).click();
     expect(closed).toHaveBeenCalled();
   });
 
@@ -66,7 +67,17 @@ describe('CoverColorDialogComponent', () => {
     const saved = jasmine.createSpy('saved');
     component.saved.subscribe(saved);
     (el().querySelector('[aria-label="Red"]') as HTMLElement).click();
-    (el().querySelector('.ui-btn--primary') as HTMLElement).click();
+    (el().querySelector('.cc-btn--save') as HTMLElement).click();
     expect(saved).toHaveBeenCalledWith('#E74C3C');
+  });
+
+  it('keeps the header and footer outside the scrolling body', () => {
+    const dialog = el().querySelector('[role="dialog"]')!;
+    const parts = [...dialog.children].map((c) => c.className);
+    expect(parts).toEqual(['cc-header', 'cc-body', 'cc-footer']);
+    const buttons = [...el().querySelectorAll('.cc-footer button')].map((b) =>
+      b.textContent!.trim()
+    );
+    expect(buttons).toEqual(['Cancel', 'Save']);
   });
 });

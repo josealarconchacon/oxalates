@@ -1,308 +1,192 @@
-/* Choose Color dialog (profile cover color). Step 1 moves the old styles
-   here unchanged; later steps replace them with the new design. Colors like
-   --card-background come from the profile page, which sets its own dark values. */
+/* Choose Color dialog (profile cover color). All colors come from the --cc-*
+   tokens below, so light and dark mode only differ in this one block. */
 :host {
   display: block;
+
+  --cc-surface: #ffffff;
+  --cc-surface-2: #f1f4f0; /* picker panel, close button */
+  --cc-input: #f6f7f4;
+  --cc-line: #e3e7e2;
+  --cc-ink: #111a15;
+  --cc-muted: #4a5550;
+  --cc-accent: #17603f; /* Save, white text */
+  --cc-ring: #17603f; /* focus and selected rings */
 }
 
-@media (max-width: 640px) {
-  .color-picker-content {
-    padding: 1rem;
-    margin: 1rem;
-  }
-
-  .color-grid {
-    grid-template-columns: repeat(4, 1fr);
-    gap: 0.5rem;
-  }
-
-  .color-preset {
-    width: 2.5rem;
-    height: 2.5rem;
-  }
+:host-context(.dark-theme) {
+  --cc-surface: #161d19;
+  --cc-surface-2: #1d2621;
+  --cc-input: #0e1411;
+  --cc-line: #2a3530;
+  --cc-ink: #eaf0ec;
+  --cc-muted: #a7b3ac;
+  --cc-accent: #1f7a4d;
+  --cc-ring: #7fd9aa;
 }
 
-
-.color-picker-backdrop {
+/* ---- Frame: backdrop, dialog, pinned header and footer ---- */
+.cc-backdrop {
   position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background-color: rgba(0, 0, 0, 0.75);
-  backdrop-filter: blur(4px);
+  inset: 0;
+  z-index: 2147483647; /* above the sticky header */
   display: flex;
   align-items: center;
   justify-content: center;
-  z-index: 2147483647;
-  animation: fadeIn 0.2s ease-out;
+  padding: 16px;
+  background: rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(4px);
 }
 
-.color-picker-content {
-  position: relative;
-  background-color: var(--card-background);
-  border-radius: 1.5rem;
-  padding: 2rem;
+.cc-dialog {
+  display: flex;
+  flex-direction: column;
   width: 100%;
   max-width: 480px;
-  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25),
-    0 0 0 1px rgba(0, 0, 0, 0.05);
-  z-index: 2147483648;
-  animation: slideUp 0.3s ease-out;
-  transform-origin: center bottom;
-  color: var(--text-color);
-  border: 1px solid var(--border-color);
+  max-height: 88vh;
+  overflow: hidden; /* rounded corners clip the scrolling body */
+  background: var(--cc-surface);
+  color: var(--cc-ink);
+  border: 1px solid var(--cc-line);
+  border-radius: 24px;
+  box-shadow: 0 24px 48px -12px rgba(0, 0, 0, 0.35);
+  font-family: var(--font-family-sans);
+  animation: cc-rise 0.25s ease-out;
 }
 
-.color-picker-header {
-  position: relative;
-  z-index: 10001;
+.cc-header {
   display: flex;
+  flex-shrink: 0;
+  align-items: center;
   justify-content: space-between;
-  align-items: center;
-  margin-bottom: 1.5rem;
-  padding-bottom: 1rem;
-  border-bottom: 1px solid var(--border-color);
+  gap: 16px;
+  padding: 24px 24px 16px;
 }
 
-.color-picker-title {
-  font-size: 1.25rem;
-  font-weight: 600;
-  color: var(--text-color);
+.cc-title {
   margin: 0;
+  font-family: var(--font-family-display);
+  font-size: 1.5rem; /* 24px */
+  font-weight: 700;
+  line-height: 1.2;
+  letter-spacing: -0.015em;
+  color: var(--cc-ink);
 }
 
-.close-button {
-  width: 2.5rem;
-  height: 2.5rem;
-  border-radius: 9999px;
-  border: none;
-  background: var(--button-background);
-  color: var(--button-text);
+.cc-close {
+  display: grid;
+  flex-shrink: 0;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  padding: 0;
+  border: 1px solid var(--cc-line);
+  border-radius: 12px;
+  background: var(--cc-surface-2);
+  color: var(--cc-ink);
   cursor: pointer;
+  --icon-stroke: 2;
+}
+
+.cc-close:hover {
+  border-color: var(--cc-muted);
+}
+
+/* The only part that scrolls. min-height: 0 lets it shrink inside the flex column. */
+.cc-body {
+  flex: 1 1 auto;
+  min-height: 0;
+  padding: 8px 24px 24px;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+}
+
+.cc-footer {
   display: flex;
-  align-items: center;
-  justify-content: center;
-  transition: all 0.2s ease;
-  border: 1px solid var(--border-color);
+  flex-shrink: 0;
+  justify-content: flex-end;
+  gap: 12px;
+  padding: 16px 24px;
+  border-top: 1px solid var(--cc-line);
+  background: var(--cc-surface);
 }
 
-.close-button:hover {
-  background-color: var(--hover-background);
-  transform: scale(1.05);
+.cc-btn {
+  min-height: 48px;
+  min-width: 112px;
+  padding: 0 24px;
+  border-radius: 12px;
+  font: inherit;
+  font-size: 1rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition:
+    border-color 0.15s ease,
+    filter 0.15s ease;
 }
 
+.cc-btn--cancel {
+  border: 1px solid var(--cc-line);
+  background: transparent;
+  color: var(--cc-ink);
+}
+
+.cc-btn--cancel:hover {
+  border-color: var(--cc-muted);
+}
+
+.cc-btn--save {
+  border: 1px solid transparent;
+  background: var(--cc-accent);
+  color: #ffffff; /* 7.3:1 on light accent, 5.3:1 on dark */
+}
+
+.cc-btn--save:hover {
+  filter: brightness(1.1);
+}
+
+.cc-close:focus-visible,
+.cc-btn:focus-visible {
+  outline: 2px solid var(--cc-ring);
+  outline-offset: 3px;
+}
+
+@keyframes cc-rise {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/* ---- Body content: the old look for now; steps 3–6 replace these ---- */
 .color-preview {
   width: 100%;
   height: 100px;
-  border-radius: 1rem;
-  margin-bottom: 1.5rem;
-  transition: background-color 0.2s ease;
-  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.1);
-  border: 3px solid var(--card-background);
-  outline: 1px solid var(--border-color);
+  border-radius: 16px;
+  border: 1px solid var(--cc-line);
 }
 
 .color-grid {
-  position: relative;
-  z-index: 10001;
   display: grid;
-  grid-template-columns: repeat(8, 1fr);
-  gap: 0.5rem;
-  margin: 1.5rem 0;
-  padding: 1rem;
-  background-color: var(--card-background);
-  border-radius: 1rem;
-  border: 1px solid var(--border-color);
-}
-
-.color-preset {
-  aspect-ratio: 1;
-  border-radius: 0.75rem;
-  border: 3px solid transparent;
-  cursor: pointer;
-  transition: all 0.2s ease;
-  position: relative;
-}
-
-/* The default swatch is very pale, so outline it to keep its edge visible. */
-.color-preset:first-child:not(.selected) {
-  box-shadow: inset 0 0 0 1px rgba(17, 26, 21, 0.35);
-}
-
-.color-preset:hover {
-  transform: scale(1.1);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-  z-index: 1;
-}
-
-.color-preset.selected {
-  border-color: white;
-  box-shadow: 0 0 0 2px var(--primary-color), 0 4px 12px rgba(0, 0, 0, 0.1);
-}
-
-.color-input-group {
-  position: relative;
-  z-index: 10001;
-  display: flex;
-  flex-direction: column;
-  gap: 1rem;
-  margin: 1.5rem 0;
-  padding: 1.5rem;
-  background-color: var(--card-background);
-  border-radius: 1rem;
-  border: 1px solid var(--border-color);
-}
-
-.color-value {
-  padding: 0.75rem;
-  background-color: var(--input-background);
-  border-radius: 0.75rem;
-  font-size: 0.875rem;
-  font-family: monospace;
-  color: var(--text-color);
-  text-align: center;
-  border: 1px solid var(--border-color);
-  user-select: all;
-}
-
-.color-actions {
-  position: relative;
-  z-index: 10001;
-  display: flex;
-  justify-content: flex-end;
-  gap: 1rem;
-  margin-top: 1.5rem;
-  padding-top: 1.5rem;
-  border-top: 1px solid var(--border-color);
-}
-
-@keyframes fadeIn {
-  from {
-    opacity: 0;
-  }
-  to {
-    opacity: 1;
-  }
-}
-
-@keyframes slideUp {
-  from {
-    opacity: 0;
-    transform: translateY(20px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-/* Responsive adjustments for color picker */
-@media (max-width: 640px) {
-  .color-picker-content {
-    margin: 1rem;
-    padding: 1.5rem;
-    max-width: calc(100% - 2rem);
-    border-radius: 1.25rem;
-  }
-
-  .color-grid {
-    grid-template-columns: repeat(6, 1fr);
-    padding: 0.75rem;
-    gap: 0.5rem;
-  }
-
-  .color-preview {
-    height: 80px;
-  }
-
-  .color-actions {
-    flex-direction: column;
-    gap: 0.75rem;
-  }
-
-  .color-actions button {
-    width: 100%;
-    padding: 0.875rem;
-  }
-}
-
-
-@media (max-width: 576px) {
-  .color-picker-content {
-    padding: var(--spacing-4);
-  }
-}
-
-
-:host-context(.dark-theme) .color-picker-content {
-  background-color: var(--dialog-background);
-  border-color: var(--border-color);
-}
-
-:host-context(.dark-theme) .color-picker-title {
-  color: var(--text-color);
-}
-
-:host-context(.dark-theme) .close-button {
-  color: var(--text-secondary);
-}
-
-:host-context(.dark-theme) .close-button:hover {
-  background-color: var(--hover-background);
-  color: var(--text-color);
-}
-
-:host-context(.dark-theme) .color-value {
-  background-color: var(--input-background);
-  border-color: var(--border-color);
-  color: var(--text-color);
-}
-
-.color-picker-content {
-  background-color: var(--card-background);
-  border: 1px solid var(--border-color);
-  box-shadow: 0 4px 6px var(--shadow-color);
-}
-
-.color-picker-header {
-  border-bottom: 1px solid var(--border-color);
-  padding: 1rem;
-  display: flex;
-  align-items: center;
+  grid-template-columns: repeat(auto-fill, 2.5rem); /* wraps; never overflows */
   justify-content: space-between;
-}
-
-.color-picker-title {
-  color: var(--text-color);
-  margin: 0;
-  font-size: 1.25rem;
-  font-weight: 600;
-}
-
-.color-grid {
-  display: grid;
-  grid-template-columns: repeat(6, 1fr);
   gap: 0.5rem;
+  margin: 16px 0;
   padding: 1rem;
-  background-color: var(--card-background);
-  border-radius: var(--radius-lg);
-  border: 1px solid var(--border-color);
+  border: 1px solid var(--cc-line);
+  border-radius: 16px;
 }
 
 .color-preset {
   width: 2.5rem;
   height: 2.5rem;
-  border-radius: var(--radius-lg);
-  border: 2px solid var(--border-color);
+  border: 2px solid var(--cc-line);
+  border-radius: 12px;
   cursor: pointer;
-  transition: all var(--transition-base);
   position: relative;
-}
-
-.color-preset:hover {
-  transform: scale(1.1);
-  box-shadow: 0 2px 4px var(--shadow-color);
 }
 
 .color-preset.selected::after {
@@ -316,37 +200,38 @@
   font-size: 1rem;
 }
 
-.color-actions {
+.color-preset.selected {
+  box-shadow: 0 0 0 2px var(--cc-ring);
+}
+
+.color-input-group {
   display: flex;
+  flex-direction: column;
+  align-items: center;
   gap: 1rem;
   padding: 1rem;
-  border-top: 1px solid var(--border-color);
+  border: 1px solid var(--cc-line);
+  border-radius: 16px;
 }
 
-/* The look comes from .ui-btn--primary / .ui-btn--secondary. */
-.color-actions button {
-  flex: 1;
-  min-width: 100px;
+.color-value {
+  width: 100%;
+  padding: 0.75rem;
+  border: 1px solid var(--cc-line);
+  border-radius: 12px;
+  background: var(--cc-input);
+  color: var(--cc-ink);
+  font-family: monospace;
+  font-size: 0.875rem;
+  text-align: center;
 }
-
-:host-context(.dark-theme) .color-picker-backdrop {
-  background-color: rgba(0, 0, 0, 0.75);
-}
-
-:host-context(.dark-theme) .color-preset {
-  border-color: var(--border-color);
-}
-
-:host-context(.dark-theme) .color-preset:hover {
-  border-color: var(--text-primary);
-}
-
 
 @media (prefers-reduced-motion: reduce) {
-  .color-picker-backdrop,
-  .color-picker-content,
-  .color-preset {
+  .cc-dialog {
     animation: none;
+  }
+
+  .cc-btn {
     transition: none;
   }
 }
