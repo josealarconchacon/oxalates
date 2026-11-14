@@ -6,7 +6,10 @@ import { AngularFireAuthModule } from '@angular/fire/compat/auth';
 import { environment } from 'src/environments/environment';
 import { provideRouter } from '@angular/router';
 import { ReactiveFormsModule } from '@angular/forms';
+import { A11yModule } from '@angular/cdk/a11y';
 import { ColorSketchModule } from 'ngx-color/sketch';
+import { provideNoopAnimations } from '@angular/platform-browser/animations';
+import { CoverColorDialogComponent } from './cover-color-dialog/cover-color-dialog.component';
 import { ChangePasswordComponent } from '../change-password/change-password.component';
 import { SaveItemsComponent } from './save-items/save-items.component';
 import { ClickableDirective } from 'src/app/shared/directives/clickable.directive';
@@ -20,17 +23,23 @@ describe('ProfileComponent', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
       // The page and the pieces its template renders (the same set as ProfileModule)
-      declarations: [ProfileComponent, ChangePasswordComponent, SaveItemsComponent],
+      declarations: [
+        ProfileComponent,
+        ChangePasswordComponent,
+        SaveItemsComponent,
+        CoverColorDialogComponent,
+      ],
       imports: [
         AngularFireModule.initializeApp(environment.firebaseConfig),
         AngularFireAuthModule,
         ReactiveFormsModule,
+        A11yModule,
         ColorSketchModule,
         ClickableDirective,
         AlertComponent,
         IconComponent,
       ],
-      providers: [provideRouter([])],
+      providers: [provideRouter([]), provideNoopAnimations()],
     });
 
     fixture = TestBed.createComponent(ProfileComponent);
@@ -70,8 +79,7 @@ describe('ProfileComponent', () => {
     afterEach(() => localStorage.removeItem('headerColor'));
 
     it('saves a picked color', () => {
-      component.selectedColor = '#17603F';
-      component.saveColor();
+      component.saveColor('#17603F');
       expect(component.currentHeaderColor).toBe('#17603F');
       expect(localStorage.getItem('headerColor')).toBe('#17603F');
       expect(component.bannerIsDark).toBeTrue();
@@ -82,12 +90,42 @@ describe('ProfileComponent', () => {
       component.currentHeaderColor = '#17603F';
       component.bannerIsDark = true;
 
-      component.onColorSelect('#EAEFE9');
-      component.saveColor();
+      component.saveColor('#EAEFE9');
 
       expect(component.currentHeaderColor).toBeNull();
       expect(component.bannerIsDark).toBeFalse();
       expect(localStorage.getItem('headerColor')).toBeNull();
+    });
+  });
+
+  describe('Choose Color dialog', () => {
+    afterEach(() => localStorage.removeItem('headerColor'));
+    const dialog = () =>
+      fixture.nativeElement.querySelector('app-cover-color-dialog');
+
+    it('opens from the palette button and closes on Cancel without saving', () => {
+      fixture.nativeElement.querySelector('.color-picker-toggle').click();
+      fixture.detectChanges();
+      expect(dialog()).not.toBeNull();
+
+      dialog().querySelector('.ui-btn--secondary').click();
+      fixture.detectChanges();
+      expect(component.isColorPickerVisible).toBeFalse();
+      expect(localStorage.getItem('headerColor')).toBeNull();
+    });
+
+    it('passes the saved color in, and Save stores the pick', () => {
+      component.currentHeaderColor = '#4267B2';
+      component.toggleColorPicker();
+      fixture.detectChanges();
+      const blue = dialog().querySelector('[aria-label="Blue"]');
+      expect(blue.getAttribute('aria-selected')).toBe('true');
+
+      dialog().querySelector('[aria-label="Purple"]').click();
+      dialog().querySelector('.ui-btn--primary').click();
+      fixture.detectChanges();
+      expect(component.currentHeaderColor).toBe('#9B59B6');
+      expect(component.isColorPickerVisible).toBeFalse();
     });
   });
 

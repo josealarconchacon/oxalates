@@ -15,6 +15,19 @@ export const presetColors: string[] = [
   '#34495E',
 ];
 
+/** Screen-reader names for presetColors, in the same order. Never shown. */
+export const presetColorNames: string[] = [
+  'Light gray',
+  'Dark green',
+  'Blue',
+  'Pink',
+  'Green',
+  'Red',
+  'Purple',
+  'Yellow',
+  'Slate',
+];
+
 export function colorToHex(color: HSLA | HSVA | RGBA): string {
   if (!color || typeof color !== 'object') {
     return '#000000';

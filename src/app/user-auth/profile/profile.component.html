@@ -108,67 +108,11 @@
     </section>
   </div>
   @if (isColorPickerVisible) {
-    <div
-      class="color-picker-backdrop"
-      (click)="onBackdropClick($event)"
+    <app-cover-color-dialog
       [@fadeInOut]
-      >
-      <div
-        class="color-picker-content"
-        role="dialog"
-        aria-modal="true"
-        aria-label="Color picker"
-        >
-        <div class="color-picker-header">
-          <h3 class="color-picker-title">Choose Color</h3>
-          <button
-            class="close-button"
-            (click)="cancelColor()"
-            aria-label="Close color picker"
-            >
-            <i class="material-icons icon-inline" aria-hidden="true">close</i>
-          </button>
-        </div>
-        <div
-          class="color-preview"
-          [style.backgroundColor]="selectedColor"
-          role="img"
-          [attr.aria-label]="'Selected color: ' + selectedColor"
-        ></div>
-        <div class="color-grid" role="listbox" aria-label="Preset colors">
-          @for (color of presetColors; track color) {
-            <button
-              class="color-preset"
-              [class.selected]="selectedColor === color"
-              [style.backgroundColor]="color"
-              (click)="onColorSelect(color)"
-              role="option"
-              [attr.aria-selected]="selectedColor === color"
-              [attr.aria-label]="
-                (color === defaultBannerColor ? 'Default color: ' : 'Color: ') + color
-              "
-              >
-              <span class="sr-only">{{ color }}</span>
-            </button>
-          }
-        </div>
-        <div class="color-input-group">
-          <color-sketch
-            [(color)]="selectedColor"
-            (colorChange)="onColorSelect($event)"
-            aria-label="Color picker"
-          ></color-sketch>
-          <div class="color-value" role="status" aria-live="polite">
-            {{ selectedColor }}
-          </div>
-        </div>
-        <div class="color-actions">
-          <button class="ui-btn ui-btn--primary" (click)="saveColor()">Save</button>
-          <button class="ui-btn ui-btn--secondary" (click)="cancelColor()">
-            Cancel
-          </button>
-        </div>
-      </div>
-    </div>
+      [color]="currentHeaderColor"
+      (saved)="saveColor($event)"
+      (closed)="closeColorPicker()"
+    />
   }
 </div>

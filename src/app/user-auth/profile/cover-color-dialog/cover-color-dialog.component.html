@@ -1,0 +1,54 @@
+<div class="color-picker-backdrop" (click)="onBackdropClick($event)">
+  <!-- cdkTrapFocus keeps Tab inside the dialog; AutoCapture moves focus in
+       on open and back to the palette button on close. -->
+  <div
+    class="color-picker-content"
+    role="dialog"
+    aria-modal="true"
+    [attr.aria-labelledby]="titleId"
+    cdkTrapFocus
+    [cdkTrapFocusAutoCapture]="true"
+    >
+    <div class="color-picker-header">
+      <h2 class="color-picker-title" [id]="titleId">Choose Color</h2>
+      <button type="button" class="close-button" (click)="cancel()" aria-label="Close">
+        <i class="material-icons icon-inline" aria-hidden="true">close</i>
+      </button>
+    </div>
+    <div
+      class="color-preview"
+      [style.backgroundColor]="selectedColor"
+      aria-hidden="true"
+    ></div>
+    <div class="color-grid" role="listbox" aria-label="Preset colors">
+      @for (preset of presets; track preset.value) {
+        <button
+          type="button"
+          class="color-preset"
+          [class.selected]="isSelected(preset.value)"
+          [style.backgroundColor]="preset.value"
+          (click)="onColorSelect(preset.value)"
+          role="option"
+          [attr.aria-selected]="isSelected(preset.value)"
+          [attr.aria-label]="preset.name"
+        ></button>
+      }
+    </div>
+    <div class="color-input-group">
+      <color-sketch
+        [(color)]="selectedColor"
+        (colorChange)="onColorSelect($event)"
+        aria-label="Color picker"
+      ></color-sketch>
+      <div class="color-value" role="status" aria-live="polite">
+        {{ selectedColor }}
+      </div>
+    </div>
+    <div class="color-actions">
+      <button type="button" class="ui-btn ui-btn--primary" (click)="save()">Save</button>
+      <button type="button" class="ui-btn ui-btn--secondary" (click)="cancel()">
+        Cancel
+      </button>
+    </div>
+  </div>
+</div>
