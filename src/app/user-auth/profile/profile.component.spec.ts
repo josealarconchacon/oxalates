@@ -117,6 +117,12 @@ describe('ProfileComponent', () => {
       expect(el().querySelectorAll('.info-panel').length).toBe(1);
     });
 
+    it('lists Name and Email as a dl (term + value pairs)', () => {
+      const terms = [...el().querySelectorAll('.details dt')].map((d) => d.textContent!.trim());
+      expect(terms).toEqual(['Name', 'Email']);
+      expect(el().querySelectorAll('.details dd').length).toBe(2);
+    });
+
     it('no longer has its own theme button (the header has one)', () => {
       expect(el().querySelector('.theme-toggle')).toBeNull();
     });

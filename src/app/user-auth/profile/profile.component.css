@@ -288,34 +288,44 @@
   }
 }
 
-.info-item {
-  display: flex;
-  justify-content: space-between;
-  padding: var(--spacing-4) 0;
-  border-bottom: 1px solid var(--border-color);
-}
-
-.info-item:last-child {
-  border-bottom: none;
-  padding-bottom: 0;
-}
-
-.info-item:first-child {
-  padding-top: 0;
-}
-
-.info-item label {
-  color: var(--text-secondary);
-  font-size: var(--font-size-xs);
-  font-weight: var(--font-weight-medium);
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-}
-
-.info-item p {
-  font-size: var(--font-size-sm);
-  text-align: right;
+/* Name / Email: a label column and the value next to it, thin lines
+   between rows. Stacked on phones. */
+.details {
   margin: 0;
+}
+
+.detail-row {
+  display: grid;
+  grid-template-columns: 160px minmax(0, 1fr);
+  align-items: baseline;
+  gap: 16px;
+  padding: 14px 0;
+  border-top: 1px solid var(--color-line);
+}
+
+.detail-row:last-child {
+  border-bottom: 1px solid var(--color-line);
+}
+
+.detail-row dt {
+  font-size: 0.875rem;
+  color: var(--color-muted);
+}
+
+.detail-row dd {
+  margin: 0;
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--color-ink);
+  overflow-wrap: anywhere; /* long emails wrap instead of overflowing */
+}
+
+/* Phones: label above its value. Kept after the rules above so it wins. */
+@media (max-width: 640px) {
+  .detail-row {
+    grid-template-columns: 1fr;
+    gap: 4px;
+  }
 }
 
 /* The look comes from .ui-btn--secondary. */

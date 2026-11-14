@@ -81,14 +81,16 @@
           <!-- One card: heading, details and Change Password. -->
           <div class="info-panel">
             <h2 class="section-title">Profile Information</h2>
-            <div class="info-item">
-              <label>Name</label>
-              <p>{{ userProfile?.displayName || "Username" }}</p>
-            </div>
-            <div class="info-item">
-              <label>Email</label>
-              <p>{{ userProfile?.email || "username@example.com" }}</p>
-            </div>
+            <dl class="details">
+              <div class="detail-row">
+                <dt>Name</dt>
+                <dd>{{ userProfile?.displayName || "Username" }}</dd>
+              </div>
+              <div class="detail-row">
+                <dt>Email</dt>
+                <dd>{{ userProfile?.email || "username@example.com" }}</dd>
+              </div>
+            </dl>
             <button (click)="toggleChangePassword()" class="edit-button ui-btn ui-btn--secondary">
               <i class="material-icons icon-inline" aria-hidden="true">vpn_key</i> Change Password
             </button>
