@@ -85,8 +85,18 @@
               <div class="detail-row detail-row--name">
                 <dt id="profile-name-term">Name</dt>
                 <dd>
-                  @if (!isEditingName) {
-                    <span class="name-value">{{ userProfile?.displayName || "Username" }}</span>
+                  @if (!isEditingName && !userProfile?.displayName) {
+                    <!-- No name yet (email sign-ups): invite them to add one. -->
+                    <button
+                      #editNameButton
+                      type="button"
+                      class="add-name"
+                      (click)="startEditName()"
+                      >
+                      <app-icon name="pencil" [size]="16" /> Add your name
+                    </button>
+                  } @else if (!isEditingName) {
+                    <span class="name-value">{{ userProfile.displayName }}</span>
                     <button
                       #editNameButton
                       type="button"

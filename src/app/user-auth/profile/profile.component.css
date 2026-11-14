@@ -348,6 +348,37 @@
   color: var(--color-ink);
 }
 
+/* "Add your name": quiet, but clearly a button (icon + underline on hover). */
+.add-name {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 44px;
+  margin-block: -10px;
+  margin-inline: -10px;
+  padding: 0 10px;
+  border: 0;
+  border-radius: 12px;
+  background: transparent;
+  color: var(--color-muted);
+  font: inherit;
+  font-size: 1rem;
+  font-weight: 500;
+  cursor: pointer;
+  --icon-stroke: 2;
+}
+
+.add-name:hover {
+  color: var(--color-ink);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.add-name:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: 2px;
+}
+
 .name-form {
   display: flex;
   flex: 1;

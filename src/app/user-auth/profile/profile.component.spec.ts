@@ -267,4 +267,44 @@ describe('ProfileComponent', () => {
       expect(document.activeElement).toBe(pencil());
     });
   });
+
+  describe('no name yet', () => {
+    const el = () => fixture.nativeElement as HTMLElement;
+    const addName = () => el().querySelector<HTMLButtonElement>('.add-name');
+
+    beforeEach(() => {
+      (component as any).activeSection$ = of('profile');
+      component.userProfile = { displayName: '', email: 'new@example.com' };
+      fixture.detectChanges();
+    });
+
+    it('shows "Add your name" in the Name row instead of "Username" and a pencil', () => {
+      expect(addName()!.textContent!.trim()).toBe('Add your name');
+      expect(el().querySelector('.name-value')).toBeNull();
+      expect(el().querySelector('.edit-name')).toBeNull();
+    });
+
+    it('keeps "Username" in the card heading', () => {
+      expect(el().querySelector('.profile-name')!.textContent!.trim()).toBe('Username');
+    });
+
+    it('opens an empty field, and Cancel returns focus to "Add your name"', () => {
+      addName()!.click();
+      fixture.detectChanges();
+      const input = el().querySelector<HTMLInputElement>('.name-input')!;
+      expect(input.value).toBe('');
+      expect(document.activeElement).toBe(input);
+
+      el().querySelector<HTMLButtonElement>('.name-btn--cancel')!.click();
+      fixture.detectChanges();
+      expect(document.activeElement).toBe(addName());
+    });
+
+    it('once a name is saved the row shows it with the pencil', () => {
+      component.userProfile = { displayName: 'Ana', email: 'new@example.com' };
+      fixture.detectChanges();
+      expect(addName()).toBeNull();
+      expect(el().querySelector('.name-value')!.textContent!.trim()).toBe('Ana');
+    });
+  });
 });
