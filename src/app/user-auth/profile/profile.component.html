@@ -91,8 +91,8 @@
                 <dd>{{ userProfile?.email || "username@example.com" }}</dd>
               </div>
             </dl>
-            <button (click)="toggleChangePassword()" class="edit-button ui-btn ui-btn--secondary">
-              <i class="material-icons icon-inline" aria-hidden="true">vpn_key</i> Change Password
+            <button type="button" class="edit-button" (click)="toggleChangePassword()">
+              <app-icon name="key" [size]="18" /> Change Password
             </button>
           </div>
         }

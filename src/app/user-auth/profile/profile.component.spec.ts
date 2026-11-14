@@ -123,6 +123,14 @@ describe('ProfileComponent', () => {
       expect(el().querySelectorAll('.details dd').length).toBe(2);
     });
 
+    it('Change Password opens the dialog and uses the key icon', () => {
+      const btn = el().querySelector<HTMLButtonElement>('.edit-button')!;
+      expect(btn.textContent!.trim()).toBe('Change Password');
+      expect(btn.querySelector('app-icon')).not.toBeNull();
+      btn.click();
+      expect(component.isChangePasswordVisible).toBeTrue();
+    });
+
     it('no longer has its own theme button (the header has one)', () => {
       expect(el().querySelector('.theme-toggle')).toBeNull();
     });
