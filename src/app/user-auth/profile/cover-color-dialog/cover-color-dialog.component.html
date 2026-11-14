@@ -10,6 +10,8 @@
     [cdkTrapFocusAutoCapture]="true"
     >
     <!-- Header and footer stay put; only the body scrolls. -->
+    <!-- Phones only (CSS): the bottom-sheet handle. Decorative. -->
+    <span class="cc-handle" aria-hidden="true"></span>
     <header class="cc-header">
       <h2 class="cc-title" [id]="titleId">Choose Color</h2>
       <button type="button" class="cc-close" (click)="cancel()" aria-label="Close">

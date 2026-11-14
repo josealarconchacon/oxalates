@@ -74,7 +74,9 @@ describe('CoverColorDialogComponent', () => {
   it('keeps the header and footer outside the scrolling body', () => {
     const dialog = el().querySelector('[role="dialog"]')!;
     const parts = [...dialog.children].map((c) => c.className);
-    expect(parts).toEqual(['cc-header', 'cc-body', 'cc-footer']);
+    expect(parts).toEqual(['cc-handle', 'cc-header', 'cc-body', 'cc-footer']);
+    // The bottom-sheet handle is decoration only.
+    expect(el().querySelector('.cc-handle')!.getAttribute('aria-hidden')).toBe('true');
     const buttons = [...el().querySelectorAll('.cc-footer button')].map((b) =>
       b.textContent!.trim()
     );
