@@ -1,4 +1,5 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { of } from 'rxjs';
 import { ProfileComponent } from './profile.component';
 import { AngularFireModule } from '@angular/fire/compat';
 import { AngularFireAuthModule } from '@angular/fire/compat/auth';
@@ -87,6 +88,51 @@ describe('ProfileComponent', () => {
       expect(component.currentHeaderColor).toBeNull();
       expect(component.bannerIsDark).toBeFalse();
       expect(localStorage.getItem('headerColor')).toBeNull();
+    });
+  });
+
+  describe('profile card labels', () => {
+    const label = (sel: string) =>
+      (fixture.nativeElement.querySelector(sel) as HTMLElement).getAttribute(
+        'aria-label'
+      );
+
+    it('names the cover and photo buttons by what they change', () => {
+      expect(label('.color-picker-toggle')).toBe('Change cover color');
+      expect(label('.edit-avatar')).toBe('Change profile photo');
+    });
+  });
+
+  describe('Profile Information card', () => {
+    beforeEach(() => {
+      (component as any).activeSection$ = of('profile');
+      fixture.detectChanges();
+    });
+    const el = () => fixture.nativeElement as HTMLElement;
+
+    it('is one card with the heading, details and Change Password', () => {
+      const panel = el().querySelector('.info-panel')!;
+      expect(panel.querySelector('h2')!.textContent!.trim()).toBe('Profile Information');
+      expect(panel.textContent).toContain('Change Password');
+      expect(el().querySelectorAll('.info-panel').length).toBe(1);
+    });
+
+    it('lists Name and Email as a dl (term + value pairs)', () => {
+      const terms = [...el().querySelectorAll('.details dt')].map((d) => d.textContent!.trim());
+      expect(terms).toEqual(['Name', 'Email']);
+      expect(el().querySelectorAll('.details dd').length).toBe(2);
+    });
+
+    it('Change Password opens the dialog and uses the key icon', () => {
+      const btn = el().querySelector<HTMLButtonElement>('.edit-button')!;
+      expect(btn.textContent!.trim()).toBe('Change Password');
+      expect(btn.querySelector('app-icon')).not.toBeNull();
+      btn.click();
+      expect(component.isChangePasswordVisible).toBeTrue();
+    });
+
+    it('no longer has its own theme button (the header has one)', () => {
+      expect(el().querySelector('.theme-toggle')).toBeNull();
     });
   });
 });
