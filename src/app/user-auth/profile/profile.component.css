@@ -467,6 +467,28 @@
     grid-template-columns: 1fr;
     gap: 4px;
   }
+
+  /* Editing the name: the field, then Cancel | Save sharing the width. */
+  .name-input {
+    flex-basis: 100%;
+  }
+
+  .name-actions {
+    flex: 1 1 100%;
+  }
+
+  .name-btn {
+    flex: 1;
+  }
+
+  /* The error sits right under the field, above the buttons. */
+  .name-error {
+    order: 1;
+  }
+
+  .name-actions {
+    order: 2;
+  }
 }
 
 /* Change Password: a quiet secondary button under the details. Styled here
