@@ -68,7 +68,7 @@ export interface RecipeResult {
   incomplete: boolean;
   unknownIngredients: { id: string; name: string }[];
   includesYourValues: boolean;
-  /** Some ingredient with a known total has no soluble value. */
+  /** Some ingredient's soluble value is unknown (soluble total is "at least"). */
   solubleIncomplete: boolean;
   allUnknown: boolean;
   /** Highest mg first; unknown rows last. */
