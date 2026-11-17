@@ -120,6 +120,126 @@
   color: var(--color-muted);
 }
 
+/* "Not here?" and no results */
+.not-here {
+  margin: 0;
+  padding: 4px 2px 0;
+  font-size: 0.8125rem;
+  color: var(--color-muted);
+}
+
+.link {
+  padding: 0;
+  border: 0;
+  background: none;
+  color: var(--color-accent-fg);
+  font: inherit;
+  font-weight: 700;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+  cursor: pointer;
+}
+
+.none {
+  display: grid;
+  justify-items: start;
+  gap: 8px;
+  padding: 4px 2px;
+}
+
+.none-title {
+  margin: 0;
+  font-weight: 700;
+}
+
+.none-text {
+  margin: 0;
+  font-size: 0.875rem;
+  color: var(--color-muted);
+  line-height: 1.45;
+}
+
+.btn-outline {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  min-height: 44px;
+  padding: 0 14px;
+  border: 1px solid var(--color-line);
+  border-radius: 12px;
+  background: transparent;
+  color: var(--color-ink);
+  font: inherit;
+  font-size: 0.875rem;
+  font-weight: 700;
+  text-align: left;
+  cursor: pointer;
+  --icon-stroke: 2.25;
+}
+
+.btn-outline:hover {
+  border-color: var(--color-muted);
+}
+
+/* Add-it-yourself step */
+.custom {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 120px;
+  gap: 12px;
+}
+
+.custom-label {
+  display: block;
+  margin-bottom: 6px;
+  font-size: 0.8125rem;
+  font-weight: 700;
+}
+
+.custom-input {
+  width: 100%;
+  height: 44px;
+  padding: 0 12px;
+  border: 1px solid var(--color-line);
+  border-radius: 12px;
+  background: var(--rb-input, var(--color-surface));
+  color: var(--color-ink);
+  font: inherit;
+  font-size: 0.9375rem;
+  font-weight: 600;
+}
+
+.custom-error {
+  margin: 0;
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--rb-danger, #b42318);
+}
+
+.custom-note {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  margin: 0;
+  padding: 10px 12px;
+  border-radius: 12px;
+  background: var(--rb-warning-bg, #fff4db);
+  color: var(--rb-warning-text, #6b4e00);
+  font-size: 0.8125rem;
+  line-height: 1.45;
+  --icon-stroke: 2.25;
+}
+
+.custom-note app-icon {
+  flex-shrink: 0;
+  margin-top: 1px;
+}
+
+@media (max-width: 480px) {
+  .custom {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
 .amount-row {
   display: flex;
   flex-wrap: wrap;
@@ -165,6 +285,9 @@
 }
 
 .search-input:focus-visible,
+.custom-input:focus-visible,
+.link:focus-visible,
+.btn-outline:focus-visible,
 .icon-btn:focus-visible,
 .back:focus-visible,
 .add:focus-visible {

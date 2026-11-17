@@ -28,4 +28,11 @@ describe('summaryView', () => {
     expect(v.wholeRecipe).toBe('10.1');
     expect(v.atLeast).toBeTrue();
   });
+
+  it('soluble is "unknown" when no ingredient has a soluble value', () => {
+    expect(view([grams('carrot', 100)]).solubleUnknown).toBeFalse();
+    const noSoluble = lookup(food({ id: 's', total_oxalate_mg_per_100g: '5.00', total_soluble_oxalate_mg_per_100g: null, calc_soluble_mg_oxalate_per_serving: '0.00' }));
+    const v = summaryView(calculateRecipe(recipe([grams('s', 100)]), noSoluble), 1, true);
+    expect(v.solubleUnknown).toBeTrue();
+  });
 });

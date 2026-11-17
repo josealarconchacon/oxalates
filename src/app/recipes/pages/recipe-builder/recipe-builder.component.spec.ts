@@ -253,6 +253,16 @@ describe('RecipeBuilderComponent', () => {
       expect(el().querySelectorAll('app-ingredient-row').length).toBe(1);
       expect(el().querySelector('.section-meta')!.textContent).toBe('1 · 15.0 mg');
 
+      fixture.debugElement
+        .query((d) => d.name === 'app-ingredient-search')
+        .componentInstance.added.emit(custom('Tapioca starch', 30));
+      fixture.detectChanges();
+      const rows = el().querySelectorAll('app-ingredient-row');
+      expect(rows[1].textContent).toContain('Your own ingredient');
+      expect(rows[1].textContent).toContain('Unknown');
+      expect(el().querySelector('.section-meta')!.textContent).toBe('2 · at least 15.0 mg');
+      expect(el().querySelector('app-live-summary')!.textContent).toContain('No oxalate value for: Tapioca starch');
+
       el().querySelector<HTMLButtonElement>('app-ingredient-search [aria-label="Close"]')!.click();
       fixture.detectChanges();
       await new Promise((r) => setTimeout(r));

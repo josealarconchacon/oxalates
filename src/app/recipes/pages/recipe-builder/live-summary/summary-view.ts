@@ -11,6 +11,8 @@ export interface SummaryView {
   /** Totals are a minimum because some ingredient is unknown. */
   atLeast: boolean;
   solubleAtLeast: boolean;
+  /** No ingredient has a soluble value at all. */
+  solubleUnknown: boolean;
   level: string | null;
   unknownNames: string[];
 }
@@ -24,6 +26,7 @@ export function summaryView(result: RecipeResult, ingredientCount: number, ready
     solublePerServing: formatMg(result.perServingSolubleMg),
     atLeast: result.incomplete,
     solubleAtLeast: result.solubleIncomplete,
+    solubleUnknown: !result.breakdown.some((b) => b.solubleMg !== null),
     level: result.level,
     unknownNames: result.unknownIngredients.map((u) => u.name),
   };

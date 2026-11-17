@@ -1,4 +1,4 @@
-@if (!picked) {
+@if (!picked && !addingCustom) {
   <div class="search-head">
     <div class="search-box">
       <app-icon class="search-icon" name="search" [size]="18" />
@@ -48,12 +48,71 @@
         </li>
       }
     </ul>
+    <p class="not-here">
+      Not here?
+      <button type="button" class="link" (click)="startCustom()">Add “{{ trimmedQuery }}” as your own ingredient</button>
+    </p>
   } @else if (trimmedQuery.length >= 2) {
-    <p class="status" role="status">We couldn't find “{{ trimmedQuery }}”.</p>
+    <div class="none" role="status">
+      <p class="none-title">We couldn't find “{{ trimmedQuery }}”.</p>
+      <p class="none-text">Check the spelling, or add it yourself. We'll mark it so your total stays honest.</p>
+      <button type="button" class="btn-outline" (click)="startCustom()">
+        <app-icon name="plus" [size]="16" /> Add “{{ trimmedQuery }}” as your own ingredient
+      </button>
+    </div>
   } @else {
     <p class="status">Type at least 2 letters.</p>
   }
-} @else if (draft) {
+} @else if (addingCustom) {
+  <!-- Not in the food list: name + grams; oxalate stays unknown. -->
+  <div class="picked">
+    <button type="button" class="back" (click)="backToSearch()">
+      <app-icon name="arrow-left" [size]="16" /> Search
+    </button>
+    <button type="button" class="icon-btn" aria-label="Close" (click)="closed.emit()">
+      <app-icon name="x" [size]="18" />
+    </button>
+  </div>
+  <div class="custom" (keydown.enter)="$event.preventDefault(); addCustom()" (keydown.escape)="closed.emit()">
+    <div class="custom-field custom-field--name">
+      <label class="custom-label" [for]="listId + '-custom-name'">Ingredient name</label>
+      <input
+        class="custom-input"
+        type="text"
+        maxlength="80"
+        autocomplete="off"
+        [id]="listId + '-custom-name'"
+        [value]="customName"
+        [attr.aria-describedby]="customError ? listId + '-custom-error' : null"
+        (input)="customName = $any($event.target).value; customError = null"
+      />
+    </div>
+    <div class="custom-field custom-field--grams">
+      <label class="custom-label" [for]="listId + '-custom-grams'">Amount (g)</label>
+      <input
+        class="custom-input"
+        type="text"
+        inputmode="decimal"
+        maxlength="7"
+        autocomplete="off"
+        [id]="listId + '-custom-grams'"
+        [value]="customGrams"
+        [attr.aria-describedby]="customError ? listId + '-custom-error' : null"
+        (input)="customGrams = $any($event.target).value; customError = null"
+      />
+    </div>
+  </div>
+  @if (customError) {
+    <p class="custom-error" [id]="listId + '-custom-error'" role="alert">{{ customError }}</p>
+  }
+  <p class="custom-note">
+    <app-icon name="alert-triangle" [size]="16" />
+    <span>Oxalate unknown. Your recipe will show “at least” until you add a value.</span>
+  </p>
+  <div class="actions">
+    <button type="button" class="add" (click)="addCustom()">Add as your own ingredient</button>
+  </div>
+} @else if (draft && picked) {
   <!-- Amount step for the picked food. Enter adds. -->
   <div class="picked">
     <button type="button" class="back" (click)="backToSearch()">

@@ -57,6 +57,12 @@ export class IngredientSearchComponent implements AfterViewInit {
   /** Read out after an add ("Added Rice."). */
   announcement = '';
 
+  /** The "add it yourself" step, for foods that aren't in the list. */
+  addingCustom = false;
+  customName = '';
+  customGrams = '100';
+  customError: string | null = null;
+
   private queries = new Subject<string>();
 
   constructor() {
@@ -171,7 +177,36 @@ export class IngredientSearchComponent implements AfterViewInit {
     this.backToSearch(true);
   }
 
+  startCustom(): void {
+    this.addingCustom = true;
+    this.customName = this.trimmedQuery;
+    this.customGrams = '100';
+    this.customError = null;
+    setTimeout(() => this.focusById(`${this.listId}-custom-name`));
+  }
+
+  /** An ingredient that isn't in the food list: oxalate unknown, grams only. */
+  addCustom(): void {
+    const name = this.customName.trim();
+    const grams = Number(this.customGrams.replace(',', '.'));
+    if (!name) {
+      this.customError = 'Give your ingredient a name.';
+      this.focusById(`${this.listId}-custom-name`);
+      return;
+    }
+    if (!(grams > 0)) {
+      this.customError = 'Enter an amount above 0.';
+      this.focusById(`${this.listId}-custom-grams`);
+      return;
+    }
+    this.added.emit({ id: newId(), source: 'custom', name, grams, inputAmount: grams, inputUnit: 'g' });
+    this.announcement = `Added ${name}.`;
+    this.backToSearch(true);
+  }
+
   backToSearch(clear = false): void {
+    this.addingCustom = false;
+    this.customError = null;
     this.picked = null;
     this.draft = null;
     if (clear) {
@@ -189,6 +224,10 @@ export class IngredientSearchComponent implements AfterViewInit {
 
   private focusAmount(): void {
     (document.querySelector(`#${this.listId}-amount input`) as HTMLInputElement | null)?.focus();
+  }
+
+  private focusById(id: string): void {
+    document.getElementById(id)?.focus();
   }
 }
 

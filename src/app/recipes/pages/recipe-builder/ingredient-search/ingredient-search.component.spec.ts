@@ -112,9 +112,83 @@ describe('IngredientSearchComponent', () => {
     expect(closed).toHaveBeenCalled();
   }));
 
-  it('says when nothing matches', fakeAsync(() => {
-    search.and.returnValue(of([]));
-    typeQuery('xyzzy');
-    expect(el().querySelector('.status')!.textContent).toContain('We couldn’t find “xyzzy”.'.replace('’', "'"));
-  }));
+  describe('add it yourself', () => {
+    const text = () => el().textContent!.replace(/\s+/g, ' ');
+    const customName = () => el().querySelector<HTMLInputElement>('[id$="-custom-name"]')!;
+    const customGrams = () => el().querySelector<HTMLInputElement>('[id$="-custom-grams"]')!;
+    const setValue = (input: HTMLInputElement, value: string) => {
+      input.value = value;
+      input.dispatchEvent(new Event('input'));
+      fixture.detectChanges();
+    };
+
+    it('no results: explains and offers to add it yourself', fakeAsync(() => {
+      search.and.returnValue(of([]));
+      typeQuery('tapioca starch');
+      expect(text()).toContain("We couldn't find “tapioca starch”.");
+      expect(text()).toContain("Check the spelling, or add it yourself. We'll mark it so your total stays honest.");
+      expect(el().querySelector('.none .btn-outline')!.textContent!.trim()).toBe(
+        'Add “tapioca starch” as your own ingredient'
+      );
+    }));
+
+    it('with results there is still a "Not here?" way to add it yourself', fakeAsync(() => {
+      typeQuery('zucc');
+      expect(el().querySelector('.not-here')!.textContent).toContain('Add “zucc” as your own ingredient');
+    }));
+
+    it('adds a custom ingredient: name prefilled, grams only, unknown oxalate', fakeAsync(() => {
+      search.and.returnValue(of([]));
+      typeQuery('tapioca starch');
+      el().querySelector<HTMLButtonElement>('.none .btn-outline')!.click();
+      fixture.detectChanges();
+      tick();
+      expect(customName().value).toBe('tapioca starch');
+      expect(document.activeElement).toBe(customName());
+      expect(text()).toContain('Oxalate unknown. Your recipe will show “at least” until you add a value.');
+      setValue(customName(), 'Tapioca starch');
+      setValue(customGrams(), '30');
+      el().querySelector<HTMLButtonElement>('.add')!.click();
+      tick();
+      expect(added[0]).toEqual(
+        jasmine.objectContaining({ source: 'custom', name: 'Tapioca starch', grams: 30, inputAmount: 30, inputUnit: 'g' })
+      );
+      expect(added[0].customMgPer100g).toBeUndefined();
+      expect(added[0].foodId).toBeUndefined();
+      fixture.detectChanges();
+      expect(input().value).toBe(''); // back to search for the next one
+    }));
+
+    it('needs a name and grams above 0', fakeAsync(() => {
+      search.and.returnValue(of([]));
+      typeQuery('xx');
+      el().querySelector<HTMLButtonElement>('.none .btn-outline')!.click();
+      fixture.detectChanges();
+      tick();
+      setValue(customName(), '  ');
+      el().querySelector<HTMLButtonElement>('.add')!.click();
+      fixture.detectChanges();
+      expect(el().querySelector('.custom-error')!.textContent).toBe('Give your ingredient a name.');
+      expect(customName().getAttribute('aria-describedby')).toMatch(/-custom-error$/);
+      setValue(customName(), 'Mystery flour');
+      setValue(customGrams(), '0');
+      el().querySelector<HTMLButtonElement>('.add')!.click();
+      fixture.detectChanges();
+      expect(el().querySelector('.custom-error')!.textContent).toBe('Enter an amount above 0.');
+      expect(added.length).toBe(0);
+    }));
+
+    it('Enter adds without submitting the recipe form', fakeAsync(() => {
+      search.and.returnValue(of([]));
+      typeQuery('tapioca');
+      el().querySelector<HTMLButtonElement>('.none .btn-outline')!.click();
+      fixture.detectChanges();
+      tick();
+      const enter = new KeyboardEvent('keydown', { key: 'Enter', bubbles: true, cancelable: true });
+      customGrams().dispatchEvent(enter);
+      tick();
+      expect(enter.defaultPrevented).toBeTrue();
+      expect(added.length).toBe(1);
+    }));
+  });
 });

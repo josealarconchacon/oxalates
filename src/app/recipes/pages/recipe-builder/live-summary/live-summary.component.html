@@ -42,7 +42,7 @@
   </div>
   <div class="r">
     <dt>Soluble per serving</dt>
-    <dd>@if (view.state === 'ready') {@if (view.solubleAtLeast) {<span class="at-least">at least </span>}{{ view.solublePerServing }} mg} @else {—}</dd>
+    <dd>@if (view.state !== 'ready') {—} @else if (view.solubleUnknown) {Unknown} @else {@if (view.solubleAtLeast) {<span class="at-least">at least </span>}{{ view.solublePerServing }} mg}</dd>
   </div>
   <div class="r">
     <dt>Serves</dt>
