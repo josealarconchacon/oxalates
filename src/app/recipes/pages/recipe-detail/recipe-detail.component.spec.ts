@@ -214,4 +214,42 @@ describe('RecipeDetailComponent', () => {
       el().remove();
     });
   });
+
+  describe('Show sources', () => {
+    const KEY = 'recipe-show-sources:u1';
+    const sw = () => el().querySelector<HTMLButtonElement>('[role="switch"]')!;
+    const sources = () => Array.from(el().querySelectorAll('.source')).map((p) => squash(p));
+
+    beforeEach(() => localStorage.removeItem(KEY));
+    afterEach(() => localStorage.removeItem(KEY));
+
+    it('is off by default, a labelled switch, and shows source lines when turned on', async () => {
+      get.and.resolveTo({ ...recipe([grams('carrot', 100, 'Carrot'), custom('Tapioca starch', 10)]), id: 'r1' });
+      await render();
+      expect(squash(sw())).toBe('Show sources');
+      expect(sw().getAttribute('aria-checked')).toBe('false');
+      expect(sources()).toEqual([]);
+
+      sw().click();
+      fixture.detectChanges();
+      expect(sw().getAttribute('aria-checked')).toBe('true');
+      expect(sources()).toEqual(['Source: Test', 'Your own ingredient']);
+      expect(el().querySelector('li')!.getAttribute('aria-label')).toBe('Carrot, 100 g, 10.0 mg, 100 percent of total, Source: Test');
+      expect(localStorage.getItem(KEY)).toBe('true');
+    });
+
+    it('remembers the choice for this user', async () => {
+      localStorage.setItem(KEY, 'true');
+      get.and.resolveTo({ ...recipe([grams('carrot', 100, 'Carrot')]), id: 'r1' });
+      await render();
+      expect(sw().getAttribute('aria-checked')).toBe('true');
+      expect(sources()).toEqual(['Source: Test']);
+    });
+
+    it('a food no longer in the list says so even with sources off', async () => {
+      get.and.resolveTo({ ...recipe([grams('carrot', 100, 'Carrot'), grams('gone', 50, 'Old kale')]), id: 'r1' });
+      await render();
+      expect(sources()).toEqual(['No longer in the food list']);
+    });
+  });
 });

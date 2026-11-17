@@ -10,7 +10,7 @@ describe('breakdownRows', () => {
     // No weight for a serving, but a measured mg per serving.
     food({ id: 'cup', item: 'Mystery greens', total_oxalate_mg_per_100g: 'n/a', serving_g: 'n/a', calc_oxalate_per_serving: '5.00' })
   );
-  const rowsFor = (r: ReturnType<typeof recipe>) => breakdownRows(r, calculateRecipe(r, foods, levelForMgPerServing));
+  const rowsFor = (r: ReturnType<typeof recipe>) => breakdownRows(r, calculateRecipe(r, foods, levelForMgPerServing), foods);
 
   it('keeps the engine order (highest first, unknown last) with mg, share and bar width', () => {
     const rows = rowsFor(
@@ -42,5 +42,17 @@ describe('breakdownRows', () => {
     const [row] = rowsFor(recipe([ingredient]));
     expect(row.amount).toBe('2 × 1/2 cup');
     expect(row.mg).toBe('10.0');
+  });
+
+  it('source lines: the food list reference, your own ingredient, or no longer in the list', () => {
+    const rows = rowsFor(
+      recipe([grams('carrot', 100, 'Carrot'), custom('Tapioca starch', 10), grams('gone', 50, 'Old kale')])
+    );
+    const byName = (name: string) => rows.find((r) => r.name === name)!;
+    expect(byName('Carrot')).toEqual(jasmine.objectContaining({ source: 'Source: Test', missingFood: false }));
+    expect(byName('Tapioca starch')).toEqual(jasmine.objectContaining({ source: 'Your own ingredient', missingFood: false }));
+    expect(byName('Old kale')).toEqual(
+      jasmine.objectContaining({ source: 'No longer in the food list', missingFood: true, known: false, mg: '' })
+    );
   });
 });

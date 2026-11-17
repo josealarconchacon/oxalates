@@ -1,4 +1,5 @@
 import { formatMg, formatShare } from '../../../engine/format';
+import { FoodLookup } from '../../../engine/recipe-calculator';
 import { formatGrams } from '../../../engine/units';
 import { Recipe, RecipeResult } from '../../../model/recipe';
 
@@ -16,10 +17,14 @@ export interface BreakdownRowView {
   /** Bar width in %, at least 1 when the share is above 0. */
   barWidth: number;
   ariaLabel: string;
+  /** "Source: …", "Your own ingredient", "No longer in the food list", or ''. */
+  source: string;
+  /** The food was removed from the list: explain it even with sources off. */
+  missingFood: boolean;
 }
 
 /** Rows in the engine's order (highest first, unknown last). Display only. */
-export function breakdownRows(recipe: Recipe, result: RecipeResult): BreakdownRowView[] {
+export function breakdownRows(recipe: Recipe, result: RecipeResult, getFood: FoodLookup): BreakdownRowView[] {
   const byId = new Map(recipe.ingredients.map((i) => [i.id, i]));
   return result.breakdown.map((row) => {
     const ingredient = byId.get(row.ingredientId);
@@ -41,9 +46,20 @@ export function breakdownRows(recipe: Recipe, result: RecipeResult): BreakdownRo
       mg,
       share: known ? formatShare(share) : '—',
       barWidth: !known ? 0 : share > 0 ? Math.max(1, share) : 0,
+      source: sourceLine(ingredient, getFood),
+      missingFood: ingredient?.source === 'database' && !(ingredient.foodId && getFood(ingredient.foodId)),
       ariaLabel: [row.name, amount, ...(known ? [`${mg} mg`, `${pct} percent of total`] : ['oxalate unknown'])]
         .filter(Boolean)
         .join(', '),
     };
   });
+}
+
+function sourceLine(ingredient: Recipe['ingredients'][number] | undefined, getFood: FoodLookup): string {
+  if (!ingredient) return '';
+  if (ingredient.source === 'custom') return 'Your own ingredient';
+  const food = ingredient.foodId ? getFood(ingredient.foodId) : undefined;
+  if (!food) return 'No longer in the food list';
+  const reference = (food.reference ?? '').trim();
+  return reference ? `Source: ${reference}` : '';
 }

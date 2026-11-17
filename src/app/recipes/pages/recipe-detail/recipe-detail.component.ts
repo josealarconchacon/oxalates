@@ -35,6 +35,8 @@ export class RecipeDetailComponent implements OnInit {
   recipe: Recipe | null = null;
   result: RecipeResult | null = null;
   rows: BreakdownRowView[] = [];
+  /** Off by default; remembered per user on this device. */
+  showSources = false;
   private id = '';
 
   ngOnInit(): void {
@@ -51,7 +53,8 @@ export class RecipeDetailComponent implements OnInit {
       ]);
       this.recipe = recipe;
       this.result = recipe ? calculateRecipe(recipe, getFood, levelForMgPerServing) : null;
-      this.rows = recipe && this.result ? breakdownRows(recipe, this.result) : [];
+      this.rows = recipe && this.result ? breakdownRows(recipe, this.result, getFood) : [];
+      this.showSources = recipe ? readShowSources(recipe.ownerId) : false;
       this.state = recipe ? 'ready' : 'not-found';
     } catch {
       this.state = 'error';
@@ -82,6 +85,11 @@ export class RecipeDetailComponent implements OnInit {
     };
   }
 
+  setShowSources(on: boolean): void {
+    this.showSources = on;
+    if (this.recipe) writeShowSources(this.recipe.ownerId, on);
+  }
+
   get isHigher(): boolean {
     const level = this.result?.level;
     return !!level && !this.result!.allUnknown && HIGHER_LEVELS.has(level.trim().toLowerCase());
@@ -100,5 +108,23 @@ export class RecipeDetailComponent implements OnInit {
     if (!iso || isNaN(date.getTime())) return '';
     const thisYear = date.getFullYear() === new Date().getFullYear();
     return formatDate(date, thisYear ? 'MMM d' : 'MMM d, y', this.locale);
+  }
+}
+
+const SHOW_SOURCES_KEY = 'recipe-show-sources:';
+
+function readShowSources(uid: string): boolean {
+  try {
+    return localStorage.getItem(SHOW_SOURCES_KEY + uid) === 'true';
+  } catch {
+    return false;
+  }
+}
+
+function writeShowSources(uid: string, on: boolean): void {
+  try {
+    localStorage.setItem(SHOW_SOURCES_KEY + uid, String(on));
+  } catch {
+    // Private mode or storage full: the switch still works for this visit.
   }
 }

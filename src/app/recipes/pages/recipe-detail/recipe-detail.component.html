@@ -94,7 +94,8 @@
           </div>
         </section>
 
-        <app-recipe-breakdown class="block" [rows]="rows" [totalMg]="n.whole" [hasTotal]="!result.allUnknown" />
+        <app-recipe-breakdown class="block" [rows]="rows" [totalMg]="n.whole" [hasTotal]="!result.allUnknown"
+          [showSources]="showSources" (showSourcesChange)="setShowSources($event)" />
       }
     }
   }
