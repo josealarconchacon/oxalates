@@ -60,9 +60,29 @@
 
           <section class="card" aria-labelledby="ingredients-title">
             <div class="section-head">
-              <h2 id="ingredients-title" class="section-title">Ingredients</h2>
+              <h2 #ingredientsTitle id="ingredients-title" class="section-title" tabindex="-1">Ingredients</h2>
+              @if (ingredients.length) {
+                <span class="section-meta">{{ ingredientsTotal }}</span>
+              }
             </div>
-            <p class="placeholder">Ingredients arrive in the next step.</p>
+            @if (ingredients.length) {
+              <div class="ingredients" role="list">
+                @for (ingredient of ingredients; track ingredient.id) {
+                  <app-ingredient-row
+                    role="listitem"
+                    [ingredient]="ingredient"
+                    [row]="rowFor(ingredient.id)"
+                    [options]="optionsFor(ingredient)"
+                    [source]="sourceFor(ingredient)"
+                    (changed)="updateIngredient($event)"
+                    (remove)="removeIngredient(ingredient.id)"
+                    (openAmount)="sheetId = ingredient.id"
+                  />
+                }
+              </div>
+            } @else {
+              <p class="placeholder">No ingredients yet. Adding them comes in the next step.</p>
+            }
           </section>
 
           <section class="card">
@@ -71,8 +91,8 @@
           </section>
         </form>
 
-        <!-- Live summary: numbers come in the next step. -->
         <aside class="summary card" aria-label="Recipe summary">
+          <app-live-summary [view]="view" [serves]="serves" [ingredientCount]="ingredients.length" />
           <button type="submit" form="recipe-form" class="btn-accent btn-block" [disabled]="saving">
             {{ saving ? 'Saving…' : mode === 'edit' ? 'Save changes' : 'Save recipe' }}
           </button>
@@ -85,11 +105,41 @@
 
       <!-- Below 1024px the summary becomes this bar. -->
       <div class="bottom-bar">
+        <div class="bar-total" aria-live="polite">
+          <span class="bar-label">Per serving</span>
+          <span class="bar-value">
+            @switch (view.state) {
+              @case ('ready') {
+                @if (view.atLeast) {<span class="bar-at-least">at least </span>}{{ view.perServing }} mg
+              }
+              @case ('unknown') { Unknown }
+              @default { — }
+            }
+          </span>
+        </div>
+        @if (view.state === 'ready' && view.level) {
+          <app-level-pill [level]="view.level" [prefix]="view.atLeast ? 'At least ' : ''" />
+        }
+        @if (view.state !== 'loading' && view.unknownNames.length) {
+          <app-icon class="bar-warning" name="alert-triangle" [size]="16" />
+          <span class="sr-only">Incomplete: some ingredients have no oxalate value.</span>
+        }
         <span class="bottom-bar-spacer"></span>
         <button type="submit" form="recipe-form" class="btn-accent" [disabled]="saving">
           {{ saving ? 'Saving…' : mode === 'edit' ? 'Save changes' : 'Save' }}
         </button>
       </div>
     }
+  }
+
+  @if (sheetIngredient; as ingredient) {
+    <app-amount-sheet
+      [ingredient]="ingredient"
+      [row]="rowFor(ingredient.id)"
+      [options]="optionsFor(ingredient)"
+      [source]="sourceFor(ingredient)"
+      (changed)="updateIngredient($event)"
+      (closed)="sheetId = null"
+    />
   }
 </main>

@@ -1,9 +1,16 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ActivatedRoute, Router, convertToParamMap, provideRouter } from '@angular/router';
 import { NotificationService } from 'src/app/landing-page/dialog-service/oxalate/service/notification.service';
+import { of } from 'rxjs';
+import { RecipeFoodsService } from '../../data/recipe-foods.service';
 import { RecipeService } from '../../data/recipe.service';
-import { recipe } from '../../engine/testing/fixtures';
+import { custom, food, grams, lookup, recipe, servings } from '../../engine/testing/fixtures';
 import { RecipeBuilderComponent } from './recipe-builder.component';
+
+const foods = lookup(
+  food({ id: 'carrot', item: 'Carrot', total_oxalate_mg_per_100g: '10.00', total_soluble_oxalate_mg_per_100g: '4.00', reference: 'LO Cookbook 2' }),
+  food({ id: 'rice', item: 'Rice', serving_size: '1 cup', serving_g: '195.00', calc_oxalate_per_serving: '4.90', total_oxalate_mg_per_100g: '2.50' })
+);
 
 describe('RecipeBuilderComponent', () => {
   let fixture: ComponentFixture<RecipeBuilderComponent>;
@@ -46,6 +53,7 @@ describe('RecipeBuilderComponent', () => {
         provideRouter([]),
         { provide: RecipeService, useValue: service },
         { provide: NotificationService, useValue: { show: notify } },
+        { provide: RecipeFoodsService, useValue: { lookup$: of(foods) } },
       ],
     });
   });
@@ -128,6 +136,101 @@ describe('RecipeBuilderComponent', () => {
       await render('nope');
       expect(text()).toContain("We couldn't find that recipe.");
       expect(el().querySelector('#recipe-form')).toBeNull();
+    });
+  });
+
+  describe('ingredients and the live total', () => {
+    const summary = () => el().querySelector('app-live-summary')!.textContent!.replace(/\s+/g, ' ');
+
+    async function editWith(ingredients: any[], serves = 2) {
+      service.get.and.resolveTo({ ...recipe(ingredients, serves), id: 'r1' });
+      await render('r1');
+    }
+
+    it('shows each ingredient with its source and mg, and the totals', async () => {
+      await editWith([grams('carrot', 200, 'Carrot'), servings('rice', 2, 'Rice')]);
+      const rows = el().querySelectorAll('app-ingredient-row');
+      expect(rows.length).toBe(2);
+      expect(rows[0].textContent).toContain('Source: LO Cookbook 2');
+      expect(rows[0].textContent).toContain('20.0 mg');
+      expect(rows[1].textContent).toContain('9.8 mg'); // 2 × 4.9 measured per cup
+      expect(el().querySelector('.section-meta')!.textContent).toBe('2 · 29.8 mg');
+      expect(summary()).toContain('14.9 mg'); // 29.8 ÷ 2 servings
+      expect(summary()).toMatch(/Whole recipe\s*29\.8 mg/);
+    });
+
+    it('recomputes when Serves changes', async () => {
+      await editWith([grams('carrot', 200, 'Carrot')]);
+      el().querySelector<HTMLButtonElement>('[aria-label="More servings"]')!.click();
+      fixture.detectChanges();
+      expect(summary()).toContain('6.7 mg'); // 20 ÷ 3
+    });
+
+    it('recomputes as an amount is typed', async () => {
+      await editWith([grams('carrot', 200, 'Carrot')]);
+      const amount = el().querySelector<HTMLInputElement>('[aria-label="Amount of Carrot"]')!;
+      amount.value = '300';
+      amount.dispatchEvent(new Event('input'));
+      fixture.detectChanges();
+      expect(el().querySelector('.section-meta')!.textContent).toBe('1 · 30.0 mg');
+    });
+
+    it('an unknown ingredient reads "Unknown" and makes totals "at least"', async () => {
+      await editWith([grams('carrot', 200, 'Carrot'), custom('Tapioca starch', 30)]);
+      expect(el().querySelectorAll('app-ingredient-row')[1].textContent).toContain('Unknown');
+      expect(summary()).toContain('at least');
+      expect(summary()).toContain('Incomplete');
+      expect(summary()).toContain('No oxalate value for: Tapioca starch');
+    });
+
+    it('removing an ingredient updates the totals and keeps focus in the list', async () => {
+      await editWith([grams('carrot', 200, 'Carrot'), grams('carrot', 100, 'More carrot')]);
+      el().querySelector<HTMLButtonElement>('[aria-label="Remove More carrot"]')!.click();
+      fixture.detectChanges();
+      expect(el().querySelectorAll('app-ingredient-row').length).toBe(1);
+      expect(el().querySelector('.section-meta')!.textContent).toBe('1 · 20.0 mg');
+      expect(document.activeElement!.id).toBe('ingredients-title');
+    });
+
+    it('Enter in an amount field does not save the recipe', async () => {
+      await editWith([grams('carrot', 200, 'Carrot')]);
+      const amount = el().querySelector<HTMLInputElement>('[aria-label="Amount of Carrot"]')!;
+      const enter = new KeyboardEvent('keydown', { key: 'Enter', cancelable: true });
+      amount.dispatchEvent(enter);
+      expect(enter.defaultPrevented).toBeTrue();
+    });
+
+    it('saves the edited ingredients', async () => {
+      await editWith([grams('carrot', 200, 'Carrot')]);
+      service.update.and.callFake(async (r) => r);
+      const amount = el().querySelector<HTMLInputElement>('[aria-label="Amount of Carrot"]')!;
+      amount.value = '50';
+      amount.dispatchEvent(new Event('input'));
+      await submit();
+      expect(service.update.calls.mostRecent().args[0].ingredients[0]).toEqual(
+        jasmine.objectContaining({ grams: 50, inputAmount: 50, inputUnit: 'g' })
+      );
+    });
+
+    it('phones: the row opens an amount sheet that applies changes and closes on Done', async () => {
+      await editWith([servings('rice', 2, 'Rice')]);
+      el().querySelector<HTMLButtonElement>('.open')!.click();
+      fixture.detectChanges();
+      const sheet = el().querySelector('app-amount-sheet [role="dialog"]')!;
+      expect(sheet.getAttribute('aria-modal')).toBe('true');
+      const amount = sheet.querySelector<HTMLInputElement>('input')!;
+      amount.value = '1';
+      amount.dispatchEvent(new Event('input'));
+      fixture.detectChanges();
+      expect(sheet.textContent).toContain('4.9 mg');
+      sheet.querySelector<HTMLButtonElement>('.done')!.click();
+      fixture.detectChanges();
+      expect(el().querySelector('app-amount-sheet')).toBeNull();
+    });
+
+    it('the empty recipe says how to start', async () => {
+      await render();
+      expect(summary()).toContain('Add an ingredient to see the total.');
     });
   });
 });
