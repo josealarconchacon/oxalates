@@ -1,10 +1,7 @@
 /**
- * Recipes: a user's own dish built from foods in the oxalate list (or
- * ingredients that aren't in it). All dates are ISO strings; the storage
- * layer converts them.
+ * Recipes: a user's own dish built from foods in the oxalate list or ingredients that aren't in it
  */
 
-/** The date the food list (assets/mock-oxalate/oxolateListData.json) was last updated. */
 export const FOOD_DATA_UPDATED_AT = '2024-07-27';
 
 /** 'serving' = the food's own household measure, e.g. 2 × "1/2 cup". */

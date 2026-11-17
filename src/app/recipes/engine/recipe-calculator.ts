@@ -12,18 +12,9 @@ export type FoodLookup = (foodId: string) => Oxalate | undefined;
 /** Turns mg per serving into a level, or null when there are no ranges. */
 export type LevelOf = (mgPerServing: number) => string | null;
 
-/**
- * One ingredient's mg and soluble mg. null = unknown, never 0.
- *
- * Grams: mg = mg per 100 g × grams ÷ 100.
- * Household measure ('serving'): mg = the food's measured mg per serving ×
- * count, and grams = serving grams × count (null without a weight). The
- * measured value is used because per 100 g can describe a different state
- * (e.g. dry tea leaves vs. a brewed cup).
- */
 export function calculateIngredient(
   ingredient: RecipeIngredient,
-  getFood: FoodLookup
+  getFood: FoodLookup,
 ): IngredientBreakdown {
   const row: IngredientBreakdown = {
     ingredientId: ingredient.id,
@@ -39,7 +30,12 @@ export function calculateIngredient(
 
   if (ingredient.source === 'custom') {
     const per100 = ingredient.customMgPer100g;
-    if (per100 !== undefined && Number.isFinite(per100) && per100 >= 0 && row.grams !== null) {
+    if (
+      per100 !== undefined &&
+      Number.isFinite(per100) &&
+      per100 >= 0 &&
+      row.grams !== null
+    ) {
       row.mg = (per100 * row.grams) / 100;
       row.isYourValue = true;
     }
@@ -55,14 +51,20 @@ export function calculateIngredient(
     const g = ingredient.grams;
     if (g !== null) {
       row.mg = v.mgPer100g !== null ? (v.mgPer100g * g) / 100 : null;
-      row.solubleMg = v.solublePer100g !== null ? (v.solublePer100g * g) / 100 : null;
+      row.solubleMg =
+        v.solublePer100g !== null ? (v.solublePer100g * g) / 100 : null;
       row.derived = row.mg !== null && v.derived;
     }
   } else {
     const count = ingredient.inputAmount;
     row.grams = v.servingGrams !== null ? v.servingGrams * count : null;
     row.mg = perServing(v.mgPerServing, v.mgPer100g, v.servingGrams, count);
-    row.solubleMg = perServing(v.solublePerServing, v.solublePer100g, v.servingGrams, count);
+    row.solubleMg = perServing(
+      v.solublePerServing,
+      v.solublePer100g,
+      v.servingGrams,
+      count,
+    );
   }
   row.known = row.mg !== null;
   return row;
@@ -72,7 +74,7 @@ export function calculateIngredient(
 export function calculateRecipe(
   recipe: Pick<Recipe, 'serves' | 'ingredients'>,
   getFood: FoodLookup,
-  levelOf?: LevelOf
+  levelOf?: LevelOf,
 ): RecipeResult {
   const rows = recipe.ingredients.map((i) => calculateIngredient(i, getFood));
   const known = rows.filter((r) => r.known);
@@ -84,7 +86,10 @@ export function calculateRecipe(
     r.sharePercent = totalMg > 0 ? (r.mg! / totalMg) * 100 : 0;
   }
   // Highest mg first; unknown rows keep their order at the end.
-  const breakdown = [...known.sort((a, b) => b.mg! - a.mg!), ...rows.filter((r) => !r.known)];
+  const breakdown = [
+    ...known.sort((a, b) => b.mg! - a.mg!),
+    ...rows.filter((r) => !r.known),
+  ];
 
   const allUnknown = rows.length > 0 && known.length === 0;
   const perServingMg = totalMg / serves;
@@ -93,9 +98,12 @@ export function calculateRecipe(
     perServingMg,
     totalSolubleMg,
     perServingSolubleMg: totalSolubleMg / serves,
-    level: levelOf && !allUnknown && rows.length > 0 ? levelOf(perServingMg) : null,
+    level:
+      levelOf && !allUnknown && rows.length > 0 ? levelOf(perServingMg) : null,
     incomplete: known.length < rows.length,
-    unknownIngredients: rows.filter((r) => !r.known).map((r) => ({ id: r.ingredientId, name: r.name })),
+    unknownIngredients: rows
+      .filter((r) => !r.known)
+      .map((r) => ({ id: r.ingredientId, name: r.name })),
     includesYourValues: rows.some((r) => r.isYourValue),
     solubleIncomplete: rows.some((r) => r.solubleMg === null),
     allUnknown,
@@ -107,10 +115,11 @@ function perServing(
   measured: number | null,
   per100: number | null,
   servingGrams: number | null,
-  count: number
+  count: number,
 ): number | null {
   if (measured !== null) return measured * count;
-  if (per100 !== null && servingGrams !== null) return ((per100 * servingGrams) / 100) * count;
+  if (per100 !== null && servingGrams !== null)
+    return ((per100 * servingGrams) / 100) * count;
   return null;
 }
 
