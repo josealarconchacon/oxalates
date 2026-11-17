@@ -1,5 +1,7 @@
 import { Component, DestroyRef, ElementRef, LOCALE_ID, OnInit, ViewChild, inject } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { BreakpointObserver } from '@angular/cdk/layout';
+import { CdkMenu, CdkMenuItem, CdkMenuTrigger } from '@angular/cdk/menu';
 import { formatDate } from '@angular/common';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { firstValueFrom } from 'rxjs';
@@ -18,6 +20,9 @@ import { BreakdownRowView, breakdownRows } from './breakdown/breakdown-view';
 import { DeleteDialogComponent } from './delete-dialog/delete-dialog.component';
 import { IncompleteBadgeComponent } from './incomplete-badge/incomplete-badge.component';
 
+const WIDE = '(min-width: 1024px)';
+const PHONE = '(max-width: 640px)';
+
 /** Levels that get the calm "higher side" note. */
 const HIGHER_LEVELS = new Set(['high', 'very high', 'extremely high']);
 
@@ -25,7 +30,8 @@ const HIGHER_LEVELS = new Set(['high', 'very high', 'extremely high']);
 @Component({
   selector: 'app-recipe-detail',
   standalone: true,
-  imports: [RouterLink, IconComponent, LevelPillComponent, IncompleteBadgeComponent, BreakdownComponent, DeleteDialogComponent],
+  imports: [RouterLink, IconComponent, LevelPillComponent, IncompleteBadgeComponent, BreakdownComponent, DeleteDialogComponent,
+    CdkMenuTrigger, CdkMenu, CdkMenuItem],
   templateUrl: './recipe-detail.component.html',
   styleUrl: './recipe-detail.component.css',
 })
@@ -37,6 +43,7 @@ export class RecipeDetailComponent implements OnInit {
   private drafts = inject(RecipeDraftService);
   private notifications = inject(NotificationService);
   private destroyRef = inject(DestroyRef);
+  private breakpoints = inject(BreakpointObserver);
   private locale = inject(LOCALE_ID);
 
   state: 'loading' | 'not-found' | 'error' | 'ready' = 'loading';
@@ -51,12 +58,20 @@ export class RecipeDetailComponent implements OnInit {
 
   duplicating = false;
   duplicateError = false;
+  /** full ≥ 1024px · menu 641–1023px (Edit + More) · icons ≤ 640px. */
+  actionsMode: 'full' | 'menu' | 'icons' = 'full';
   deleteOpen = false;
   deleting = false;
   deleteError = false;
   @ViewChild('deleteButton') private deleteButton?: ElementRef<HTMLButtonElement>;
 
   ngOnInit(): void {
+    this.breakpoints
+      .observe([WIDE, PHONE])
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe((state) => {
+        this.actionsMode = state.breakpoints[WIDE] ? 'full' : state.breakpoints[PHONE] ? 'icons' : 'menu';
+      });
     // The same page shows the copy after Duplicate, so follow :id changes.
     this.route.paramMap.pipe(takeUntilDestroyed(this.destroyRef)).subscribe((params) => {
       this.id = params.get('id') ?? '';

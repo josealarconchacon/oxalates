@@ -84,7 +84,7 @@ import { BreakdownRowView } from './breakdown-view';
       align-items: center;
       gap: 10px;
       min-height: 44px;
-      margin-right: -8px;
+      margin: 0 -8px;
       padding: 0 8px;
       border: 0;
       border-radius: 12px;

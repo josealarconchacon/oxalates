@@ -89,17 +89,55 @@
               }
             </p>
 
-            <div class="actions">
-              <!-- PR 4: the primary "Log a serving" button goes first here. -->
-              <a class="btn-outline" [routerLink]="['/recipes', r.id, 'edit']">
-                <app-icon name="pencil" [size]="16" /> Edit
-              </a>
-              <button type="button" class="btn-outline" [disabled]="duplicating" (click)="duplicate()">
-                <app-icon name="copy" [size]="16" /> {{ duplicating ? 'Duplicating…' : 'Duplicate' }}
-              </button>
-              <button #deleteButton type="button" class="btn-outline btn-danger" (click)="openDelete()">
-                <app-icon name="trash-2" [size]="16" /> Delete
-              </button>
+            <!-- PR 4: the primary "Log a serving" button goes first in this row. -->
+            <div class="actions" [attr.data-mode]="actionsMode">
+              @switch (actionsMode) {
+                @case ('full') {
+                  <a class="btn-outline" [routerLink]="['/recipes', r.id, 'edit']">
+                    <app-icon name="pencil" [size]="16" /> Edit
+                  </a>
+                  <button type="button" class="btn-outline" [disabled]="duplicating" (click)="duplicate()">
+                    <app-icon name="copy" [size]="16" /> {{ duplicating ? 'Duplicating…' : 'Duplicate' }}
+                  </button>
+                  <button #deleteButton type="button" class="btn-outline btn-danger" (click)="openDelete()">
+                    <app-icon name="trash-2" [size]="16" /> Delete
+                  </button>
+                }
+                @case ('menu') {
+                  <a class="btn-outline" [routerLink]="['/recipes', r.id, 'edit']">
+                    <app-icon name="pencil" [size]="16" /> Edit
+                  </a>
+                  <button #deleteButton type="button" class="btn-outline btn-icon" aria-label="More actions"
+                    [cdkMenuTriggerFor]="moreMenu">
+                    <app-icon name="more-horizontal" [size]="18" />
+                  </button>
+                  <ng-template #moreMenu>
+                    <div class="rd-menu" cdkMenu>
+                      <button type="button" class="rd-menu-item" cdkMenuItem [cdkMenuItemDisabled]="duplicating"
+                        (cdkMenuItemTriggered)="duplicate()">
+                        <app-icon name="copy" [size]="16" /> Duplicate
+                      </button>
+                      <button type="button" class="rd-menu-item rd-menu-item--danger" cdkMenuItem
+                        (cdkMenuItemTriggered)="openDelete()">
+                        <app-icon name="trash-2" [size]="16" /> Delete
+                      </button>
+                    </div>
+                  </ng-template>
+                }
+                @case ('icons') {
+                  <a class="btn-outline btn-icon" aria-label="Edit" [routerLink]="['/recipes', r.id, 'edit']">
+                    <app-icon name="pencil" [size]="18" />
+                  </a>
+                  <button type="button" class="btn-outline btn-icon" aria-label="Duplicate" [disabled]="duplicating"
+                    (click)="duplicate()">
+                    <app-icon name="copy" [size]="18" />
+                  </button>
+                  <button #deleteButton type="button" class="btn-outline btn-icon btn-danger" aria-label="Delete"
+                    (click)="openDelete()">
+                    <app-icon name="trash-2" [size]="18" />
+                  </button>
+                }
+              }
             </div>
             @if (duplicateError) {
               <p class="action-error" role="alert">We couldn't duplicate this recipe. Try again.</p>
@@ -107,26 +145,30 @@
           </div>
         </section>
 
-        <app-recipe-breakdown class="block" [rows]="rows" [totalMg]="n.whole" [hasTotal]="!result.allUnknown"
-          [showSources]="showSources" (showSourcesChange)="setShowSources($event)" />
+        <div class="lower">
+          <app-recipe-breakdown [rows]="rows" [totalMg]="n.whole" [hasTotal]="!result.allUnknown"
+            [showSources]="showSources" (showSourcesChange)="setShowSources($event)" />
 
-        @if ((r.notes || '').trim()) {
-          <section class="rd-card block notes" aria-labelledby="notes-title">
-            <h2 class="h2" id="notes-title">Notes and steps</h2>
-            <p class="notes-text">{{ r.notes }}</p>
-          </section>
-        }
+          <div class="side">
+            @if ((r.notes || '').trim()) {
+              <section class="rd-card notes" aria-labelledby="notes-title">
+                <h2 class="h2" id="notes-title">Notes and steps</h2>
+                <p class="notes-text">{{ r.notes }}</p>
+              </section>
+            }
 
-        <aside class="medical block" aria-label="About these numbers">
-          <app-icon name="info" [size]="18" />
-          <div>
-            <p class="medical-text">
-              These numbers are estimates from published food lists. Cooking, like boiling and draining, can change
-              the real amount. Check with your clinician before changing your diet.
-            </p>
-            <p class="data-date">Data updated: {{ dataUpdated }}</p>
+            <aside class="medical" aria-label="About these numbers">
+              <app-icon name="info" [size]="18" />
+              <div>
+                <p class="medical-text">
+                  These numbers are estimates from published food lists. Cooking, like boiling and draining, can change
+                  the real amount. Check with your clinician before changing your diet.
+                </p>
+                <p class="data-date">Data updated: {{ dataUpdated }}</p>
+              </div>
+            </aside>
           </div>
-        </aside>
+        </div>
       }
     }
   }

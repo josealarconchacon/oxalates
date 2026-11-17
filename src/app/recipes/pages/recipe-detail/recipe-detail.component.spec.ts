@@ -1,5 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ActivatedRoute, Router, convertToParamMap, provideRouter } from '@angular/router';
+import { BreakpointObserver, BreakpointState } from '@angular/cdk/layout';
 import { BehaviorSubject, of } from 'rxjs';
 import { NotificationService } from 'src/app/landing-page/dialog-service/oxalate/service/notification.service';
 import { RecipeFoodsService } from '../../data/recipe-foods.service';
@@ -15,6 +16,12 @@ describe('RecipeDetailComponent', () => {
   let remove: jasmine.Spy;
   let toast: jasmine.Spy;
   let params: BehaviorSubject<ReturnType<typeof convertToParamMap>>;
+  let screen: BehaviorSubject<BreakpointState>;
+  /** Pretend the window is this wide (the page's breakpoints: ≥ 1024, ≤ 640). */
+  const widthOf = (px: number): BreakpointState => {
+    const breakpoints = { '(min-width: 1024px)': px >= 1024, '(max-width: 640px)': px <= 640 };
+    return { matches: Object.values(breakpoints).some(Boolean), breakpoints };
+  };
   const el = () => fixture.nativeElement as HTMLElement;
   const text = () => el().textContent!.replace(/\s+/g, ' ');
   const squash = (node: Element | null) => node!.textContent!.replace(/\s+/g, ' ').trim();
@@ -34,6 +41,7 @@ describe('RecipeDetailComponent', () => {
     remove = jasmine.createSpy('remove');
     toast = jasmine.createSpy('show');
     params = new BehaviorSubject(convertToParamMap({ id: 'r1' }));
+    screen = new BehaviorSubject(widthOf(1440));
     TestBed.configureTestingModule({
       imports: [RecipeDetailComponent],
       providers: [
@@ -52,6 +60,7 @@ describe('RecipeDetailComponent', () => {
           },
         },
         { provide: ActivatedRoute, useValue: { paramMap: params } },
+        { provide: BreakpointObserver, useValue: { observe: () => screen } },
       ],
     });
   });
@@ -394,6 +403,42 @@ describe('RecipeDetailComponent', () => {
       fixture.detectChanges();
       expect(squash(dialog()!.querySelector('[role="alert"]'))).toBe("We couldn't delete this recipe. Try again.");
       expect(navigate).not.toHaveBeenCalled();
+    });
+  });
+
+  describe('actions by screen width', () => {
+    const actions = () => el().querySelector('.actions')!;
+    const labels = () =>
+      Array.from(actions().querySelectorAll('a, button')).map((b) => b.getAttribute('aria-label') ?? squash(b));
+
+    beforeEach(() => get.and.resolveTo({ ...recipe([grams('carrot', 100)]), id: 'r1', name: 'Soup' }));
+
+    it('≥ 1024px: Edit, Duplicate and Delete with text', async () => {
+      await render();
+      expect(labels()).toEqual(['Edit', 'Duplicate', 'Delete']);
+    });
+
+    it('641–1023px: Edit + a More menu with Duplicate and Delete', async () => {
+      screen.next(widthOf(768));
+      await render();
+      expect(labels()).toEqual(['Edit', 'More actions']);
+      const more = actions().querySelector<HTMLButtonElement>('[aria-label="More actions"]')!;
+      expect(more.getAttribute('aria-haspopup')).toBe('menu');
+      more.click();
+      fixture.detectChanges();
+      const items = Array.from(document.querySelectorAll<HTMLButtonElement>('[role="menuitem"]'));
+      expect(items.map((i) => squash(i))).toEqual(['Duplicate', 'Delete']);
+      items[1].click();
+      fixture.detectChanges();
+      expect(document.querySelector('app-delete-dialog')).not.toBeNull();
+    });
+
+    it('≤ 640px: three 44px icon buttons with labels', async () => {
+      screen.next(widthOf(390));
+      await render();
+      expect(labels()).toEqual(['Edit', 'Duplicate', 'Delete']);
+      expect(Array.from(actions().children).every((b) => b.classList.contains('btn-icon'))).toBeTrue();
+      expect(squash(actions())).toBe('');
     });
   });
 });
