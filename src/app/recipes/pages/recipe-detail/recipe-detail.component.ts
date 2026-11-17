@@ -8,7 +8,7 @@ import { RecipeService } from '../../data/recipe.service';
 import { formatMg } from '../../engine/format';
 import { calculateRecipe } from '../../engine/recipe-calculator';
 import { levelForMgPerServing } from '../../engine/recipe-level';
-import { Recipe, RecipeResult } from '../../model/recipe';
+import { FOOD_DATA_UPDATED_AT, Recipe, RecipeResult } from '../../model/recipe';
 import { LevelPillComponent } from '../../shared/level-pill/level-pill.component';
 import { BreakdownComponent } from './breakdown/breakdown.component';
 import { BreakdownRowView, breakdownRows } from './breakdown/breakdown-view';
@@ -35,6 +35,8 @@ export class RecipeDetailComponent implements OnInit {
   recipe: Recipe | null = null;
   result: RecipeResult | null = null;
   rows: BreakdownRowView[] = [];
+  /** When the food list's numbers were last updated, e.g. "Jul 27, 2024". */
+  readonly dataUpdated = formatDate(FOOD_DATA_UPDATED_AT, 'MMM d, y', this.locale);
   /** Off by default; remembered per user on this device. */
   showSources = false;
   private id = '';

@@ -96,6 +96,24 @@
 
         <app-recipe-breakdown class="block" [rows]="rows" [totalMg]="n.whole" [hasTotal]="!result.allUnknown"
           [showSources]="showSources" (showSourcesChange)="setShowSources($event)" />
+
+        @if ((r.notes || '').trim()) {
+          <section class="rd-card block notes" aria-labelledby="notes-title">
+            <h2 class="h2" id="notes-title">Notes and steps</h2>
+            <p class="notes-text">{{ r.notes }}</p>
+          </section>
+        }
+
+        <aside class="medical block" aria-label="About these numbers">
+          <app-icon name="info" [size]="18" />
+          <div>
+            <p class="medical-text">
+              These numbers are estimates from published food lists. Cooking, like boiling and draining, can change
+              the real amount. Check with your clinician before changing your diet.
+            </p>
+            <p class="data-date">Data updated: {{ dataUpdated }}</p>
+          </div>
+        </aside>
       }
     }
   }

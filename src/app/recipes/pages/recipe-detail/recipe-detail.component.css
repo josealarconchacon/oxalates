@@ -213,6 +213,48 @@
   margin-top: 32px;
 }
 
+.h2 {
+  margin: 0;
+  font-family: var(--font-family-display);
+  font-size: 1.375rem;
+  font-weight: 700;
+}
+
+/* Notes are shown as written: line breaks kept, nothing parsed. */
+.notes-text {
+  margin: 12px 0 0;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  line-height: 1.6;
+}
+
+.medical {
+  display: flex;
+  gap: 12px;
+  padding: 16px 18px;
+  border-radius: 18px;
+  background: var(--rd-surface-2);
+  font-size: 0.875rem;
+  line-height: 1.55;
+  --icon-stroke: 2;
+}
+
+.medical app-icon {
+  flex: none;
+  margin-top: 1px;
+  color: var(--color-muted);
+}
+
+.medical-text {
+  margin: 0;
+}
+
+.data-date {
+  margin: 8px 0 0;
+  color: var(--color-muted);
+  font-size: 0.8125rem;
+}
+
 .rd-card {
   padding: 24px;
   border: 1px solid var(--color-line);

@@ -252,4 +252,31 @@ describe('RecipeDetailComponent', () => {
       expect(sources()).toEqual(['No longer in the food list']);
     });
   });
+
+  describe('notes, medical note and data date', () => {
+    it('shows notes as written, line breaks kept', async () => {
+      const notes = '1. Boil the carrots.\n2. Drain and mash.';
+      get.and.resolveTo({ ...recipe([grams('carrot', 100)]), id: 'r1', notes });
+      await render();
+      const card = el().querySelector('.notes')!;
+      expect(squash(card.querySelector('h2'))).toBe('Notes and steps');
+      expect(card.querySelector('.notes-text')!.textContent).toBe(notes);
+      expect(getComputedStyle(card.querySelector('.notes-text')!).whiteSpace).toBe('pre-wrap');
+    });
+
+    it('hides the notes card when there are no notes', async () => {
+      get.and.resolveTo({ ...recipe([grams('carrot', 100)]), id: 'r1', notes: '   ' });
+      await render();
+      expect(el().querySelector('.notes')).toBeNull();
+    });
+
+    it('always shows the medical note and the food data date', async () => {
+      get.and.resolveTo({ ...recipe([]), id: 'r1' });
+      await render();
+      expect(squash(el().querySelector('.medical-text'))).toBe(
+        'These numbers are estimates from published food lists. Cooking, like boiling and draining, can change the real amount. Check with your clinician before changing your diet.'
+      );
+      expect(squash(el().querySelector('.data-date'))).toBe('Data updated: Jul 27, 2024');
+    });
+  });
 });
