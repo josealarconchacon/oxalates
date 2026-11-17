@@ -10,12 +10,16 @@ import { calculateRecipe } from '../../engine/recipe-calculator';
 import { levelForMgPerServing } from '../../engine/recipe-level';
 import { Recipe, RecipeResult } from '../../model/recipe';
 import { LevelPillComponent } from '../../shared/level-pill/level-pill.component';
+import { IncompleteBadgeComponent } from './incomplete-badge/incomplete-badge.component';
+
+/** Levels that get the calm "higher side" note. */
+const HIGHER_LEVELS = new Set(['high', 'very high', 'extremely high']);
 
 /** /recipes/:id — one recipe, its numbers and what drives them. */
 @Component({
   selector: 'app-recipe-detail',
   standalone: true,
-  imports: [RouterLink, IconComponent, LevelPillComponent],
+  imports: [RouterLink, IconComponent, LevelPillComponent, IncompleteBadgeComponent],
   templateUrl: './recipe-detail.component.html',
   styleUrl: './recipe-detail.component.css',
 })
@@ -72,6 +76,19 @@ export class RecipeDetailComponent implements OnInit {
       /** No ingredient has a soluble value, so there is nothing to show. */
       solubleUnknown: !res.breakdown.some((b) => b.solubleMg !== null),
     };
+  }
+
+  get isHigher(): boolean {
+    const level = this.result?.level;
+    return !!level && !this.result!.allUnknown && HIGHER_LEVELS.has(level.trim().toLowerCase());
+  }
+
+  /** From the Incomplete popover: bring an ingredient's breakdown row into view. */
+  goToRow(ingredientId: string): void {
+    const row = document.getElementById('ing-' + ingredientId);
+    if (!row) return;
+    row.scrollIntoView({ block: 'center', behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth' });
+    row.focus({ preventScroll: true });
   }
 
   private editedDate(iso: string): string {

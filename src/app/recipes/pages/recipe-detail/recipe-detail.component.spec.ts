@@ -123,5 +123,57 @@ describe('RecipeDetailComponent', () => {
       expect(tileText(tiles[1])).toBe('Soluble per serving Unknown');
       expect(el().querySelector('.whole')!.textContent).not.toContain('soluble');
     });
+  
+    it('incomplete: shows the Incomplete badge with the unknown names', async () => {
+      get.and.resolveTo(soup({ ingredients: [grams('carrot', 200, 'Carrot'), custom('Tapioca starch', 20)] }));
+      await render();
+      const badge = el().querySelector('app-incomplete-badge')!;
+      expect(badge).not.toBeNull();
+      badge.querySelector<HTMLButtonElement>('.badge')!.click();
+      fixture.detectChanges();
+      expect(squash(badge.querySelector('.text'))).toContain('no oxalate value for Tapioca starch.');
+    });
+
+    it('complete: no badge', async () => {
+      get.and.resolveTo(soup());
+      await render();
+      expect(el().querySelector('app-incomplete-badge')).toBeNull();
+    });
+
+    it('all ingredients unknown: tiles say Unknown, no level pill, the badge still shows', async () => {
+      get.and.resolveTo(soup({ ingredients: [custom('Tapioca starch', 20), custom('Mystery spice', 5)] }));
+      await render();
+      const tiles = Array.from(el().querySelectorAll('.tile')).map(tileText);
+      expect(tiles).toEqual(['Per serving Unknown', 'Soluble per serving Unknown']);
+      expect(el().querySelector('app-level-pill')).toBeNull();
+      expect(el().querySelector('app-incomplete-badge')).not.toBeNull();
+      expect(squash(el().querySelector('.whole'))).toBe('Whole recipe: Unknown');
+      expect(el().querySelector('.calm-note')).toBeNull();
+    });
+
+    it('soluble missing on some rows only: only the soluble numbers read "at least"', async () => {
+      get.and.resolveTo(soup({ ingredients: [grams('carrot', 200, 'Carrot'), grams('nosol', 100, 'Kale')] }));
+      await render();
+      const tiles = Array.from(el().querySelectorAll('.tile')).map(tileText);
+      expect(tiles[0]).not.toContain('at least');
+      expect(tiles[1]).toContain('at least');
+      expect(el().querySelector('app-level-pill')!.textContent!.trim()).not.toContain('At least');
+      expect(el().querySelector('app-incomplete-badge')).toBeNull();
+    });
+
+    it('High or above: a calm note, with no swap promise', async () => {
+      // 340 g carrot, serves 2 → 17.0 mg per serving (High).
+      get.and.resolveTo(soup({ ingredients: [grams('carrot', 340, 'Carrot')] }));
+      await render();
+      expect(el().querySelector('app-level-pill')!.textContent!.trim()).toBe('High');
+      expect(squash(el().querySelector('.calm-note'))).toBe('This one is on the higher side.');
+      expect(text()).not.toContain('swap');
+    });
+
+    it('below High: no note', async () => {
+      get.and.resolveTo(soup());
+      await render();
+      expect(el().querySelector('.calm-note')).toBeNull();
+    });
   });
 });

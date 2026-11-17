@@ -77,7 +77,7 @@
   display: grid;
   place-items: center;
   aspect-ratio: 4 / 3;
-  border-radius: 22px;
+  border-radius: 24px;
   background: var(--rd-photo-bg);
   color: var(--rd-photo-icon);
   --icon-stroke: 1.5;
@@ -105,6 +105,9 @@
 }
 
 .tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
   padding: 2px 10px;
   border: 1px solid var(--color-line);
   border-radius: 999px;
@@ -113,10 +116,41 @@
   line-height: 1.5;
 }
 
+.tag app-icon {
+  color: var(--color-muted);
+  --icon-stroke: 2;
+}
+
+.meta-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px 12px;
+}
+
 .meta {
   margin: 0;
   color: var(--color-muted);
-  font-size: 0.9375rem;
+  font-size: 0.875rem;
+}
+
+/* Calm, not an alarm: neutral surface, no red. */
+.calm-note {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+  margin: 0;
+  padding: 10px 14px;
+  border-radius: 12px;
+  background: var(--rd-surface-2);
+  font-size: 0.875rem;
+  --icon-stroke: 2;
+}
+
+.calm-note app-icon {
+  flex: none;
+  color: var(--color-muted);
 }
 
 .tiles {
@@ -161,7 +195,7 @@
 
 .at-least {
   font-family: var(--font-family-sans);
-  font-size: 1rem;
+  font-size: 0.9375rem;
   font-weight: 600;
   color: var(--color-muted);
 }
@@ -169,7 +203,7 @@
 .whole {
   margin: 0;
   color: var(--color-muted);
-  font-size: 0.9375rem;
+  font-size: 0.875rem;
   font-variant-numeric: tabular-nums;
 }
 

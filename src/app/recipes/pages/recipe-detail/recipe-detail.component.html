@@ -35,22 +35,31 @@
             @if (r.tags.length) {
               <ul class="tags" aria-label="Tags">
                 @for (tag of r.tags; track tag) {
-                  <li class="tag">{{ tag }}</li>
+                  <li class="tag"><app-icon name="tag" [size]="13" />{{ tag }}</li>
                 }
               </ul>
             }
             <h1 class="title" id="recipe-title">{{ r.name }}</h1>
-            <p class="meta">{{ metaLine }}</p>
-            @if (result.level) {
-              <app-level-pill [level]="result.level" [prefix]="n.atLeast ? 'At least ' : ''" />
-            }
+            <div class="meta-row">
+              <p class="meta">{{ metaLine }}</p>
+              @if (result.level && !result.allUnknown) {
+                <app-level-pill [level]="result.level" [prefix]="n.atLeast ? 'At least ' : ''" />
+              }
+              @if (result.incomplete) {
+                <app-incomplete-badge [unknown]="result.unknownIngredients" (goTo)="goToRow($event)" />
+              }
+            </div>
 
             <div class="tiles">
               <div class="tile">
                 <span class="tile-label">Per serving</span>
-                <p class="big">
-                  @if (n.atLeast) {<span class="at-least">at least </span>}{{ n.perServing }}<span class="unit"> mg</span>
-                </p>
+                @if (result.allUnknown) {
+                  <p class="big big--unknown">Unknown</p>
+                } @else {
+                  <p class="big">
+                    @if (n.atLeast) {<span class="at-least">at least </span>}{{ n.perServing }}<span class="unit"> mg</span>
+                  </p>
+                }
               </div>
               <div class="tile">
                 <span class="tile-label">Soluble per serving</span>
@@ -64,10 +73,19 @@
               </div>
             </div>
 
+            @if (isHigher) {
+              <!-- TODO(swaps): add "The swaps below can bring it down." once swaps ship. -->
+              <p class="calm-note"><app-icon name="info" [size]="16" /> This one is on the higher side.</p>
+            }
+
             <p class="whole">
-              Whole recipe: {{ n.atLeast ? 'at least ' : '' }}{{ n.whole }} mg
-              @if (!n.solubleUnknown) {
-                · soluble {{ n.solubleAtLeast ? 'at least ' : '' }}{{ n.solubleWhole }} mg
+              @if (result.allUnknown) {
+                Whole recipe: Unknown
+              } @else {
+                Whole recipe: {{ n.atLeast ? 'at least ' : '' }}{{ n.whole }} mg
+                @if (!n.solubleUnknown) {
+                  · soluble {{ n.solubleAtLeast ? 'at least ' : '' }}{{ n.solubleWhole }} mg
+                }
               }
             </p>
 
