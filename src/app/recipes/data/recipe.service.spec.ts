@@ -61,8 +61,9 @@ describe('RecipeService.list', () => {
   });
 });
 
-describe('RecipeService get / create / update', () => {
+describe('RecipeService get / create / update / remove', () => {
   let writes: { path: string; data: any }[];
+  let deletes: string[];
   let stored: Record<string, object>;
 
   function service(): RecipeService {
@@ -70,6 +71,10 @@ describe('RecipeService get / create / update', () => {
       get: () => of({ exists: path in stored, data: () => stored[path] }),
       set: (data: object) => {
         writes.push({ path, data });
+        return Promise.resolve();
+      },
+      delete: () => {
+        deletes.push(path);
         return Promise.resolve();
       },
     });
@@ -103,6 +108,7 @@ describe('RecipeService get / create / update', () => {
 
   beforeEach(() => {
     writes = [];
+    deletes = [];
     stored = { 'recipes/u1/items/r1': { name: 'Stored', serves: 3 } };
   });
 
@@ -119,6 +125,11 @@ describe('RecipeService get / create / update', () => {
     );
     expect(writes[0].path).toBe('recipes/u1/items/new-id');
     expect('photoUrl' in writes[0].data).toBeFalse();
+  });
+
+  it("remove deletes the user's recipe", async () => {
+    await service().remove('r1');
+    expect(deletes).toEqual(['recipes/u1/items/r1']);
   });
 
   it('update keeps createdAt and moves updatedAt', async () => {

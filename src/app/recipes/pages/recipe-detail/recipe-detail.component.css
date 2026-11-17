@@ -293,8 +293,31 @@
   --icon-stroke: 2;
 }
 
-.btn-outline:hover {
+.btn-outline:hover:not(:disabled) {
   border-color: var(--color-muted);
+}
+
+.btn-outline:disabled {
+  cursor: default;
+  opacity: 0.7;
+}
+
+.btn-danger {
+  color: var(--rd-danger);
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 4px;
+}
+
+.action-error {
+  margin: 0;
+  color: var(--rd-danger);
+  font-size: 0.875rem;
+  font-weight: 600;
 }
 
 .sk {

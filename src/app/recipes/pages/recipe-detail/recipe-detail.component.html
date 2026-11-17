@@ -89,8 +89,21 @@
               }
             </p>
 
-            <!-- Temporary until the actions row (step 7). -->
-            <a class="btn-outline" [routerLink]="['/recipes', r.id, 'edit']">Edit</a>
+            <div class="actions">
+              <!-- PR 4: the primary "Log a serving" button goes first here. -->
+              <a class="btn-outline" [routerLink]="['/recipes', r.id, 'edit']">
+                <app-icon name="pencil" [size]="16" /> Edit
+              </a>
+              <button type="button" class="btn-outline" [disabled]="duplicating" (click)="duplicate()">
+                <app-icon name="copy" [size]="16" /> {{ duplicating ? 'Duplicating…' : 'Duplicate' }}
+              </button>
+              <button #deleteButton type="button" class="btn-outline btn-danger" (click)="openDelete()">
+                <app-icon name="trash-2" [size]="16" /> Delete
+              </button>
+            </div>
+            @if (duplicateError) {
+              <p class="action-error" role="alert">We couldn't duplicate this recipe. Try again.</p>
+            }
           </div>
         </section>
 
@@ -116,5 +129,10 @@
         </aside>
       }
     }
+  }
+
+  @if (deleteOpen && recipe) {
+    <app-delete-dialog [name]="recipe.name" [busy]="deleting" [error]="deleteError"
+      (confirm)="confirmDelete()" (cancel)="closeDelete()" />
   }
 </div>

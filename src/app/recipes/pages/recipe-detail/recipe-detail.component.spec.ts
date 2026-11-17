@@ -1,6 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { ActivatedRoute, convertToParamMap, provideRouter } from '@angular/router';
-import { of } from 'rxjs';
+import { ActivatedRoute, Router, convertToParamMap, provideRouter } from '@angular/router';
+import { BehaviorSubject, of } from 'rxjs';
+import { NotificationService } from 'src/app/landing-page/dialog-service/oxalate/service/notification.service';
 import { RecipeFoodsService } from '../../data/recipe-foods.service';
 import { RecipeService } from '../../data/recipe.service';
 import { custom, food, grams, lookup, recipe } from '../../engine/testing/fixtures';
@@ -10,6 +11,10 @@ import { RecipeDetailComponent } from './recipe-detail.component';
 describe('RecipeDetailComponent', () => {
   let fixture: ComponentFixture<RecipeDetailComponent>;
   let get: jasmine.Spy;
+  let create: jasmine.Spy;
+  let remove: jasmine.Spy;
+  let toast: jasmine.Spy;
+  let params: BehaviorSubject<ReturnType<typeof convertToParamMap>>;
   const el = () => fixture.nativeElement as HTMLElement;
   const text = () => el().textContent!.replace(/\s+/g, ' ');
   const squash = (node: Element | null) => node!.textContent!.replace(/\s+/g, ' ').trim();
@@ -25,11 +30,16 @@ describe('RecipeDetailComponent', () => {
 
   beforeEach(() => {
     get = jasmine.createSpy('get');
+    create = jasmine.createSpy('create');
+    remove = jasmine.createSpy('remove');
+    toast = jasmine.createSpy('show');
+    params = new BehaviorSubject(convertToParamMap({ id: 'r1' }));
     TestBed.configureTestingModule({
       imports: [RecipeDetailComponent],
       providers: [
         provideRouter([]),
-        { provide: RecipeService, useValue: { get } },
+        { provide: RecipeService, useValue: { get, create, remove } },
+        { provide: NotificationService, useValue: { show: toast } },
         {
           provide: RecipeFoodsService,
           useValue: {
@@ -41,7 +51,7 @@ describe('RecipeDetailComponent', () => {
             ),
           },
         },
-        { provide: ActivatedRoute, useValue: { snapshot: { paramMap: convertToParamMap({ id: 'r1' }) } } },
+        { provide: ActivatedRoute, useValue: { paramMap: params } },
       ],
     });
   });
@@ -277,6 +287,113 @@ describe('RecipeDetailComponent', () => {
         'These numbers are estimates from published food lists. Cooking, like boiling and draining, can change the real amount. Check with your clinician before changing your diet.'
       );
       expect(squash(el().querySelector('.data-date'))).toBe('Data updated: Jul 27, 2024');
+    });
+  });
+
+  describe('Edit / Duplicate / Delete', () => {
+    const soup = (): Recipe => ({
+      ...recipe([grams('carrot', 200, 'Carrot')], 2),
+      id: 'r1',
+      name: 'Carrot soup',
+      notes: 'Boil.',
+      tags: ['Dinner'],
+    });
+    const button = (label: string) =>
+      Array.from(el().querySelectorAll<HTMLButtonElement>('.actions button')).find((b) => squash(b).includes(label))!;
+    const dialog = () => document.querySelector('app-delete-dialog [role="alertdialog"]');
+    let navigate: jasmine.Spy;
+
+    beforeEach(async () => {
+      get.and.resolveTo(soup());
+      await render();
+      document.body.appendChild(el());
+      navigate = spyOn(TestBed.inject(Router), 'navigate').and.resolveTo(true);
+    });
+
+    afterEach(() => el().remove());
+
+    it('Edit links to the builder', () => {
+      expect(el().querySelector('.actions a')!.getAttribute('href')).toBe('/recipes/r1/edit');
+    });
+
+    it('Duplicate creates "Copy of <name>" and opens the copy with a toast', async () => {
+      const r = fixture.componentInstance.recipe!;
+      create.and.resolveTo({ ...r, id: 'r2', name: 'Copy of Carrot soup' });
+      button('Duplicate').click();
+      await fixture.whenStable();
+      expect(create).toHaveBeenCalledWith({
+        name: 'Copy of Carrot soup',
+        serves: 2,
+        ingredients: r.ingredients,
+        notes: 'Boil.',
+        tags: ['Dinner'],
+        photoUrl: undefined,
+      });
+      expect(toast).toHaveBeenCalledWith('Copy created.', 'Close', ['success-snackbar']);
+      expect(navigate).toHaveBeenCalledWith(['/recipes', 'r2']);
+    });
+
+    it('the page follows the URL to the copy', async () => {
+      get.and.resolveTo({ ...soup(), id: 'r2', name: 'Copy of Carrot soup' });
+      params.next(convertToParamMap({ id: 'r2' }));
+      // next() runs outside Angular's zone, so wait for the load ourselves.
+      await new Promise((resolve) => setTimeout(resolve));
+      fixture.detectChanges();
+      expect(get).toHaveBeenCalledWith('r2');
+      expect(squash(el().querySelector('h1'))).toBe('Copy of Carrot soup');
+    });
+
+    it('Duplicate error: says so and stays', async () => {
+      create.and.rejectWith(new Error('offline'));
+      button('Duplicate').click();
+      await fixture.whenStable();
+      fixture.detectChanges();
+      expect(squash(el().querySelector('.action-error'))).toBe("We couldn't duplicate this recipe. Try again.");
+      expect(navigate).not.toHaveBeenCalled();
+    });
+
+    it('Delete asks first, with focus on Cancel; Cancel closes it', async () => {
+      button('Delete').click();
+      fixture.detectChanges();
+      await fixture.whenStable();
+      expect(squash(dialog()!.querySelector('h2'))).toBe('Delete “Carrot soup”?');
+      expect(squash(dialog()!.querySelector('p'))).toBe("This can't be undone. Days you already logged keep their numbers.");
+      expect(document.activeElement!.textContent!.trim()).toBe('Cancel');
+
+      (document.activeElement as HTMLButtonElement).click();
+      fixture.detectChanges();
+      expect(dialog()).toBeNull();
+      expect(remove).not.toHaveBeenCalled();
+    });
+
+    it('Esc closes the dialog', () => {
+      button('Delete').click();
+      fixture.detectChanges();
+      document.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape' }));
+      fixture.detectChanges();
+      expect(dialog()).toBeNull();
+    });
+
+    it('Delete recipe removes it, then goes to Recipes with a toast', async () => {
+      remove.and.resolveTo();
+      button('Delete').click();
+      fixture.detectChanges();
+      dialog()!.querySelector<HTMLButtonElement>('.btn--danger')!.click();
+      await fixture.whenStable();
+      expect(remove).toHaveBeenCalledWith('r1');
+      expect(toast).toHaveBeenCalledWith('Recipe deleted.', 'Close', ['success-snackbar']);
+      expect(navigate).toHaveBeenCalledWith(['/recipes']);
+    });
+
+    it('Delete error: the dialog stays open and says so', async () => {
+      remove.and.rejectWith(new Error('offline'));
+      button('Delete').click();
+      fixture.detectChanges();
+      dialog()!.querySelector<HTMLButtonElement>('.btn--danger')!.click();
+      await fixture.whenStable();
+      fixture.detectChanges();
+      expect(squash(dialog()!.querySelector('[role="alert"]'))).toBe("We couldn't delete this recipe. Try again.");
+      expect(navigate).not.toHaveBeenCalled();
     });
   });
 });

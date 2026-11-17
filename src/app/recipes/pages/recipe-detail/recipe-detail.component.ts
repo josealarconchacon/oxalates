@@ -1,8 +1,11 @@
-import { Component, LOCALE_ID, OnInit, inject } from '@angular/core';
+import { Component, DestroyRef, ElementRef, LOCALE_ID, OnInit, ViewChild, inject } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { formatDate } from '@angular/common';
-import { ActivatedRoute, RouterLink } from '@angular/router';
+import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { firstValueFrom } from 'rxjs';
 import { IconComponent } from 'src/app/shared/components/icon/icon.component';
+import { NotificationService } from 'src/app/landing-page/dialog-service/oxalate/service/notification.service';
+import { RecipeDraftService } from '../../data/recipe-draft.service';
 import { RecipeFoodsService } from '../../data/recipe-foods.service';
 import { RecipeService } from '../../data/recipe.service';
 import { formatMg } from '../../engine/format';
@@ -12,6 +15,7 @@ import { FOOD_DATA_UPDATED_AT, Recipe, RecipeResult } from '../../model/recipe';
 import { LevelPillComponent } from '../../shared/level-pill/level-pill.component';
 import { BreakdownComponent } from './breakdown/breakdown.component';
 import { BreakdownRowView, breakdownRows } from './breakdown/breakdown-view';
+import { DeleteDialogComponent } from './delete-dialog/delete-dialog.component';
 import { IncompleteBadgeComponent } from './incomplete-badge/incomplete-badge.component';
 
 /** Levels that get the calm "higher side" note. */
@@ -21,7 +25,7 @@ const HIGHER_LEVELS = new Set(['high', 'very high', 'extremely high']);
 @Component({
   selector: 'app-recipe-detail',
   standalone: true,
-  imports: [RouterLink, IconComponent, LevelPillComponent, IncompleteBadgeComponent, BreakdownComponent],
+  imports: [RouterLink, IconComponent, LevelPillComponent, IncompleteBadgeComponent, BreakdownComponent, DeleteDialogComponent],
   templateUrl: './recipe-detail.component.html',
   styleUrl: './recipe-detail.component.css',
 })
@@ -29,6 +33,10 @@ export class RecipeDetailComponent implements OnInit {
   private recipes = inject(RecipeService);
   private foods = inject(RecipeFoodsService);
   private route = inject(ActivatedRoute);
+  private router = inject(Router);
+  private drafts = inject(RecipeDraftService);
+  private notifications = inject(NotificationService);
+  private destroyRef = inject(DestroyRef);
   private locale = inject(LOCALE_ID);
 
   state: 'loading' | 'not-found' | 'error' | 'ready' = 'loading';
@@ -41,9 +49,20 @@ export class RecipeDetailComponent implements OnInit {
   showSources = false;
   private id = '';
 
+  duplicating = false;
+  duplicateError = false;
+  deleteOpen = false;
+  deleting = false;
+  deleteError = false;
+  @ViewChild('deleteButton') private deleteButton?: ElementRef<HTMLButtonElement>;
+
   ngOnInit(): void {
-    this.id = this.route.snapshot.paramMap.get('id') ?? '';
-    void this.load();
+    // The same page shows the copy after Duplicate, so follow :id changes.
+    this.route.paramMap.pipe(takeUntilDestroyed(this.destroyRef)).subscribe((params) => {
+      this.id = params.get('id') ?? '';
+      this.duplicateError = false;
+      void this.load();
+    });
   }
 
   async load(): Promise<void> {
@@ -85,6 +104,57 @@ export class RecipeDetailComponent implements OnInit {
       /** No ingredient has a soluble value, so there is nothing to show. */
       solubleUnknown: !res.breakdown.some((b) => b.solubleMg !== null),
     };
+  }
+
+  /** "Copy of <name>" with the same ingredients, serves, tags and notes; then open it. */
+  async duplicate(): Promise<void> {
+    const r = this.recipe;
+    if (!r || this.duplicating) return;
+    this.duplicating = true;
+    this.duplicateError = false;
+    try {
+      const copy = await this.recipes.create({
+        name: `Copy of ${r.name}`,
+        serves: r.serves,
+        ingredients: r.ingredients,
+        notes: r.notes ?? '',
+        tags: r.tags ?? [],
+        photoUrl: r.photoUrl,
+      });
+      this.notifications.show('Copy created.', 'Close', ['success-snackbar']);
+      await this.router.navigate(['/recipes', copy.id]);
+    } catch {
+      this.duplicateError = true;
+    } finally {
+      this.duplicating = false;
+    }
+  }
+
+  openDelete(): void {
+    this.deleteError = false;
+    this.deleteOpen = true;
+  }
+
+  closeDelete(): void {
+    this.deleteOpen = false;
+    setTimeout(() => this.deleteButton?.nativeElement.focus());
+  }
+
+  async confirmDelete(): Promise<void> {
+    if (!this.recipe || this.deleting) return;
+    this.deleting = true;
+    this.deleteError = false;
+    try {
+      await this.recipes.remove(this.recipe.id);
+      this.drafts.clear(this.recipe.id);
+      this.deleteOpen = false;
+      this.notifications.show('Recipe deleted.', 'Close', ['success-snackbar']);
+      await this.router.navigate(['/recipes']);
+    } catch {
+      this.deleteError = true;
+    } finally {
+      this.deleting = false;
+    }
   }
 
   setShowSources(on: boolean): void {

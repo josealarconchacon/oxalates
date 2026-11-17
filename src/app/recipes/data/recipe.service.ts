@@ -51,6 +51,11 @@ export class RecipeService {
     return updated;
   }
 
+  async remove(id: string): Promise<void> {
+    const uid = await this.uid();
+    await this.item(uid, id).delete();
+  }
+
   private async uid(): Promise<string> {
     const user = await this.auth.getCurrentUser();
     if (!user) throw new Error('Not signed in');
