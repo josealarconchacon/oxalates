@@ -5,9 +5,26 @@
 
   @switch (state) {
     @case ('loading') {
-      <div class="rd-card" aria-busy="true" aria-label="Loading recipe">
-        <span class="sk sk--title"></span>
-        <span class="sk"></span>
+      <div class="skeleton" role="status" aria-busy="true" aria-label="Loading recipe">
+        <div class="hero" aria-hidden="true">
+          <span class="sk sk--photo"></span>
+          <div class="intro">
+            <span class="sk sk--title"></span>
+            <span class="sk sk--meta"></span>
+            <div class="tiles">
+              <span class="sk sk--tile"></span>
+              <span class="sk sk--tile"></span>
+            </div>
+          </div>
+        </div>
+        <div class="lower" aria-hidden="true">
+          <div class="rd-card">
+            <span class="sk sk--h2"></span>
+            @for (row of [1, 2, 3, 4]; track row) {
+              <span class="sk sk--row"></span>
+            }
+          </div>
+        </div>
       </div>
     }
     @case ('not-found') {

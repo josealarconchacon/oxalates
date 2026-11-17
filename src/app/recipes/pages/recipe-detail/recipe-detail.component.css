@@ -408,16 +408,53 @@
 .sk {
   display: block;
   height: 14px;
-  margin-top: 12px;
   border-radius: 7px;
-  background: var(--color-line);
+  background: var(--rd-surface-2);
   animation: pulse 1.2s ease-in-out infinite;
 }
 
+/* Skeleton pieces follow the page's shapes and grids (.hero, .lower). */
+.sk--photo {
+  height: auto;
+  aspect-ratio: 16 / 9;
+  border-radius: 24px;
+}
+
+@media (min-width: 1024px) {
+  .sk--photo {
+    aspect-ratio: 4 / 3;
+  }
+}
+
+.skeleton .intro {
+  justify-items: stretch;
+}
+
 .sk--title {
-  width: 55%;
-  height: 32px;
-  margin-top: 0;
+  width: 70%;
+  height: 40px;
+  border-radius: 10px;
+}
+
+.sk--meta {
+  width: 45%;
+}
+
+.sk--tile {
+  height: 92px;
+  border-radius: 16px;
+}
+
+.sk--h2 {
+  width: 40%;
+  height: 24px;
+  margin-bottom: 20px;
+}
+
+.sk--row {
+  height: 40px;
+  margin-top: 14px;
+  border-radius: 10px;
 }
 
 @keyframes pulse {

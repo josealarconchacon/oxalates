@@ -441,4 +441,30 @@ describe('RecipeDetailComponent', () => {
       expect(squash(actions())).toBe('');
     });
   });
+
+  describe('states', () => {
+    it('loading: a skeleton shaped like the page (title, two tiles, four rows)', async () => {
+      get.and.returnValue(new Promise(() => {}));
+      fixture = TestBed.createComponent(RecipeDetailComponent);
+      fixture.detectChanges();
+      const sk = el().querySelector('.skeleton')!;
+      expect(sk.getAttribute('aria-busy')).toBe('true');
+      expect(sk.getAttribute('aria-label')).toBe('Loading recipe');
+      expect(sk.querySelectorAll('.sk--title').length).toBe(1);
+      expect(sk.querySelectorAll('.sk--tile').length).toBe(2);
+      expect(sk.querySelectorAll('.sk--row').length).toBe(4);
+      expect(el().querySelector('h1')).toBeNull();
+    });
+
+    it('a food no longer in the list: keeps its name, counts as unknown, and says why', async () => {
+      get.and.resolveTo({ ...recipe([grams('carrot', 100, 'Carrot'), grams('gone', 50, 'Old kale')]), id: 'r1' });
+      await render();
+      const rows = Array.from(el().querySelectorAll('app-recipe-breakdown li'));
+      const gone = rows.find((li) => li.getAttribute('aria-label')!.startsWith('Old kale'))!;
+      expect(squash(gone.querySelector('.mg'))).toBe('Unknown');
+      expect(squash(gone.querySelector('.source'))).toBe('No longer in the food list');
+      expect(el().querySelector('app-incomplete-badge')).not.toBeNull();
+      expect(el().querySelector('app-level-pill')!.textContent!.trim()).toMatch(/^At least /);
+    });
+  });
 });
