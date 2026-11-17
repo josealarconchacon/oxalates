@@ -80,8 +80,18 @@
                   />
                 }
               </div>
-            } @else {
-              <p class="placeholder">No ingredients yet. Adding them comes in the next step.</p>
+            } @else if (!adding) {
+              <p class="placeholder">No ingredients yet. Search the food list to add one.</p>
+            }
+
+            @if (adding && !useSheet) {
+              <div class="add-panel">
+                <app-ingredient-search (added)="addIngredient($event)" (closed)="closeAdd()" />
+              </div>
+            } @else if (!adding) {
+              <button #addButton type="button" class="btn-outline add-btn" (click)="openAdd()">
+                <app-icon name="plus" [size]="18" /> Add ingredient
+              </button>
             }
           </section>
 
@@ -130,6 +140,17 @@
         </button>
       </div>
     }
+  }
+
+  @if (adding && useSheet) {
+    <div class="sheet-backdrop" (click)="$event.target === $event.currentTarget && closeAdd()">
+      <div class="add-sheet" role="dialog" aria-modal="true" aria-labelledby="add-sheet-title"
+        cdkTrapFocus [cdkTrapFocusAutoCapture]="true">
+        <span class="sheet-handle" aria-hidden="true"></span>
+        <h2 id="add-sheet-title" class="sheet-title">Add ingredient</h2>
+        <app-ingredient-search (added)="addIngredient($event)" (closed)="closeAdd()" />
+      </div>
+    </div>
   }
 
   @if (sheetIngredient; as ingredient) {

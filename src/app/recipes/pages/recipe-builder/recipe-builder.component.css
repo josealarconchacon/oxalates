@@ -171,6 +171,67 @@
   margin-top: 8px;
 }
 
+.add-btn {
+  margin-top: 16px;
+  --icon-stroke: 2.25;
+}
+
+.add-btn:hover {
+  border-color: var(--color-muted);
+}
+
+/* Desktop: the add flow sits under the list. */
+.add-panel {
+  margin-top: 16px;
+  padding: 12px;
+  border: 2px solid var(--color-accent);
+  border-radius: 16px;
+}
+
+/* Below 1024px: the add flow is a bottom sheet. */
+.sheet-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 2000;
+  display: flex;
+  align-items: flex-end;
+  background: rgba(0, 0, 0, 0.5);
+}
+
+.add-sheet {
+  display: grid;
+  align-content: start;
+  gap: 12px;
+  width: 100%;
+  max-height: 88dvh;
+  padding: 10px 20px 0;
+  overflow-y: auto;
+  border-radius: 24px 24px 0 0;
+  background: var(--color-surface);
+  animation: sheet-up 0.25s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+.sheet-handle {
+  justify-self: center;
+  width: 40px;
+  height: 4px;
+  border-radius: 999px;
+  background: var(--color-line);
+}
+
+.sheet-title {
+  margin: 4px 0 0;
+  font-family: var(--font-family-display);
+  font-size: 1.25rem;
+  font-weight: 700;
+}
+
+@keyframes sheet-up {
+  from {
+    transform: translateY(100%);
+  }
+}
+
 .placeholder {
   margin: 12px 0 0;
   color: var(--color-muted);
@@ -404,7 +465,8 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .sk {
+  .sk,
+  .add-sheet {
     animation: none;
   }
 }

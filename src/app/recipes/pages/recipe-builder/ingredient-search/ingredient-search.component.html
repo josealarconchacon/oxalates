@@ -1,0 +1,85 @@
+@if (!picked) {
+  <div class="search-head">
+    <div class="search-box">
+      <app-icon class="search-icon" name="search" [size]="18" />
+      <input
+        #searchInput
+        class="search-input"
+        type="text"
+        role="combobox"
+        aria-label="Search foods"
+        aria-autocomplete="list"
+        autocomplete="off"
+        placeholder="Search foods, e.g. carrots"
+        [value]="query"
+        [attr.aria-expanded]="results.length > 0"
+        [attr.aria-controls]="listId"
+        [attr.aria-activedescendant]="active >= 0 ? optionId(active) : null"
+        (input)="onQuery($any($event.target).value)"
+        (keydown)="onSearchKey($event)"
+      />
+    </div>
+    <button type="button" class="icon-btn" aria-label="Close" (click)="closed.emit()">
+      <app-icon name="x" [size]="18" />
+    </button>
+  </div>
+
+  @if (loading) {
+    <p class="status" role="status">Searching…</p>
+  } @else if (results.length) {
+    <ul class="results" role="listbox" [id]="listId" aria-label="Foods">
+      @for (food of results; track $index; let i = $index) {
+        <li
+          role="option"
+          class="result"
+          [id]="optionId(i)"
+          [class.active]="i === active"
+          [attr.aria-selected]="i === active"
+          (mousemove)="active = i"
+          (click)="pick(food)"
+        >
+          <span class="result-text">
+            <span class="result-name">{{ food.item }}</span>
+            <span class="result-meta">{{ meta(food) }}</span>
+          </span>
+          @if (levelOf(food); as level) {
+            <app-level-pill [level]="level" />
+          }
+        </li>
+      }
+    </ul>
+  } @else if (trimmedQuery.length >= 2) {
+    <p class="status" role="status">We couldn't find “{{ trimmedQuery }}”.</p>
+  } @else {
+    <p class="status">Type at least 2 letters.</p>
+  }
+} @else if (draft) {
+  <!-- Amount step for the picked food. Enter adds. -->
+  <div class="picked">
+    <button type="button" class="back" (click)="backToSearch()">
+      <app-icon name="arrow-left" [size]="16" /> Search
+    </button>
+    <button type="button" class="icon-btn" aria-label="Close" (click)="closed.emit()">
+      <app-icon name="x" [size]="18" />
+    </button>
+  </div>
+  <div class="picked-food">
+    <span class="result-text">
+      <span class="result-name">{{ picked.item }}</span>
+      <span class="result-meta">{{ meta(picked) }}</span>
+    </span>
+    @if (levelOf(picked); as level) {
+      <app-level-pill [level]="level" />
+    }
+  </div>
+  <div class="amount-row" [id]="listId + '-amount'" (keydown.enter)="add()" (keydown.escape)="closed.emit()">
+    <app-amount-editor [ingredient]="draft" [options]="options" (changed)="draft = $event" />
+    <span class="draft-mg" aria-live="polite">{{ draftMg }}</span>
+  </div>
+  <div class="actions">
+    <button type="button" class="add" [disabled]="!(draft.inputAmount > 0)" (click)="add()">
+      Add {{ draftAmountText }}
+    </button>
+  </div>
+}
+<p class="sr-only" aria-live="polite">{{ announcement }}</p>

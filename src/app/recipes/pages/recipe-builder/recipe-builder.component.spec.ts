@@ -1,6 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ActivatedRoute, Router, convertToParamMap, provideRouter } from '@angular/router';
 import { NotificationService } from 'src/app/landing-page/dialog-service/oxalate/service/notification.service';
+import { OxalateService } from 'src/app/landing-page/dialog-service/service/oxalate.service';
 import { of } from 'rxjs';
 import { RecipeFoodsService } from '../../data/recipe-foods.service';
 import { RecipeService } from '../../data/recipe.service';
@@ -54,6 +55,7 @@ describe('RecipeBuilderComponent', () => {
         { provide: RecipeService, useValue: service },
         { provide: NotificationService, useValue: { show: notify } },
         { provide: RecipeFoodsService, useValue: { lookup$: of(foods) } },
+        { provide: OxalateService, useValue: { searchOxalateData: () => of([]) } },
       ],
     });
   });
@@ -231,6 +233,31 @@ describe('RecipeBuilderComponent', () => {
     it('the empty recipe says how to start', async () => {
       await render();
       expect(summary()).toContain('Add an ingredient to see the total.');
+    });
+  });
+
+  describe('add ingredient', () => {
+    beforeEach(() => render());
+
+    it('"Add ingredient" opens the search; a picked food becomes a row; Close returns focus', async () => {
+      el().querySelector<HTMLButtonElement>('.add-btn')!.click();
+      fixture.detectChanges();
+      const search = el().querySelector('app-ingredient-search')!;
+      expect(search).not.toBeNull();
+
+      search.dispatchEvent(new Event('noop'));
+      fixture.debugElement
+        .query((d) => d.name === 'app-ingredient-search')
+        .componentInstance.added.emit({ ...grams('carrot', 150, 'Carrot') });
+      fixture.detectChanges();
+      expect(el().querySelectorAll('app-ingredient-row').length).toBe(1);
+      expect(el().querySelector('.section-meta')!.textContent).toBe('1 · 15.0 mg');
+
+      el().querySelector<HTMLButtonElement>('app-ingredient-search [aria-label="Close"]')!.click();
+      fixture.detectChanges();
+      await new Promise((r) => setTimeout(r));
+      expect(el().querySelector('app-ingredient-search')).toBeNull();
+      expect(document.activeElement).toBe(el().querySelector('.add-btn'));
     });
   });
 });

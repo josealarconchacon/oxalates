@@ -1,5 +1,7 @@
 import { Component, DestroyRef, ElementRef, OnInit, ViewChild, inject } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { A11yModule } from '@angular/cdk/a11y';
+import { BreakpointObserver } from '@angular/cdk/layout';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { NotificationService } from 'src/app/landing-page/dialog-service/oxalate/service/notification.service';
@@ -14,6 +16,7 @@ import { IngredientBreakdown, Recipe, RecipeIngredient, RecipeResult } from '../
 import { LevelPillComponent } from '../../shared/level-pill/level-pill.component';
 import { AmountSheetComponent } from './amount-sheet/amount-sheet.component';
 import { IngredientRowComponent } from './ingredient-row/ingredient-row.component';
+import { IngredientSearchComponent } from './ingredient-search/ingredient-search.component';
 import { LiveSummaryComponent } from './live-summary/live-summary.component';
 import { SummaryView, summaryView } from './live-summary/summary-view';
 import { ServesStepperComponent } from './serves-stepper/serves-stepper.component';
@@ -31,6 +34,8 @@ import { ServesStepperComponent } from './serves-stepper/serves-stepper.componen
     AmountSheetComponent,
     LiveSummaryComponent,
     LevelPillComponent,
+    IngredientSearchComponent,
+    A11yModule,
   ],
   templateUrl: './recipe-builder.component.html',
   styleUrl: './recipe-builder.component.css',
@@ -42,6 +47,7 @@ export class RecipeBuilderComponent implements OnInit {
   private notifications = inject(NotificationService);
   private foods = inject(RecipeFoodsService);
   private destroyRef = inject(DestroyRef);
+  private breakpoints = inject(BreakpointObserver);
 
   @ViewChild('nameInput') private nameInput?: ElementRef<HTMLInputElement>;
 
@@ -63,6 +69,12 @@ export class RecipeBuilderComponent implements OnInit {
   /** Phones: the ingredient whose amount sheet is open. */
   sheetId: string | null = null;
   @ViewChild('ingredientsTitle') private ingredientsTitle?: ElementRef<HTMLElement>;
+  @ViewChild('addButton') private addButton?: ElementRef<HTMLButtonElement>;
+
+  /** The add-ingredient panel (desktop) or sheet (below 1024px) is open. */
+  adding = false;
+  /** Below 1024px, adding happens in a bottom sheet. */
+  useSheet = false;
 
   mode: 'create' | 'edit' = 'create';
   state: 'loading' | 'not-found' | 'ready' = 'ready';
@@ -78,6 +90,10 @@ export class RecipeBuilderComponent implements OnInit {
       this.foodsReady = true;
       this.recalc();
     });
+    this.breakpoints
+      .observe('(max-width: 1023.98px)')
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe((state) => (this.useSheet = state.matches));
     this.form.controls.serves.valueChanges
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe(() => this.recalc());
@@ -177,6 +193,20 @@ export class RecipeBuilderComponent implements OnInit {
 
   get sheetIngredient(): RecipeIngredient | undefined {
     return this.ingredients.find((i) => i.id === this.sheetId);
+  }
+
+  openAdd(): void {
+    this.adding = true;
+  }
+
+  closeAdd(): void {
+    this.adding = false;
+    setTimeout(() => this.addButton?.nativeElement.focus());
+  }
+
+  addIngredient(ingredient: RecipeIngredient): void {
+    this.ingredients = [...this.ingredients, ingredient];
+    this.recalc();
   }
 
   updateIngredient(updated: RecipeIngredient): void {
