@@ -10,6 +10,8 @@ import { calculateRecipe } from '../../engine/recipe-calculator';
 import { levelForMgPerServing } from '../../engine/recipe-level';
 import { Recipe, RecipeResult } from '../../model/recipe';
 import { LevelPillComponent } from '../../shared/level-pill/level-pill.component';
+import { BreakdownComponent } from './breakdown/breakdown.component';
+import { BreakdownRowView, breakdownRows } from './breakdown/breakdown-view';
 import { IncompleteBadgeComponent } from './incomplete-badge/incomplete-badge.component';
 
 /** Levels that get the calm "higher side" note. */
@@ -19,7 +21,7 @@ const HIGHER_LEVELS = new Set(['high', 'very high', 'extremely high']);
 @Component({
   selector: 'app-recipe-detail',
   standalone: true,
-  imports: [RouterLink, IconComponent, LevelPillComponent, IncompleteBadgeComponent],
+  imports: [RouterLink, IconComponent, LevelPillComponent, IncompleteBadgeComponent, BreakdownComponent],
   templateUrl: './recipe-detail.component.html',
   styleUrl: './recipe-detail.component.css',
 })
@@ -32,6 +34,7 @@ export class RecipeDetailComponent implements OnInit {
   state: 'loading' | 'not-found' | 'error' | 'ready' = 'loading';
   recipe: Recipe | null = null;
   result: RecipeResult | null = null;
+  rows: BreakdownRowView[] = [];
   private id = '';
 
   ngOnInit(): void {
@@ -48,6 +51,7 @@ export class RecipeDetailComponent implements OnInit {
       ]);
       this.recipe = recipe;
       this.result = recipe ? calculateRecipe(recipe, getFood, levelForMgPerServing) : null;
+      this.rows = recipe && this.result ? breakdownRows(recipe, this.result) : [];
       this.state = recipe ? 'ready' : 'not-found';
     } catch {
       this.state = 'error';

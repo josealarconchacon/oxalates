@@ -93,6 +93,8 @@
             <a class="btn-outline" [routerLink]="['/recipes', r.id, 'edit']">Edit</a>
           </div>
         </section>
+
+        <app-recipe-breakdown class="block" [rows]="rows" [totalMg]="n.whole" [hasTotal]="!result.allUnknown" />
       }
     }
   }

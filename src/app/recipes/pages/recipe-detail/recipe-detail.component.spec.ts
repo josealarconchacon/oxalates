@@ -176,4 +176,42 @@ describe('RecipeDetailComponent', () => {
       expect(el().querySelector('.calm-note')).toBeNull();
     });
   });
+
+  describe("What's driving this", () => {
+    const soup = (): Recipe => ({
+      ...recipe([grams('carrot', 200, 'Carrot'), custom('Tapioca starch', 20)], 2),
+      id: 'r1',
+      name: 'Carrot soup',
+    });
+
+    it('lists each ingredient with mg, share and a bar; unknown rows last', async () => {
+      get.and.resolveTo(soup());
+      await render();
+      const card = el().querySelector('app-recipe-breakdown')!;
+      expect(squash(card.querySelector('h2'))).toBe("What's driving this");
+      expect(squash(card.querySelector('.sub'))).toBe("Whole recipe, highest first. Bars show each ingredient's share of 20.0 mg.");
+      const items = Array.from(card.querySelectorAll('li'));
+      expect(items.map((li) => li.getAttribute('aria-label'))).toEqual([
+        'Carrot, 200 g, 20.0 mg, 100 percent of total',
+        'Tapioca starch, 20 g, oxalate unknown',
+      ]);
+      expect(items[0].querySelector<HTMLElement>('.fill')!.style.width).toBe('100%');
+      expect(squash(items[1].querySelector('.mg'))).toBe('Unknown');
+      expect(squash(items[1].querySelector('.pct'))).toBe('—');
+      expect(items[1].querySelector('.track')).toBeNull();
+    });
+
+    it('a name in the Incomplete popover moves focus to its row', async () => {
+      const r = soup();
+      get.and.resolveTo(r);
+      await render();
+      document.body.appendChild(el());
+      el().querySelector<HTMLButtonElement>('app-incomplete-badge .badge')!.click();
+      fixture.detectChanges();
+      el().querySelector<HTMLAnchorElement>('#incomplete-popover a')!.click();
+      fixture.detectChanges();
+      expect(document.activeElement!.id).toBe('ing-' + r.ingredients[1].id);
+      el().remove();
+    });
+  });
 });
