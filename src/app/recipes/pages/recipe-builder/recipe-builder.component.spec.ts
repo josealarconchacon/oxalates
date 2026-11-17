@@ -396,14 +396,16 @@ describe('RecipeBuilderComponent', () => {
       expect(localStorage.getItem('recipe-draft:new')).toBeNull();
     }));
 
-    it('Cancel drops the draft', fakeAsync(() => {
+    it('choosing "Leave" drops the draft', fakeAsync(() => {
       TestBed.overrideProvider(ActivatedRoute, { useValue: { snapshot: { paramMap: convertToParamMap({}) } } });
       fixture = TestBed.createComponent(RecipeBuilderComponent);
-      spyOn(TestBed.inject(Router), 'navigateByUrl').and.resolveTo(true);
       fixture.detectChanges();
       fixture.componentInstance.form.controls.name.setValue('Never mind');
       tick(400);
-      el().querySelector<HTMLAnchorElement>('.summary .btn-ghost')!.click();
+      expect(localStorage.getItem('recipe-draft:new')).not.toBeNull();
+      void fixture.componentInstance.canLeave();
+      fixture.detectChanges();
+      el().querySelectorAll<HTMLButtonElement>('app-leave-dialog button')[1].click();
       expect(localStorage.getItem('recipe-draft:new')).toBeNull();
     }));
 
@@ -414,6 +416,71 @@ describe('RecipeBuilderComponent', () => {
       await submit();
       expect(service.create).toHaveBeenCalled();
       expect(localStorage.getItem('recipe-draft:new')).toBeNull();
+    });
+  });
+
+  describe('leaving with unsaved changes', () => {
+    const dialog = () => el().querySelector('app-leave-dialog [role="alertdialog"]');
+    const buttons = () => [...el().querySelectorAll<HTMLButtonElement>('app-leave-dialog button')];
+
+    beforeEach(() => render());
+
+    it('leaves freely when nothing changed', () => {
+      expect(fixture.componentInstance.canLeave()).toBeTrue();
+      expect(dialog()).toBeNull();
+    });
+
+    it('asks "Leave without saving?"; Keep editing stays', async () => {
+      type('#recipe-name', 'Soup');
+      const answer = fixture.componentInstance.canLeave() as Promise<boolean>;
+      fixture.detectChanges();
+      expect(dialog()!.getAttribute('aria-modal')).toBe('true');
+      expect(dialog()!.textContent).toContain('Leave without saving?');
+      expect(dialog()!.textContent).toContain('Your changes to this recipe will be lost.');
+      expect(buttons().map((b) => b.textContent!.trim())).toEqual(['Keep editing', 'Leave']);
+      buttons()[0].click();
+      fixture.detectChanges();
+      expect(await answer).toBeFalse();
+      expect(dialog()).toBeNull();
+      expect(el().querySelector<HTMLInputElement>('#recipe-name')!.value).toBe('Soup');
+    });
+
+    it('Leave lets the navigation go ahead', async () => {
+      type('#recipe-name', 'Soup');
+      const answer = fixture.componentInstance.canLeave() as Promise<boolean>;
+      fixture.detectChanges();
+      buttons()[1].click();
+      expect(await answer).toBeTrue();
+    });
+
+    it('Esc means keep editing', async () => {
+      type('#recipe-name', 'Soup');
+      const answer = fixture.componentInstance.canLeave() as Promise<boolean>;
+      fixture.detectChanges();
+      document.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape' }));
+      expect(await answer).toBeFalse();
+    });
+
+    it('after a successful save there is nothing to ask about', async () => {
+      service.create.and.callFake(async (d) => ({ ...recipe([]), ...d }));
+      fixture.componentInstance.addIngredient(grams('carrot', 100, 'Carrot'));
+      type('#recipe-name', 'Soup');
+      await submit();
+      expect(fixture.componentInstance.canLeave()).toBeTrue();
+    });
+
+    // Called directly: a real window 'beforeunload' makes Karma think the page reloaded.
+    it('closing the tab with changes asks the browser to warn', () => {
+      const unload = () => {
+        const event = { preventDefault: jasmine.createSpy('preventDefault'), returnValue: undefined as unknown };
+        fixture.componentInstance.onBeforeUnload(event as unknown as BeforeUnloadEvent);
+        return event;
+      };
+      expect(unload().preventDefault).not.toHaveBeenCalled();
+      type('#recipe-name', 'Soup');
+      const dirty = unload();
+      expect(dirty.preventDefault).toHaveBeenCalled();
+      expect(dirty.returnValue).toBe('');
     });
   });
 });

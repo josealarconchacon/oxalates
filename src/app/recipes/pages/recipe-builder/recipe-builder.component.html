@@ -132,7 +132,7 @@
           <button type="submit" form="recipe-form" class="btn-accent btn-block" [disabled]="saving">
             {{ saving ? 'Saving…' : mode === 'edit' ? 'Save changes' : 'Save recipe' }}
           </button>
-          <a class="btn-ghost btn-block" routerLink="/recipes" (click)="cancel()">Cancel</a>
+          <a class="btn-ghost btn-block" routerLink="/recipes">Cancel</a>
           @if (mode === 'edit') {
             <p class="summary-note">Past days keep the numbers they were logged with.</p>
           }
@@ -177,6 +177,10 @@
         <app-ingredient-search (added)="addIngredient($event)" (closed)="closeAdd()" />
       </div>
     </div>
+  }
+
+  @if (askingToLeave) {
+    <app-leave-dialog (choose)="onLeaveChoice($event)" />
   }
 
   @if (sheetIngredient; as ingredient) {

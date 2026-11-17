@@ -1,4 +1,4 @@
-import { Component, DestroyRef, ElementRef, OnInit, ViewChild, inject } from '@angular/core';
+import { Component, DestroyRef, ElementRef, HostListener, OnInit, ViewChild, inject } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { Subject, debounceTime, fromEvent, merge } from 'rxjs';
 import { A11yModule } from '@angular/cdk/a11y';
@@ -24,6 +24,8 @@ import { LiveSummaryComponent } from './live-summary/live-summary.component';
 import { SummaryView, summaryView } from './live-summary/summary-view';
 import { ServesStepperComponent } from './serves-stepper/serves-stepper.component';
 import { TagPickerComponent } from './tag-picker/tag-picker.component';
+import { LeaveDialogComponent } from './leave-dialog/leave-dialog.component';
+import { LeavesSafely } from '../../guards/unsaved-changes.guard';
 
 /** A save that hasn't answered by then counts as failed (e.g. lost connection). */
 export const SAVE_TIMEOUT_MS = 15_000;
@@ -43,12 +45,13 @@ export const SAVE_TIMEOUT_MS = 15_000;
     LevelPillComponent,
     IngredientSearchComponent,
     TagPickerComponent,
+    LeaveDialogComponent,
     A11yModule,
   ],
   templateUrl: './recipe-builder.component.html',
   styleUrl: './recipe-builder.component.css',
 })
-export class RecipeBuilderComponent implements OnInit {
+export class RecipeBuilderComponent implements OnInit, LeavesSafely {
   private recipes = inject(RecipeService);
   private route = inject(ActivatedRoute);
   private router = inject(Router);
@@ -101,6 +104,8 @@ export class RecipeBuilderComponent implements OnInit {
   private recipe: Recipe | null = null;
   private recipeId: string | null = null;
   private changes = new Subject<void>();
+  /** Set while "Leave without saving?" is open; answers the route guard. */
+  private leaveAnswer: ((leave: boolean) => void) | null = null;
 
   ngOnInit(): void {
     this.recalc();
@@ -191,10 +196,34 @@ export class RecipeBuilderComponent implements OnInit {
     }
   }
 
-  /** Cancel: the user chose to drop their changes. */
-  cancel(): void {
-    this.drafts.clear(this.recipeId);
-    this.dirty = false;
+  get askingToLeave(): boolean {
+    return this.leaveAnswer !== null;
+  }
+
+  /** The route guard asks this before any navigation away (Cancel included). */
+  canLeave(): boolean | Promise<boolean> {
+    if (!this.dirty) return true;
+    return new Promise<boolean>((resolve) => (this.leaveAnswer = resolve));
+  }
+
+  onLeaveChoice(leave: boolean): void {
+    const answer = this.leaveAnswer;
+    this.leaveAnswer = null;
+    if (leave) {
+      // The dialog said the changes will be lost, so drop the draft too.
+      this.drafts.clear(this.recipeId);
+      this.dirty = false;
+    }
+    answer?.(leave);
+  }
+
+  /** Closing or reloading the tab: the browser shows its own warning. */
+  @HostListener('window:beforeunload', ['$event'])
+  onBeforeUnload(event: BeforeUnloadEvent): void {
+    if (this.dirty) {
+      event.preventDefault();
+      event.returnValue = ''; // older browsers need this set
+    }
   }
 
   /** "Discard" on the restored-draft banner: back to the saved version. */

@@ -1,4 +1,5 @@
 import { Routes } from '@angular/router';
+import { unsavedChangesGuard } from './guards/unsaved-changes.guard';
 
 /** Lazy-loaded under /recipes (signed-in only, see app-routing). */
 export const RECIPE_ROUTES: Routes = [
@@ -13,11 +14,13 @@ export const RECIPE_ROUTES: Routes = [
     loadComponent: () =>
       import('./pages/recipe-builder/recipe-builder.component').then((m) => m.RecipeBuilderComponent),
     title: 'New recipe',
+    canDeactivate: [unsavedChangesGuard],
   },
   {
     path: ':id/edit',
     loadComponent: () =>
       import('./pages/recipe-builder/recipe-builder.component').then((m) => m.RecipeBuilderComponent),
     title: 'Edit recipe',
+    canDeactivate: [unsavedChangesGuard],
   },
 ];
