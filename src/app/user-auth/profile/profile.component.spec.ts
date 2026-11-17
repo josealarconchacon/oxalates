@@ -41,7 +41,7 @@ describe('ProfileComponent', () => {
         AlertComponent,
         IconComponent,
       ],
-      providers: [provideRouter([]), provideNoopAnimations()],
+      providers: [provideRouter([{ path: 'auth', children: [] }]), provideNoopAnimations()],
     });
 
     fixture = TestBed.createComponent(ProfileComponent);
