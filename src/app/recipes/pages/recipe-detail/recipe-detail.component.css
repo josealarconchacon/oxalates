@@ -1,0 +1,141 @@
+/* Recipe detail. Cards use .rd-card (not the global .card, which adds a
+   transform). Colors: shared --color-* tokens plus --rd-* below. */
+:host {
+  display: block;
+
+  --rd-surface-2: #f1f4f0;
+  --rd-warning-bg: #fff4db;
+  --rd-warning-text: #6b4e00;
+  --rd-danger: #b42318;
+  --rd-bar: #17603f;
+}
+
+:host-context(.dark-theme) {
+  --rd-surface-2: #1d2621;
+  --rd-warning-bg: #33290e;
+  --rd-warning-text: #f2c94c;
+  --rd-danger: #f59b94;
+  --rd-bar: #7fd9aa;
+}
+
+.page {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: calc(var(--header-height, 72px) + 28px) 24px 64px;
+  font-family: var(--font-family-sans);
+  color: var(--color-ink);
+}
+
+.back {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  min-height: 44px;
+  margin: -10px 0 8px -8px;
+  padding: 0 8px;
+  border-radius: 10px;
+  color: var(--color-accent-fg);
+  font-size: 0.875rem;
+  font-weight: 700;
+  text-decoration: none;
+  --icon-stroke: 2.25;
+}
+
+.back:hover {
+  text-decoration: underline;
+}
+
+.title {
+  margin: 8px 0 16px;
+  font-family: var(--font-family-display);
+  font-size: 2.625rem; /* 42px */
+  font-weight: 700;
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+  overflow-wrap: anywhere;
+}
+
+.rd-card {
+  padding: 24px;
+  border: 1px solid var(--color-line);
+  border-radius: 22px;
+  background: var(--color-surface);
+}
+
+.message {
+  display: grid;
+  justify-items: center;
+  gap: 12px;
+  text-align: center;
+}
+
+.message-title {
+  margin: 0;
+  font-weight: 700;
+}
+
+.btn-outline {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  min-height: 44px;
+  padding: 0 16px;
+  border: 1px solid var(--color-line);
+  border-radius: 12px;
+  background: transparent;
+  color: var(--color-ink);
+  font: inherit;
+  font-size: 0.9375rem;
+  font-weight: 700;
+  text-decoration: none;
+  cursor: pointer;
+  --icon-stroke: 2;
+}
+
+.btn-outline:hover {
+  border-color: var(--color-muted);
+}
+
+.sk {
+  display: block;
+  height: 14px;
+  margin-top: 12px;
+  border-radius: 7px;
+  background: var(--color-line);
+  animation: pulse 1.2s ease-in-out infinite;
+}
+
+.sk--title {
+  width: 55%;
+  height: 32px;
+  margin-top: 0;
+}
+
+@keyframes pulse {
+  50% {
+    opacity: 0.5;
+  }
+}
+
+.back:focus-visible,
+.btn-outline:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: 2px;
+}
+
+@media (max-width: 640px) {
+  .page {
+    padding-inline: 16px;
+  }
+
+  .title {
+    font-size: 1.875rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .sk {
+    animation: none;
+  }
+}

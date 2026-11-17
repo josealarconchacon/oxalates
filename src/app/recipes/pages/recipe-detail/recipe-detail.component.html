@@ -1,0 +1,33 @@
+<div class="page">
+  <a class="back" routerLink="/recipes">
+    <app-icon name="arrow-left" [size]="16" /> Recipes
+  </a>
+
+  @switch (state) {
+    @case ('loading') {
+      <div class="rd-card" aria-busy="true" aria-label="Loading recipe">
+        <span class="sk sk--title"></span>
+        <span class="sk"></span>
+      </div>
+    }
+    @case ('not-found') {
+      <div class="rd-card message" role="alert">
+        <p class="message-title">We couldn't find that recipe.</p>
+        <a class="btn-outline" routerLink="/recipes">Back to Recipes</a>
+      </div>
+    }
+    @case ('error') {
+      <div class="rd-card message" role="alert">
+        <p class="message-title">We couldn't load this recipe.</p>
+        <button type="button" class="btn-outline" (click)="load()">Try again</button>
+      </div>
+    }
+    @default {
+      @if (recipe; as r) {
+        <h1 class="title">{{ r.name }}</h1>
+        <!-- Temporary until the actions row (step 7). -->
+        <a class="btn-outline" [routerLink]="['/recipes', r.id, 'edit']">Edit</a>
+      }
+    }
+  }
+</div>

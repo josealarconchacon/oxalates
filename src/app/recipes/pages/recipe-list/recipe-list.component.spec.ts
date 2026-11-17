@@ -51,11 +51,11 @@ describe('RecipeListComponent', () => {
     expect(cta.getAttribute('href')).toBe('/recipes/new');
   });
 
-  it('a row shows name, serves and per-serving mg, and links to its edit page', async () => {
+  it('a row shows name, serves and per-serving mg, and links to its detail page', async () => {
     list.and.resolveTo([{ ...recipe([grams('carrot', 200)], 4), id: 'r9', name: 'Carrot soup' }]);
     await render();
     const row = el().querySelector<HTMLAnchorElement>('a.rl-row')!;
-    expect(row.getAttribute('href')).toBe('/recipes/r9/edit');
+    expect(row.getAttribute('href')).toBe('/recipes/r9');
     expect(row.textContent).toContain('Carrot soup');
     expect(row.textContent).toContain('Serves 4');
     expect(row.textContent!.replace(/\s+/g, ' ')).toContain('5.0 mg per serving');

@@ -17,6 +17,12 @@ export const RECIPE_ROUTES: Routes = [
     canDeactivate: [unsavedChangesGuard],
   },
   {
+    path: ':id',
+    loadComponent: () =>
+      import('./pages/recipe-detail/recipe-detail.component').then((m) => m.RecipeDetailComponent),
+    title: 'Recipe',
+  },
+  {
     path: ':id/edit',
     loadComponent: () =>
       import('./pages/recipe-builder/recipe-builder.component').then((m) => m.RecipeBuilderComponent),

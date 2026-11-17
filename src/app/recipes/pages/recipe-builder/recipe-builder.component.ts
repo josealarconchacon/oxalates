@@ -183,17 +183,25 @@ export class RecipeBuilderComponent implements OnInit, LeavesSafely {
       const write = this.recipe
         ? this.recipes.update({ ...this.recipe, ...draft })
         : this.recipes.create(draft);
-      await withTimeout(write, SAVE_TIMEOUT_MS);
+      const saved = await withTimeout(write, SAVE_TIMEOUT_MS);
       this.drafts.clear(this.recipeId);
       this.dirty = false;
       this.notifications.show('Recipe saved.', 'Close', ['success-snackbar']);
-      // TODO(PR 3): open the recipe's detail page instead of the list.
-      void this.router.navigate(['/recipes']);
+      void this.router.navigate(['/recipes', saved.id]);
     } catch {
       this.saveFailed = true;
     } finally {
       this.saving = false;
     }
+  }
+
+  /** Back and Cancel: the recipe's page when editing, the list when new. */
+  get backLink(): string[] {
+    return this.mode === 'edit' && this.recipeId ? ['/recipes', this.recipeId] : ['/recipes'];
+  }
+
+  get backLabel(): string {
+    return this.mode === 'edit' ? 'Recipe' : 'Recipes';
   }
 
   get askingToLeave(): boolean {
