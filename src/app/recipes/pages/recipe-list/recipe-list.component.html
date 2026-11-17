@@ -1,4 +1,4 @@
-<main class="page">
+<div class="page">
   <header class="page-head">
     <h1 class="title">Recipes</h1>
     @if (state !== 'ready' || rows.length) {
@@ -12,7 +12,7 @@
     @case ('loading') {
       <ul class="list" aria-busy="true" aria-label="Loading your recipes">
         @for (s of skeletons; track s) {
-          <li class="row row--skeleton" aria-hidden="true">
+          <li class="rl-row rl-row--skeleton" aria-hidden="true">
             <span class="sk sk--name"></span><span class="sk sk--meta"></span>
           </li>
         }
@@ -29,7 +29,7 @@
         <ul class="list">
           @for (row of rows; track row.id) {
             <li>
-              <a class="row" [routerLink]="['/recipes', row.id, 'edit']">
+              <a class="rl-row" [routerLink]="['/recipes', row.id, 'edit']">
                 <span class="row-main">
                   <span class="row-name">{{ row.name }}</span>
                   <span class="row-meta">Serves {{ row.serves }}</span>
@@ -67,4 +67,4 @@
       }
     }
   }
-</main>
+</div>

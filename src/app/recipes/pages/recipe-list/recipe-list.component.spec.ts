@@ -39,7 +39,7 @@ describe('RecipeListComponent', () => {
     fixture = TestBed.createComponent(RecipeListComponent);
     fixture.detectChanges();
     expect(el().querySelector('[aria-busy="true"]')).not.toBeNull();
-    expect(el().querySelectorAll('.row--skeleton').length).toBe(3);
+    expect(el().querySelectorAll('.rl-row--skeleton').length).toBe(3);
   });
 
   it('empty state invites the first recipe', async () => {
@@ -54,7 +54,7 @@ describe('RecipeListComponent', () => {
   it('a row shows name, serves and per-serving mg, and links to its edit page', async () => {
     list.and.resolveTo([{ ...recipe([grams('carrot', 200)], 4), id: 'r9', name: 'Carrot soup' }]);
     await render();
-    const row = el().querySelector<HTMLAnchorElement>('a.row')!;
+    const row = el().querySelector<HTMLAnchorElement>('a.rl-row')!;
     expect(row.getAttribute('href')).toBe('/recipes/r9/edit');
     expect(row.textContent).toContain('Carrot soup');
     expect(row.textContent).toContain('Serves 4');
@@ -65,7 +65,7 @@ describe('RecipeListComponent', () => {
   it('an incomplete recipe says "at least" and shows the Incomplete badge', async () => {
     list.and.resolveTo([{ ...recipe([grams('carrot', 100), custom('Tapioca', 20)]), id: 'r1' }]);
     await render();
-    const row = el().querySelector('a.row')!;
+    const row = el().querySelector('a.rl-row')!;
     expect(row.textContent).toContain('at least');
     expect(row.querySelector('.badge')!.textContent!.trim()).toBe('Incomplete');
   });
