@@ -6,12 +6,14 @@
 
   <!-- Phones: the name + amount open the amount sheet. -->
   <button type="button" class="open" (click)="openAmount.emit()"
-    [attr.aria-label]="'Change amount of ' + ingredient.name + ', ' + amountText">
+    [attr.aria-label]="'Change amount of ' + ingredient.name + ', ' + amountText"
+    [attr.aria-describedby]="error ? errorId : null">
     <span class="name">{{ ingredient.name }}</span>
     <span class="sub">{{ amountText }}</span>
   </button>
 
-  <app-amount-editor class="editor" [ingredient]="ingredient" [options]="options" (changed)="changed.emit($event)" />
+  <app-amount-editor class="editor" [ingredient]="ingredient" [options]="options"
+    [invalid]="!!error" [describedBy]="error ? errorId : null" (changed)="changed.emit($event)" />
 
   <span class="mg">
     @if (!hasAmount) {
@@ -26,4 +28,8 @@
   <button type="button" class="remove" [attr.aria-label]="'Remove ' + ingredient.name" (click)="remove.emit()">
     <app-icon name="trash-2" [size]="18" />
   </button>
+
+  @if (error) {
+    <p class="row-error" [id]="errorId">{{ error }}</p>
+  }
 </div>

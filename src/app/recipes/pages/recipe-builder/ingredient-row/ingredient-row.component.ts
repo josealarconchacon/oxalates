@@ -23,10 +23,16 @@ export class IngredientRowComponent {
   @Input() options: UnitOption[] = [];
   /** e.g. "Source: LO Cookbook 2" */
   @Input() source = '';
+  /** Validation message for this row (after Save was tried). */
+  @Input() error: string | null = null;
   @Output() changed = new EventEmitter<RecipeIngredient>();
   @Output() remove = new EventEmitter<void>();
   /** Phones: open the amount sheet. */
   @Output() openAmount = new EventEmitter<void>();
+
+  get errorId(): string {
+    return `ingredient-error-${this.ingredient.id}`;
+  }
 
   get hasAmount(): boolean {
     return this.ingredient.inputAmount > 0;

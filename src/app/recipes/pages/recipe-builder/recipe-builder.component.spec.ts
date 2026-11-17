@@ -1,4 +1,4 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed, fakeAsync, tick } from '@angular/core/testing';
 import { ActivatedRoute, Router, convertToParamMap, provideRouter } from '@angular/router';
 import { NotificationService } from 'src/app/landing-page/dialog-service/oxalate/service/notification.service';
 import { OxalateService } from 'src/app/landing-page/dialog-service/service/oxalate.service';
@@ -6,7 +6,7 @@ import { of } from 'rxjs';
 import { RecipeFoodsService } from '../../data/recipe-foods.service';
 import { RecipeService } from '../../data/recipe.service';
 import { custom, food, grams, lookup, recipe, servings } from '../../engine/testing/fixtures';
-import { RecipeBuilderComponent } from './recipe-builder.component';
+import { RecipeBuilderComponent, SAVE_TIMEOUT_MS } from './recipe-builder.component';
 
 const foods = lookup(
   food({ id: 'carrot', item: 'Carrot', total_oxalate_mg_per_100g: '10.00', total_soluble_oxalate_mg_per_100g: '4.00', reference: 'LO Cookbook 2' }),
@@ -45,7 +45,14 @@ describe('RecipeBuilderComponent', () => {
     fixture.detectChanges();
   }
 
+  const clearDrafts = () => {
+    localStorage.removeItem('recipe-draft:new');
+    localStorage.removeItem('recipe-draft:r1');
+  };
+  afterEach(clearDrafts);
+
   beforeEach(() => {
+    clearDrafts();
     service = jasmine.createSpyObj('RecipeService', ['get', 'create', 'update']);
     notify = jasmine.createSpy('show');
     TestBed.configureTestingModule({
@@ -72,6 +79,7 @@ describe('RecipeBuilderComponent', () => {
 
     it('needs a name: shows the error, focuses the field, saves nothing', async () => {
       await submit();
+      await new Promise((r) => setTimeout(r));
       const name = el().querySelector<HTMLInputElement>('#recipe-name')!;
       expect(el().querySelector('#recipe-name-error')!.textContent).toBe('Give your recipe a name.');
       expect(name.getAttribute('aria-describedby')).toBe('recipe-name-error');
@@ -81,6 +89,8 @@ describe('RecipeBuilderComponent', () => {
 
     it('saves the trimmed name, serves and notes, then shows the toast and goes to the list', async () => {
       service.create.and.callFake(async (d) => ({ ...recipe([]), ...d }));
+      const carrot = grams('carrot', 100, 'Carrot');
+      fixture.componentInstance.addIngredient(carrot);
       type('#recipe-name', '  Carrot soup ');
       type('#recipe-notes', 'Simmer 20 min.');
       el().querySelector<HTMLButtonElement>('[aria-label="More servings"]')!.click();
@@ -90,7 +100,7 @@ describe('RecipeBuilderComponent', () => {
         serves: 5,
         notes: 'Simmer 20 min.',
         tags: [],
-        ingredients: [],
+        ingredients: [carrot],
       });
       expect(notify).toHaveBeenCalledWith('Recipe saved.', 'Close', ['success-snackbar']);
       expect(navigate).toHaveBeenCalledWith(['/recipes']);
@@ -98,6 +108,7 @@ describe('RecipeBuilderComponent', () => {
 
     it('saves the tags picked in the tag picker', async () => {
       service.create.and.callFake(async (d) => ({ ...recipe([]), ...d }));
+      fixture.componentInstance.addIngredient(grams('carrot', 100, 'Carrot'));
       type('#recipe-name', 'Smoothie');
       el().querySelector<HTMLButtonElement>('app-tag-picker .chip--add')!.click();
       fixture.detectChanges();
@@ -111,6 +122,7 @@ describe('RecipeBuilderComponent', () => {
 
     it('a failed save keeps everything and offers "Try again"', async () => {
       service.create.and.rejectWith(new Error('offline'));
+      fixture.componentInstance.addIngredient(grams('carrot', 100, 'Carrot'));
       type('#recipe-name', 'Carrot soup');
       await submit();
       expect(text()).toContain("We couldn't save your recipe. Your changes are still here.");
@@ -120,7 +132,7 @@ describe('RecipeBuilderComponent', () => {
   });
 
   describe('edit', () => {
-    const stored = { ...recipe([], 3), id: 'r1', name: 'Soup', notes: 'Stir.', tags: ['Gluten-free'] };
+    const stored = { ...recipe([grams('carrot', 100, 'Carrot')], 3), id: 'r1', name: 'Soup', notes: 'Stir.', tags: ['Gluten-free'] };
 
     it('loads the recipe into the form', async () => {
       service.get.and.resolveTo(stored);
@@ -281,6 +293,127 @@ describe('RecipeBuilderComponent', () => {
       await new Promise((r) => setTimeout(r));
       expect(el().querySelector('app-ingredient-search')).toBeNull();
       expect(document.activeElement).toBe(el().querySelector('.add-btn'));
+    });
+  });
+
+  describe('validation', () => {
+    const settle = () => new Promise((r) => setTimeout(r));
+
+    it('lists every problem under its field, in your words', async () => {
+      await render();
+      const serves = el().querySelector<HTMLInputElement>('#recipe-serves')!;
+      serves.value = '';
+      serves.dispatchEvent(new Event('input'));
+      await submit();
+      expect(el().querySelector('#recipe-name-error')!.textContent).toBe('Give your recipe a name.');
+      expect(el().querySelector('#recipe-serves-error')!.textContent).toBe('Serves must be 1 or more.');
+      expect(el().querySelector('#ingredients-error')!.textContent).toBe('Add at least one ingredient.');
+      expect(service.create).not.toHaveBeenCalled();
+    });
+
+    it('a bad amount shows under its row, gets focus, and clears when fixed', async () => {
+      service.get.and.resolveTo({ ...recipe([grams('carrot', 0, 'Carrot')], 2), id: 'r1' });
+      await render('r1');
+      await submit();
+      await settle();
+      const row = el().querySelector('app-ingredient-row')!;
+      expect(row.querySelector('.row-error')!.textContent).toBe('Enter an amount above 0.');
+      const amount = row.querySelector<HTMLInputElement>('[aria-label="Amount of Carrot"]')!;
+      expect(amount.getAttribute('aria-invalid')).toBe('true');
+      // Focus lands on whichever is visible: the amount box, or the tappable row on phones.
+      const visible = amount.offsetParent !== null ? amount : row.querySelector('.open');
+      expect(document.activeElement).toBe(visible);
+      amount.value = '120';
+      amount.dispatchEvent(new Event('input'));
+      fixture.detectChanges();
+      expect(row.querySelector('.row-error')).toBeNull();
+    });
+
+    it('over 10,000 g is not allowed', async () => {
+      service.get.and.resolveTo({ ...recipe([grams('carrot', 12000, 'Carrot')], 2), id: 'r1' });
+      await render('r1');
+      await submit();
+      expect(el().querySelector('.row-error')!.textContent).toBe('Use 10,000 g or less.');
+      expect(service.update).not.toHaveBeenCalled();
+    });
+  });
+
+  describe('save states', () => {
+    it('a save that never answers ends as "couldn\'t save" after the timeout', fakeAsync(() => {
+      service.create.and.returnValue(new Promise(() => {}));
+      TestBed.overrideProvider(ActivatedRoute, { useValue: { snapshot: { paramMap: convertToParamMap({}) } } });
+      fixture = TestBed.createComponent(RecipeBuilderComponent);
+      spyOn(TestBed.inject(Router), 'navigate');
+      fixture.detectChanges();
+      fixture.componentInstance.addIngredient(grams('carrot', 100, 'Carrot'));
+      fixture.componentInstance.form.controls.name.setValue('Soup');
+      void fixture.componentInstance.save();
+      fixture.detectChanges();
+      expect(el().querySelector('.summary .btn-accent')!.textContent!.trim()).toBe('Saving…');
+      tick(SAVE_TIMEOUT_MS);
+      fixture.detectChanges();
+      expect(el().textContent).toContain("We couldn't save your recipe. Your changes are still here.");
+      tick(1000);
+    }));
+
+    it('offline: shows the banner, waits, and saves when back online', async () => {
+      const onLine = spyOnProperty(navigator, 'onLine').and.returnValue(false);
+      service.create.and.callFake(async (d) => ({ ...recipe([]), ...d }));
+      await render();
+      expect(el().textContent).toContain("You're offline. You can keep editing; we'll save when you're back.");
+      fixture.componentInstance.addIngredient(grams('carrot', 100, 'Carrot'));
+      type('#recipe-name', 'Soup');
+      await submit();
+      expect(service.create).not.toHaveBeenCalled();
+      expect(localStorage.getItem('recipe-draft:new')).toContain('Soup');
+
+      onLine.and.returnValue(true);
+      window.dispatchEvent(new Event('online'));
+      await fixture.whenStable();
+      expect(service.create).toHaveBeenCalled();
+      expect(localStorage.getItem('recipe-draft:new')).toBeNull();
+    });
+  });
+
+  describe('local draft', () => {
+    it('keeps changes in this browser and brings them back on the next visit', fakeAsync(() => {
+      TestBed.overrideProvider(ActivatedRoute, { useValue: { snapshot: { paramMap: convertToParamMap({}) } } });
+      fixture = TestBed.createComponent(RecipeBuilderComponent);
+      fixture.detectChanges();
+      fixture.componentInstance.form.controls.name.setValue('Half-made soup');
+      tick(400);
+      expect(JSON.parse(localStorage.getItem('recipe-draft:new')!).name).toBe('Half-made soup');
+      fixture.destroy();
+
+      fixture = TestBed.createComponent(RecipeBuilderComponent);
+      fixture.detectChanges();
+      expect(el().querySelector<HTMLInputElement>('#recipe-name')!.value).toBe('Half-made soup');
+      expect(el().textContent).toContain("We brought back the changes you hadn't saved.");
+
+      el().querySelector<HTMLButtonElement>('.banner--info .banner-action')!.click();
+      fixture.detectChanges();
+      expect(el().querySelector<HTMLInputElement>('#recipe-name')!.value).toBe('');
+      expect(localStorage.getItem('recipe-draft:new')).toBeNull();
+    }));
+
+    it('Cancel drops the draft', fakeAsync(() => {
+      TestBed.overrideProvider(ActivatedRoute, { useValue: { snapshot: { paramMap: convertToParamMap({}) } } });
+      fixture = TestBed.createComponent(RecipeBuilderComponent);
+      spyOn(TestBed.inject(Router), 'navigateByUrl').and.resolveTo(true);
+      fixture.detectChanges();
+      fixture.componentInstance.form.controls.name.setValue('Never mind');
+      tick(400);
+      el().querySelector<HTMLAnchorElement>('.summary .btn-ghost')!.click();
+      expect(localStorage.getItem('recipe-draft:new')).toBeNull();
+    }));
+
+    it('a successful save clears the draft', async () => {
+      service.create.and.callFake(async (d) => ({ ...recipe([]), ...d }));
+      localStorage.setItem('recipe-draft:new', JSON.stringify({ name: 'Soup', serves: 2, notes: '', tags: [], ingredients: [grams('carrot', 100, 'Carrot')], savedAt: '' }));
+      await render();
+      await submit();
+      expect(service.create).toHaveBeenCalled();
+      expect(localStorage.getItem('recipe-draft:new')).toBeNull();
     });
   });
 });

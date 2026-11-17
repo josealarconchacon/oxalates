@@ -77,6 +77,14 @@
   border-color: var(--color-muted);
 }
 
+.row-error {
+  grid-column: 1 / -1;
+  margin: -4px 0 0;
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--rb-danger, #b42318);
+}
+
 .remove:focus-visible,
 .open:focus-visible {
   outline: var(--focus-ring);

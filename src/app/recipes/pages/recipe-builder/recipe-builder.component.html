@@ -20,6 +20,18 @@
       </div>
     }
     @default {
+      @if (offline) {
+        <div class="banner banner--warning" role="status">
+          <app-icon name="alert-triangle" [size]="18" />
+          <span>You're offline. You can keep editing; we'll save when you're back.</span>
+        </div>
+      }
+      @if (restoredDraft) {
+        <div class="banner banner--info" role="status">
+          <span>We brought back the changes you hadn't saved.</span>
+          <button type="button" class="banner-action" (click)="discardDraft()">Discard them</button>
+        </div>
+      }
       @if (saveFailed) {
         <div class="banner banner--danger" role="alert">
           <app-icon name="alert-triangle" [size]="18" />
@@ -43,20 +55,27 @@
                   formControlName="name"
                   autocomplete="off"
                   maxlength="80"
-                  [attr.aria-invalid]="nameError ? true : null"
-                  [attr.aria-describedby]="nameError ? 'recipe-name-error' : null"
-                  (input)="clearNameError()"
+                  [attr.aria-invalid]="errorFor('name') ? true : null"
+                  [attr.aria-describedby]="errorFor('name') ? 'recipe-name-error' : null"
                 />
-                @if (nameError) {
-                  <p id="recipe-name-error" class="field-error">{{ nameError }}</p>
+                @if (errorFor('name'); as error) {
+                  <p id="recipe-name-error" class="field-error">{{ error }}</p>
                 }
               </div>
               <div class="field field--serves">
                 <label class="label" for="recipe-serves">Serves</label>
-                <app-serves-stepper inputId="recipe-serves" formControlName="serves" />
+                <app-serves-stepper
+                  inputId="recipe-serves"
+                  formControlName="serves"
+                  [invalid]="!!errorFor('serves')"
+                  [describedBy]="errorFor('serves') ? 'recipe-serves-error' : null"
+                />
+                @if (errorFor('serves'); as error) {
+                  <p id="recipe-serves-error" class="field-error">{{ error }}</p>
+                }
               </div>
             </div>
-            <app-tag-picker class="tags" [tags]="tags" (tagsChange)="tags = $event" />
+            <app-tag-picker class="tags" [tags]="tags" (tagsChange)="onTagsChange($event)" />
           </section>
 
           <section class="rb-card" aria-labelledby="ingredients-title">
@@ -71,6 +90,8 @@
                 @for (ingredient of ingredients; track ingredient.id) {
                   <app-ingredient-row
                     role="listitem"
+                    [attr.data-ingredient-id]="ingredient.id"
+                    [error]="errorFor(ingredient.id)"
                     [ingredient]="ingredient"
                     [row]="rowFor(ingredient.id)"
                     [options]="optionsFor(ingredient)"
@@ -84,13 +105,17 @@
             } @else if (!adding) {
               <p class="placeholder">No ingredients yet. Search the food list to add one.</p>
             }
+            @if (errorFor('ingredients'); as error) {
+              <p id="ingredients-error" class="field-error">{{ error }}</p>
+            }
 
             @if (adding && !useSheet) {
               <div class="add-panel">
                 <app-ingredient-search (added)="addIngredient($event)" (closed)="closeAdd()" />
               </div>
             } @else if (!adding) {
-              <button #addButton type="button" class="btn-outline add-btn" (click)="openAdd()">
+              <button #addButton type="button" class="btn-outline add-btn" (click)="openAdd()"
+                [attr.aria-describedby]="errorFor('ingredients') ? 'ingredients-error' : null">
                 <app-icon name="plus" [size]="18" /> Add ingredient
               </button>
             }
@@ -107,7 +132,7 @@
           <button type="submit" form="recipe-form" class="btn-accent btn-block" [disabled]="saving">
             {{ saving ? 'Saving…' : mode === 'edit' ? 'Save changes' : 'Save recipe' }}
           </button>
-          <a class="btn-ghost btn-block" routerLink="/recipes">Cancel</a>
+          <a class="btn-ghost btn-block" routerLink="/recipes" (click)="cancel()">Cancel</a>
           @if (mode === 'edit') {
             <p class="summary-note">Past days keep the numbers they were logged with.</p>
           }

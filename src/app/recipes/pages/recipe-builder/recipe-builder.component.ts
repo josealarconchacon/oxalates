@@ -1,5 +1,6 @@
 import { Component, DestroyRef, ElementRef, OnInit, ViewChild, inject } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { Subject, debounceTime, fromEvent, merge } from 'rxjs';
 import { A11yModule } from '@angular/cdk/a11y';
 import { BreakpointObserver } from '@angular/cdk/layout';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
@@ -7,7 +8,9 @@ import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { NotificationService } from 'src/app/landing-page/dialog-service/oxalate/service/notification.service';
 import { IconComponent } from 'src/app/shared/components/icon/icon.component';
 import { RecipeFoodsService } from '../../data/recipe-foods.service';
+import { RecipeDraftService } from '../../data/recipe-draft.service';
 import { RecipeDraft, RecipeService } from '../../data/recipe.service';
+import { RecipeError, validateRecipe } from '../../engine/recipe-validation';
 import { formatMg } from '../../engine/format';
 import { FoodLookup, calculateRecipe } from '../../engine/recipe-calculator';
 import { levelForMgPerServing } from '../../engine/recipe-level';
@@ -21,6 +24,9 @@ import { LiveSummaryComponent } from './live-summary/live-summary.component';
 import { SummaryView, summaryView } from './live-summary/summary-view';
 import { ServesStepperComponent } from './serves-stepper/serves-stepper.component';
 import { TagPickerComponent } from './tag-picker/tag-picker.component';
+
+/** A save that hasn't answered by then counts as failed (e.g. lost connection). */
+export const SAVE_TIMEOUT_MS = 15_000;
 
 /** Create (/recipes/new) or edit (/recipes/:id/edit) a recipe. */
 @Component({
@@ -50,6 +56,7 @@ export class RecipeBuilderComponent implements OnInit {
   private foods = inject(RecipeFoodsService);
   private destroyRef = inject(DestroyRef);
   private breakpoints = inject(BreakpointObserver);
+  private drafts = inject(RecipeDraftService);
 
   @ViewChild('nameInput') private nameInput?: ElementRef<HTMLInputElement>;
 
@@ -81,8 +88,19 @@ export class RecipeBuilderComponent implements OnInit {
   state: 'loading' | 'not-found' | 'ready' = 'ready';
   saving = false;
   saveFailed = false;
-  nameError: string | null = null;
+  /** Validation runs after the first Save, then again on every change. */
+  private submitted = false;
+  errors: RecipeError[] = [];
+  /** The browser is offline; a Save waits until it's back. */
+  offline = typeof navigator !== 'undefined' && !navigator.onLine;
+  private saveWhenOnline = false;
+  /** A local draft from an earlier visit was put back into the form. */
+  restoredDraft = false;
+  /** Something changed since load or the last save (the leave guard uses this too). */
+  dirty = false;
   private recipe: Recipe | null = null;
+  private recipeId: string | null = null;
+  private changes = new Subject<void>();
 
   ngOnInit(): void {
     this.recalc();
@@ -95,14 +113,22 @@ export class RecipeBuilderComponent implements OnInit {
       .observe('(max-width: 1023.98px)')
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe((state) => (this.useSheet = state.matches));
-    this.form.controls.serves.valueChanges
+    this.form.valueChanges.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(() => this.changed());
+    // Keep a local draft a moment after each change.
+    this.changes
+      .pipe(debounceTime(400), takeUntilDestroyed(this.destroyRef))
+      .subscribe(() => this.keepDraft());
+    merge(fromEvent(window, 'online'), fromEvent(window, 'offline'))
       .pipe(takeUntilDestroyed(this.destroyRef))
-      .subscribe(() => this.recalc());
+      .subscribe(() => this.onConnectionChange());
 
     const id = this.route.snapshot.paramMap.get('id');
+    this.recipeId = id;
     if (id) {
       this.mode = 'edit';
       void this.load(id);
+    } else {
+      this.restoreDraft();
     }
   }
 
@@ -115,10 +141,8 @@ export class RecipeBuilderComponent implements OnInit {
         return;
       }
       this.recipe = recipe;
-      this.form.setValue({ name: recipe.name, serves: recipe.serves, notes: recipe.notes ?? '' });
-      this.ingredients = recipe.ingredients ?? [];
-      this.tags = recipe.tags ?? [];
-      this.recalc();
+      this.fill(recipe);
+      this.restoreDraft();
       this.state = 'ready';
     } catch {
       this.state = 'not-found';
@@ -127,12 +151,20 @@ export class RecipeBuilderComponent implements OnInit {
 
   async save(): Promise<void> {
     if (this.saving) return;
-    const { name, serves, notes } = this.form.getRawValue();
-    this.nameError = name.trim() ? null : 'Give your recipe a name.';
-    if (this.nameError) {
-      this.nameInput?.nativeElement.focus();
+    this.submitted = true;
+    this.errors = this.validate();
+    if (this.errors.length) {
+      this.focusFirstError();
       return;
     }
+    if (this.offline) {
+      // Firestore would wait silently; keep the draft and save when back.
+      this.saveWhenOnline = true;
+      this.keepDraft();
+      return;
+    }
+
+    const { name, serves, notes } = this.form.getRawValue();
     const draft: RecipeDraft = {
       name: name.trim(),
       serves: serves ?? 1,
@@ -140,15 +172,15 @@ export class RecipeBuilderComponent implements OnInit {
       tags: this.tags,
       ingredients: this.ingredients,
     };
-
     this.saving = true;
     this.saveFailed = false;
     try {
-      if (this.recipe) {
-        await this.recipes.update({ ...this.recipe, ...draft });
-      } else {
-        await this.recipes.create(draft);
-      }
+      const write = this.recipe
+        ? this.recipes.update({ ...this.recipe, ...draft })
+        : this.recipes.create(draft);
+      await withTimeout(write, SAVE_TIMEOUT_MS);
+      this.drafts.clear(this.recipeId);
+      this.dirty = false;
       this.notifications.show('Recipe saved.', 'Close', ['success-snackbar']);
       // TODO(PR 3): open the recipe's detail page instead of the list.
       void this.router.navigate(['/recipes']);
@@ -159,8 +191,90 @@ export class RecipeBuilderComponent implements OnInit {
     }
   }
 
-  clearNameError(): void {
-    this.nameError = null;
+  /** Cancel: the user chose to drop their changes. */
+  cancel(): void {
+    this.drafts.clear(this.recipeId);
+    this.dirty = false;
+  }
+
+  /** "Discard" on the restored-draft banner: back to the saved version. */
+  discardDraft(): void {
+    this.drafts.clear(this.recipeId);
+    this.restoredDraft = false;
+    this.fill(this.recipe);
+    this.dirty = false;
+  }
+
+  errorFor(field: string): string | null {
+    return this.errors.find((e) => e.field === field)?.message ?? null;
+  }
+
+  onTagsChange(tags: string[]): void {
+    this.tags = tags;
+    this.changed();
+  }
+
+  private validate(): RecipeError[] {
+    const { name, serves } = this.form.getRawValue();
+    return validateRecipe({ name, serves, ingredients: this.ingredients });
+  }
+
+  /** After a user edit: re-check (once Save was tried) and keep a draft. */
+  private changed(): void {
+    this.dirty = true;
+    this.recalc();
+    this.changes.next();
+  }
+
+  private fill(recipe: Recipe | null): void {
+    this.form.setValue(
+      { name: recipe?.name ?? '', serves: recipe?.serves ?? 4, notes: recipe?.notes ?? '' },
+      { emitEvent: false }
+    );
+    this.ingredients = recipe?.ingredients ?? [];
+    this.tags = recipe?.tags ?? [];
+    this.recalc();
+  }
+
+  private restoreDraft(): void {
+    const draft = this.drafts.load(this.recipeId);
+    if (!draft) return;
+    this.form.setValue({ name: draft.name, serves: draft.serves, notes: draft.notes }, { emitEvent: false });
+    this.ingredients = draft.ingredients;
+    this.tags = draft.tags;
+    this.restoredDraft = true;
+    this.dirty = true;
+    this.recalc();
+  }
+
+  private keepDraft(): void {
+    if (!this.dirty) return;
+    const { name, serves, notes } = this.form.getRawValue();
+    this.drafts.save(this.recipeId, { name, serves, notes, tags: this.tags, ingredients: this.ingredients });
+  }
+
+  private onConnectionChange(): void {
+    this.offline = !navigator.onLine;
+    if (!this.offline && this.saveWhenOnline) {
+      this.saveWhenOnline = false;
+      void this.save();
+    }
+  }
+
+  /** Errors come name → serves → ingredients → each ingredient, as on screen. */
+  private focusFirstError(): void {
+    const first = this.errors[0];
+    setTimeout(() => {
+      if (first.field === 'name') return this.nameInput?.nativeElement.focus();
+      if (first.field === 'serves') return document.getElementById('recipe-serves')?.focus();
+      if (first.field === 'ingredients') return this.addButton?.nativeElement.focus();
+      const row = document.querySelector(`[data-ingredient-id="${first.field}"]`);
+      // The amount box on wider screens; the tappable row on phones.
+      const target = [...(row?.querySelectorAll<HTMLElement>('.editor input, .open') ?? [])].find(
+        (e) => e.offsetParent !== null
+      );
+      target?.focus();
+    });
   }
 
   // ---- Ingredients and the live total ----
@@ -207,17 +321,17 @@ export class RecipeBuilderComponent implements OnInit {
 
   addIngredient(ingredient: RecipeIngredient): void {
     this.ingredients = [...this.ingredients, ingredient];
-    this.recalc();
+    this.changed();
   }
 
   updateIngredient(updated: RecipeIngredient): void {
     this.ingredients = this.ingredients.map((i) => (i.id === updated.id ? updated : i));
-    this.recalc();
+    this.changed();
   }
 
   removeIngredient(id: string): void {
     this.ingredients = this.ingredients.filter((i) => i.id !== id);
-    this.recalc();
+    this.changed();
     // The button is gone; put focus somewhere sensible.
     this.ingredientsTitle?.nativeElement.focus();
   }
@@ -230,5 +344,15 @@ export class RecipeBuilderComponent implements OnInit {
     );
     this.rowsById = new Map(this.result.breakdown.map((b) => [b.ingredientId, b]));
     this.view = summaryView(this.result, this.ingredients.length, this.foodsReady);
+    if (this.submitted) this.errors = this.validate();
   }
+}
+
+/** Rejects if the promise hasn't settled in time; the timer stops when it does. */
+function withTimeout<T>(promise: Promise<T>, ms: number): Promise<T> {
+  let timer: ReturnType<typeof setTimeout> | undefined;
+  const timeout = new Promise<T>((_, reject) => {
+    timer = setTimeout(() => reject(new Error('Save timed out')), ms);
+  });
+  return Promise.race([promise, timeout]).finally(() => clearTimeout(timer));
 }
