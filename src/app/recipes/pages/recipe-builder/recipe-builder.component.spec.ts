@@ -96,6 +96,19 @@ describe('RecipeBuilderComponent', () => {
       expect(navigate).toHaveBeenCalledWith(['/recipes']);
     });
 
+    it('saves the tags picked in the tag picker', async () => {
+      service.create.and.callFake(async (d) => ({ ...recipe([]), ...d }));
+      type('#recipe-name', 'Smoothie');
+      el().querySelector<HTMLButtonElement>('app-tag-picker .chip--add')!.click();
+      fixture.detectChanges();
+      [...el().querySelectorAll<HTMLButtonElement>('app-tag-picker .option')]
+        .find((o) => o.textContent!.trim() === 'Drink/Smoothie')!
+        .click();
+      fixture.detectChanges();
+      await submit();
+      expect(service.create.calls.mostRecent().args[0].tags).toEqual(['Drink/Smoothie']);
+    });
+
     it('a failed save keeps everything and offers "Try again"', async () => {
       service.create.and.rejectWith(new Error('offline'));
       type('#recipe-name', 'Carrot soup');

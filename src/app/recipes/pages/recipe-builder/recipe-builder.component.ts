@@ -20,6 +20,7 @@ import { IngredientSearchComponent } from './ingredient-search/ingredient-search
 import { LiveSummaryComponent } from './live-summary/live-summary.component';
 import { SummaryView, summaryView } from './live-summary/summary-view';
 import { ServesStepperComponent } from './serves-stepper/serves-stepper.component';
+import { TagPickerComponent } from './tag-picker/tag-picker.component';
 
 /** Create (/recipes/new) or edit (/recipes/:id/edit) a recipe. */
 @Component({
@@ -35,6 +36,7 @@ import { ServesStepperComponent } from './serves-stepper/serves-stepper.componen
     LiveSummaryComponent,
     LevelPillComponent,
     IngredientSearchComponent,
+    TagPickerComponent,
     A11yModule,
   ],
   templateUrl: './recipe-builder.component.html',
@@ -57,7 +59,6 @@ export class RecipeBuilderComponent implements OnInit {
     notes: new FormControl('', { nonNullable: true }),
   });
   ingredients: RecipeIngredient[] = [];
-  // Edited by a later step; kept as-is on save.
   tags: string[] = [];
 
   /** Recomputed by the engine on every change. */

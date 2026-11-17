@@ -8,13 +8,13 @@
     @case ('loading') {
       <div class="layout" aria-busy="true" aria-label="Loading recipe">
         <div class="form">
-          <div class="card card--skeleton"><span class="sk"></span><span class="sk sk--short"></span></div>
-          <div class="card card--skeleton"><span class="sk"></span><span class="sk"></span><span class="sk sk--short"></span></div>
+          <div class="rb-card rb-card--skeleton"><span class="sk"></span><span class="sk sk--short"></span></div>
+          <div class="rb-card rb-card--skeleton"><span class="sk"></span><span class="sk"></span><span class="sk sk--short"></span></div>
         </div>
       </div>
     }
     @case ('not-found') {
-      <div class="card message" role="alert">
+      <div class="rb-card message" role="alert">
         <p class="message-title">We couldn't find that recipe.</p>
         <a class="btn-outline" routerLink="/recipes">Back to recipes</a>
       </div>
@@ -30,8 +30,8 @@
 
       <div class="layout">
         <form id="recipe-form" class="form" [formGroup]="form" (ngSubmit)="save()" novalidate>
-          <!-- Name, serves (tags come in a later step) -->
-          <section class="card">
+          <!-- Name, serves, tags -->
+          <section class="rb-card">
             <div class="name-serves">
               <div class="field field--name">
                 <label class="label" for="recipe-name">Recipe name</label>
@@ -56,9 +56,10 @@
                 <app-serves-stepper inputId="recipe-serves" formControlName="serves" />
               </div>
             </div>
+            <app-tag-picker class="tags" [tags]="tags" (tagsChange)="tags = $event" />
           </section>
 
-          <section class="card" aria-labelledby="ingredients-title">
+          <section class="rb-card" aria-labelledby="ingredients-title">
             <div class="section-head">
               <h2 #ingredientsTitle id="ingredients-title" class="section-title" tabindex="-1">Ingredients</h2>
               @if (ingredients.length) {
@@ -95,13 +96,13 @@
             }
           </section>
 
-          <section class="card">
+          <section class="rb-card">
             <label class="label" for="recipe-notes">Notes and steps</label>
             <textarea id="recipe-notes" class="input textarea" rows="5" formControlName="notes"></textarea>
           </section>
         </form>
 
-        <aside class="summary card" aria-label="Recipe summary">
+        <aside class="summary rb-card" aria-label="Recipe summary">
           <app-live-summary [view]="view" [serves]="serves" [ingredientCount]="ingredients.length" />
           <button type="submit" form="recipe-form" class="btn-accent btn-block" [disabled]="saving">
             {{ saving ? 'Saving…' : mode === 'edit' ? 'Save changes' : 'Save recipe' }}

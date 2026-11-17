@@ -1,0 +1,66 @@
+<span class="label" [id]="id + '-label'">Tags</span>
+<div class="chips" role="group" [attr.aria-labelledby]="id + '-label'">
+  @for (tag of tags; track tag; let i = $index) {
+    <span class="chip">
+      <app-icon class="chip-icon" name="tag" [size]="14" />
+      <span>{{ tag }}</span>
+      <button type="button" class="chip-remove" [attr.aria-label]="'Remove tag ' + tag" (click)="remove(i)">
+        <app-icon name="x" [size]="14" />
+      </button>
+    </span>
+  }
+
+  @if (!full) {
+    <span class="add-wrap">
+      <button
+        #addButton
+        type="button"
+        class="chip chip--add"
+        [attr.aria-expanded]="open"
+        [attr.aria-controls]="id + '-menu'"
+        (click)="toggle()"
+      >
+        <app-icon name="plus" [size]="14" /> Add tag
+      </button>
+
+      @if (open) {
+        <div class="menu" [id]="id + '-menu'" role="group" aria-label="Add a tag">
+          @if (suggestions.length) {
+            <p class="menu-title">Suggestions</p>
+            <div class="menu-options">
+              @for (s of suggestions; track s) {
+                <button type="button" class="option" (click)="add(s)">{{ s }}</button>
+              }
+            </div>
+          }
+          <label class="menu-title" [for]="id + '-custom'">Your own tag</label>
+          <div class="custom">
+            <input
+              #customInput
+              class="custom-input"
+              type="text"
+              autocomplete="off"
+              [id]="id + '-custom'"
+              [attr.maxlength]="maxLength"
+              [value]="custom"
+              [attr.aria-describedby]="error ? id + '-error' : null"
+              (input)="custom = $any($event.target).value; error = null"
+              (keydown)="onCustomKey($event)"
+            />
+            <button type="button" class="custom-add" (click)="add(custom)">Add</button>
+          </div>
+          <p class="hint">{{ custom.length }}/{{ maxLength }}</p>
+          @if (error) {
+            <p class="error" [id]="id + '-error'" role="alert">{{ error }}</p>
+          }
+        </div>
+      }
+    </span>
+  }
+</div>
+<p class="helper">
+  Tags are your own labels. We don't check them.
+  @if (full) {
+    You can add up to {{ maxTags }}.
+  }
+</p>
