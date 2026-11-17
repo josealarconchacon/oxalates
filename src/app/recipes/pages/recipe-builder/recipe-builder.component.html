@@ -1,0 +1,196 @@
+<div class="page">
+  <a class="back" routerLink="/recipes">
+    <app-icon name="arrow-left" [size]="16" /> Recipes
+  </a>
+  <h1 class="title">{{ mode === 'edit' ? 'Edit recipe' : 'New recipe' }}</h1>
+
+  @switch (state) {
+    @case ('loading') {
+      <div class="layout" aria-busy="true" aria-label="Loading recipe">
+        <div class="form">
+          <div class="rb-card rb-card--skeleton"><span class="sk"></span><span class="sk sk--short"></span></div>
+          <div class="rb-card rb-card--skeleton"><span class="sk"></span><span class="sk"></span><span class="sk sk--short"></span></div>
+        </div>
+      </div>
+    }
+    @case ('not-found') {
+      <div class="rb-card message" role="alert">
+        <p class="message-title">We couldn't find that recipe.</p>
+        <a class="btn-outline" routerLink="/recipes">Back to recipes</a>
+      </div>
+    }
+    @default {
+      @if (offline) {
+        <div class="banner banner--warning" role="status">
+          <app-icon name="alert-triangle" [size]="18" />
+          <span>You're offline. You can keep editing; we'll save when you're back.</span>
+        </div>
+      }
+      @if (restoredDraft) {
+        <div class="banner banner--info" role="status">
+          <span>We brought back the changes you hadn't saved.</span>
+          <button type="button" class="banner-action" (click)="discardDraft()">Discard them</button>
+        </div>
+      }
+      @if (saveFailed) {
+        <div class="banner banner--danger" role="alert">
+          <app-icon name="alert-triangle" [size]="18" />
+          <span>We couldn't save your recipe. Your changes are still here.</span>
+          <button type="button" class="banner-action" (click)="save()">Try again</button>
+        </div>
+      }
+
+      <div class="layout">
+        <form id="recipe-form" class="form" [formGroup]="form" (ngSubmit)="save()" novalidate>
+          <!-- Name, serves, tags -->
+          <section class="rb-card">
+            <div class="name-serves">
+              <div class="field field--name">
+                <label class="label" for="recipe-name">Recipe name</label>
+                <input
+                  #nameInput
+                  id="recipe-name"
+                  class="input"
+                  type="text"
+                  formControlName="name"
+                  autocomplete="off"
+                  maxlength="80"
+                  [attr.aria-invalid]="errorFor('name') ? true : null"
+                  [attr.aria-describedby]="errorFor('name') ? 'recipe-name-error' : null"
+                />
+                @if (errorFor('name'); as error) {
+                  <p id="recipe-name-error" class="field-error">{{ error }}</p>
+                }
+              </div>
+              <div class="field field--serves">
+                <label class="label" for="recipe-serves">Serves</label>
+                <app-serves-stepper
+                  inputId="recipe-serves"
+                  formControlName="serves"
+                  [invalid]="!!errorFor('serves')"
+                  [describedBy]="errorFor('serves') ? 'recipe-serves-error' : null"
+                />
+                @if (errorFor('serves'); as error) {
+                  <p id="recipe-serves-error" class="field-error">{{ error }}</p>
+                }
+              </div>
+            </div>
+            <app-tag-picker class="tags" [tags]="tags" (tagsChange)="onTagsChange($event)" />
+          </section>
+
+          <section class="rb-card" aria-labelledby="ingredients-title">
+            <div class="section-head">
+              <h2 #ingredientsTitle id="ingredients-title" class="section-title" tabindex="-1">Ingredients</h2>
+              @if (ingredients.length) {
+                <span class="section-meta">{{ ingredientsTotal }}</span>
+              }
+            </div>
+            @if (ingredients.length) {
+              <div class="ingredients" role="list">
+                @for (ingredient of ingredients; track ingredient.id) {
+                  <app-ingredient-row
+                    role="listitem"
+                    [attr.data-ingredient-id]="ingredient.id"
+                    [error]="errorFor(ingredient.id)"
+                    [ingredient]="ingredient"
+                    [row]="rowFor(ingredient.id)"
+                    [options]="optionsFor(ingredient)"
+                    [source]="sourceFor(ingredient)"
+                    (changed)="updateIngredient($event)"
+                    (remove)="removeIngredient(ingredient.id)"
+                    (openAmount)="sheetId = ingredient.id"
+                  />
+                }
+              </div>
+            } @else if (!adding) {
+              <p class="placeholder">No ingredients yet. Search the food list to add one.</p>
+            }
+            @if (errorFor('ingredients'); as error) {
+              <p id="ingredients-error" class="field-error">{{ error }}</p>
+            }
+
+            @if (adding && !useSheet) {
+              <div class="add-panel">
+                <app-ingredient-search (added)="addIngredient($event)" (closed)="closeAdd()" />
+              </div>
+            } @else if (!adding) {
+              <button #addButton type="button" class="btn-outline add-btn" (click)="openAdd()"
+                [attr.aria-describedby]="errorFor('ingredients') ? 'ingredients-error' : null">
+                <app-icon name="plus" [size]="18" /> Add ingredient
+              </button>
+            }
+          </section>
+
+          <section class="rb-card">
+            <label class="label" for="recipe-notes">Notes and steps</label>
+            <textarea id="recipe-notes" class="input textarea" rows="5" formControlName="notes"></textarea>
+          </section>
+        </form>
+
+        <aside class="summary rb-card" aria-label="Recipe summary">
+          <app-live-summary [view]="view" [serves]="serves" [ingredientCount]="ingredients.length" />
+          <button type="submit" form="recipe-form" class="btn-accent btn-block" [disabled]="saving">
+            {{ saving ? 'Saving…' : mode === 'edit' ? 'Save changes' : 'Save recipe' }}
+          </button>
+          <a class="btn-ghost btn-block" routerLink="/recipes">Cancel</a>
+          @if (mode === 'edit') {
+            <p class="summary-note">Past days keep the numbers they were logged with.</p>
+          }
+        </aside>
+      </div>
+
+      <!-- Below 1024px the summary becomes this bar. -->
+      <div class="bottom-bar">
+        <div class="bar-total" aria-live="polite">
+          <span class="bar-label">Per serving</span>
+          <span class="bar-value">
+            @switch (view.state) {
+              @case ('ready') {
+                @if (view.atLeast) {<span class="bar-at-least">at least </span>}{{ view.perServing }} mg
+              }
+              @case ('unknown') { Unknown }
+              @default { — }
+            }
+          </span>
+        </div>
+        @if (view.state === 'ready' && view.level) {
+          <app-level-pill [level]="view.level" [prefix]="view.atLeast ? 'At least ' : ''" />
+        }
+        @if (view.state !== 'loading' && view.unknownNames.length) {
+          <app-icon class="bar-warning" name="alert-triangle" [size]="16" />
+          <span class="sr-only">Incomplete: some ingredients have no oxalate value.</span>
+        }
+        <span class="bottom-bar-spacer"></span>
+        <button type="submit" form="recipe-form" class="btn-accent" [disabled]="saving">
+          {{ saving ? 'Saving…' : mode === 'edit' ? 'Save changes' : 'Save' }}
+        </button>
+      </div>
+    }
+  }
+
+  @if (adding && useSheet) {
+    <div class="sheet-backdrop" (click)="$event.target === $event.currentTarget && closeAdd()">
+      <div class="add-sheet" role="dialog" aria-modal="true" aria-labelledby="add-sheet-title"
+        cdkTrapFocus [cdkTrapFocusAutoCapture]="true">
+        <span class="sheet-handle" aria-hidden="true"></span>
+        <h2 id="add-sheet-title" class="sheet-title">Add ingredient</h2>
+        <app-ingredient-search (added)="addIngredient($event)" (closed)="closeAdd()" />
+      </div>
+    </div>
+  }
+
+  @if (askingToLeave) {
+    <app-leave-dialog (choose)="onLeaveChoice($event)" />
+  }
+
+  @if (sheetIngredient; as ingredient) {
+    <app-amount-sheet
+      [ingredient]="ingredient"
+      [row]="rowFor(ingredient.id)"
+      [options]="optionsFor(ingredient)"
+      [source]="sourceFor(ingredient)"
+      (changed)="updateIngredient($event)"
+      (closed)="sheetId = null"
+    />
+  }
+</div>

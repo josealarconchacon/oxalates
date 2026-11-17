@@ -1,0 +1,490 @@
+/* Recipe builder. Cards use .rb-card, not .card: the global .card rule
+   (styles.css) adds a transform that stacks later cards over menus.
+   Two columns (form + sticky summary) from 1024px; below
+   that one column with a sticky bottom bar. Colors: shared --color-* tokens
+   plus the builder's --rb-* tokens below. */
+:host {
+  display: block;
+
+  --rb-input: #ffffff;
+  --rb-surface-2: #f1f4f0;
+  --rb-danger: #b42318;
+  --rb-danger-bg: #fef3f2;
+  --rb-warning-bg: #fff4db;
+  --rb-warning-text: #6b4e00;
+}
+
+:host-context(.dark-theme) {
+  --rb-input: #0e1411;
+  --rb-surface-2: #1d2621;
+  --rb-danger: #f59b94;
+  --rb-danger-bg: #2d1a19;
+  --rb-warning-bg: #33290e;
+  --rb-warning-text: #f2c94c;
+}
+
+.page {
+  max-width: 1140px;
+  margin: 0 auto;
+  padding: calc(var(--header-height, 72px) + 28px) 24px 64px;
+  font-family: var(--font-family-sans);
+  color: var(--color-ink);
+}
+
+.back {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  min-height: 44px;
+  margin: -10px 0 0 -8px;
+  padding: 0 8px;
+  border-radius: 10px;
+  color: var(--color-accent-fg);
+  font-size: 0.875rem;
+  font-weight: 700;
+  text-decoration: none;
+  --icon-stroke: 2.25;
+}
+
+.back:hover {
+  text-decoration: underline;
+}
+
+.title {
+  margin: 4px 0 20px;
+  font-family: var(--font-family-display);
+  font-size: 2.25rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
+
+/* ---- Layout ---- */
+.layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 340px;
+  align-items: start;
+  gap: 24px;
+}
+
+.form {
+  display: grid;
+  gap: 16px;
+  min-width: 0;
+}
+
+.rb-card {
+  padding: 24px;
+  border: 1px solid var(--color-line);
+  border-radius: 22px;
+  background: var(--color-surface);
+}
+
+.summary {
+  position: sticky;
+  top: calc(var(--header-height, 72px) + 24px);
+  display: grid;
+  gap: 8px;
+  padding: 20px;
+}
+
+.summary-note {
+  margin: 8px 0 0;
+  font-size: 0.8125rem;
+  color: var(--color-muted);
+  text-align: center;
+}
+
+/* ---- Fields ---- */
+.name-serves {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 160px;
+  gap: 16px;
+}
+
+.field {
+  min-width: 0;
+}
+
+.tags {
+  margin-top: 18px;
+}
+
+.label {
+  display: block;
+  margin-bottom: 8px;
+  font-size: 0.875rem;
+  font-weight: 700;
+}
+
+.input {
+  width: 100%;
+  height: 52px;
+  padding: 0 14px;
+  border: 1px solid var(--color-line);
+  border-radius: 14px;
+  background: var(--rb-input);
+  color: var(--color-ink);
+  font: inherit;
+  font-size: 1rem;
+  font-weight: 600;
+}
+
+.input[aria-invalid='true'] {
+  border-color: var(--rb-danger);
+}
+
+.textarea {
+  height: auto;
+  min-height: 120px;
+  padding: 12px 14px;
+  font-weight: 500;
+  line-height: 1.5;
+  resize: vertical;
+}
+
+.field-error {
+  margin: 6px 0 0;
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--rb-danger);
+}
+
+.section-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.section-title {
+  margin: 0;
+  font-family: var(--font-family-display);
+  font-size: 1.375rem;
+  font-weight: 700;
+}
+
+.section-meta {
+  font-size: 0.8125rem;
+  color: var(--color-muted);
+  font-variant-numeric: tabular-nums;
+}
+
+.section-title:focus {
+  outline: none;
+}
+
+.ingredients {
+  margin-top: 8px;
+}
+
+.add-btn {
+  margin-top: 16px;
+  --icon-stroke: 2.25;
+}
+
+.add-btn:hover {
+  border-color: var(--color-muted);
+}
+
+/* Desktop: the add flow sits under the list. */
+.add-panel {
+  margin-top: 16px;
+  padding: 12px;
+  border: 2px solid var(--color-accent);
+  border-radius: 16px;
+}
+
+/* Below 1024px: the add flow is a bottom sheet. */
+.sheet-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 2000;
+  display: flex;
+  align-items: flex-end;
+  background: rgba(0, 0, 0, 0.5);
+}
+
+.add-sheet {
+  display: grid;
+  align-content: start;
+  gap: 12px;
+  width: 100%;
+  max-height: 88dvh;
+  padding: 10px 20px 0;
+  overflow-y: auto;
+  border-radius: 24px 24px 0 0;
+  background: var(--color-surface);
+  animation: sheet-up 0.25s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+.sheet-handle {
+  justify-self: center;
+  width: 40px;
+  height: 4px;
+  border-radius: 999px;
+  background: var(--color-line);
+}
+
+.sheet-title {
+  margin: 4px 0 0;
+  font-family: var(--font-family-display);
+  font-size: 1.25rem;
+  font-weight: 700;
+}
+
+@keyframes sheet-up {
+  from {
+    transform: translateY(100%);
+  }
+}
+
+.placeholder {
+  margin: 12px 0 0;
+  color: var(--color-muted);
+}
+
+/* ---- Buttons ---- */
+.btn-accent,
+.btn-ghost,
+.btn-outline {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  min-height: 48px;
+  padding: 0 20px;
+  border-radius: 12px;
+  font: inherit;
+  font-size: 0.9375rem;
+  font-weight: 700;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.btn-accent {
+  border: 1px solid transparent;
+  background: var(--color-accent);
+  color: #ffffff;
+}
+
+.btn-accent:hover:not(:disabled) {
+  filter: brightness(1.1);
+}
+
+.btn-accent:disabled {
+  cursor: progress;
+  opacity: 0.75;
+}
+
+.btn-ghost {
+  border: 1px solid transparent;
+  background: transparent;
+  color: var(--color-ink);
+}
+
+.btn-ghost:hover {
+  background: var(--rb-surface-2);
+}
+
+.btn-outline {
+  border: 1px solid var(--color-line);
+  background: transparent;
+  color: var(--color-ink);
+}
+
+.btn-block {
+  width: 100%;
+}
+
+/* ---- Messages ---- */
+.banner {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 16px;
+  padding: 12px 16px;
+  border-radius: 14px;
+  font-weight: 600;
+  --icon-stroke: 2.25;
+}
+
+.banner--warning {
+  background: var(--rb-warning-bg);
+  color: var(--rb-warning-text);
+}
+
+.banner--info {
+  border: 1px solid var(--color-line);
+  background: var(--rb-surface-2);
+  color: var(--color-ink);
+  font-weight: 500;
+}
+
+.banner--danger {
+  background: var(--rb-danger-bg);
+  color: var(--rb-danger);
+}
+
+.banner-action {
+  margin-left: auto;
+  min-height: 40px;
+  padding: 0 14px;
+  border: 1px solid currentColor;
+  border-radius: 10px;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.message {
+  display: grid;
+  justify-items: center;
+  gap: 12px;
+  text-align: center;
+}
+
+.message-title {
+  margin: 0;
+  font-weight: 700;
+}
+
+/* ---- Loading ---- */
+.rb-card--skeleton {
+  display: grid;
+  gap: 12px;
+}
+
+.sk {
+  display: block;
+  height: 14px;
+  border-radius: 7px;
+  background: var(--color-line);
+  animation: pulse 1.2s ease-in-out infinite;
+}
+
+.sk--short {
+  width: 40%;
+}
+
+@keyframes pulse {
+  50% {
+    opacity: 0.5;
+  }
+}
+
+/* ---- Bottom bar (below 1024px) ---- */
+.bottom-bar {
+  display: none;
+}
+
+.bar-total {
+  display: grid;
+}
+
+.bar-label {
+  font-size: 0.75rem;
+  color: var(--color-muted);
+}
+
+.bar-value {
+  font-family: var(--font-family-display);
+  font-size: 1.375rem;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+.bar-at-least {
+  font-family: var(--font-family-sans);
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--color-muted);
+}
+
+.bar-warning {
+  color: var(--rb-warning-text);
+  --icon-stroke: 2.25;
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+}
+
+.back:focus-visible,
+.input:focus-visible,
+.btn-accent:focus-visible,
+.btn-ghost:focus-visible,
+.btn-outline:focus-visible,
+.banner-action:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: 2px;
+}
+
+@media (max-width: 1023.98px) {
+  .page {
+    padding-bottom: 120px; /* room above the bottom bar */
+  }
+
+  .layout {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .summary {
+    display: none;
+  }
+
+  .bottom-bar {
+    position: fixed;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    z-index: 900;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 24px calc(12px + env(safe-area-inset-bottom));
+    border-top: 1px solid var(--color-line);
+    background: var(--color-surface);
+  }
+
+  .bottom-bar-spacer {
+    flex: 1;
+  }
+}
+
+@media (max-width: 640px) {
+  .page {
+    padding-inline: 16px;
+  }
+
+  .title {
+    font-size: 1.875rem;
+  }
+
+  .rb-card {
+    padding: 18px;
+  }
+
+  .name-serves {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .bottom-bar {
+    padding-inline: 16px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .sk,
+  .add-sheet {
+    animation: none;
+  }
+}

@@ -1,0 +1,55 @@
+<div class="head">
+  <h2 class="label">Live total</h2>
+  @if (view.state === 'ready' && view.level) {
+    <app-level-pill [level]="view.level" [prefix]="view.atLeast ? 'At least ' : ''" />
+  }
+</div>
+
+<div class="tile" aria-live="polite">
+  <span class="tile-label">Per serving</span>
+  @switch (view.state) {
+    @case ('loading') {
+      <p class="hint">Loading food data…</p>
+    }
+    @case ('empty') {
+      <p class="big">—</p>
+      <p class="hint">Add an ingredient to see the total.</p>
+    }
+    @case ('unknown') {
+      <p class="big big--unknown">Unknown</p>
+    }
+    @default {
+      <p class="big">
+        @if (view.atLeast) {<span class="at-least">at least </span>}{{ view.perServing }}<span class="unit"> mg</span>
+      </p>
+    }
+  }
+</div>
+
+@if (view.state !== 'loading' && view.unknownNames.length) {
+  <div class="incomplete">
+    <span class="badge"><app-icon name="alert-triangle" [size]="14" /> Incomplete</span>
+    <p class="incomplete-text">
+      No oxalate value for: {{ view.unknownNames.join(', ') }}. Totals are “at least”.
+    </p>
+  </div>
+}
+
+<dl class="rows">
+  <div class="r">
+    <dt>Whole recipe</dt>
+    <dd>@if (view.state === 'ready') {@if (view.atLeast) {<span class="at-least">at least </span>}{{ view.wholeRecipe }} mg} @else {—}</dd>
+  </div>
+  <div class="r">
+    <dt>Soluble per serving</dt>
+    <dd>@if (view.state !== 'ready') {—} @else if (view.solubleUnknown) {Unknown} @else {@if (view.solubleAtLeast) {<span class="at-least">at least </span>}{{ view.solublePerServing }} mg}</dd>
+  </div>
+  <div class="r">
+    <dt>Serves</dt>
+    <dd>{{ serves }}</dd>
+  </div>
+  <div class="r">
+    <dt>Ingredients</dt>
+    <dd>{{ ingredientCount }}</dd>
+  </div>
+</dl>

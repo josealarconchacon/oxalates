@@ -12,14 +12,14 @@ describe('validateRecipe', () => {
     const r = { ...recipe([], 0), name: '  ' };
     expect(messages(r)).toEqual([
       'Give your recipe a name.',
-      'Servings must be a whole number, 1 or more.',
+      'Serves must be 1 or more.',
       'Add at least one ingredient.',
     ]);
-    expect(messages(recipe([grams('carrot', 100)], 1.5))).toContain('Servings must be a whole number, 1 or more.');
+    expect(messages(recipe([grams('carrot', 100)], 1.5))).toContain('Serves must be 1 or more.');
   });
 
   it('each amount must be > 0 and ≤ 10,000 g', () => {
-    expect(messages(recipe([grams('carrot', 0, 'Carrot')]))).toEqual(['Enter an amount for Carrot.']); // one message per problem
+    expect(messages(recipe([grams('carrot', 0, 'Carrot')]))).toEqual(['Enter an amount above 0.']); // one message per problem
     expect(messages(recipe([grams('carrot', 10_000)]))).toEqual([]);
     expect(messages(recipe([grams('carrot', 10_001)]))).toEqual(['Use 10,000 g or less.']);
   });
@@ -27,6 +27,10 @@ describe('validateRecipe', () => {
   it('household servings: > 0 and at most 100', () => {
     expect(messages(recipe([servings('tea', 100)]))).toEqual([]);
     expect(messages(recipe([servings('tea', 101)]))).toEqual(['Use 100 servings or fewer.']);
+  });
+
+  it('an empty Serves box is an error', () => {
+    expect(messages({ ...recipe([grams('carrot', 100)]), serves: null })).toEqual(['Serves must be 1 or more.']);
   });
 
   it('flags the ingredient by id', () => {

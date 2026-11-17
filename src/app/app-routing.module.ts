@@ -69,6 +69,12 @@ export const routes: Routes = [
     canActivate: [authGuard],
     title: 'Daily oxalate log',
   },
+  {
+    path: 'recipes',
+    loadChildren: () =>
+      import('./recipes/recipes.routes').then((m) => m.RECIPE_ROUTES),
+    canActivate: [authGuard],
+  },
   { path: '**', component: NotFoundComponent, title: 'Page not found' },
 ];
 

@@ -1,0 +1,191 @@
+:host {
+  display: block;
+}
+
+.label {
+  display: block;
+  margin-bottom: 8px;
+  font-size: 0.875rem;
+  font-weight: 700;
+}
+
+.chips {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+}
+
+/* Neutral outline chips: tags are labels, not levels. */
+.chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  min-height: 32px;
+  padding: 0 4px 0 10px;
+  border: 1px solid var(--color-line);
+  border-radius: 999px;
+  background: transparent;
+  color: var(--color-ink);
+  font: inherit;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  --icon-stroke: 2;
+}
+
+.chip-icon {
+  color: var(--color-muted);
+}
+
+.chip-remove {
+  display: grid;
+  place-items: center;
+  width: 24px;
+  height: 24px;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  background: transparent;
+  color: var(--color-muted);
+  cursor: pointer;
+}
+
+.chip-remove:hover {
+  background: var(--rb-surface-2, #f1f4f0);
+  color: var(--color-ink);
+}
+
+.chip--add {
+  padding: 0 12px;
+  cursor: pointer;
+}
+
+.chip--add:hover {
+  border-color: var(--color-muted);
+}
+
+.add-wrap {
+  position: relative;
+}
+
+.menu {
+  position: absolute;
+  top: calc(100% + 6px);
+  left: 0;
+  z-index: 50;
+  display: grid;
+  gap: 8px;
+  width: 300px;
+  max-width: calc(100vw - 48px);
+  padding: 14px;
+  border: 1px solid var(--color-line);
+  border-radius: 16px;
+  background: var(--color-surface);
+  box-shadow: 0 16px 32px -12px rgba(0, 0, 0, 0.35);
+}
+
+.menu-title {
+  margin: 0;
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: var(--color-muted);
+}
+
+.menu-options {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.option {
+  min-height: 36px;
+  padding: 0 12px;
+  border: 1px solid var(--color-line);
+  border-radius: 999px;
+  background: transparent;
+  color: var(--color-ink);
+  font: inherit;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.option:hover {
+  border-color: var(--color-muted);
+}
+
+.custom {
+  display: flex;
+  gap: 6px;
+}
+
+.custom-input {
+  flex: 1;
+  min-width: 0;
+  height: 40px;
+  padding: 0 10px;
+  border: 1px solid var(--color-line);
+  border-radius: 10px;
+  background: var(--rb-input, var(--color-surface));
+  color: var(--color-ink);
+  font: inherit;
+  font-size: 0.875rem;
+}
+
+.custom-add {
+  height: 40px;
+  padding: 0 14px;
+  border: 0;
+  border-radius: 10px;
+  background: var(--color-accent);
+  color: #ffffff;
+  font: inherit;
+  font-size: 0.875rem;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.hint {
+  margin: -4px 0 0;
+  font-size: 0.75rem;
+  color: var(--color-muted);
+  text-align: right;
+}
+
+.error {
+  margin: 0;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  color: var(--rb-danger, #b42318);
+}
+
+.helper {
+  margin: 8px 0 0;
+  font-size: 0.8125rem;
+  color: var(--color-muted);
+}
+
+/* Phones: anchor the menu to the start of the row so it can't spill off-screen. */
+@media (max-width: 640px) {
+  .chips {
+    position: relative;
+  }
+
+  .add-wrap {
+    position: static;
+  }
+
+  .menu {
+    width: 100%;
+    max-width: none;
+  }
+}
+
+.chip-remove:focus-visible,
+.chip--add:focus-visible,
+.option:focus-visible,
+.custom-input:focus-visible,
+.custom-add:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: 2px;
+}

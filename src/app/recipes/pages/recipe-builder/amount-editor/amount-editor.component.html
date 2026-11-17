@@ -1,0 +1,33 @@
+<div class="amount">
+  <input
+    class="amount-input"
+    type="text"
+    inputmode="decimal"
+    autocomplete="off"
+    maxlength="7"
+    [id]="id"
+    [value]="text"
+    [attr.aria-label]="'Amount of ' + ingredient.name"
+    [attr.aria-invalid]="invalid || null"
+    [attr.aria-describedby]="describedBy || null"
+    (input)="onAmount($any($event.target).value)"
+    (keydown.enter)="$event.preventDefault()"
+  />
+  <span class="unit">
+    <select
+      class="unit-select"
+      [attr.aria-label]="'Unit for ' + ingredient.name"
+      [disabled]="options.length < 2"
+      (change)="onUnit($any($event.target).value)"
+      (keydown.enter)="$event.preventDefault()"
+    >
+      @for (o of options; track o.unit) {
+        <option [value]="o.unit" [selected]="o.unit === unitValue">{{ o.label }}</option>
+      }
+    </select>
+    <app-icon class="unit-chevron" name="chevron-down" [size]="16" />
+  </span>
+</div>
+@if (helper) {
+  <p class="helper">{{ helper }}</p>
+}

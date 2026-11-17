@@ -12,6 +12,9 @@ export type IconName =
   | 'bookmark'
   | 'log-out'
   | 'pencil'
+  | 'alert-triangle'
+  | 'tag'
+  | 'arrow-left'
   | 'arrow-right'
   | 'chevron-right'
   | 'chevron-left'
@@ -100,6 +103,16 @@ export type IconName =
         }
         @case ('log-out') {
           <svg:path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4M16 17l5-5-5-5M21 12H9" />
+        }
+        @case ('alert-triangle') {
+          <svg:path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3M12 9v4M12 17h.01" />
+        }
+        @case ('tag') {
+          <svg:path d="M12.586 2.586A2 2 0 0 0 11.172 2H4a2 2 0 0 0-2 2v7.172a2 2 0 0 0 .586 1.414l8.704 8.704a2.426 2.426 0 0 0 3.42 0l6.58-6.58a2.426 2.426 0 0 0 0-3.42z" />
+          <svg:circle cx="7.5" cy="7.5" r=".5" />
+        }
+        @case ('arrow-left') {
+          <svg:path d="m12 19-7-7 7-7M19 12H5" />
         }
         @case ('pencil') {
           <svg:path d="M21.17 6.81a1 1 0 0 0-3.99-3.99L3.84 16.17a2 2 0 0 0-.5.83l-1.32 4.35a.5.5 0 0 0 .62.62l4.35-1.32a2 2 0 0 0 .83-.5z" />

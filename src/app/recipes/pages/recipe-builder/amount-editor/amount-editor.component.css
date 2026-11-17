@@ -1,0 +1,78 @@
+:host {
+  display: block;
+  min-width: 0;
+}
+
+.amount {
+  display: flex;
+  gap: 8px;
+}
+
+.amount-input,
+.unit-select {
+  height: 44px;
+  border: 1px solid var(--color-line);
+  border-radius: 12px;
+  background: var(--rb-input, var(--color-surface));
+  color: var(--color-ink);
+  font: inherit;
+  font-size: 0.9375rem;
+  font-weight: 600;
+}
+
+.amount-input {
+  flex: 0 0 72px;
+  width: 72px;
+  padding: 0 10px;
+  font-variant-numeric: tabular-nums;
+}
+
+.amount-input[aria-invalid='true'] {
+  border-color: var(--rb-danger, #b42318);
+}
+
+.unit {
+  position: relative;
+  flex: 1;
+  min-width: 0;
+}
+
+.unit-select {
+  width: 100%;
+  padding: 0 34px 0 12px;
+  appearance: none;
+  cursor: pointer;
+  text-overflow: ellipsis;
+}
+
+/* A single unit (g only) reads as plain text, not a broken control. */
+.unit-select:disabled {
+  cursor: default;
+  opacity: 1;
+}
+
+.unit-select:disabled + .unit-chevron {
+  display: none;
+}
+
+.unit-chevron {
+  position: absolute;
+  top: 50%;
+  right: 12px;
+  color: var(--color-muted);
+  pointer-events: none;
+  transform: translateY(-50%);
+}
+
+.helper {
+  margin: 4px 0 0 2px;
+  font-size: 0.75rem;
+  color: var(--color-muted);
+  font-variant-numeric: tabular-nums;
+}
+
+.amount-input:focus-visible,
+.unit-select:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: 1px;
+}
