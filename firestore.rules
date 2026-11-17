@@ -18,6 +18,11 @@ service cloud.firestore {
       allow read, write: if isOwner(uid);
     }
 
+    // Recipes: recipes/{uid}/items/{recipeId}
+    match /recipes/{uid}/{rest=**} {
+      allow read, write: if isOwner(uid);
+    }
+
     // Saved foods: savedOxalates/{uid}/oxalates/{id}
     match /savedOxalates/{uid}/{rest=**} {
       allow read, write: if isOwner(uid);

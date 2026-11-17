@@ -1,0 +1,70 @@
+<main class="page">
+  <header class="page-head">
+    <h1 class="title">Recipes</h1>
+    @if (state !== 'ready' || rows.length) {
+      <a class="btn-accent" routerLink="/recipes/new">
+        <app-icon name="plus" [size]="18" /> New recipe
+      </a>
+    }
+  </header>
+
+  @switch (state) {
+    @case ('loading') {
+      <ul class="list" aria-busy="true" aria-label="Loading your recipes">
+        @for (s of skeletons; track s) {
+          <li class="row row--skeleton" aria-hidden="true">
+            <span class="sk sk--name"></span><span class="sk sk--meta"></span>
+          </li>
+        }
+      </ul>
+    }
+    @case ('error') {
+      <div class="message" role="alert">
+        <p class="message-title">We couldn't load your recipes.</p>
+        <button type="button" class="btn-outline" (click)="load()">Try again</button>
+      </div>
+    }
+    @default {
+      @if (rows.length) {
+        <ul class="list">
+          @for (row of rows; track row.id) {
+            <li>
+              <a class="row" [routerLink]="['/recipes', row.id, 'edit']">
+                <span class="row-main">
+                  <span class="row-name">{{ row.name }}</span>
+                  <span class="row-meta">Serves {{ row.serves }}</span>
+                </span>
+                <span class="row-numbers">
+                  <span class="row-mg">
+                    @if (row.incomplete) {<span class="at-least">at least </span>}
+                    {{ row.perServing }} mg<span class="per"> per serving</span>
+                  </span>
+                  @if (row.level) {
+                    <app-level-pill [level]="row.level" [prefix]="row.incomplete ? 'At least ' : ''" />
+                  }
+                  @if (row.incomplete) {
+                    <span class="badge">
+                      <app-icon name="alert-triangle" [size]="14" /> Incomplete
+                    </span>
+                  }
+                </span>
+                <app-icon class="chevron" name="chevron-right" [size]="18" />
+              </a>
+            </li>
+          }
+        </ul>
+      } @else {
+        <div class="empty">
+          <span class="empty-icon" aria-hidden="true"><app-icon name="utensils" [size]="28" /></span>
+          <h2 class="empty-title">Cook it once, count it every time.</h2>
+          <p class="empty-text">
+            Build a recipe from foods you already know, and see the oxalate in each serving.
+          </p>
+          <a class="btn-accent" routerLink="/recipes/new">
+            <app-icon name="plus" [size]="18" /> Create your first recipe
+          </a>
+        </div>
+      }
+    }
+  }
+</main>
