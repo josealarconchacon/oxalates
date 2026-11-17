@@ -1,0 +1,95 @@
+<main class="page">
+  <a class="back" routerLink="/recipes">
+    <app-icon name="arrow-left" [size]="16" /> Recipes
+  </a>
+  <h1 class="title">{{ mode === 'edit' ? 'Edit recipe' : 'New recipe' }}</h1>
+
+  @switch (state) {
+    @case ('loading') {
+      <div class="layout" aria-busy="true" aria-label="Loading recipe">
+        <div class="form">
+          <div class="card card--skeleton"><span class="sk"></span><span class="sk sk--short"></span></div>
+          <div class="card card--skeleton"><span class="sk"></span><span class="sk"></span><span class="sk sk--short"></span></div>
+        </div>
+      </div>
+    }
+    @case ('not-found') {
+      <div class="card message" role="alert">
+        <p class="message-title">We couldn't find that recipe.</p>
+        <a class="btn-outline" routerLink="/recipes">Back to recipes</a>
+      </div>
+    }
+    @default {
+      @if (saveFailed) {
+        <div class="banner banner--danger" role="alert">
+          <app-icon name="alert-triangle" [size]="18" />
+          <span>We couldn't save your recipe. Your changes are still here.</span>
+          <button type="button" class="banner-action" (click)="save()">Try again</button>
+        </div>
+      }
+
+      <div class="layout">
+        <form id="recipe-form" class="form" [formGroup]="form" (ngSubmit)="save()" novalidate>
+          <!-- Name, serves (tags come in a later step) -->
+          <section class="card">
+            <div class="name-serves">
+              <div class="field field--name">
+                <label class="label" for="recipe-name">Recipe name</label>
+                <input
+                  #nameInput
+                  id="recipe-name"
+                  class="input"
+                  type="text"
+                  formControlName="name"
+                  autocomplete="off"
+                  maxlength="80"
+                  [attr.aria-invalid]="nameError ? true : null"
+                  [attr.aria-describedby]="nameError ? 'recipe-name-error' : null"
+                  (input)="clearNameError()"
+                />
+                @if (nameError) {
+                  <p id="recipe-name-error" class="field-error">{{ nameError }}</p>
+                }
+              </div>
+              <div class="field field--serves">
+                <label class="label" for="recipe-serves">Serves</label>
+                <app-serves-stepper inputId="recipe-serves" formControlName="serves" />
+              </div>
+            </div>
+          </section>
+
+          <section class="card" aria-labelledby="ingredients-title">
+            <div class="section-head">
+              <h2 id="ingredients-title" class="section-title">Ingredients</h2>
+            </div>
+            <p class="placeholder">Ingredients arrive in the next step.</p>
+          </section>
+
+          <section class="card">
+            <label class="label" for="recipe-notes">Notes and steps</label>
+            <textarea id="recipe-notes" class="input textarea" rows="5" formControlName="notes"></textarea>
+          </section>
+        </form>
+
+        <!-- Live summary: numbers come in the next step. -->
+        <aside class="summary card" aria-label="Recipe summary">
+          <button type="submit" form="recipe-form" class="btn-accent btn-block" [disabled]="saving">
+            {{ saving ? 'Saving…' : mode === 'edit' ? 'Save changes' : 'Save recipe' }}
+          </button>
+          <a class="btn-ghost btn-block" routerLink="/recipes">Cancel</a>
+          @if (mode === 'edit') {
+            <p class="summary-note">Past days keep the numbers they were logged with.</p>
+          }
+        </aside>
+      </div>
+
+      <!-- Below 1024px the summary becomes this bar. -->
+      <div class="bottom-bar">
+        <span class="bottom-bar-spacer"></span>
+        <button type="submit" form="recipe-form" class="btn-accent" [disabled]="saving">
+          {{ saving ? 'Saving…' : mode === 'edit' ? 'Save changes' : 'Save' }}
+        </button>
+      </div>
+    }
+  }
+</main>
