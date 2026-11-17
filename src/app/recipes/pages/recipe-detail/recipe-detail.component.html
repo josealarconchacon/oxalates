@@ -23,10 +23,58 @@
       </div>
     }
     @default {
-      @if (recipe; as r) {
-        <h1 class="title">{{ r.name }}</h1>
-        <!-- Temporary until the actions row (step 7). -->
-        <a class="btn-outline" [routerLink]="['/recipes', r.id, 'edit']">Edit</a>
+      @if (recipe && result) {
+        @let r = recipe;
+        @let n = numbers;
+        <section class="hero" aria-labelledby="recipe-title">
+          <div class="photo" role="img" aria-label="Recipe photo">
+            <app-icon name="utensils" [size]="40" />
+          </div>
+
+          <div class="intro">
+            @if (r.tags.length) {
+              <ul class="tags" aria-label="Tags">
+                @for (tag of r.tags; track tag) {
+                  <li class="tag">{{ tag }}</li>
+                }
+              </ul>
+            }
+            <h1 class="title" id="recipe-title">{{ r.name }}</h1>
+            <p class="meta">{{ metaLine }}</p>
+            @if (result.level) {
+              <app-level-pill [level]="result.level" [prefix]="n.atLeast ? 'At least ' : ''" />
+            }
+
+            <div class="tiles">
+              <div class="tile">
+                <span class="tile-label">Per serving</span>
+                <p class="big">
+                  @if (n.atLeast) {<span class="at-least">at least </span>}{{ n.perServing }}<span class="unit"> mg</span>
+                </p>
+              </div>
+              <div class="tile">
+                <span class="tile-label">Soluble per serving</span>
+                @if (n.solubleUnknown) {
+                  <p class="big big--unknown">Unknown</p>
+                } @else {
+                  <p class="big">
+                    @if (n.solubleAtLeast) {<span class="at-least">at least </span>}{{ n.solublePerServing }}<span class="unit"> mg</span>
+                  </p>
+                }
+              </div>
+            </div>
+
+            <p class="whole">
+              Whole recipe: {{ n.atLeast ? 'at least ' : '' }}{{ n.whole }} mg
+              @if (!n.solubleUnknown) {
+                · soluble {{ n.solubleAtLeast ? 'at least ' : '' }}{{ n.solubleWhole }} mg
+              }
+            </p>
+
+            <!-- Temporary until the actions row (step 7). -->
+            <a class="btn-outline" [routerLink]="['/recipes', r.id, 'edit']">Edit</a>
+          </div>
+        </section>
       }
     }
   }

@@ -1,23 +1,33 @@
-import { Component, OnInit, inject } from '@angular/core';
+import { Component, LOCALE_ID, OnInit, inject } from '@angular/core';
+import { formatDate } from '@angular/common';
 import { ActivatedRoute, RouterLink } from '@angular/router';
+import { firstValueFrom } from 'rxjs';
 import { IconComponent } from 'src/app/shared/components/icon/icon.component';
+import { RecipeFoodsService } from '../../data/recipe-foods.service';
 import { RecipeService } from '../../data/recipe.service';
-import { Recipe } from '../../model/recipe';
+import { formatMg } from '../../engine/format';
+import { calculateRecipe } from '../../engine/recipe-calculator';
+import { levelForMgPerServing } from '../../engine/recipe-level';
+import { Recipe, RecipeResult } from '../../model/recipe';
+import { LevelPillComponent } from '../../shared/level-pill/level-pill.component';
 
 /** /recipes/:id — one recipe, its numbers and what drives them. */
 @Component({
   selector: 'app-recipe-detail',
   standalone: true,
-  imports: [RouterLink, IconComponent],
+  imports: [RouterLink, IconComponent, LevelPillComponent],
   templateUrl: './recipe-detail.component.html',
   styleUrl: './recipe-detail.component.css',
 })
 export class RecipeDetailComponent implements OnInit {
   private recipes = inject(RecipeService);
+  private foods = inject(RecipeFoodsService);
   private route = inject(ActivatedRoute);
+  private locale = inject(LOCALE_ID);
 
   state: 'loading' | 'not-found' | 'error' | 'ready' = 'loading';
   recipe: Recipe | null = null;
+  result: RecipeResult | null = null;
   private id = '';
 
   ngOnInit(): void {
@@ -28,10 +38,46 @@ export class RecipeDetailComponent implements OnInit {
   async load(): Promise<void> {
     this.state = 'loading';
     try {
-      this.recipe = await this.recipes.get(this.id);
-      this.state = this.recipe ? 'ready' : 'not-found';
+      const [recipe, getFood] = await Promise.all([
+        this.recipes.get(this.id),
+        firstValueFrom(this.foods.lookup$),
+      ]);
+      this.recipe = recipe;
+      this.result = recipe ? calculateRecipe(recipe, getFood, levelForMgPerServing) : null;
+      this.state = recipe ? 'ready' : 'not-found';
     } catch {
       this.state = 'error';
     }
+  }
+
+  /** "Serves 4 · Edited Nov 17" (the year only when it isn't this year). */
+  get metaLine(): string {
+    const r = this.recipe;
+    if (!r) return '';
+    const serves = `Serves ${r.serves}`;
+    const edited = this.editedDate(r.updatedAt || r.createdAt);
+    return edited ? `${serves} · Edited ${edited}` : serves;
+  }
+
+  /** Text for the numbers; "at least" is a separate flag so it can be styled. */
+  get numbers() {
+    const res = this.result!;
+    return {
+      perServing: formatMg(res.perServingMg),
+      whole: formatMg(res.totalMg),
+      solublePerServing: formatMg(res.perServingSolubleMg),
+      solubleWhole: formatMg(res.totalSolubleMg),
+      atLeast: res.incomplete,
+      solubleAtLeast: res.solubleIncomplete,
+      /** No ingredient has a soluble value, so there is nothing to show. */
+      solubleUnknown: !res.breakdown.some((b) => b.solubleMg !== null),
+    };
+  }
+
+  private editedDate(iso: string): string {
+    const date = new Date(iso);
+    if (!iso || isNaN(date.getTime())) return '';
+    const thisYear = date.getFullYear() === new Date().getFullYear();
+    return formatDate(date, thisYear ? 'MMM d' : 'MMM d, y', this.locale);
   }
 }
