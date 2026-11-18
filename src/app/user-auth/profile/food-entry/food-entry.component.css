@@ -668,3 +668,10 @@ thead .header-detail th {
   opacity: 0.5;
   cursor: not-allowed;
 }
+
+/* "at least": a logged recipe in this meal has an ingredient with no value. */
+.at-least {
+  font-size: 0.8125rem;
+  font-weight: 500;
+  color: var(--color-muted);
+}

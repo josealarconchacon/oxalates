@@ -29,6 +29,7 @@
       <div class="stat-tile">
         <dt class="stat-label">Total Oxalate:</dt>
         <dd class="stat-value">
+          @if (totals.atLeast) {<span class="at-least">at least </span>}
           <span class="stat-number">{{ totalOxalate | number : "1.1-1" }}</span>
           <span class="unit"> mg</span>
         </dd>
@@ -36,6 +37,7 @@
       <div class="stat-tile">
         <dt class="stat-label">Total Soluble Oxalate:</dt>
         <dd class="stat-value">
+          @if (totals.solubleAtLeast) {<span class="at-least">at least </span>}
           <span class="stat-number">{{ totalSolubleOxalate | number : "1.1-1" }}</span>
           <span class="unit"> mg</span>
         </dd>

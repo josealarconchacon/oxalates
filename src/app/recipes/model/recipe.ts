@@ -82,6 +82,8 @@ export interface RecipeLogSnapshot {
   solubleMg: number;
   level: string | null;
   incomplete: boolean;
+  /** Some ingredient's soluble value is unknown (soluble is "at least"). */
+  solubleIncomplete: boolean;
   ingredients: { name: string; grams: number | null; mg: number | null }[];
   dataUpdatedAt: string;
   loggedAt: string;

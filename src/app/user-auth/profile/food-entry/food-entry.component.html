@@ -154,34 +154,25 @@
                             </tr>
                           }
                           <tr class="total-row">
+                            @let mt = mealTotals(meal.items);
                             <td class="food-name-col">
                               Total
                               <span class="oxalate-mobile">
-                                {{
-                                calculateTotalOxalate(meal.items) | number : "1.2-2"
-                                }}
+                                @if (mt.atLeast) {<span class="at-least">at least </span>}{{ mt.mg | number : "1.2-2" }}
                                 mg
                               </span>
                               <span class="soluble-mobile">
-                                {{
-                                calculateTotalSolubleOxalate(meal.items)
-                                | number : "1.2-2"
-                                }}
+                                @if (mt.solubleAtLeast) {<span class="at-least">at least </span>}{{ mt.solubleMg | number : "1.2-2" }}
                                 mg
                               </span>
                             </td>
                             <td class="serving-col hide-mobile"></td>
                             <td class="oxalate-col hide-mobile">
-                              {{
-                              calculateTotalOxalate(meal.items) | number : "1.2-2"
-                              }}
+                              @if (mt.atLeast) {<span class="at-least">at least </span>}{{ mt.mg | number : "1.2-2" }}
                               mg
                             </td>
                             <td class="soluble-col hide-mobile">
-                              {{
-                              calculateTotalSolubleOxalate(meal.items)
-                              | number : "1.2-2"
-                              }}
+                              @if (mt.solubleAtLeast) {<span class="at-least">at least </span>}{{ mt.solubleMg | number : "1.2-2" }}
                               mg
                             </td>
                             <td class="action-col"></td>

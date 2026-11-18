@@ -59,5 +59,24 @@ describe('ResultsSectionComponent', () => {
     fixture.detectChanges();
     expect(buttons().map((b) => b.disabled)).toEqual([false, false]);
   });
-});
 
+  it('adds "at least" when a logged recipe was incomplete, with the snapshot mg', () => {
+    component.lunchItems = [{ oxalatePerServing: 10, solubleOxalatePerServing: 4, numberOfServings: 1 }];
+    component.dinnerItems = [
+      {
+        kind: 'recipe',
+        entryId: 'e1',
+        snapshot: { mg: 3, solubleMg: 1, incomplete: true, solubleIncomplete: true },
+        foodName: 'Soup',
+        oxalatePerServing: 3,
+        solubleOxalatePerServing: 1,
+        numberOfServings: 1,
+      },
+    ];
+    fixture.detectChanges();
+    expect(tiles().map((t) => text(t.querySelector('dd')))).toEqual([
+      'at least 13.0 mg',
+      'at least 5.0 mg',
+    ]);
+  });
+});

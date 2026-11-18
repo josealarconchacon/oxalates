@@ -13,7 +13,8 @@ import { CalculateOxalateComponent } from '../calculate-oxalate/calculate-oxalat
 import { ResultsSectionComponent } from '../calculate-oxalate/results-section/results-section.component';
 import { DateSwitcherComponent } from './date-switcher/date-switcher.component';
 import { DialogDirective } from 'src/app/shared/directives/dialog.directive';
-import { FoodEntryService } from './service/food-entry.service';
+import { DayItem, FoodEntryService } from './service/food-entry.service';
+import { Totals, mealTotals } from './model/day-totals';
 import { Subscription, from, of } from 'rxjs';
 import { ThemeService } from 'src/app/shared/services/theme.service';
 import { AuthService } from '../../service/auth-service.service';
@@ -294,20 +295,16 @@ export class FoodEntryComponent implements OnInit, OnDestroy {
     );
   }
 
+  /** Meal totals: foods as before, logged recipes from their snapshot. */
+  mealTotals(items: FoodItem[]): Totals {
+    return mealTotals(items as unknown as DayItem[]);
+  }
+
   calculateTotalOxalate(items: FoodItem[]): number {
-    return items.reduce(
-      (total, food) =>
-        total + (food.oxalatePerServing || 0) * (food.numberOfServings || 0),
-      0
-    );
+    return this.mealTotals(items).mg;
   }
 
   calculateTotalSolubleOxalate(items: FoodItem[]): number {
-    return items.reduce(
-      (total, food) =>
-        total +
-        (food.solubleOxalatePerServing || 0) * (food.numberOfServings || 0),
-      0
-    );
+    return this.mealTotals(items).solubleMg;
   }
 }
