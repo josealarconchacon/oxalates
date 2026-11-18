@@ -31,7 +31,6 @@ export type IconName =
   | 'key'
   | 'check'
   | 'pipette'
-  | 'pencil'
   | 'utensils'
   | 'trash-2'
   | 'palette'
@@ -51,7 +50,9 @@ export type IconName =
   | 'droplet'
   | 'gauge'
   | 'clipboard-list'
-  | 'users';
+  | 'users'
+  | 'copy'
+  | 'more-horizontal';
 
 /**
  * One line-icon set for the app (Lucide paths, 24×24 grid).
@@ -157,9 +158,6 @@ export type IconName =
           <svg:circle cx="12" cy="12" r="10" />
           <svg:path d="M12 16v-4M12 8h.01" />
         }
-        @case ('pencil') {
-          <svg:path d="M21.174 6.812a1 1 0 0 0-3.986-3.987L3.842 16.174a2 2 0 0 0-.5.83l-1.321 4.352a.5.5 0 0 0 .623.622l4.353-1.32a2 2 0 0 0 .83-.497zM15 5l4 4" />
-        }
         @case ('pipette') {
           <svg:path d="m2 22 1-1h3l9-9M3 21v-3l9-9" />
           <svg:path d="m15 6 3.4-3.4a2.1 2.1 0 1 1 3 3L18 9l.4.4a2.1 2.1 0 1 1-3 3l-3.8-3.8a2.1 2.1 0 1 1 3-3l.4.4Z" />
@@ -261,6 +259,15 @@ export type IconName =
           <svg:path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2" />
           <svg:circle cx="9" cy="7" r="4" />
           <svg:path d="M22 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75" />
+        }
+        @case ('copy') {
+          <svg:rect x="8" y="8" width="14" height="14" rx="2" ry="2" />
+          <svg:path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2" />
+        }
+        @case ('more-horizontal') {
+          <svg:circle cx="12" cy="12" r="1" />
+          <svg:circle cx="19" cy="12" r="1" />
+          <svg:circle cx="5" cy="12" r="1" />
         }
       }
     </svg>

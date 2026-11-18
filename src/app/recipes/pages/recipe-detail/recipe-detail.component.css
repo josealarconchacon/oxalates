@@ -1,0 +1,502 @@
+/* Recipe detail. Cards use .rd-card (not the global .card, which adds a
+   transform). Colors: shared --color-* tokens plus --rd-* below. */
+:host {
+  display: block;
+
+  --rd-surface-2: #f1f4f0;
+  --rd-warning-bg: #fff4db;
+  --rd-warning-text: #6b4e00;
+  --rd-danger: #b42318;
+  --rd-bar: #17603f;
+  --rd-photo-bg: #f3e7da;
+  --rd-photo-icon: #8a5a2b;
+}
+
+:host-context(.dark-theme) {
+  --rd-surface-2: #1d2621;
+  --rd-warning-bg: #33290e;
+  --rd-warning-text: #f2c94c;
+  --rd-danger: #f59b94;
+  --rd-bar: #7fd9aa;
+  --rd-photo-bg: #2b231b;
+  --rd-photo-icon: #d8b28a;
+}
+
+.page {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: calc(var(--header-height, 72px) + 28px) 24px 64px;
+  font-family: var(--font-family-sans);
+  color: var(--color-ink);
+}
+
+.back {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  min-height: 44px;
+  margin: -10px 0 8px -8px;
+  padding: 0 8px;
+  border-radius: 10px;
+  color: var(--color-accent-fg);
+  font-size: 0.875rem;
+  font-weight: 700;
+  text-decoration: none;
+  --icon-stroke: 2.25;
+}
+
+.back:hover {
+  text-decoration: underline;
+}
+
+.title {
+  margin: 8px 0 16px;
+  font-family: var(--font-family-display);
+  font-size: 2.625rem; /* 42px */
+  font-weight: 700;
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+  overflow-wrap: anywhere;
+}
+
+/* Title block: photo + name, level and the two main numbers.
+   One column below 1024px; photo beside the text from 1024px. */
+.hero {
+  display: grid;
+  gap: 24px;
+  align-items: start;
+}
+
+/* Breakdown, then notes + medical note. A right-hand column from 1024px. */
+.lower {
+  display: grid;
+  gap: 24px;
+  align-items: start;
+  margin-top: 32px;
+}
+
+.side {
+  display: grid;
+  gap: 24px;
+}
+
+@media (min-width: 1024px) {
+  .hero {
+    grid-template-columns: 420px minmax(0, 1fr);
+    gap: 40px;
+  }
+
+  .lower {
+    grid-template-columns: minmax(0, 1fr) 320px;
+    gap: 32px;
+  }
+}
+
+@media (min-width: 1280px) {
+  .hero {
+    grid-template-columns: 560px minmax(0, 1fr);
+  }
+
+  .lower {
+    grid-template-columns: minmax(0, 1fr) 380px;
+  }
+}
+
+.photo {
+  display: grid;
+  place-items: center;
+  aspect-ratio: 16 / 9;
+  border-radius: 24px;
+  background: var(--rd-photo-bg);
+  color: var(--rd-photo-icon);
+  --icon-stroke: 1.5;
+}
+
+@media (min-width: 1024px) {
+  .photo {
+    aspect-ratio: 4 / 3;
+  }
+}
+
+.intro {
+  display: grid;
+  justify-items: start;
+  gap: 12px;
+  min-width: 0;
+}
+
+.intro > .title {
+  margin: 0;
+}
+
+/* Neutral chips: tags are the user's labels, not levels. */
+.tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 2px 10px;
+  border: 1px solid var(--color-line);
+  border-radius: 999px;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  line-height: 1.5;
+}
+
+.tag app-icon {
+  color: var(--color-muted);
+  --icon-stroke: 2;
+}
+
+.meta-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px 12px;
+}
+
+.meta {
+  margin: 0;
+  color: var(--color-muted);
+  font-size: 0.875rem;
+}
+
+/* Calm, not an alarm: neutral surface, no red. */
+.calm-note {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+  margin: 0;
+  padding: 10px 14px;
+  border-radius: 12px;
+  background: var(--rd-surface-2);
+  font-size: 0.875rem;
+  --icon-stroke: 2;
+}
+
+.calm-note app-icon {
+  flex: none;
+  color: var(--color-muted);
+}
+
+.tiles {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+  width: 100%;
+  margin-top: 4px;
+}
+
+.tile {
+  padding: 16px;
+  border-radius: 16px;
+  background: var(--rd-surface-2);
+}
+
+.tile-label {
+  font-size: 0.875rem;
+  color: var(--color-muted);
+}
+
+.big {
+  margin: 6px 0 0;
+  font-family: var(--font-family-display);
+  font-size: 2.5rem;
+  font-weight: 700;
+  line-height: 1;
+  letter-spacing: -0.02em;
+  font-variant-numeric: tabular-nums;
+}
+
+.big--unknown {
+  font-size: 1.75rem;
+}
+
+.unit {
+  font-family: var(--font-family-sans);
+  font-size: 1rem;
+  font-weight: 500;
+  color: var(--color-muted);
+}
+
+.at-least {
+  font-family: var(--font-family-sans);
+  font-size: 0.9375rem;
+  font-weight: 600;
+  color: var(--color-muted);
+}
+
+.whole {
+  margin: 0;
+  color: var(--color-muted);
+  font-size: 0.875rem;
+  font-variant-numeric: tabular-nums;
+}
+
+.h2 {
+  margin: 0;
+  font-family: var(--font-family-display);
+  font-size: 1.375rem;
+  font-weight: 700;
+}
+
+/* Notes are shown as written: line breaks kept, nothing parsed. */
+.notes-text {
+  margin: 12px 0 0;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  line-height: 1.6;
+}
+
+.medical {
+  display: flex;
+  gap: 12px;
+  padding: 16px 18px;
+  border-radius: 18px;
+  background: var(--rd-surface-2);
+  font-size: 0.875rem;
+  line-height: 1.55;
+  --icon-stroke: 2;
+}
+
+.medical app-icon {
+  flex: none;
+  margin-top: 1px;
+  color: var(--color-muted);
+}
+
+.medical-text {
+  margin: 0;
+}
+
+.data-date {
+  margin: 8px 0 0;
+  color: var(--color-muted);
+  font-size: 0.8125rem;
+}
+
+.rd-card {
+  padding: 24px;
+  border: 1px solid var(--color-line);
+  border-radius: 22px;
+  background: var(--color-surface);
+}
+
+.message {
+  display: grid;
+  justify-items: center;
+  gap: 12px;
+  text-align: center;
+}
+
+.message-title {
+  margin: 0;
+  font-weight: 700;
+}
+
+.btn-outline {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  min-height: 44px;
+  padding: 0 16px;
+  border: 1px solid var(--color-line);
+  border-radius: 12px;
+  background: transparent;
+  color: var(--color-ink);
+  font: inherit;
+  font-size: 0.9375rem;
+  font-weight: 700;
+  text-decoration: none;
+  cursor: pointer;
+  --icon-stroke: 2;
+}
+
+.btn-outline:hover:not(:disabled) {
+  border-color: var(--color-muted);
+}
+
+.btn-outline:disabled {
+  cursor: default;
+  opacity: 0.7;
+}
+
+.btn-danger {
+  color: var(--rd-danger);
+}
+
+/* 44 × 44 icon-only buttons (More, and the phone row). */
+.btn-icon {
+  width: 44px;
+  padding: 0;
+}
+
+/* The More menu opens in an overlay on <body>, outside this page, so it uses
+   the global tokens (the --rd-* ones live on the page). */
+.rd-menu {
+  display: grid;
+  min-width: 180px;
+  padding: 6px;
+  border: 1px solid var(--color-line);
+  border-radius: 14px;
+  background: var(--color-surface);
+  box-shadow: 0 16px 32px -12px rgba(0, 0, 0, 0.3);
+  font-family: var(--font-family-sans);
+}
+
+.rd-menu-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-height: 44px;
+  padding: 0 12px;
+  border: 0;
+  border-radius: 10px;
+  background: transparent;
+  color: var(--color-ink);
+  font: inherit;
+  font-size: 0.9375rem;
+  font-weight: 600;
+  text-align: left;
+  cursor: pointer;
+  --icon-stroke: 2;
+}
+
+.rd-menu-item:hover,
+.rd-menu-item:focus-visible {
+  background: var(--color-line);
+  outline: none;
+}
+
+.rd-menu-item[aria-disabled='true'] {
+  opacity: 0.6;
+  cursor: default;
+}
+
+.rd-menu-item--danger {
+  color: #b42318;
+}
+
+::ng-deep .dark-theme .rd-menu-item--danger {
+  color: #f59b94;
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 4px;
+}
+
+.action-error {
+  margin: 0;
+  color: var(--rd-danger);
+  font-size: 0.875rem;
+  font-weight: 600;
+}
+
+.sk {
+  display: block;
+  height: 14px;
+  border-radius: 7px;
+  background: var(--rd-surface-2);
+  animation: pulse 1.2s ease-in-out infinite;
+}
+
+/* Skeleton pieces follow the page's shapes and grids (.hero, .lower). */
+.sk--photo {
+  height: auto;
+  aspect-ratio: 16 / 9;
+  border-radius: 24px;
+}
+
+@media (min-width: 1024px) {
+  .sk--photo {
+    aspect-ratio: 4 / 3;
+  }
+}
+
+.skeleton .intro {
+  justify-items: stretch;
+}
+
+.sk--title {
+  width: 70%;
+  height: 40px;
+  border-radius: 10px;
+}
+
+.sk--meta {
+  width: 45%;
+}
+
+.sk--tile {
+  height: 92px;
+  border-radius: 16px;
+}
+
+.sk--h2 {
+  width: 40%;
+  height: 24px;
+  margin-bottom: 20px;
+}
+
+.sk--row {
+  height: 40px;
+  margin-top: 14px;
+  border-radius: 10px;
+}
+
+@keyframes pulse {
+  50% {
+    opacity: 0.5;
+  }
+}
+
+.back:focus-visible,
+.btn-outline:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: 2px;
+}
+
+@media (max-width: 640px) {
+  .page {
+    padding-inline: 16px;
+  }
+
+  .title {
+    font-size: 1.875rem;
+  }
+
+  .big {
+    font-size: 1.875rem; /* 30px */
+  }
+
+  .big--unknown {
+    font-size: 1.375rem;
+  }
+
+  .tiles {
+    gap: 8px;
+  }
+
+  .tile {
+    padding: 14px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .sk {
+    animation: none;
+  }
+}

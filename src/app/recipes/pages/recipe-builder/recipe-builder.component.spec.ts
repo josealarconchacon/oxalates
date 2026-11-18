@@ -87,7 +87,7 @@ describe('RecipeBuilderComponent', () => {
       expect(service.create).not.toHaveBeenCalled();
     });
 
-    it('saves the trimmed name, serves and notes, then shows the toast and goes to the list', async () => {
+    it('saves the trimmed name, serves and notes, then shows the toast and opens the recipe', async () => {
       service.create.and.callFake(async (d) => ({ ...recipe([]), ...d }));
       const carrot = grams('carrot', 100, 'Carrot');
       fixture.componentInstance.addIngredient(carrot);
@@ -103,7 +103,7 @@ describe('RecipeBuilderComponent', () => {
         ingredients: [carrot],
       });
       expect(notify).toHaveBeenCalledWith('Recipe saved.', 'Close', ['success-snackbar']);
-      expect(navigate).toHaveBeenCalledWith(['/recipes']);
+      expect(navigate).toHaveBeenCalledWith(['/recipes', 'r1']);
     });
 
     it('saves the tags picked in the tag picker', async () => {
@@ -128,6 +128,23 @@ describe('RecipeBuilderComponent', () => {
       expect(text()).toContain("We couldn't save your recipe. Your changes are still here.");
       expect(el().querySelector<HTMLInputElement>('#recipe-name')!.value).toBe('Carrot soup');
       expect(navigate).not.toHaveBeenCalled();
+    });
+  });
+
+  describe('back link and Cancel', () => {
+    it('new recipe: back to the list', async () => {
+      await render();
+      expect(el().querySelector('.back')!.getAttribute('href')).toBe('/recipes');
+      expect(el().querySelector('.back')!.textContent!.trim()).toBe('Recipes');
+      expect(el().querySelector('.summary .btn-ghost')!.getAttribute('href')).toBe('/recipes');
+    });
+
+    it("editing: back to the recipe's page", async () => {
+      service.get.and.resolveTo({ ...recipe([grams('carrot', 100, 'Carrot')]), id: 'r1' });
+      await render('r1');
+      expect(el().querySelector('.back')!.getAttribute('href')).toBe('/recipes/r1');
+      expect(el().querySelector('.back')!.textContent!.trim()).toBe('Recipe');
+      expect(el().querySelector('.summary .btn-ghost')!.getAttribute('href')).toBe('/recipes/r1');
     });
   });
 

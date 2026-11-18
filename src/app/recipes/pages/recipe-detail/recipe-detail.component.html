@@ -1,0 +1,197 @@
+<div class="page">
+  <a class="back" routerLink="/recipes">
+    <app-icon name="arrow-left" [size]="16" /> Recipes
+  </a>
+
+  @switch (state) {
+    @case ('loading') {
+      <div class="skeleton" role="status" aria-busy="true" aria-label="Loading recipe">
+        <div class="hero" aria-hidden="true">
+          <span class="sk sk--photo"></span>
+          <div class="intro">
+            <span class="sk sk--title"></span>
+            <span class="sk sk--meta"></span>
+            <div class="tiles">
+              <span class="sk sk--tile"></span>
+              <span class="sk sk--tile"></span>
+            </div>
+          </div>
+        </div>
+        <div class="lower" aria-hidden="true">
+          <div class="rd-card">
+            <span class="sk sk--h2"></span>
+            @for (row of [1, 2, 3, 4]; track row) {
+              <span class="sk sk--row"></span>
+            }
+          </div>
+        </div>
+      </div>
+    }
+    @case ('not-found') {
+      <div class="rd-card message" role="alert">
+        <p class="message-title">We couldn't find that recipe.</p>
+        <a class="btn-outline" routerLink="/recipes">Back to Recipes</a>
+      </div>
+    }
+    @case ('error') {
+      <div class="rd-card message" role="alert">
+        <p class="message-title">We couldn't load this recipe.</p>
+        <button type="button" class="btn-outline" (click)="load()">Try again</button>
+      </div>
+    }
+    @default {
+      @if (recipe && result) {
+        @let r = recipe;
+        @let n = numbers;
+        <section class="hero" aria-labelledby="recipe-title">
+          <div class="photo" role="img" aria-label="Recipe photo">
+            <app-icon name="utensils" [size]="40" />
+          </div>
+
+          <div class="intro">
+            @if (r.tags.length) {
+              <ul class="tags" aria-label="Tags">
+                @for (tag of r.tags; track tag) {
+                  <li class="tag"><app-icon name="tag" [size]="13" />{{ tag }}</li>
+                }
+              </ul>
+            }
+            <h1 class="title" id="recipe-title">{{ r.name }}</h1>
+            <div class="meta-row">
+              <p class="meta">{{ metaLine }}</p>
+              @if (result.level && !result.allUnknown) {
+                <app-level-pill [level]="result.level" [prefix]="n.atLeast ? 'At least ' : ''" />
+              }
+              @if (result.incomplete) {
+                <app-incomplete-badge [unknown]="result.unknownIngredients" (goTo)="goToRow($event)" />
+              }
+            </div>
+
+            <div class="tiles">
+              <div class="tile">
+                <span class="tile-label">Per serving</span>
+                @if (result.allUnknown) {
+                  <p class="big big--unknown">Unknown</p>
+                } @else {
+                  <p class="big">
+                    @if (n.atLeast) {<span class="at-least">at least </span>}{{ n.perServing }}<span class="unit"> mg</span>
+                  </p>
+                }
+              </div>
+              <div class="tile">
+                <span class="tile-label">Soluble per serving</span>
+                @if (n.solubleUnknown) {
+                  <p class="big big--unknown">Unknown</p>
+                } @else {
+                  <p class="big">
+                    @if (n.solubleAtLeast) {<span class="at-least">at least </span>}{{ n.solublePerServing }}<span class="unit"> mg</span>
+                  </p>
+                }
+              </div>
+            </div>
+
+            @if (isHigher) {
+              <!-- TODO(swaps): add "The swaps below can bring it down." once swaps ship. -->
+              <p class="calm-note"><app-icon name="info" [size]="16" /> This one is on the higher side.</p>
+            }
+
+            <p class="whole">
+              @if (result.allUnknown) {
+                Whole recipe: Unknown
+              } @else {
+                Whole recipe: {{ n.atLeast ? 'at least ' : '' }}{{ n.whole }} mg
+                @if (!n.solubleUnknown) {
+                  · soluble {{ n.solubleAtLeast ? 'at least ' : '' }}{{ n.solubleWhole }} mg
+                }
+              }
+            </p>
+
+            <!-- PR 4: the primary "Log a serving" button goes first in this row. -->
+            <div class="actions" [attr.data-mode]="actionsMode">
+              @switch (actionsMode) {
+                @case ('full') {
+                  <a class="btn-outline" [routerLink]="['/recipes', r.id, 'edit']">
+                    <app-icon name="pencil" [size]="16" /> Edit
+                  </a>
+                  <button type="button" class="btn-outline" [disabled]="duplicating" (click)="duplicate()">
+                    <app-icon name="copy" [size]="16" /> {{ duplicating ? 'Duplicating…' : 'Duplicate' }}
+                  </button>
+                  <button #deleteButton type="button" class="btn-outline btn-danger" (click)="openDelete()">
+                    <app-icon name="trash-2" [size]="16" /> Delete
+                  </button>
+                }
+                @case ('menu') {
+                  <a class="btn-outline" [routerLink]="['/recipes', r.id, 'edit']">
+                    <app-icon name="pencil" [size]="16" /> Edit
+                  </a>
+                  <button #deleteButton type="button" class="btn-outline btn-icon" aria-label="More actions"
+                    [cdkMenuTriggerFor]="moreMenu">
+                    <app-icon name="more-horizontal" [size]="18" />
+                  </button>
+                  <ng-template #moreMenu>
+                    <div class="rd-menu" cdkMenu>
+                      <button type="button" class="rd-menu-item" cdkMenuItem [cdkMenuItemDisabled]="duplicating"
+                        (cdkMenuItemTriggered)="duplicate()">
+                        <app-icon name="copy" [size]="16" /> Duplicate
+                      </button>
+                      <button type="button" class="rd-menu-item rd-menu-item--danger" cdkMenuItem
+                        (cdkMenuItemTriggered)="openDelete()">
+                        <app-icon name="trash-2" [size]="16" /> Delete
+                      </button>
+                    </div>
+                  </ng-template>
+                }
+                @case ('icons') {
+                  <a class="btn-outline btn-icon" aria-label="Edit" [routerLink]="['/recipes', r.id, 'edit']">
+                    <app-icon name="pencil" [size]="18" />
+                  </a>
+                  <button type="button" class="btn-outline btn-icon" aria-label="Duplicate" [disabled]="duplicating"
+                    (click)="duplicate()">
+                    <app-icon name="copy" [size]="18" />
+                  </button>
+                  <button #deleteButton type="button" class="btn-outline btn-icon btn-danger" aria-label="Delete"
+                    (click)="openDelete()">
+                    <app-icon name="trash-2" [size]="18" />
+                  </button>
+                }
+              }
+            </div>
+            @if (duplicateError) {
+              <p class="action-error" role="alert">We couldn't duplicate this recipe. Try again.</p>
+            }
+          </div>
+        </section>
+
+        <div class="lower">
+          <app-recipe-breakdown [rows]="rows" [totalMg]="n.whole" [hasTotal]="!result.allUnknown"
+            [showSources]="showSources" (showSourcesChange)="setShowSources($event)" />
+
+          <div class="side">
+            @if ((r.notes || '').trim()) {
+              <section class="rd-card notes" aria-labelledby="notes-title">
+                <h2 class="h2" id="notes-title">Notes and steps</h2>
+                <p class="notes-text">{{ r.notes }}</p>
+              </section>
+            }
+
+            <aside class="medical" aria-label="About these numbers">
+              <app-icon name="info" [size]="18" />
+              <div>
+                <p class="medical-text">
+                  These numbers are estimates from published food lists. Cooking, like boiling and draining, can change
+                  the real amount. Check with your clinician before changing your diet.
+                </p>
+                <p class="data-date">Data updated: {{ dataUpdated }}</p>
+              </div>
+            </aside>
+          </div>
+        </div>
+      }
+    }
+  }
+
+  @if (deleteOpen && recipe) {
+    <app-delete-dialog [name]="recipe.name" [busy]="deleting" [error]="deleteError"
+      (confirm)="confirmDelete()" (cancel)="closeDelete()" />
+  }
+</div>

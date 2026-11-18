@@ -29,7 +29,7 @@
         <ul class="list">
           @for (row of rows; track row.id) {
             <li>
-              <a class="rl-row" [routerLink]="['/recipes', row.id, 'edit']">
+              <a class="rl-row" [routerLink]="['/recipes', row.id]">
                 <span class="row-main">
                   <span class="row-name">{{ row.name }}</span>
                   <span class="row-meta">Serves {{ row.serves }}</span>
