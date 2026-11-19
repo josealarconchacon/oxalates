@@ -3,6 +3,8 @@ import { ActivatedRoute, Router, convertToParamMap, provideRouter } from '@angul
 import { BreakpointObserver, BreakpointState } from '@angular/cdk/layout';
 import { BehaviorSubject, of } from 'rxjs';
 import { NotificationService } from 'src/app/landing-page/dialog-service/oxalate/service/notification.service';
+import { FoodEntryService } from 'src/app/user-auth/profile/food-entry/service/food-entry.service';
+import { provideNoopAnimations } from '@angular/platform-browser/animations';
 import { RecipeFoodsService } from '../../data/recipe-foods.service';
 import { RecipeService } from '../../data/recipe.service';
 import { custom, food, grams, lookup, recipe } from '../../engine/testing/fixtures';
@@ -61,6 +63,8 @@ describe('RecipeDetailComponent', () => {
         },
         { provide: ActivatedRoute, useValue: { paramMap: params } },
         { provide: BreakpointObserver, useValue: { observe: () => screen } },
+        { provide: FoodEntryService, useValue: { getDailyEntry: () => of(null) } },
+        provideNoopAnimations(),
       ],
     });
   });
@@ -413,15 +417,15 @@ describe('RecipeDetailComponent', () => {
 
     beforeEach(() => get.and.resolveTo({ ...recipe([grams('carrot', 100)]), id: 'r1', name: 'Soup' }));
 
-    it('≥ 1024px: Edit, Duplicate and Delete with text', async () => {
+    it('≥ 1024px: Log a serving first, then Edit, Duplicate and Delete with text', async () => {
       await render();
-      expect(labels()).toEqual(['Edit', 'Duplicate', 'Delete']);
+      expect(labels()).toEqual(['Log a serving', 'Edit', 'Duplicate', 'Delete']);
     });
 
     it('641–1023px: Edit + a More menu with Duplicate and Delete', async () => {
       screen.next(widthOf(768));
       await render();
-      expect(labels()).toEqual(['Edit', 'More actions']);
+      expect(labels()).toEqual(['Log a serving', 'Edit', 'More actions']);
       const more = actions().querySelector<HTMLButtonElement>('[aria-label="More actions"]')!;
       expect(more.getAttribute('aria-haspopup')).toBe('menu');
       more.click();
@@ -437,6 +441,7 @@ describe('RecipeDetailComponent', () => {
       screen.next(widthOf(390));
       await render();
       expect(labels()).toEqual(['Edit', 'Duplicate', 'Delete']);
+      // The phone "Log a serving" bar comes in step 4.
       expect(Array.from(actions().children).every((b) => b.classList.contains('btn-icon'))).toBeTrue();
       expect(squash(actions())).toBe('');
     });
@@ -465,6 +470,26 @@ describe('RecipeDetailComponent', () => {
       expect(squash(gone.querySelector('.source'))).toBe('No longer in the food list');
       expect(el().querySelector('app-incomplete-badge')).not.toBeNull();
       expect(el().querySelector('app-level-pill')!.textContent!.trim()).toMatch(/^At least /);
+    });
+  });
+
+  describe('Log a serving', () => {
+    beforeEach(() => get.and.resolveTo({ ...recipe([grams('carrot', 100)]), id: 'r1', name: 'Soup' }));
+
+    it('opens the dialog; closing it puts focus back on the button', async () => {
+      await render();
+      document.body.appendChild(el());
+      const button = el().querySelector<HTMLButtonElement>('.actions .btn-primary')!;
+      button.click();
+      fixture.detectChanges();
+      expect(el().querySelector('app-log-serving [role="dialog"]')).not.toBeNull();
+
+      el().querySelector<HTMLButtonElement>('app-log-serving [aria-label="Close"]')!.click();
+      fixture.detectChanges();
+      await new Promise((r) => setTimeout(r));
+      expect(el().querySelector('app-log-serving')).toBeNull();
+      expect(document.activeElement).toBe(el().querySelector('.actions .btn-primary'));
+      el().remove();
     });
   });
 });

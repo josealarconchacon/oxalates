@@ -1,3 +1,4 @@
+import { RecipeLogSnapshot } from 'src/app/recipes/model/recipe';
 import { DailyFoodEntry, DayItem, isRecipeEntry } from '../service/food-entry.service';
 
 /** mg for some entries. `atLeast`: an incomplete recipe is in there, so the real total is higher. */
@@ -16,20 +17,22 @@ const ZERO: Totals = { mg: 0, solubleMg: 0, atLeast: false, solubleAtLeast: fals
  * mg 0 but is incomplete, so the total reads "at least".
  */
 export function itemTotals(item: DayItem): Totals {
-  if (isRecipeEntry(item)) {
-    const s = item.snapshot;
-    return {
-      mg: s.mg,
-      solubleMg: s.solubleMg,
-      atLeast: s.incomplete,
-      solubleAtLeast: s.incomplete || !!s.solubleIncomplete,
-    };
-  }
+  if (isRecipeEntry(item)) return snapshotTotals(item.snapshot);
   return {
     mg: (item.oxalatePerServing || 0) * (item.numberOfServings || 0),
     solubleMg: (item.solubleOxalatePerServing || 0) * (item.numberOfServings || 0),
     atLeast: false,
     solubleAtLeast: false,
+  };
+}
+
+/** A logged recipe's numbers, straight from its snapshot. */
+export function snapshotTotals(s: RecipeLogSnapshot): Totals {
+  return {
+    mg: s.mg,
+    solubleMg: s.solubleMg,
+    atLeast: s.incomplete,
+    solubleAtLeast: s.incomplete || !!s.solubleIncomplete,
   };
 }
 

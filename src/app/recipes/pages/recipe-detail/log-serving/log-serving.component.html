@@ -1,0 +1,106 @@
+<div class="scrim" (click)="close()"></div>
+<div class="panel" role="dialog" aria-modal="true" aria-labelledby="log-title" aria-describedby="log-recipe"
+  cdkTrapFocus [cdkTrapFocusAutoCapture]="true">
+  <div class="head">
+    <div>
+      <h2 class="title" id="log-title">Log a serving</h2>
+      <p class="recipe" id="log-recipe">{{ recipe.name }}</p>
+    </div>
+    <button type="button" class="icon-btn close" aria-label="Close" (click)="close()">
+      <app-icon name="x" [size]="18" />
+    </button>
+  </div>
+
+  <div class="body">
+    <!-- Day -->
+    <div class="field">
+      <span class="label" id="log-day-label">Day</span>
+      <div class="day" role="group" aria-labelledby="log-day-label">
+        <button type="button" class="icon-btn" aria-label="Previous day" (click)="moveDay(-1)">
+          <app-icon name="chevron-left" [size]="18" />
+        </button>
+        <button type="button" class="day-pick" aria-haspopup="dialog"
+          [attr.aria-label]="'Pick a date, currently ' + (day | date: 'EEEE, MMMM d') + (isToday ? ', today' : '')"
+          (click)="openPicker()">
+          <app-icon name="calendar" [size]="18" />
+          <span class="day-text">{{ day | date: 'EEE, MMM d' }}</span>
+          @if (isToday) {<span class="today">Today</span>}
+        </button>
+        <button type="button" class="icon-btn" aria-label="Next day" (click)="moveDay(1)">
+          <app-icon name="chevron-right" [size]="18" />
+        </button>
+        <!-- The picker needs an input to attach to; the button above is the real control. -->
+        <input class="picker-anchor" tabindex="-1" aria-hidden="true" [matDatepicker]="picker" [value]="day"
+          (dateChange)="setDay($event.value)" />
+        <mat-datepicker #picker (opened)="onPickerOpened()" />
+      </div>
+    </div>
+
+    <!-- Meal -->
+    <div class="field">
+      <span class="label" id="log-meal-label">Meal</span>
+      <div class="segmented" role="radiogroup" aria-labelledby="log-meal-label">
+        @for (m of meals; track m.key) {
+          <button type="button" role="radio" class="segment" [attr.aria-checked]="meal === m.key"
+            [tabindex]="meal === m.key ? 0 : -1" (click)="selectMeal(m.key)"
+            (keydown)="onRadioKey($event, mealKeys, meal, selectMeal)">
+            {{ m.label }}
+          </button>
+        }
+      </div>
+    </div>
+
+    <!-- Servings -->
+    <div class="field">
+      <span class="label" id="log-servings-label">Servings</span>
+      <div class="chips" role="radiogroup" aria-labelledby="log-servings-label">
+        @for (c of servingChoices; track c.value) {
+          <button type="button" role="radio" class="chip" [attr.aria-checked]="serving === c.value"
+            [attr.aria-label]="c.value === 0.5 ? 'Half' : null"
+            [tabindex]="serving === c.value ? 0 : -1" (click)="selectServing(c.value)"
+            (keydown)="onRadioKey($event, servingValues, serving, selectServing)">
+            {{ c.label }}
+          </button>
+        }
+      </div>
+      <!-- Custom servings stepper: step 5. -->
+    </div>
+
+    <!-- Preview -->
+    <div class="preview" aria-live="polite">
+      <div class="preview-top">
+        <p class="adds">{{ adds }}</p>
+        @if (snapshot.level && !result.allUnknown) {
+          <app-level-pill [level]="snapshot.level" [prefix]="snapshot.incomplete ? 'At least ' : ''" />
+        }
+      </div>
+      <p class="soluble">{{ soluble }}</p>
+      <p class="day-total">
+        <span class="day-total-label">Day total:</span>
+        @switch (dayState.status) {
+          @case ('loading') {<span class="muted">Loading…</span>}
+          @case ('error') {<span class="muted">We couldn't load this day.</span>}
+          @default {
+            <span class="before">{{ dayTotal?.before }}</span>
+            <app-icon name="chevron-right" [size]="14" aria-hidden="true" />
+            <span class="sr-only">to</span>
+            <span class="after">{{ dayTotal?.after }}</span>
+          }
+        }
+      </p>
+    </div>
+  </div>
+
+  <div class="foot">
+    @if (error) {
+      <p class="error" role="alert">We couldn't add this to your day. Try again.</p>
+    }
+    <div class="foot-buttons">
+      <button type="button" class="btn btn--outline" [disabled]="saving" (click)="close()">Cancel</button>
+      <button type="button" class="btn btn--primary" [disabled]="saving" (click)="submit()">
+        <app-icon name="plus" [size]="18" />
+        {{ saving ? 'Adding…' : 'Add to ' + mealLabel }}
+      </button>
+    </div>
+  </div>
+</div>

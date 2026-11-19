@@ -106,8 +106,12 @@
               }
             </p>
 
-            <!-- PR 4: the primary "Log a serving" button goes first in this row. -->
             <div class="actions" [attr.data-mode]="actionsMode">
+              @if (actionsMode !== 'icons') {
+                <button #logButton type="button" class="btn-primary" (click)="openLog()">
+                  <app-icon name="calendar-plus" [size]="18" /> Log a serving
+                </button>
+              }
               @switch (actionsMode) {
                 @case ('full') {
                   <a class="btn-outline" [routerLink]="['/recipes', r.id, 'edit']">
@@ -188,6 +192,10 @@
         </div>
       }
     }
+  }
+
+  @if (logOpen && recipe && result) {
+    <app-log-serving [recipe]="recipe" [result]="result" (add)="onLogAdd($event)" (closed)="closeLog()" />
   }
 
   @if (deleteOpen && recipe) {

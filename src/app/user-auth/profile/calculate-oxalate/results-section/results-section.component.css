@@ -126,8 +126,10 @@
   }
 }
 
-/* "at least": a logged recipe has an ingredient with no value. */
+/* "at least": a logged recipe has an ingredient with no value.
+   On its own line above the number, so narrow tiles don't split "mg" off. */
 .at-least {
+  display: block;
   font-size: 0.8125rem;
   font-weight: 600;
   color: var(--color-muted);

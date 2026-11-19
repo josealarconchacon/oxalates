@@ -18,6 +18,7 @@ import { LevelPillComponent } from '../../shared/level-pill/level-pill.component
 import { BreakdownComponent } from './breakdown/breakdown.component';
 import { BreakdownRowView, breakdownRows } from './breakdown/breakdown-view';
 import { DeleteDialogComponent } from './delete-dialog/delete-dialog.component';
+import { LogServingChoice, LogServingComponent } from './log-serving/log-serving.component';
 import { IncompleteBadgeComponent } from './incomplete-badge/incomplete-badge.component';
 
 const WIDE = '(min-width: 1024px)';
@@ -31,7 +32,7 @@ const HIGHER_LEVELS = new Set(['high', 'very high', 'extremely high']);
   selector: 'app-recipe-detail',
   standalone: true,
   imports: [RouterLink, IconComponent, LevelPillComponent, IncompleteBadgeComponent, BreakdownComponent, DeleteDialogComponent,
-    CdkMenuTrigger, CdkMenu, CdkMenuItem],
+    CdkMenuTrigger, CdkMenu, CdkMenuItem, LogServingComponent],
   templateUrl: './recipe-detail.component.html',
   styleUrl: './recipe-detail.component.css',
 })
@@ -60,6 +61,8 @@ export class RecipeDetailComponent implements OnInit {
   duplicateError = false;
   /** full ≥ 1024px · menu 641–1023px (Edit + More) · icons ≤ 640px. */
   actionsMode: 'full' | 'menu' | 'icons' = 'full';
+  logOpen = false;
+  @ViewChild('logButton') private logButton?: ElementRef<HTMLButtonElement>;
   deleteOpen = false;
   deleting = false;
   deleteError = false;
@@ -143,6 +146,20 @@ export class RecipeDetailComponent implements OnInit {
     } finally {
       this.duplicating = false;
     }
+  }
+
+  openLog(): void {
+    this.logOpen = true;
+  }
+
+  closeLog(): void {
+    this.logOpen = false;
+    setTimeout(() => this.logButton?.nativeElement.focus());
+  }
+
+  onLogAdd(choice: LogServingChoice): void {
+    // Saving the snapshot, the toast and Undo: step 6.
+    void choice;
   }
 
   openDelete(): void {

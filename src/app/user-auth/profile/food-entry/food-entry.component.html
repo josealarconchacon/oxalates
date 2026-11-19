@@ -74,6 +74,25 @@
                   </thead>
                   <tbody>
                     @for (food of meal.items; track food; let i = $index) {
+                      @if (isRecipe(food)) {
+                        <tr class="food-row food-row--recipe">
+                          <td class="food-name-col">
+                            <app-recipe-entry [entry]="food" [deleted]="isDeletedRecipe(food)" />
+                          </td>
+                          <td class="serving-col hide-mobile"></td>
+                          <td class="oxalate-col hide-mobile"></td>
+                          <td class="soluble-col hide-mobile"></td>
+                          <td class="action-col">
+                            <button
+                              class="delete-btn"
+                              (click)="deleteFood(meal.key, i)"
+                              [attr.aria-label]="'Delete ' + food.snapshot.recipeName"
+                              >
+                              <i class="material-icons" aria-hidden="true">close</i>
+                            </button>
+                          </td>
+                        </tr>
+                      } @else {
                       <tr
                         class="food-row"
                         >
@@ -152,6 +171,7 @@
                                 </button>
                               </td>
                             </tr>
+                      }
                           }
                           <tr class="total-row">
                             @let mt = mealTotals(meal.items);

@@ -13,7 +13,9 @@ import { CalculateOxalateComponent } from '../calculate-oxalate/calculate-oxalat
 import { ResultsSectionComponent } from '../calculate-oxalate/results-section/results-section.component';
 import { DateSwitcherComponent } from './date-switcher/date-switcher.component';
 import { DialogDirective } from 'src/app/shared/directives/dialog.directive';
-import { DayItem, FoodEntryService } from './service/food-entry.service';
+import { DayItem, FoodEntryService, RecipeEntry, isRecipeEntry } from './service/food-entry.service';
+import { RecipeEntryComponent } from './recipe-entry/recipe-entry.component';
+import { RecipeService } from 'src/app/recipes/data/recipe.service';
 import { Totals, mealTotals } from './model/day-totals';
 import { Subscription, from, of } from 'rxjs';
 import { ThemeService } from 'src/app/shared/services/theme.service';
@@ -21,14 +23,8 @@ import { AuthService } from '../../service/auth-service.service';
 import { catchError, delay, retryWhen, take, tap } from 'rxjs/operators';
 import { AngularFireAuth } from '@angular/fire/compat/auth';
 
-export interface FoodItem {
-  foodName: string;
-  servingSize: string;
-  numberOfServings: number;
-  oxalatePerServing: number;
-  solubleOxalatePerServing: number;
-  isExpanded?: boolean;
-}
+/** A meal row: a food or a logged recipe, plus UI state. */
+export type FoodItem = DayItem & { isExpanded?: boolean };
 
 type MealKey = 'breakfast' | 'lunch' | 'dinner' | 'snacks';
 
@@ -42,6 +38,7 @@ type MealKey = 'breakfast' | 'lunch' | 'dinner' | 'snacks';
     DateSwitcherComponent,
     DialogDirective,
     IconComponent,
+    RecipeEntryComponent,
   ],
   templateUrl: './food-entry.component.html',
   styleUrls: ['./food-entry.component.css'],
@@ -71,8 +68,13 @@ export class FoodEntryComponent implements OnInit, OnDestroy {
     private foodEntryService: FoodEntryService,
     private themeService: ThemeService,
     private authService: AuthService,
-    private afAuth: AngularFireAuth
+    private afAuth: AngularFireAuth,
+    private recipes: RecipeService
   ) {}
+
+  /** Ids of the user's recipes, to mark logged recipes that were deleted. Null until known. */
+  existingRecipeIds: Set<string> | null = null;
+  private recipeIdsRequested = false;
 
   ngOnInit() {
     // Subscribe to theme changes
@@ -154,6 +156,7 @@ export class FoodEntryComponent implements OnInit, OnDestroy {
               ...item,
               isExpanded: false,
             }));
+            this.loadRecipeIdsIfNeeded();
           }
         },
         error: (error) => {
@@ -272,6 +275,27 @@ export class FoodEntryComponent implements OnInit, OnDestroy {
     } catch (error) {
       console.error('Error deleting food item:', error);
     }
+  }
+
+  isRecipe(item: FoodItem): item is RecipeEntry & { isExpanded?: boolean } {
+    return isRecipeEntry(item);
+  }
+
+  /** True only once we know the recipe is gone; until then it stays a link. */
+  isDeletedRecipe(item: RecipeEntry): boolean {
+    return !!this.existingRecipeIds && !this.existingRecipeIds.has(item.snapshot.recipeId);
+  }
+
+  /** Loads the user's recipe ids once, and only when a logged recipe is on screen. */
+  private loadRecipeIdsIfNeeded(): void {
+    if (this.recipeIdsRequested) return;
+    const all = [...this.breakfastItems, ...this.lunchItems, ...this.dinnerItems, ...this.snackItems];
+    if (!all.some((i) => isRecipeEntry(i))) return;
+    this.recipeIdsRequested = true;
+    this.recipes
+      .list()
+      .then((list) => (this.existingRecipeIds = new Set(list.map((r) => r.id))))
+      .catch(() => (this.recipeIdsRequested = false));
   }
 
   closeCalculator() {
