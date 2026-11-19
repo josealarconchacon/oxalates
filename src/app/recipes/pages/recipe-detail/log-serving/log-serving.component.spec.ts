@@ -59,6 +59,7 @@ describe('LogServingComponent', () => {
     expect(squash(el().querySelector('#log-title'))).toBe('Log a serving');
     expect(squash(el().querySelector('#log-recipe'))).toBe('Carrot soup');
     expect(el().querySelector('[aria-label="Close"]')).not.toBeNull();
+    expect(el().querySelector('.grab')!.getAttribute('aria-hidden')).toBe('true');
   });
 
   it('day: today by default, with the Today tag; arrows move a day and load that day', () => {

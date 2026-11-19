@@ -338,6 +338,77 @@
   outline-offset: 2px;
 }
 
+.grab {
+  display: none;
+}
+
+/* ≤ 640px: a bottom sheet. Full width, top corners 24, slides up. */
+@media (max-width: 640px) {
+  :host {
+    place-items: end stretch;
+    padding: 0;
+  }
+
+  .panel {
+    max-width: none;
+    max-height: 92vh;
+    max-height: 92dvh;
+    border-width: 1px 0 0;
+    border-radius: 24px 24px 0 0;
+    animation: sheet-up 0.22s ease-out;
+  }
+
+  .grab {
+    display: block;
+    width: 40px;
+    height: 5px;
+    margin: 10px auto 0;
+    border-radius: 999px;
+    background: var(--color-line);
+  }
+
+  .head {
+    padding: 12px 20px 8px;
+  }
+
+  .body {
+    padding: 12px 20px 20px;
+  }
+
+  .foot {
+    padding: 14px 20px calc(14px + env(safe-area-inset-bottom, 0px));
+  }
+
+  .foot-buttons .btn {
+    min-height: 52px;
+  }
+
+  .btn--outline {
+    flex: 1;
+  }
+
+  .btn--primary {
+    flex: 2;
+  }
+
+  .segment {
+    font-size: 0.875rem;
+  }
+}
+
+@keyframes sheet-up {
+  from {
+    transform: translateY(24px);
+    opacity: 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .panel {
+    animation: none;
+  }
+}
+
 /* Date picker popup: a copy of Daily Intake's date switcher rules (they only load
    with that page). Could move to the global styles later. */
 ::ng-deep .mat-datepicker-content {

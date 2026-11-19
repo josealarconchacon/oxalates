@@ -441,7 +441,6 @@ describe('RecipeDetailComponent', () => {
       screen.next(widthOf(390));
       await render();
       expect(labels()).toEqual(['Edit', 'Duplicate', 'Delete']);
-      // The phone "Log a serving" bar comes in step 4.
       expect(Array.from(actions().children).every((b) => b.classList.contains('btn-icon'))).toBeTrue();
       expect(squash(actions())).toBe('');
     });
@@ -490,6 +489,36 @@ describe('RecipeDetailComponent', () => {
       expect(el().querySelector('app-log-serving')).toBeNull();
       expect(document.activeElement).toBe(el().querySelector('.actions .btn-primary'));
       el().remove();
+    });
+  });
+
+  describe('phone "Log a serving" bar', () => {
+    beforeEach(() => get.and.resolveTo({ ...recipe([grams('carrot', 100)]), id: 'r1', name: 'Soup' }));
+    afterEach(() => (document.body.style.paddingBottom = ''));
+
+    it('≤ 640px: a pinned full-width bar opens the dialog; the body makes room for it', async () => {
+      screen.next(widthOf(390));
+      await render();
+      const bar = el().querySelector('.log-bar')!;
+      expect(squash(bar)).toBe('Log a serving');
+      expect(document.body.style.paddingBottom).toContain('77px');
+
+      bar.querySelector<HTMLButtonElement>('button')!.click();
+      fixture.detectChanges();
+      expect(el().querySelector('app-log-serving')).not.toBeNull();
+    });
+
+    it('wider screens: no bar, no extra room; leaving the page removes the room', async () => {
+      screen.next(widthOf(390));
+      await render();
+      screen.next(widthOf(1440));
+      fixture.detectChanges();
+      expect(el().querySelector('.log-bar')).toBeNull();
+      expect(document.body.style.paddingBottom).toBe('');
+
+      screen.next(widthOf(390));
+      fixture.destroy();
+      expect(document.body.style.paddingBottom).toBe('');
     });
   });
 });

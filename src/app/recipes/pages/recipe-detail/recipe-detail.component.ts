@@ -22,6 +22,8 @@ import { LogServingChoice, LogServingComponent } from './log-serving/log-serving
 import { IncompleteBadgeComponent } from './incomplete-badge/incomplete-badge.component';
 
 const WIDE = '(min-width: 1024px)';
+/** Height of the pinned phone bar: 52px button + 24px padding + 1px border, and the iPhone home bar. */
+const LOG_BAR_ROOM = 'calc(77px + env(safe-area-inset-bottom, 0px))';
 const PHONE = '(max-width: 640px)';
 
 /** Levels that get the calm "higher side" note. */
@@ -68,12 +70,17 @@ export class RecipeDetailComponent implements OnInit {
   deleteError = false;
   @ViewChild('deleteButton') private deleteButton?: ElementRef<HTMLButtonElement>;
 
+  constructor() {
+    this.destroyRef.onDestroy(() => this.makeRoomForLogBar(false));
+  }
+
   ngOnInit(): void {
     this.breakpoints
       .observe([WIDE, PHONE])
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe((state) => {
         this.actionsMode = state.breakpoints[WIDE] ? 'full' : state.breakpoints[PHONE] ? 'icons' : 'menu';
+        this.makeRoomForLogBar(this.actionsMode === 'icons');
       });
     // The same page shows the copy after Duplicate, so follow :id changes.
     this.route.paramMap.pipe(takeUntilDestroyed(this.destroyRef)).subscribe((params) => {
@@ -146,6 +153,14 @@ export class RecipeDetailComponent implements OnInit {
     } finally {
       this.duplicating = false;
     }
+  }
+
+  /**
+   * The phone bar is pinned over the bottom of the screen; pad the page's
+   * <body> so the last content (the site footer too) can scroll above it.
+   */
+  private makeRoomForLogBar(on: boolean): void {
+    document.body.style.paddingBottom = on ? LOG_BAR_ROOM : '';
   }
 
   openLog(): void {

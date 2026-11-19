@@ -194,6 +194,15 @@
     }
   }
 
+  @if (state === 'ready' && recipe && actionsMode === 'icons') {
+    <!-- Phones: "Log a serving" stays pinned to the bottom of the screen. -->
+    <div class="log-bar">
+      <button #logButton type="button" class="btn-primary log-bar-btn" (click)="openLog()">
+        <app-icon name="calendar-plus" [size]="20" /> Log a serving
+      </button>
+    </div>
+  }
+
   @if (logOpen && recipe && result) {
     <app-log-serving [recipe]="recipe" [result]="result" (add)="onLogAdd($event)" (closed)="closeLog()" />
   }
