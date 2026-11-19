@@ -14,6 +14,9 @@ import { FoodEntryService } from '../../food-entry/service/food-entry.service';
 import { AlertService } from 'src/app/shared/alert-service/alert.service';
 import { AlertComponent } from 'src/app/landing-page/dialog-service/oxalate/shared/alert/alert.component';
 import { DialogDirective } from 'src/app/shared/directives/dialog.directive';
+import { dayTotals } from '../../food-entry/model/day-totals';
+import { reportRow, reportTotal } from '../../food-entry/model/report-lines';
+import { DayItem } from '../../food-entry/service/food-entry.service';
 
 interface FoodItem {
   foodName: string;
@@ -106,17 +109,8 @@ export class GetReportComponent implements OnInit, OnDestroy {
         // Add snack items
         this.addMealItemsToCSV(csvRows, entry.snacks || [], 'Snacks');
 
-        // Add total row
-        const totalOxalate = this.calculateTotalOxalate(entry);
-        const totalSolubleOxalate = this.calculateTotalSolubleOxalate(entry);
-        csvRows.push([
-          '',
-          '',
-          '',
-          'Total:',
-          totalOxalate.toFixed(2),
-          totalSolubleOxalate.toFixed(2),
-        ]);
+        // Add total row ("at least" when a logged recipe was incomplete)
+        csvRows.push(['', '', '', 'Total:', ...this.totalCells(entry)]);
 
         const csvContent = csvRows
           .map((row) => row.map((field) => this.escapeCsvField(field)).join(','))
@@ -246,14 +240,7 @@ export class GetReportComponent implements OnInit, OnDestroy {
     mealType: string
   ): void {
     items.forEach((item) => {
-      csvRows.push([
-        mealType,
-        item.foodName,
-        item.servingSize,
-        item.numberOfServings.toString(),
-        (item.oxalatePerServing * item.numberOfServings).toFixed(2),
-        (item.solubleOxalatePerServing * item.numberOfServings).toFixed(2),
-      ]);
+      csvRows.push(reportRow(item, mealType).map(String));
     });
   }
 
@@ -264,28 +251,12 @@ export class GetReportComponent implements OnInit, OnDestroy {
     ['breakfast', 'lunch', 'dinner', 'snacks'].forEach((mealType) => {
       const items = entry[mealType as keyof DailyEntry] || [];
       items.forEach((item: FoodItem) => {
-        tableData.push([
-          this.capitalizeFirstLetter(mealType),
-          item.foodName,
-          item.servingSize,
-          item.numberOfServings,
-          (item.oxalatePerServing * item.numberOfServings).toFixed(2),
-          (item.solubleOxalatePerServing * item.numberOfServings).toFixed(2),
-        ]);
+        tableData.push(reportRow(item as DayItem, this.capitalizeFirstLetter(mealType)));
       });
     });
 
-    // Add total row
-    const totalOxalate = this.calculateTotalOxalate(entry);
-    const totalSolubleOxalate = this.calculateTotalSolubleOxalate(entry);
-    tableData.push([
-      '',
-      '',
-      '',
-      'Total:',
-      totalOxalate.toFixed(2),
-      totalSolubleOxalate.toFixed(2),
-    ]);
+    // Add total row ("at least" when a logged recipe was incomplete)
+    tableData.push(['', '', '', 'Total:', ...this.totalCells(entry)]);
 
     return tableData;
   }
@@ -294,33 +265,14 @@ export class GetReportComponent implements OnInit, OnDestroy {
     return string.charAt(0).toUpperCase() + string.slice(1);
   }
 
-  private calculateTotalOxalate(entry: DailyEntry): number {
-    let total = 0;
-    ['breakfast', 'lunch', 'dinner', 'snacks'].forEach((mealType) => {
-      const items = entry[mealType as keyof DailyEntry];
-      if (items) {
-        total += items.reduce(
-          (sum: number, item: FoodItem) =>
-            sum + item.oxalatePerServing * item.numberOfServings,
-          0
-        );
-      }
+  /** Total and soluble cells: foods as always, logged recipes from their snapshot. */
+  private totalCells(entry: DailyEntry): [string, string] {
+    const t = dayTotals({
+      breakfast: (entry.breakfast ?? []) as DayItem[],
+      lunch: (entry.lunch ?? []) as DayItem[],
+      dinner: (entry.dinner ?? []) as DayItem[],
+      snacks: (entry.snacks ?? []) as DayItem[],
     });
-    return total;
-  }
-
-  private calculateTotalSolubleOxalate(entry: DailyEntry): number {
-    let total = 0;
-    ['breakfast', 'lunch', 'dinner', 'snacks'].forEach((mealType) => {
-      const items = entry[mealType as keyof DailyEntry];
-      if (items) {
-        total += items.reduce(
-          (sum: number, item: FoodItem) =>
-            sum + item.solubleOxalatePerServing * item.numberOfServings,
-          0
-        );
-      }
-    });
-    return total;
+    return [reportTotal(t.mg, t.atLeast), reportTotal(t.solubleMg, t.solubleAtLeast)];
   }
 }
