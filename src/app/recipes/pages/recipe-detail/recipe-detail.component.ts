@@ -8,6 +8,7 @@ import { firstValueFrom } from 'rxjs';
 import { IconComponent } from 'src/app/shared/components/icon/icon.component';
 import { NotificationService } from 'src/app/landing-page/dialog-service/oxalate/service/notification.service';
 import { RecipeDraftService } from '../../data/recipe-draft.service';
+import { RecipeLogService } from '../../data/recipe-log.service';
 import { RecipeFoodsService } from '../../data/recipe-foods.service';
 import { RecipeService } from '../../data/recipe.service';
 import { formatMg } from '../../engine/format';
@@ -47,6 +48,7 @@ export class RecipeDetailComponent implements OnInit {
   private notifications = inject(NotificationService);
   private destroyRef = inject(DestroyRef);
   private breakpoints = inject(BreakpointObserver);
+  private logs = inject(RecipeLogService);
   private locale = inject(LOCALE_ID);
 
   state: 'loading' | 'not-found' | 'error' | 'ready' = 'loading';
@@ -64,6 +66,8 @@ export class RecipeDetailComponent implements OnInit {
   /** full ≥ 1024px · menu 641–1023px (Edit + More) · icons ≤ 640px. */
   actionsMode: 'full' | 'menu' | 'icons' = 'full';
   logOpen = false;
+  logSaving = false;
+  logError = false;
   @ViewChild('logButton') private logButton?: ElementRef<HTMLButtonElement>;
   deleteOpen = false;
   deleting = false;
@@ -164,6 +168,7 @@ export class RecipeDetailComponent implements OnInit {
   }
 
   openLog(): void {
+    this.logError = false;
     this.logOpen = true;
   }
 
@@ -172,9 +177,20 @@ export class RecipeDetailComponent implements OnInit {
     setTimeout(() => this.logButton?.nativeElement.focus());
   }
 
-  onLogAdd(choice: LogServingChoice): void {
-    // Saving the snapshot, the toast and Undo: step 6.
-    void choice;
+  /** Saves a frozen snapshot into Daily Intake; on success: close, then the toast. */
+  async onLogAdd(choice: LogServingChoice): Promise<void> {
+    if (!this.recipe || !this.result || this.logSaving) return;
+    this.logSaving = true;
+    this.logError = false;
+    try {
+      const logged = await this.logs.log(this.recipe, this.result, choice);
+      this.closeLog();
+      this.logs.announce(logged);
+    } catch {
+      this.logError = true;
+    } finally {
+      this.logSaving = false;
+    }
   }
 
   openDelete(): void {

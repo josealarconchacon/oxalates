@@ -16,6 +16,7 @@ import { DialogDirective } from 'src/app/shared/directives/dialog.directive';
 import { DayItem, FoodEntryService, RecipeEntry, isRecipeEntry } from './service/food-entry.service';
 import { RecipeEntryComponent } from './recipe-entry/recipe-entry.component';
 import { RecipeService } from 'src/app/recipes/data/recipe.service';
+import { ActivatedRoute } from '@angular/router';
 import { Totals, mealTotals } from './model/day-totals';
 import { Subscription, from, of } from 'rxjs';
 import { ThemeService } from 'src/app/shared/services/theme.service';
@@ -69,7 +70,8 @@ export class FoodEntryComponent implements OnInit, OnDestroy {
     private themeService: ThemeService,
     private authService: AuthService,
     private afAuth: AngularFireAuth,
-    private recipes: RecipeService
+    private recipes: RecipeService,
+    private route: ActivatedRoute
   ) {}
 
   /** Ids of the user's recipes, to mark logged recipes that were deleted. Null until known. */
@@ -77,6 +79,10 @@ export class FoodEntryComponent implements OnInit, OnDestroy {
   private recipeIdsRequested = false;
 
   ngOnInit() {
+    // "View day" from a logged recipe links here with ?date=yyyy-mm-dd.
+    const fromLink = dayFromParam(this.route.snapshot.queryParamMap.get('date'));
+    if (fromLink) this.currentDate = fromLink;
+
     // Subscribe to theme changes
     this.themeService.isDarkTheme$.subscribe((isDark) => {
       this.isDarkTheme = isDark;
@@ -331,4 +337,13 @@ export class FoodEntryComponent implements OnInit, OnDestroy {
   calculateTotalSolubleOxalate(items: FoodItem[]): number {
     return this.mealTotals(items).solubleMg;
   }
+}
+
+/** "2026-11-19" → that local day; anything else → null. */
+export function dayFromParam(value: string | null): Date | null {
+  const match = /^(\d{4})-(\d{2})-(\d{2})$/.exec(value ?? '');
+  if (!match) return null;
+  const [y, m, d] = match.slice(1).map(Number);
+  const date = new Date(y, m - 1, d);
+  return date.getMonth() === m - 1 && date.getDate() === d ? date : null;
 }

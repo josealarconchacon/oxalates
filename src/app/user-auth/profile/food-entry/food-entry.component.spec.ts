@@ -1,5 +1,5 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { FoodEntryComponent } from './food-entry.component';
+import { FoodEntryComponent, dayFromParam } from './food-entry.component';
 import { AngularFireModule } from '@angular/fire/compat';
 import {
   AngularFirestoreModule,
@@ -294,6 +294,16 @@ describe('FoodEntryComponent', () => {
       expect(buttons[1].getAttribute('aria-label')).toBe('Delete Lemon herb chicken');
       buttons[1].click();
       expect(del).toHaveBeenCalledWith('dinner', 1);
+    });
+  });
+
+  describe('opening on a date (View day)', () => {
+    it('reads yyyy-mm-dd as that local day, and ignores anything else', () => {
+      const d = dayFromParam('2026-11-19')!;
+      expect([d.getFullYear(), d.getMonth(), d.getDate(), d.getHours()]).toEqual([2026, 10, 19, 0]);
+      expect(dayFromParam(null)).toBeNull();
+      expect(dayFromParam('2026-02-30')).toBeNull();
+      expect(dayFromParam('tomorrow')).toBeNull();
     });
   });
 });

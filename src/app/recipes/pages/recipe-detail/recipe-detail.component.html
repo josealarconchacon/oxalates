@@ -204,7 +204,8 @@
   }
 
   @if (logOpen && recipe && result) {
-    <app-log-serving [recipe]="recipe" [result]="result" (add)="onLogAdd($event)" (closed)="closeLog()" />
+    <app-log-serving [recipe]="recipe" [result]="result" [saving]="logSaving" [error]="logError"
+      (add)="onLogAdd($event)" (closed)="closeLog()" />
   }
 
   @if (deleteOpen && recipe) {

@@ -4,6 +4,7 @@ import { BreakpointObserver, BreakpointState } from '@angular/cdk/layout';
 import { BehaviorSubject, of } from 'rxjs';
 import { NotificationService } from 'src/app/landing-page/dialog-service/oxalate/service/notification.service';
 import { FoodEntryService } from 'src/app/user-auth/profile/food-entry/service/food-entry.service';
+import { RecipeLogService } from '../../data/recipe-log.service';
 import { provideNoopAnimations } from '@angular/platform-browser/animations';
 import { RecipeFoodsService } from '../../data/recipe-foods.service';
 import { RecipeService } from '../../data/recipe.service';
@@ -19,6 +20,7 @@ describe('RecipeDetailComponent', () => {
   let toast: jasmine.Spy;
   let params: BehaviorSubject<ReturnType<typeof convertToParamMap>>;
   let screen: BehaviorSubject<BreakpointState>;
+  let logService: { log: jasmine.Spy; announce: jasmine.Spy };
   /** Pretend the window is this wide (the page's breakpoints: ≥ 1024, ≤ 640). */
   const widthOf = (px: number): BreakpointState => {
     const breakpoints = { '(min-width: 1024px)': px >= 1024, '(max-width: 640px)': px <= 640 };
@@ -44,6 +46,7 @@ describe('RecipeDetailComponent', () => {
     toast = jasmine.createSpy('show');
     params = new BehaviorSubject(convertToParamMap({ id: 'r1' }));
     screen = new BehaviorSubject(widthOf(1440));
+    logService = { log: jasmine.createSpy('log'), announce: jasmine.createSpy('announce') };
     TestBed.configureTestingModule({
       imports: [RecipeDetailComponent],
       providers: [
@@ -64,6 +67,7 @@ describe('RecipeDetailComponent', () => {
         { provide: ActivatedRoute, useValue: { paramMap: params } },
         { provide: BreakpointObserver, useValue: { observe: () => screen } },
         { provide: FoodEntryService, useValue: { getDailyEntry: () => of(null) } },
+        { provide: RecipeLogService, useValue: logService },
         provideNoopAnimations(),
       ],
     });
@@ -489,6 +493,36 @@ describe('RecipeDetailComponent', () => {
       expect(el().querySelector('app-log-serving')).toBeNull();
       expect(document.activeElement).toBe(el().querySelector('.actions .btn-primary'));
       el().remove();
+    });
+
+    it('Add saves, closes the dialog and shows the toast', async () => {
+      const logged = { dayKey: '2026-11-19', meal: 'dinner', entry: {} };
+      logService.log.and.resolveTo(logged);
+      await render();
+      el().querySelector<HTMLButtonElement>('.actions .btn-primary')!.click();
+      fixture.detectChanges();
+      el().querySelector<HTMLButtonElement>('app-log-serving .btn--primary')!.click();
+      await fixture.whenStable();
+      fixture.detectChanges();
+      const [r, , choice] = logService.log.calls.mostRecent().args;
+      expect(r.id).toBe('r1');
+      expect(choice.multiplier).toBe(1);
+      expect(el().querySelector('app-log-serving')).toBeNull();
+      expect(logService.announce).toHaveBeenCalledWith(logged);
+    });
+
+    it("a failed save keeps the dialog open with the error", async () => {
+      logService.log.and.rejectWith(new Error('offline'));
+      await render();
+      el().querySelector<HTMLButtonElement>('.actions .btn-primary')!.click();
+      fixture.detectChanges();
+      el().querySelector<HTMLButtonElement>('app-log-serving .btn--primary')!.click();
+      await fixture.whenStable();
+      fixture.detectChanges();
+      expect(squash(el().querySelector('app-log-serving [role="alert"]'))).toBe(
+        "We couldn't add this to your day. Try again."
+      );
+      expect(logService.announce).not.toHaveBeenCalled();
     });
   });
 
