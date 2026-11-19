@@ -8,7 +8,7 @@ import { levelForMgPerServing } from '../../../engine/recipe-level';
 import { custom, food, grams, lookup, recipe } from '../../../engine/testing/fixtures';
 import { Recipe } from '../../../model/recipe';
 import { LogServingComponent } from './log-serving.component';
-import { defaultMeal } from './log-defaults';
+import { defaultMeal } from '../../../shared/log/log-defaults';
 
 describe('LogServingComponent', () => {
   let fixture: ComponentFixture<LogServingComponent>;
@@ -181,8 +181,8 @@ describe('LogServingComponent', () => {
       imports: [LogServingComponent],
       providers: [provideNoopAnimations(), { provide: FoodEntryService, useValue: { getDailyEntry: () => new BehaviorSubject(null) } }],
     });
-    const c = TestBed.createComponent(LogServingComponent).componentInstance;
-    expect(c.meal).toBe(defaultMeal(new Date()));
+    fixture = TestBed.createComponent(LogServingComponent);
+    expect(fixture.componentInstance.meal).toBe(defaultMeal(new Date()));
   });
 
   describe('Custom servings', () => {

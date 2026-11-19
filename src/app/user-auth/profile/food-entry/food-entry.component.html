@@ -225,10 +225,37 @@
                                     aria-labelledby="add-food-title"
                                     (dialogClose)="closeCalculator()"
                                     >
-                                    <app-calculate-oxalate
-                                      [mealType]="selectedMealType"
-                                      (mealLogged)="onMealLogged($event)"
-                                    ></app-calculate-oxalate>
+                                    <!-- Foods (unchanged) | Recipes. Automatic activation; ←/→ move. -->
+                                    <div class="add-tabs" role="tablist" aria-label="What to add">
+                                      @for (t of addTabs; track t.key) {
+                                        <button type="button" role="tab" class="add-tab" [id]="'add-tab-' + t.key"
+                                          [attr.aria-selected]="addTab === t.key"
+                                          [attr.aria-controls]="'add-panel-' + t.key"
+                                          [tabindex]="addTab === t.key ? 0 : -1"
+                                          (click)="addTab = t.key" (keydown)="onAddTabKey($event)">
+                                          {{ t.label }}
+                                        </button>
+                                      }
+                                    </div>
+                                    @if (addTab === 'foods') {
+                                      <div role="tabpanel" id="add-panel-foods" aria-labelledby="add-tab-foods">
+                                        <app-calculate-oxalate
+                                          [mealType]="selectedMealType"
+                                          (mealLogged)="onMealLogged($event)"
+                                        ></app-calculate-oxalate>
+                                      </div>
+                                    } @else {
+                                      <div role="tabpanel" id="add-panel-recipes" aria-labelledby="add-tab-recipes">
+                                        <app-recipe-picker
+                                          [mealType]="selectedMealType"
+                                          [dayTotals]="currentDayTotals"
+                                          [plannedFor]="plannedFor"
+                                          [saving]="recipeSaving"
+                                          [error]="recipeError"
+                                          (pick)="onRecipePicked($event)"
+                                        />
+                                      </div>
+                                    }
                                     <!-- After the form in the DOM so the dialog still opens with focus
                                     on the search box, not on Close. -->
                                     <button

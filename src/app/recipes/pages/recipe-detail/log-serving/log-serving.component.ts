@@ -9,7 +9,6 @@ import {
   OnInit,
   Output,
   ViewChild,
-  ElementRef,
   inject,
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
@@ -17,19 +16,13 @@ import { MatNativeDateModule } from '@angular/material/core';
 import { MatDatepicker, MatDatepickerModule } from '@angular/material/datepicker';
 import { BehaviorSubject, catchError, map, of, switchMap } from 'rxjs';
 import { IconComponent } from 'src/app/shared/components/icon/icon.component';
-import { Totals, dayTotals, localDayKey, snapshotTotals, sumTotals } from 'src/app/user-auth/profile/food-entry/model/day-totals';
+import { dayTotals, localDayKey } from 'src/app/user-auth/profile/food-entry/model/day-totals';
 import { FoodEntryService, MealKey } from 'src/app/user-auth/profile/food-entry/service/food-entry.service';
-import { formatMg } from '../../../engine/format';
-import { createLogSnapshot } from '../../../engine/recipe-snapshot';
-import { Recipe, RecipeLogSnapshot, RecipeResult } from '../../../model/recipe';
-import { LevelPillComponent } from '../../../shared/level-pill/level-pill.component';
-import {
-  SERVINGS_MAX,
-  SERVINGS_MIN,
-  SERVINGS_RANGE_MESSAGE,
-  SERVINGS_STEP,
-  defaultMeal,
-} from './log-defaults';
+import { Recipe, RecipeResult } from '../../../model/recipe';
+import { defaultMeal } from '../../../shared/log/log-defaults';
+import { DayState, LogPreviewComponent } from '../../../shared/log/log-preview.component';
+import { onRadioKey } from '../../../shared/log/radio-keys';
+import { ServingsFieldComponent } from '../../../shared/log/servings-field.component';
 
 export const MEALS: { key: MealKey; label: string }[] = [
   { key: 'breakfast', label: 'Breakfast' },
@@ -38,29 +31,26 @@ export const MEALS: { key: MealKey; label: string }[] = [
   { key: 'snacks', label: 'Snacks' },
 ];
 
-export type ServingChoice = 0.5 | 1 | 2 | 'custom';
-export const SERVING_CHOICES: { value: ServingChoice; label: string }[] = [
-  { value: 0.5, label: '½' },
-  { value: 1, label: '1' },
-  { value: 2, label: '2' },
-  { value: 'custom', label: 'Custom' },
-];
-
-/** What the user chose; saving happens in the page (step 6). */
+/** What the user chose; the page saves it. */
 export interface LogServingChoice {
   dayKey: string;
   meal: MealKey;
   multiplier: number;
 }
 
-/** The day's current total, or why we don't have it. */
-type DayState = { status: 'loading' } | { status: 'error' } | { status: 'ready'; totals: Totals };
-
 /** "Log a serving": pick a day, a meal and how many servings; see what it adds. */
 @Component({
   selector: 'app-log-serving',
   standalone: true,
-  imports: [A11yModule, DatePipe, IconComponent, LevelPillComponent, MatDatepickerModule, MatNativeDateModule],
+  imports: [
+    A11yModule,
+    DatePipe,
+    IconComponent,
+    MatDatepickerModule,
+    MatNativeDateModule,
+    ServingsFieldComponent,
+    LogPreviewComponent,
+  ],
   templateUrl: './log-serving.component.html',
   styleUrl: './log-serving.component.css',
 })
@@ -78,22 +68,12 @@ export class LogServingComponent implements OnInit {
   @Output() closed = new EventEmitter<void>();
 
   @ViewChild('picker') private picker?: MatDatepicker<Date>;
-  @ViewChild('customInput') private customInput?: ElementRef<HTMLInputElement>;
+  @ViewChild(ServingsFieldComponent, { static: true }) servings!: ServingsFieldComponent;
 
   readonly meals = MEALS;
-  readonly servingChoices = SERVING_CHOICES;
 
   day = startOfDay(new Date());
   meal: MealKey = defaultMeal();
-  serving: ServingChoice = 1;
-  /** What's typed in the Custom box; `customServings` is the last valid value. */
-  customText = '1';
-  customServings = 1;
-  customError = false;
-  readonly rangeMessage = SERVINGS_RANGE_MESSAGE;
-  readonly servingsMin = SERVINGS_MIN;
-  readonly servingsMax = SERVINGS_MAX;
-  readonly servingsStep = SERVINGS_STEP;
   dayState: DayState = { status: 'loading' };
 
   private day$ = new BehaviorSubject<Date>(this.day);
@@ -154,90 +134,21 @@ export class LogServingComponent implements OnInit {
   }
 
   get multiplier(): number {
-    return this.serving === 'custom' ? this.customServings : this.serving;
-  }
-
-  /** Arrow keys move the choice within a radiogroup (and focus follows). */
-  onRadioKey<T>(event: KeyboardEvent, values: T[], current: T, select: (value: T) => void): void {
-    const step = { ArrowRight: 1, ArrowDown: 1, ArrowLeft: -1, ArrowUp: -1 }[event.key];
-    const edge = { Home: 0, End: values.length - 1 }[event.key];
-    if (step === undefined && edge === undefined) return;
-    event.preventDefault();
-    const index = edge ?? (values.indexOf(current) + step! + values.length) % values.length;
-    select(values[index]);
-    // The radios are the same elements before and after, so focus can move now
-    // (a timer here lets quick repeated presses act on the old radio).
-    const group = (event.currentTarget as HTMLElement).closest('[role="radiogroup"]');
-    group?.querySelectorAll<HTMLElement>('[role="radio"]')[index]?.focus();
+    return this.servings.multiplier;
   }
 
   selectMeal = (meal: MealKey) => (this.meal = meal);
-  selectServing = (value: ServingChoice) => {
-    if (value === 'custom' && this.serving !== 'custom') {
-      // Start from what was chosen before, e.g. 2 → "2".
-      this.customServings = this.multiplier;
-      this.customText = String(this.multiplier);
-      this.customError = false;
-    }
-    this.serving = value;
-  };
 
-  onCustomInput(text: string): void {
-    this.customText = text;
-    const n = Number(text.replace(',', '.'));
-    const valid = text.trim() !== '' && Number.isFinite(n) && n >= SERVINGS_MIN && n <= SERVINGS_MAX;
-    this.customError = !valid;
-    if (valid) this.customServings = Math.round(n * 100) / 100;
-  }
-
-  /** − / + move to the next 0.25 step, within the limits. */
-  stepCustom(direction: 1 | -1): void {
-    const steps = this.customServings / SERVINGS_STEP;
-    const next = (direction > 0 ? Math.floor(steps + 1e-9) + 1 : Math.ceil(steps - 1e-9) - 1) * SERVINGS_STEP;
-    this.customServings = Math.min(SERVINGS_MAX, Math.max(SERVINGS_MIN, next));
-    this.customText = String(this.customServings);
-    this.customError = false;
-  }
-  get mealKeys(): MealKey[] {
-    return MEALS.map((m) => m.key);
-  }
-  get servingValues(): ServingChoice[] {
-    return SERVING_CHOICES.map((c) => c.value);
-  }
-
-  // --- Preview (display only; the saved snapshot comes from the same engine call) ---
-
-  get snapshot(): RecipeLogSnapshot {
-    return createLogSnapshot(this.recipe, this.result, this.multiplier);
-  }
-
-  get adds(): string {
-    if (this.result.allUnknown) return `Adds an unknown amount to ${this.mealLabel}`;
-    const s = this.snapshot;
-    return `Adds ${s.incomplete ? 'at least ' : ''}${formatMg(s.mg)} mg to ${this.mealLabel}`;
-  }
-
-  get soluble(): string {
-    const s = this.snapshot;
-    if (!this.result.breakdown.some((b) => b.solubleMg !== null)) return 'Soluble unknown';
-    return `Soluble ${s.incomplete || s.solubleIncomplete ? 'at least ' : ''}${formatMg(s.solubleMg)} mg`;
-  }
-
-  /** "12.0 mg" → "17.6 mg", with "at least" where the day or the recipe is incomplete. */
-  get dayTotal(): { before: string; after: string } | null {
-    if (this.dayState.status !== 'ready') return null;
-    const before = this.dayState.totals;
-    const after = sumTotals([before, snapshotTotals(this.snapshot)]);
-    const text = (t: Totals) => `${t.atLeast ? 'at least ' : ''}${formatMg(t.mg)} mg`;
-    return { before: text(before), after: text(after) };
+  onMealKey(event: KeyboardEvent): void {
+    onRadioKey(event, MEALS.map((m) => m.key), this.meal, this.selectMeal);
   }
 
   // --- Footer ---
 
   submit(): void {
     if (this.saving) return;
-    if (this.serving === 'custom' && this.customError) {
-      this.customInput?.nativeElement.focus();
+    if (this.servings.invalid) {
+      this.servings.focusCustom();
       return;
     }
     this.add.emit({ dayKey: localDayKey(this.day), meal: this.meal, multiplier: this.multiplier });

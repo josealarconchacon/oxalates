@@ -306,4 +306,40 @@ describe('FoodEntryComponent', () => {
       expect(dayFromParam('tomorrow')).toBeNull();
     });
   });
+
+  describe('Add Food tabs', () => {
+    beforeEach(() => {
+      component.isLoading = false;
+      component.openCalculator('lunch');
+      fixture.detectChanges();
+    });
+
+    const tabs = () => [...fixture.nativeElement.querySelectorAll('[role="tab"]')] as HTMLButtonElement[];
+
+    it('Foods | Recipes, Foods first: the original Add Food form, unchanged', () => {
+      expect(tabs().map((t) => t.textContent!.trim())).toEqual(['Foods', 'Recipes']);
+      expect(tabs()[0].getAttribute('aria-selected')).toBe('true');
+      expect(fixture.nativeElement.querySelector('[role="tabpanel"] app-calculate-oxalate')).not.toBeNull();
+      expect(fixture.nativeElement.querySelector('app-recipe-picker')).toBeNull();
+    });
+
+    it('arrow keys switch to Recipes, and focus follows', () => {
+      document.body.appendChild(fixture.nativeElement);
+      tabs()[0].focus();
+      tabs()[0].dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowRight', bubbles: true }));
+      fixture.detectChanges();
+      expect(tabs()[1].getAttribute('aria-selected')).toBe('true');
+      expect(document.activeElement).toBe(tabs()[1]);
+      expect(fixture.nativeElement.querySelector('app-recipe-picker')).not.toBeNull();
+      expect(fixture.nativeElement.querySelector('app-calculate-oxalate')).toBeNull();
+      fixture.nativeElement.remove();
+    });
+
+    it('opening Add Food again starts on Foods', () => {
+      component.addTab = 'recipes';
+      component.closeCalculator();
+      component.openCalculator('dinner');
+      expect(component.addTab).toBe('foods');
+    });
+  });
 });

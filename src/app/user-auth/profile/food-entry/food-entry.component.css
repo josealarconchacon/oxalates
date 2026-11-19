@@ -675,3 +675,38 @@ thead .header-detail th {
   font-weight: 500;
   color: var(--color-muted);
 }
+
+/* Add Food tabs: Foods | Recipes, a segmented control above the form. */
+.add-tabs {
+  display: inline-grid;
+  grid-template-columns: repeat(2, minmax(96px, auto));
+  gap: 4px;
+  margin-bottom: 20px;
+  padding: 4px;
+  border-radius: 14px;
+  background: var(--af-surface-2);
+}
+
+.add-tab {
+  min-height: 40px;
+  padding: 0 16px;
+  border: 0;
+  border-radius: 10px;
+  background: transparent;
+  color: var(--color-ink);
+  font: inherit;
+  font-size: 0.9375rem;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.add-tab[aria-selected='true'] {
+  background: var(--color-surface);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12);
+  font-weight: 700;
+}
+
+.add-tab:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: 2px;
+}

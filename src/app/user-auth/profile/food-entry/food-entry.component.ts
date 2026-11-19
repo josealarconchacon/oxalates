@@ -15,9 +15,11 @@ import { DateSwitcherComponent } from './date-switcher/date-switcher.component';
 import { DialogDirective } from 'src/app/shared/directives/dialog.directive';
 import { DayItem, FoodEntryService, RecipeEntry, isRecipeEntry } from './service/food-entry.service';
 import { RecipeEntryComponent } from './recipe-entry/recipe-entry.component';
+import { RecipePick, RecipePickerComponent } from './recipe-picker/recipe-picker.component';
+import { RecipeLogService } from 'src/app/recipes/data/recipe-log.service';
 import { RecipeService } from 'src/app/recipes/data/recipe.service';
 import { ActivatedRoute } from '@angular/router';
-import { Totals, mealTotals } from './model/day-totals';
+import { Totals, dayTotals, localDayKey, mealTotals } from './model/day-totals';
 import { Subscription, from, of } from 'rxjs';
 import { ThemeService } from 'src/app/shared/services/theme.service';
 import { AuthService } from '../../service/auth-service.service';
@@ -40,6 +42,7 @@ type MealKey = 'breakfast' | 'lunch' | 'dinner' | 'snacks';
     DialogDirective,
     IconComponent,
     RecipeEntryComponent,
+    RecipePickerComponent,
   ],
   templateUrl: './food-entry.component.html',
   styleUrls: ['./food-entry.component.css'],
@@ -71,8 +74,18 @@ export class FoodEntryComponent implements OnInit, OnDestroy {
     private authService: AuthService,
     private afAuth: AngularFireAuth,
     private recipes: RecipeService,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private recipeLogs: RecipeLogService
   ) {}
+
+  /** Add Food: "Foods" is the original dialog; "Recipes" logs one of your recipes. */
+  readonly addTabs: { key: 'foods' | 'recipes'; label: string }[] = [
+    { key: 'foods', label: 'Foods' },
+    { key: 'recipes', label: 'Recipes' },
+  ];
+  addTab: 'foods' | 'recipes' = 'foods';
+  recipeSaving = false;
+  recipeError = false;
 
   /** Ids of the user's recipes, to mark logged recipes that were deleted. Null until known. */
   existingRecipeIds: Set<string> | null = null;
@@ -199,6 +212,8 @@ export class FoodEntryComponent implements OnInit, OnDestroy {
     // Saving rewrites the whole meal list, so adding before the day has
     // loaded would replace the saved foods with just the new one.
     if (this.isLoading) return;
+    this.addTab = 'foods';
+    this.recipeError = false;
     this.selectedMealType = mealType as
       | 'breakfast'
       | 'lunch'
@@ -302,6 +317,54 @@ export class FoodEntryComponent implements OnInit, OnDestroy {
       .list()
       .then((list) => (this.existingRecipeIds = new Set(list.map((r) => r.id))))
       .catch(() => (this.recipeIdsRequested = false));
+  }
+
+  /** ←/→ (and Home/End) switch tabs; focus follows. */
+  onAddTabKey(event: KeyboardEvent): void {
+    const keys = this.addTabs.map((t) => t.key);
+    const i = keys.indexOf(this.addTab);
+    const next = { ArrowRight: (i + 1) % keys.length, ArrowLeft: (i - 1 + keys.length) % keys.length, Home: 0, End: keys.length - 1 }[
+      event.key
+    ];
+    if (next === undefined) return;
+    event.preventDefault();
+    this.addTab = keys[next];
+    document.getElementById('add-tab-' + keys[next])?.focus();
+  }
+
+  /** The open day's totals (foods + logged recipes). */
+  get currentDayTotals(): Totals {
+    return dayTotals({
+      breakfast: this.breakfastItems,
+      lunch: this.lunchItems,
+      dinner: this.dinnerItems,
+      snacks: this.snackItems,
+    });
+  }
+
+  /** The open day, when it's after today. */
+  get plannedFor(): Date | null {
+    return localDayKey(this.currentDate) > localDayKey(new Date()) ? this.currentDate : null;
+  }
+
+  /** Recipes tab: the same snapshot, toast and Undo as "Log a serving". */
+  async onRecipePicked(pick: RecipePick) {
+    if (this.recipeSaving) return;
+    this.recipeSaving = true;
+    this.recipeError = false;
+    try {
+      const logged = await this.recipeLogs.log(pick.recipe, pick.result, {
+        dayKey: localDayKey(this.currentDate),
+        meal: this.selectedMealType,
+        multiplier: pick.multiplier,
+      });
+      this.closeCalculator();
+      this.recipeLogs.announce(logged);
+    } catch {
+      this.recipeError = true;
+    } finally {
+      this.recipeSaving = false;
+    }
   }
 
   closeCalculator() {
