@@ -8,6 +8,7 @@ import { levelForMgPerServing } from '../../../engine/recipe-level';
 import { custom, food, grams, lookup, recipe } from '../../../engine/testing/fixtures';
 import { Recipe } from '../../../model/recipe';
 import { LogServingComponent } from './log-serving.component';
+import { defaultMeal } from './log-defaults';
 
 describe('LogServingComponent', () => {
   let fixture: ComponentFixture<LogServingComponent>;
@@ -46,6 +47,8 @@ describe('LogServingComponent', () => {
     fixture = TestBed.createComponent(LogServingComponent);
     fixture.componentRef.setInput('recipe', r);
     fixture.componentRef.setInput('result', calculateRecipe(r, foods, levelForMgPerServing));
+    // The default meal depends on the clock; pin it so these tests don't.
+    fixture.componentInstance.meal = 'breakfast';
     fixture.detectChanges();
     document.body.appendChild(el());
   }
@@ -171,5 +174,92 @@ describe('LogServingComponent', () => {
     el().querySelector<HTMLButtonElement>('.btn--outline')!.click();
     el().querySelector<HTMLButtonElement>('[aria-label="Close"]')!.click();
     expect(closed).toBe(3);
+  });
+
+  it('starts on the meal for the time of day', () => {
+    TestBed.configureTestingModule({
+      imports: [LogServingComponent],
+      providers: [provideNoopAnimations(), { provide: FoodEntryService, useValue: { getDailyEntry: () => new BehaviorSubject(null) } }],
+    });
+    const c = TestBed.createComponent(LogServingComponent).componentInstance;
+    expect(c.meal).toBe(defaultMeal(new Date()));
+  });
+
+  describe('Custom servings', () => {
+    const input = () => el().querySelector<HTMLInputElement>('[aria-label="Custom servings"]')!;
+    const type = (text: string) => {
+      input().value = text;
+      input().dispatchEvent(new Event('input'));
+      fixture.detectChanges();
+    };
+
+    beforeEach(() => {
+      render();
+      radios('log-servings-label')[2].click(); // 2
+      radios('log-servings-label')[3].click(); // Custom
+      fixture.detectChanges();
+    });
+
+    it('shows a stepper that starts from the previous choice', () => {
+      expect(input().value).toBe('2');
+      expect(squash(el().querySelector('.adds'))).toBe('Adds 20.0 mg to Breakfast');
+    });
+
+    it('− / + move in 0.25 steps and stop at the limits', () => {
+      const more = el().querySelector<HTMLButtonElement>('[aria-label="More servings"]')!;
+      const fewer = el().querySelector<HTMLButtonElement>('[aria-label="Fewer servings"]')!;
+      more.click();
+      fixture.detectChanges();
+      expect(input().value).toBe('2.25');
+      expect(squash(el().querySelector('.adds'))).toBe('Adds 22.5 mg to Breakfast');
+
+      type('0.3');
+      fewer.click(); // 0.3 → 0.25, the next step down
+      fixture.detectChanges();
+      expect(input().value).toBe('0.25');
+      expect(fewer.disabled).toBeTrue();
+
+      type('20');
+      expect(more.disabled).toBeTrue();
+    });
+
+    it('out of range: says so, keeps the last good preview, and Add waits', () => {
+      type('1.5');
+      type('25');
+      expect(squash(el().querySelector('#log-servings-error'))).toBe('Choose between 0.25 and 20 servings.');
+      expect(input().getAttribute('aria-invalid')).toBe('true');
+      expect(squash(el().querySelector('.adds'))).toBe('Adds 15.0 mg to Breakfast');
+
+      const added: unknown[] = [];
+      fixture.componentInstance.add.subscribe((c) => added.push(c));
+      el().querySelector<HTMLButtonElement>('.btn--primary')!.click();
+      expect(added).toEqual([]);
+      expect(document.activeElement).toBe(input());
+
+      type('0');
+      expect(el().querySelector('#log-servings-error')).not.toBeNull();
+      type('abc');
+      expect(el().querySelector('#log-servings-error')).not.toBeNull();
+      type('3');
+      expect(el().querySelector('#log-servings-error')).toBeNull();
+      el().querySelector<HTMLButtonElement>('.btn--primary')!.click();
+      expect(added).toEqual([jasmine.objectContaining({ multiplier: 3 })]);
+    });
+  });
+
+  it('a future day adds "Planned for <date>"; today and past days don\'t', () => {
+    render();
+    expect(el().querySelector('.planned')).toBeNull();
+    el().querySelector<HTMLButtonElement>('[aria-label="Next day"]')!.click();
+    fixture.detectChanges();
+    const tomorrow = new Date();
+    tomorrow.setDate(tomorrow.getDate() + 1);
+    const label = tomorrow.toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' });
+    expect(squash(el().querySelector('.planned'))).toBe(`Planned for ${label}`);
+
+    el().querySelector<HTMLButtonElement>('[aria-label="Previous day"]')!.click();
+    el().querySelector<HTMLButtonElement>('[aria-label="Previous day"]')!.click();
+    fixture.detectChanges();
+    expect(el().querySelector('.planned')).toBeNull();
   });
 });

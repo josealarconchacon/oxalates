@@ -65,7 +65,26 @@
           </button>
         }
       </div>
-      <!-- Custom servings stepper: step 5. -->
+      @if (serving === 'custom') {
+        <div class="stepper">
+          <button type="button" class="icon-btn" aria-label="Fewer servings"
+            [disabled]="customServings <= servingsMin" (click)="stepCustom(-1)">
+            <app-icon name="minus" [size]="18" />
+          </button>
+          <input #customInput class="stepper-input" type="text" inputmode="decimal" aria-label="Custom servings"
+            [value]="customText" [attr.aria-invalid]="customError"
+            [attr.aria-describedby]="customError ? 'log-servings-error' : null"
+            (input)="onCustomInput($any($event.target).value)" />
+          <button type="button" class="icon-btn" aria-label="More servings"
+            [disabled]="customServings >= servingsMax" (click)="stepCustom(1)">
+            <app-icon name="plus" [size]="18" />
+          </button>
+          <span class="stepper-unit">servings</span>
+        </div>
+        @if (customError) {
+          <p class="field-error" id="log-servings-error" role="alert">{{ rangeMessage }}</p>
+        }
+      }
     </div>
 
     <!-- Preview -->
@@ -77,6 +96,9 @@
         }
       </div>
       <p class="soluble">{{ soluble }}</p>
+      @if (isFuture) {
+        <p class="planned"><app-icon name="calendar" [size]="14" /> Planned for {{ day | date: 'EEE, MMM d' }}</p>
+      }
       <p class="day-total">
         <span class="day-total-label">Day total:</span>
         @switch (dayState.status) {

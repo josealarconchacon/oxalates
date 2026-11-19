@@ -9,6 +9,7 @@ import {
   OnInit,
   Output,
   ViewChild,
+  ElementRef,
   inject,
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
@@ -22,6 +23,13 @@ import { formatMg } from '../../../engine/format';
 import { createLogSnapshot } from '../../../engine/recipe-snapshot';
 import { Recipe, RecipeLogSnapshot, RecipeResult } from '../../../model/recipe';
 import { LevelPillComponent } from '../../../shared/level-pill/level-pill.component';
+import {
+  SERVINGS_MAX,
+  SERVINGS_MIN,
+  SERVINGS_RANGE_MESSAGE,
+  SERVINGS_STEP,
+  defaultMeal,
+} from './log-defaults';
 
 export const MEALS: { key: MealKey; label: string }[] = [
   { key: 'breakfast', label: 'Breakfast' },
@@ -70,14 +78,22 @@ export class LogServingComponent implements OnInit {
   @Output() closed = new EventEmitter<void>();
 
   @ViewChild('picker') private picker?: MatDatepicker<Date>;
+  @ViewChild('customInput') private customInput?: ElementRef<HTMLInputElement>;
 
   readonly meals = MEALS;
   readonly servingChoices = SERVING_CHOICES;
 
   day = startOfDay(new Date());
-  meal: MealKey = 'breakfast';
+  meal: MealKey = defaultMeal();
   serving: ServingChoice = 1;
+  /** What's typed in the Custom box; `customServings` is the last valid value. */
+  customText = '1';
   customServings = 1;
+  customError = false;
+  readonly rangeMessage = SERVINGS_RANGE_MESSAGE;
+  readonly servingsMin = SERVINGS_MIN;
+  readonly servingsMax = SERVINGS_MAX;
+  readonly servingsStep = SERVINGS_STEP;
   dayState: DayState = { status: 'loading' };
 
   private day$ = new BehaviorSubject<Date>(this.day);
@@ -99,6 +115,11 @@ export class LogServingComponent implements OnInit {
   }
 
   // --- Day ---
+
+  /** A day after today: the log is a plan. */
+  get isFuture(): boolean {
+    return localDayKey(this.day) > localDayKey(new Date());
+  }
 
   get isToday(): boolean {
     return localDayKey(this.day) === localDayKey(new Date());
@@ -151,7 +172,32 @@ export class LogServingComponent implements OnInit {
   }
 
   selectMeal = (meal: MealKey) => (this.meal = meal);
-  selectServing = (value: ServingChoice) => (this.serving = value);
+  selectServing = (value: ServingChoice) => {
+    if (value === 'custom' && this.serving !== 'custom') {
+      // Start from what was chosen before, e.g. 2 → "2".
+      this.customServings = this.multiplier;
+      this.customText = String(this.multiplier);
+      this.customError = false;
+    }
+    this.serving = value;
+  };
+
+  onCustomInput(text: string): void {
+    this.customText = text;
+    const n = Number(text.replace(',', '.'));
+    const valid = text.trim() !== '' && Number.isFinite(n) && n >= SERVINGS_MIN && n <= SERVINGS_MAX;
+    this.customError = !valid;
+    if (valid) this.customServings = Math.round(n * 100) / 100;
+  }
+
+  /** − / + move to the next 0.25 step, within the limits. */
+  stepCustom(direction: 1 | -1): void {
+    const steps = this.customServings / SERVINGS_STEP;
+    const next = (direction > 0 ? Math.floor(steps + 1e-9) + 1 : Math.ceil(steps - 1e-9) - 1) * SERVINGS_STEP;
+    this.customServings = Math.min(SERVINGS_MAX, Math.max(SERVINGS_MIN, next));
+    this.customText = String(this.customServings);
+    this.customError = false;
+  }
   get mealKeys(): MealKey[] {
     return MEALS.map((m) => m.key);
   }
@@ -190,6 +236,10 @@ export class LogServingComponent implements OnInit {
 
   submit(): void {
     if (this.saving) return;
+    if (this.serving === 'custom' && this.customError) {
+      this.customInput?.nativeElement.focus();
+      return;
+    }
     this.add.emit({ dayKey: localDayKey(this.day), meal: this.meal, multiplier: this.multiplier });
   }
 
