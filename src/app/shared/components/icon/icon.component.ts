@@ -52,7 +52,9 @@ export type IconName =
   | 'clipboard-list'
   | 'users'
   | 'copy'
-  | 'more-horizontal';
+  | 'more-horizontal'
+  | 'book-open'
+  | 'calendar-plus';
 
 /**
  * One line-icon set for the app (Lucide paths, 24×24 grid).
@@ -263,6 +265,13 @@ export type IconName =
         @case ('copy') {
           <svg:rect x="8" y="8" width="14" height="14" rx="2" ry="2" />
           <svg:path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2" />
+        }
+        @case ('calendar-plus') {
+          <svg:path d="M8 2v4M16 2v4M21 13V6a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h8M3 10h18M16 19h6M19 16v6" />
+        }
+        @case ('book-open') {
+          <svg:path d="M12 7v14" />
+          <svg:path d="M3 18a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1h5a4 4 0 0 1 4 4 4 4 0 0 1 4-4h5a1 1 0 0 1 1 1v13a1 1 0 0 1-1 1h-6a3 3 0 0 0-3 3 3 3 0 0 0-3-3z" />
         }
         @case ('more-horizontal') {
           <svg:circle cx="12" cy="12" r="1" />

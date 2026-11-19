@@ -1,0 +1,94 @@
+<div class="head">
+  <!-- Labels the Add Food dialog while this tab is open (Foods has the same id). -->
+  <h2 id="add-food-title" class="title">Add to {{ mealLabel }}</h2>
+  <p class="subtitle">Pick one of your recipes, then how many servings you had.</p>
+</div>
+
+@switch (state) {
+  @case ('loading') {
+    <p class="status" role="status">Loading your recipes…</p>
+  }
+  @case ('error') {
+    <div class="status" role="alert">
+      <p>We couldn't load your recipes.</p>
+      <button type="button" class="btn-outline" (click)="load()">Try again</button>
+    </div>
+  }
+  @default {
+    @if (!options.length) {
+      <div class="empty">
+        <app-icon name="book-open" [size]="22" aria-hidden="true" />
+        <p>You don't have any recipes yet.</p>
+        <a class="btn-outline" routerLink="/recipes/new">Create a recipe</a>
+      </div>
+    } @else if (!selected) {
+      <input
+        id="recipe-search"
+        class="search"
+        type="text"
+        autocomplete="off"
+        role="combobox"
+        aria-label="Search your recipes"
+        placeholder="Search your recipes"
+        aria-autocomplete="list"
+        aria-controls="recipe-listbox"
+        [attr.aria-expanded]="matches.length > 0"
+        [attr.aria-activedescendant]="active >= 0 ? optionId(active) : null"
+        [value]="query"
+        (input)="onQuery($any($event.target).value)"
+        (keydown)="onSearchKey($event)"
+        data-autofocus
+      />
+      @if (matches.length) {
+        <ul class="list" id="recipe-listbox" role="listbox" aria-label="Your recipes">
+          @for (o of matches; track o.recipe.id; let i = $index) {
+            <li class="option" role="option" [id]="optionId(i)" [attr.aria-selected]="i === active"
+              (mousedown)="$event.preventDefault()" (click)="choose(o)" (mouseenter)="active = i">
+              <span class="option-main">
+                <span class="option-name">{{ o.recipe.name }}</span>
+                <span class="option-mg">
+                  @if (o.result.allUnknown) {
+                    Unknown per serving
+                  } @else {
+                    {{ o.result.incomplete ? 'at least ' : '' }}{{ o.perServing }} mg per serving
+                  }
+                </span>
+              </span>
+              <span class="option-badges">
+                @if (o.result.level && !o.result.allUnknown) {
+                  <app-level-pill [level]="o.result.level" [prefix]="o.result.incomplete ? 'At least ' : ''" />
+                }
+                @if (o.result.incomplete) {
+                  <span class="incomplete"><app-icon name="alert-triangle" [size]="12" /> Incomplete</span>
+                }
+              </span>
+            </li>
+          }
+        </ul>
+      } @else {
+        <p class="status">No recipes match “{{ query }}”.</p>
+      }
+    } @else {
+      <div class="chosen">
+        <span class="chosen-text">
+          <span class="option-name">{{ selected.recipe.name }}</span>
+          <span class="option-mg">Recipe · serves {{ selected.recipe.serves }}</span>
+        </span>
+        <button type="button" class="btn-outline btn-small" (click)="change()">Change</button>
+      </div>
+
+      <app-servings-field />
+
+      <app-log-preview [recipe]="selected.recipe" [result]="selected.result" [multiplier]="multiplier"
+        [mealLabel]="mealLabel" [day]="dayState" [plannedFor]="plannedFor" />
+
+      @if (error) {
+        <p class="error" role="alert">We couldn't add this to your day. Try again.</p>
+      }
+      <button type="button" class="log-btn" [disabled]="saving" (click)="submit()">
+        <app-icon name="plus" [size]="18" />
+        {{ saving ? 'Adding…' : 'Log Food' }}
+      </button>
+    }
+  }
+}

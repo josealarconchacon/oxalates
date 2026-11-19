@@ -3,6 +3,9 @@ import { ActivatedRoute, Router, convertToParamMap, provideRouter } from '@angul
 import { BreakpointObserver, BreakpointState } from '@angular/cdk/layout';
 import { BehaviorSubject, of } from 'rxjs';
 import { NotificationService } from 'src/app/landing-page/dialog-service/oxalate/service/notification.service';
+import { FoodEntryService } from 'src/app/user-auth/profile/food-entry/service/food-entry.service';
+import { RecipeLogService } from '../../data/recipe-log.service';
+import { provideNoopAnimations } from '@angular/platform-browser/animations';
 import { RecipeFoodsService } from '../../data/recipe-foods.service';
 import { RecipeService } from '../../data/recipe.service';
 import { custom, food, grams, lookup, recipe } from '../../engine/testing/fixtures';
@@ -17,6 +20,7 @@ describe('RecipeDetailComponent', () => {
   let toast: jasmine.Spy;
   let params: BehaviorSubject<ReturnType<typeof convertToParamMap>>;
   let screen: BehaviorSubject<BreakpointState>;
+  let logService: { log: jasmine.Spy; announce: jasmine.Spy };
   /** Pretend the window is this wide (the page's breakpoints: ≥ 1024, ≤ 640). */
   const widthOf = (px: number): BreakpointState => {
     const breakpoints = { '(min-width: 1024px)': px >= 1024, '(max-width: 640px)': px <= 640 };
@@ -42,6 +46,7 @@ describe('RecipeDetailComponent', () => {
     toast = jasmine.createSpy('show');
     params = new BehaviorSubject(convertToParamMap({ id: 'r1' }));
     screen = new BehaviorSubject(widthOf(1440));
+    logService = { log: jasmine.createSpy('log'), announce: jasmine.createSpy('announce') };
     TestBed.configureTestingModule({
       imports: [RecipeDetailComponent],
       providers: [
@@ -61,6 +66,9 @@ describe('RecipeDetailComponent', () => {
         },
         { provide: ActivatedRoute, useValue: { paramMap: params } },
         { provide: BreakpointObserver, useValue: { observe: () => screen } },
+        { provide: FoodEntryService, useValue: { getDailyEntry: () => of(null) } },
+        { provide: RecipeLogService, useValue: logService },
+        provideNoopAnimations(),
       ],
     });
   });
@@ -413,15 +421,15 @@ describe('RecipeDetailComponent', () => {
 
     beforeEach(() => get.and.resolveTo({ ...recipe([grams('carrot', 100)]), id: 'r1', name: 'Soup' }));
 
-    it('≥ 1024px: Edit, Duplicate and Delete with text', async () => {
+    it('≥ 1024px: Log a serving first, then Edit, Duplicate and Delete with text', async () => {
       await render();
-      expect(labels()).toEqual(['Edit', 'Duplicate', 'Delete']);
+      expect(labels()).toEqual(['Log a serving', 'Edit', 'Duplicate', 'Delete']);
     });
 
     it('641–1023px: Edit + a More menu with Duplicate and Delete', async () => {
       screen.next(widthOf(768));
       await render();
-      expect(labels()).toEqual(['Edit', 'More actions']);
+      expect(labels()).toEqual(['Log a serving', 'Edit', 'More actions']);
       const more = actions().querySelector<HTMLButtonElement>('[aria-label="More actions"]')!;
       expect(more.getAttribute('aria-haspopup')).toBe('menu');
       more.click();
@@ -465,6 +473,86 @@ describe('RecipeDetailComponent', () => {
       expect(squash(gone.querySelector('.source'))).toBe('No longer in the food list');
       expect(el().querySelector('app-incomplete-badge')).not.toBeNull();
       expect(el().querySelector('app-level-pill')!.textContent!.trim()).toMatch(/^At least /);
+    });
+  });
+
+  describe('Log a serving', () => {
+    beforeEach(() => get.and.resolveTo({ ...recipe([grams('carrot', 100)]), id: 'r1', name: 'Soup' }));
+
+    it('opens the dialog; closing it puts focus back on the button', async () => {
+      await render();
+      document.body.appendChild(el());
+      const button = el().querySelector<HTMLButtonElement>('.actions .btn-primary')!;
+      button.click();
+      fixture.detectChanges();
+      expect(el().querySelector('app-log-serving [role="dialog"]')).not.toBeNull();
+
+      el().querySelector<HTMLButtonElement>('app-log-serving [aria-label="Close"]')!.click();
+      fixture.detectChanges();
+      await new Promise((r) => setTimeout(r));
+      expect(el().querySelector('app-log-serving')).toBeNull();
+      expect(document.activeElement).toBe(el().querySelector('.actions .btn-primary'));
+      el().remove();
+    });
+
+    it('Add saves, closes the dialog and shows the toast', async () => {
+      const logged = { dayKey: '2026-11-19', meal: 'dinner', entry: {} };
+      logService.log.and.resolveTo(logged);
+      await render();
+      el().querySelector<HTMLButtonElement>('.actions .btn-primary')!.click();
+      fixture.detectChanges();
+      el().querySelector<HTMLButtonElement>('app-log-serving .btn--primary')!.click();
+      await fixture.whenStable();
+      fixture.detectChanges();
+      const [r, , choice] = logService.log.calls.mostRecent().args;
+      expect(r.id).toBe('r1');
+      expect(choice.multiplier).toBe(1);
+      expect(el().querySelector('app-log-serving')).toBeNull();
+      expect(logService.announce).toHaveBeenCalledWith(logged);
+    });
+
+    it("a failed save keeps the dialog open with the error", async () => {
+      logService.log.and.rejectWith(new Error('offline'));
+      await render();
+      el().querySelector<HTMLButtonElement>('.actions .btn-primary')!.click();
+      fixture.detectChanges();
+      el().querySelector<HTMLButtonElement>('app-log-serving .btn--primary')!.click();
+      await fixture.whenStable();
+      fixture.detectChanges();
+      expect(squash(el().querySelector('app-log-serving [role="alert"]'))).toBe(
+        "We couldn't add this to your day. Try again."
+      );
+      expect(logService.announce).not.toHaveBeenCalled();
+    });
+  });
+
+  describe('phone "Log a serving" bar', () => {
+    beforeEach(() => get.and.resolveTo({ ...recipe([grams('carrot', 100)]), id: 'r1', name: 'Soup' }));
+    afterEach(() => (document.body.style.paddingBottom = ''));
+
+    it('≤ 640px: a pinned full-width bar opens the dialog; the body makes room for it', async () => {
+      screen.next(widthOf(390));
+      await render();
+      const bar = el().querySelector('.log-bar')!;
+      expect(squash(bar)).toBe('Log a serving');
+      expect(document.body.style.paddingBottom).toContain('77px');
+
+      bar.querySelector<HTMLButtonElement>('button')!.click();
+      fixture.detectChanges();
+      expect(el().querySelector('app-log-serving')).not.toBeNull();
+    });
+
+    it('wider screens: no bar, no extra room; leaving the page removes the room', async () => {
+      screen.next(widthOf(390));
+      await render();
+      screen.next(widthOf(1440));
+      fixture.detectChanges();
+      expect(el().querySelector('.log-bar')).toBeNull();
+      expect(document.body.style.paddingBottom).toBe('');
+
+      screen.next(widthOf(390));
+      fixture.destroy();
+      expect(document.body.style.paddingBottom).toBe('');
     });
   });
 });

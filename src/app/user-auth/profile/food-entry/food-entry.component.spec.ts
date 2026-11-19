@@ -1,5 +1,5 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { FoodEntryComponent } from './food-entry.component';
+import { FoodEntryComponent, dayFromParam } from './food-entry.component';
 import { AngularFireModule } from '@angular/fire/compat';
 import {
   AngularFirestoreModule,
@@ -8,6 +8,9 @@ import {
 import { environment } from 'src/environments/environment';
 import { of } from 'rxjs';
 import { provideNoopAnimations } from '@angular/platform-browser/animations';
+import { provideRouter } from '@angular/router';
+import { RecipeService } from 'src/app/recipes/data/recipe.service';
+import { recipeEntry } from './recipe-entry/recipe-entry.component.spec';
 
 class MockAngularFirestore {
   collection() {
@@ -31,6 +34,8 @@ describe('FoodEntryComponent', () => {
       ],
       providers: [
         { provide: AngularFirestore, useClass: MockAngularFirestore },
+        { provide: RecipeService, useValue: { list: () => Promise.resolve([{ id: 'r1' }]) } },
+        provideRouter([]),
         provideNoopAnimations(),
       ],
     }).compileComponents();
@@ -247,5 +252,94 @@ describe('FoodEntryComponent', () => {
       expect(close.getAttribute('aria-label')).toBe('Close');
     });
   });
-});
 
+  describe('logged recipes', () => {
+    const spinach = {
+      foodName: 'Spinach',
+      oxalatePerServing: 10,
+      solubleOxalatePerServing: 4,
+      servingSize: '1 cup',
+      numberOfServings: 1,
+    };
+
+    beforeEach(() => {
+      component.isLoading = false;
+      component.dinnerItems = [spinach, recipeEntry(), { ...recipeEntry({ recipeId: 'gone', recipeName: 'Old stew' }), entryId: 'e2' }];
+      component.existingRecipeIds = new Set(['r1']);
+      fixture.detectChanges();
+    });
+
+    it('shows recipe rows next to food rows; food rows are unchanged', () => {
+      const rows = [...fixture.nativeElement.querySelectorAll('.food-row')] as HTMLElement[];
+      expect(rows.length).toBe(3);
+      expect(rows[0].querySelector('.food-name-btn')!.textContent).toContain('Spinach');
+      expect(rows[1].querySelector('app-recipe-entry')).not.toBeNull();
+    });
+
+    it('links existing recipes and marks deleted ones', () => {
+      const entries = [...fixture.nativeElement.querySelectorAll('app-recipe-entry')] as HTMLElement[];
+      expect(entries[0].querySelector('a')!.getAttribute('href')).toBe('/recipes/r1');
+      expect(entries[1].querySelector('a')).toBeNull();
+      expect(entries[1].textContent).toContain('Recipe deleted');
+    });
+
+    it('the meal total adds the recipe snapshots', () => {
+      const total = fixture.nativeElement.querySelectorAll('.total-row .oxalate-col')[0] as HTMLElement;
+      expect(total.textContent!.replace(/\s+/g, ' ').trim()).toBe('21.20 mg');
+    });
+
+    it('a recipe row can be deleted with the existing delete button', () => {
+      const del = spyOn(component, 'deleteFood');
+      const buttons = fixture.nativeElement.querySelectorAll('.food-row .delete-btn');
+      expect(buttons[1].getAttribute('aria-label')).toBe('Delete Lemon herb chicken');
+      buttons[1].click();
+      expect(del).toHaveBeenCalledWith('dinner', 1);
+    });
+  });
+
+  describe('opening on a date (View day)', () => {
+    it('reads yyyy-mm-dd as that local day, and ignores anything else', () => {
+      const d = dayFromParam('2026-11-19')!;
+      expect([d.getFullYear(), d.getMonth(), d.getDate(), d.getHours()]).toEqual([2026, 10, 19, 0]);
+      expect(dayFromParam(null)).toBeNull();
+      expect(dayFromParam('2026-02-30')).toBeNull();
+      expect(dayFromParam('tomorrow')).toBeNull();
+    });
+  });
+
+  describe('Add Food tabs', () => {
+    beforeEach(() => {
+      component.isLoading = false;
+      component.openCalculator('lunch');
+      fixture.detectChanges();
+    });
+
+    const tabs = () => [...fixture.nativeElement.querySelectorAll('[role="tab"]')] as HTMLButtonElement[];
+
+    it('Foods | Recipes, Foods first: the original Add Food form, unchanged', () => {
+      expect(tabs().map((t) => t.textContent!.trim())).toEqual(['Foods', 'Recipes']);
+      expect(tabs()[0].getAttribute('aria-selected')).toBe('true');
+      expect(fixture.nativeElement.querySelector('[role="tabpanel"] app-calculate-oxalate')).not.toBeNull();
+      expect(fixture.nativeElement.querySelector('app-recipe-picker')).toBeNull();
+    });
+
+    it('arrow keys switch to Recipes, and focus follows', () => {
+      document.body.appendChild(fixture.nativeElement);
+      tabs()[0].focus();
+      tabs()[0].dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowRight', bubbles: true }));
+      fixture.detectChanges();
+      expect(tabs()[1].getAttribute('aria-selected')).toBe('true');
+      expect(document.activeElement).toBe(tabs()[1]);
+      expect(fixture.nativeElement.querySelector('app-recipe-picker')).not.toBeNull();
+      expect(fixture.nativeElement.querySelector('app-calculate-oxalate')).toBeNull();
+      fixture.nativeElement.remove();
+    });
+
+    it('opening Add Food again starts on Foods', () => {
+      component.addTab = 'recipes';
+      component.closeCalculator();
+      component.openCalculator('dinner');
+      expect(component.addTab).toBe('foods');
+    });
+  });
+});

@@ -1,0 +1,75 @@
+<div class="scrim" (click)="close()"></div>
+<div class="panel" role="dialog" aria-modal="true" aria-labelledby="log-title" aria-describedby="log-recipe"
+  cdkTrapFocus [cdkTrapFocusAutoCapture]="true">
+  <!-- Bottom sheet only (≤ 640px); a visual cue, not a control. -->
+  <span class="grab" aria-hidden="true"></span>
+  <div class="head">
+    <div>
+      <h2 class="title" id="log-title">Log a serving</h2>
+      <p class="recipe" id="log-recipe">{{ recipe.name }}</p>
+    </div>
+    <button type="button" class="icon-btn close" aria-label="Close" (click)="close()">
+      <app-icon name="x" [size]="18" />
+    </button>
+  </div>
+
+  <div class="body">
+    <!-- Day -->
+    <div class="field">
+      <span class="label" id="log-day-label">Day</span>
+      <div class="day" role="group" aria-labelledby="log-day-label">
+        <button type="button" class="icon-btn" aria-label="Previous day" (click)="moveDay(-1)">
+          <app-icon name="chevron-left" [size]="18" />
+        </button>
+        <button type="button" class="day-pick" aria-haspopup="dialog"
+          [attr.aria-label]="'Pick a date, currently ' + (day | date: 'EEEE, MMMM d') + (isToday ? ', today' : '')"
+          (click)="openPicker()">
+          <app-icon name="calendar" [size]="18" />
+          <span class="day-text">{{ day | date: 'EEE, MMM d' }}</span>
+          @if (isToday) {<span class="today">Today</span>}
+        </button>
+        <button type="button" class="icon-btn" aria-label="Next day" (click)="moveDay(1)">
+          <app-icon name="chevron-right" [size]="18" />
+        </button>
+        <!-- The picker needs an input to attach to; the button above is the real control. -->
+        <input class="picker-anchor" tabindex="-1" aria-hidden="true" [matDatepicker]="picker" [value]="day"
+          (dateChange)="setDay($event.value)" />
+        <mat-datepicker #picker (opened)="onPickerOpened()" />
+      </div>
+    </div>
+
+    <!-- Meal -->
+    <div class="field">
+      <span class="label" id="log-meal-label">Meal</span>
+      <div class="segmented" role="radiogroup" aria-labelledby="log-meal-label">
+        @for (m of meals; track m.key) {
+          <button type="button" role="radio" class="segment" [attr.aria-checked]="meal === m.key"
+            [tabindex]="meal === m.key ? 0 : -1" (click)="selectMeal(m.key)"
+            (keydown)="onMealKey($event)">
+            {{ m.label }}
+          </button>
+        }
+      </div>
+    </div>
+
+    <!-- Servings -->
+    <app-servings-field class="field" />
+
+    <!-- Preview -->
+    <app-log-preview [recipe]="recipe" [result]="result" [multiplier]="multiplier" [mealLabel]="mealLabel"
+      [day]="dayState" [plannedFor]="isFuture ? day : null" />
+  </div>
+
+  <div class="foot">
+    @if (error) {
+      <p class="error" role="alert">We couldn't add this to your day. Try again.</p>
+    }
+    <div class="foot-buttons">
+      <button type="button" class="btn btn--outline" [disabled]="saving" (click)="close()">Cancel</button>
+      <button type="button" class="btn btn--primary" [disabled]="saving" (click)="submit()">
+        <app-icon name="plus" [size]="18" />
+        {{ saving ? 'Adding…' : 'Add to ' + mealLabel }}
+      </button>
+    </div>
+  </div>
+</div>

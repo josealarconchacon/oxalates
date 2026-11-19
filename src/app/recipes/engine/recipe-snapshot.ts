@@ -20,6 +20,7 @@ export function createLogSnapshot(
     solubleMg: result.perServingSolubleMg * multiplier,
     level: result.level,
     incomplete: result.incomplete,
+    solubleIncomplete: result.solubleIncomplete,
     ingredients: result.breakdown.map((b) =>
       Object.freeze({
         name: b.name,

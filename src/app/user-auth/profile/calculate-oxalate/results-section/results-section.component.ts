@@ -11,6 +11,7 @@ import { ShareMenuComponent } from '../share-menu/share-menu.component';
 import { ThemeService } from 'src/app/shared/services/theme.service';
 import { Subscription } from 'rxjs';
 import { GetReportComponent } from '../get-report/get-report.component';
+import { Totals, dayTotals } from '../../food-entry/model/day-totals';
 
 @Component({
   selector: 'app-results-section',
@@ -77,39 +78,22 @@ export class ResultsSectionComponent implements OnInit, OnDestroy {
     return meals.filter((meal) => meal.items.length > 0);
   }
 
+  /** Foods as before, logged recipes from their snapshot; "at least" when a recipe was incomplete. */
+  get totals(): Totals {
+    return dayTotals({
+      breakfast: this.breakfastItems,
+      lunch: this.lunchItems,
+      dinner: this.dinnerItems,
+      snacks: this.snackItems,
+    });
+  }
+
   get totalOxalate(): number {
-    return (
-      this.calculateTotalOxalate(this.breakfastItems) +
-      this.calculateTotalOxalate(this.lunchItems) +
-      this.calculateTotalOxalate(this.dinnerItems) +
-      this.calculateTotalOxalate(this.snackItems)
-    );
+    return this.totals.mg;
   }
 
   get totalSolubleOxalate(): number {
-    return (
-      this.calculateTotalSolubleOxalate(this.breakfastItems) +
-      this.calculateTotalSolubleOxalate(this.lunchItems) +
-      this.calculateTotalSolubleOxalate(this.dinnerItems) +
-      this.calculateTotalSolubleOxalate(this.snackItems)
-    );
-  }
-
-  private calculateTotalOxalate(items: any[]): number {
-    return items.reduce(
-      (total, food) =>
-        total + (food.oxalatePerServing || 0) * (food.numberOfServings || 0),
-      0
-    );
-  }
-
-  private calculateTotalSolubleOxalate(items: any[]): number {
-    return items.reduce(
-      (total, food) =>
-        total +
-        (food.solubleOxalatePerServing || 0) * (food.numberOfServings || 0),
-      0
-    );
+    return this.totals.solubleMg;
   }
 
   openShareMenu(): void {

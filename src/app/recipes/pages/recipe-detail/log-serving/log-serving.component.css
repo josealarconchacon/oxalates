@@ -1,0 +1,426 @@
+/* "Log a serving" dialog. Colors: shared --color-* tokens plus --ls-* below. */
+:host {
+  position: fixed;
+  inset: 0;
+  z-index: 3000;
+  display: grid;
+  place-items: center;
+  padding: 24px;
+  font-family: var(--font-family-sans);
+  color: var(--color-ink);
+
+  --ls-surface-2: #f1f4f0;
+  --ls-input: #ffffff;
+  --ls-segment-on: #ffffff;
+  --ls-scrim: rgba(17, 26, 21, 0.45);
+  --ls-danger: #b42318;
+}
+
+:host-context(.dark-theme) {
+  --ls-surface-2: #1d2621;
+  --ls-input: #0e1411;
+  --ls-segment-on: #0e1411;
+  --ls-scrim: rgba(4, 7, 5, 0.72);
+  --ls-danger: #f59b94;
+}
+
+.scrim {
+  position: fixed;
+  inset: 0;
+  background: var(--ls-scrim);
+}
+
+.panel {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  max-width: 480px;
+  max-height: calc(100vh - 48px);
+  max-height: calc(100dvh - 48px);
+  border: 1px solid var(--color-line);
+  border-radius: 24px;
+  background: var(--color-surface);
+  box-shadow: 0 24px 48px -12px rgba(0, 0, 0, 0.35);
+}
+
+/* Pinned header and footer; only the body scrolls. */
+.head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 24px 24px 8px;
+}
+
+.title {
+  margin: 0;
+  font-family: var(--font-family-display);
+  font-size: 1.5rem;
+  font-weight: 700;
+  line-height: 1.2;
+}
+
+.recipe {
+  margin: 4px 0 0;
+  color: var(--color-muted);
+  font-size: 0.9375rem;
+  overflow-wrap: anywhere;
+}
+
+.body {
+  display: grid;
+  gap: 20px;
+  padding: 12px 24px 20px;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+}
+
+.foot {
+  padding: 16px 24px 20px;
+  border-top: 1px solid var(--color-line);
+}
+
+.foot-buttons {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.field {
+  display: grid;
+  gap: 8px;
+}
+
+.label {
+  font-size: 0.9375rem;
+  font-weight: 700;
+}
+
+.icon-btn {
+  display: grid;
+  place-items: center;
+  flex: none;
+  width: 44px;
+  height: 44px;
+  border: 1px solid var(--color-line);
+  border-radius: 12px;
+  background: var(--ls-surface-2);
+  color: var(--color-ink);
+  cursor: pointer;
+  --icon-stroke: 2;
+}
+
+/* Day: ‹ [calendar, date, Today] › */
+.day {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 4px;
+  border: 1px solid var(--color-line);
+  border-radius: 16px;
+  background: var(--ls-input);
+}
+
+.day-pick {
+  display: inline-flex;
+  flex: 1;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  min-height: 44px;
+  border: 0;
+  border-radius: 12px;
+  background: transparent;
+  color: var(--color-ink);
+  font: inherit;
+  font-size: 1rem;
+  font-weight: 700;
+  cursor: pointer;
+  --icon-stroke: 2;
+}
+
+.day-pick app-icon {
+  color: var(--color-accent-fg);
+}
+
+.today {
+  color: var(--color-muted);
+  font-size: 0.8125rem;
+  font-weight: 600;
+}
+
+.picker-anchor {
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  width: 1px;
+  height: 1px;
+  border: 0;
+  padding: 0;
+  opacity: 0;
+  pointer-events: none;
+}
+
+/* Meal: one track, the chosen meal raised. */
+.segmented {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 4px;
+  padding: 4px;
+  border-radius: 14px;
+  background: var(--ls-surface-2);
+}
+
+.segment {
+  min-height: 44px;
+  border: 0;
+  border-radius: 10px;
+  background: transparent;
+  color: var(--color-ink);
+  font: inherit;
+  font-size: 0.9375rem;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.segment[aria-checked='true'] {
+  background: var(--ls-segment-on);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12);
+  font-weight: 700;
+}
+
+/* Footer */
+.error {
+  margin: 0 0 12px;
+  color: var(--ls-danger);
+  font-size: 0.875rem;
+  font-weight: 600;
+}
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  min-height: 48px;
+  padding: 0 18px;
+  border-radius: 12px;
+  font: inherit;
+  font-size: 1rem;
+  font-weight: 700;
+  cursor: pointer;
+  --icon-stroke: 2.25;
+}
+
+.btn:disabled {
+  cursor: default;
+  opacity: 0.7;
+}
+
+.btn--outline {
+  border: 1px solid var(--color-line);
+  background: transparent;
+  color: var(--color-ink);
+}
+
+.btn--primary {
+  border: 1px solid transparent;
+  background: var(--color-accent);
+  color: #fff;
+}
+
+.icon-btn:focus-visible,
+.day-pick:focus-visible,
+.segment:focus-visible,
+.btn:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: 2px;
+}
+
+.grab {
+  display: none;
+}
+
+/* ≤ 640px: a bottom sheet. Full width, top corners 24, slides up. */
+@media (max-width: 640px) {
+  :host {
+    place-items: end stretch;
+    padding: 0;
+  }
+
+  .panel {
+    max-width: none;
+    max-height: 92vh;
+    max-height: 92dvh;
+    border-width: 1px 0 0;
+    border-radius: 24px 24px 0 0;
+    animation: sheet-up 0.22s ease-out;
+  }
+
+  .grab {
+    display: block;
+    width: 40px;
+    height: 5px;
+    margin: 10px auto 0;
+    border-radius: 999px;
+    background: var(--color-line);
+  }
+
+  .head {
+    padding: 12px 20px 8px;
+  }
+
+  .body {
+    padding: 12px 20px 20px;
+  }
+
+  .foot {
+    padding: 14px 20px calc(14px + env(safe-area-inset-bottom, 0px));
+  }
+
+  .foot-buttons .btn {
+    min-height: 52px;
+  }
+
+  .btn--outline {
+    flex: 1;
+  }
+
+  .btn--primary {
+    flex: 2;
+  }
+
+  .segment {
+    font-size: 0.875rem;
+  }
+}
+
+@keyframes sheet-up {
+  from {
+    transform: translateY(24px);
+    opacity: 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .panel {
+    animation: none;
+  }
+}
+
+/* Date picker popup: a copy of Daily Intake's date switcher rules (they only load
+   with that page). Could move to the global styles later. */
+::ng-deep .mat-datepicker-content {
+  background: var(--background-color);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-lg) !important;
+}
+
+:host-context(.dark-theme) ::ng-deep .mat-datepicker-content {
+  background: var(--card-background);
+}
+
+::ng-deep .mat-calendar {
+  background: transparent;
+}
+
+::ng-deep .mat-calendar-body-selected {
+  background-color: var(--primary-color);
+  color: white;
+}
+
+::ng-deep .mat-calendar-body-today:not(.mat-calendar-body-selected) {
+  border-color: var(--primary-color);
+  color: var(--text-secondary);
+}
+
+::ng-deep .mat-datepicker-popup.dark-theme {
+  background: var(--card-background);
+  color: var(--text-secondary);
+}
+
+::ng-deep .mat-datepicker-popup.dark-theme .mat-calendar {
+  background: var(--card-background);
+  color: var(--text-secondary);
+}
+
+::ng-deep .mat-datepicker-popup.dark-theme .mat-calendar-body-cell-content {
+  color: var(--text-secondary);
+}
+
+::ng-deep .mat-datepicker-popup.dark-theme .mat-calendar-body-label,
+::ng-deep .mat-datepicker-popup.dark-theme .mat-calendar-period-button,
+::ng-deep .mat-datepicker-popup.dark-theme .mat-calendar-table-header {
+  color: var(--text-secondary);
+}
+
+::ng-deep .mat-datepicker-popup.dark-theme .mat-calendar-arrow {
+  fill: var(--text-color);
+}
+
+::ng-deep .mat-datepicker-popup.dark-theme .mat-calendar-body-selected {
+  background-color: var(--primary-color);
+  color: white !important;
+}
+
+::ng-deep
+  .mat-datepicker-popup.dark-theme
+  .mat-calendar-body-today:not(.mat-calendar-body-selected) {
+  border-color: var(--primary-color);
+}
+
+::ng-deep
+  .mat-datepicker-popup.dark-theme
+  .mat-calendar-body-cell:not(.mat-calendar-body-disabled):hover
+  > .mat-calendar-body-cell-content:not(.mat-calendar-body-selected):not(
+    .mat-calendar-body-comparison-identical
+  ) {
+  background-color: var(--hover-background);
+}
+
+::ng-deep
+  .mat-datepicker-popup.dark-theme
+  .mat-calendar-body-disabled
+  > .mat-calendar-body-cell-content:not(.mat-calendar-body-selected):not(
+    .mat-calendar-body-comparison-identical
+  ) {
+  color: var(--text-secondary);
+}
+
+/* Calendar header styles */
+::ng-deep .mat-datepicker-popup.dark-theme .mat-calendar-header {
+  background: var(--card-background);
+  padding: var(--spacing-3);
+  border-bottom: 1px solid var(--border-color);
+  color: var(--text-secondary) !important;
+}
+
+/* Navigation arrows < > */
+::ng-deep .mat-datepicker-popup.dark-theme .mat-calendar-previous-button,
+::ng-deep .mat-datepicker-popup.dark-theme .mat-calendar-next-button {
+  /* color: var(--text-color) !important; */
+  background: transparent;
+  border-radius: var(--radius-sm);
+  color: var(--text-secondary) !important;
+}
+
+::ng-deep .mat-datepicker-popup.dark-theme .mat-calendar-previous-button:hover,
+::ng-deep .mat-datepicker-popup.dark-theme .mat-calendar-next-button:hover {
+  background: var(--hover-background);
+  color: var(--action-color) !important;
+}
+
+/* Weekday headers (S M T W T F S) */
+::ng-deep .mat-datepicker-popup.dark-theme .mat-calendar-table-header th {
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-medium);
+  opacity: 0.9;
+  padding: var(--spacing-2) 0;
+  color: var(--text-secondary) !important;
+}
+
+::ng-deep .mat-datepicker-popup.dark-theme .mat-calendar-table-header-divider {
+  display: none;
+}

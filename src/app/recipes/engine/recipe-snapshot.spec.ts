@@ -1,7 +1,7 @@
 import { FOOD_DATA_UPDATED_AT } from '../model/recipe';
 import { calculateRecipe } from './recipe-calculator';
 import { createLogSnapshot } from './recipe-snapshot';
-import { food, grams, lookup, recipe } from './testing/fixtures';
+import { custom, food, grams, lookup, recipe } from './testing/fixtures';
 
 const carrot = food({ id: 'carrot', total_oxalate_mg_per_100g: '10.00', total_soluble_oxalate_mg_per_100g: '4.00' });
 const foods = lookup(carrot);
@@ -20,6 +20,7 @@ describe('createLogSnapshot', () => {
       solubleMg: 4,
       level: 'Low',
       incomplete: false,
+      solubleIncomplete: false,
       ingredients: [{ name: 'Carrot', grams: 100, mg: 10 }],
       dataUpdatedAt: FOOD_DATA_UPDATED_AT,
       loggedAt: '2026-11-16T12:00:00.000Z',
@@ -51,5 +52,12 @@ describe('createLogSnapshot', () => {
     expect(snap.ingredients).toEqual([{ name: 'Carrot', grams: 100, mg: 10 }]);
     expect(Object.isFrozen(snap)).toBeTrue();
     expect(Object.isFrozen(snap.ingredients)).toBeTrue();
+  });
+
+  it('carries the incomplete flags, for "at least" day totals', () => {
+    const r = recipe([grams('carrot', 100, 'Carrot'), custom('Tapioca starch', 10)], 1);
+    const s = createLogSnapshot(r, calculateRecipe(r, foods), 1, now);
+    expect(s.incomplete).toBeTrue();
+    expect(s.solubleIncomplete).toBeTrue();
   });
 });

@@ -13,21 +13,21 @@ import { CalculateOxalateComponent } from '../calculate-oxalate/calculate-oxalat
 import { ResultsSectionComponent } from '../calculate-oxalate/results-section/results-section.component';
 import { DateSwitcherComponent } from './date-switcher/date-switcher.component';
 import { DialogDirective } from 'src/app/shared/directives/dialog.directive';
-import { FoodEntryService } from './service/food-entry.service';
+import { DayItem, FoodEntryService, RecipeEntry, isRecipeEntry } from './service/food-entry.service';
+import { RecipeEntryComponent } from './recipe-entry/recipe-entry.component';
+import { RecipePick, RecipePickerComponent } from './recipe-picker/recipe-picker.component';
+import { RecipeLogService } from 'src/app/recipes/data/recipe-log.service';
+import { RecipeService } from 'src/app/recipes/data/recipe.service';
+import { ActivatedRoute } from '@angular/router';
+import { Totals, dayTotals, localDayKey, mealTotals } from './model/day-totals';
 import { Subscription, from, of } from 'rxjs';
 import { ThemeService } from 'src/app/shared/services/theme.service';
 import { AuthService } from '../../service/auth-service.service';
 import { catchError, delay, retryWhen, take, tap } from 'rxjs/operators';
 import { AngularFireAuth } from '@angular/fire/compat/auth';
 
-export interface FoodItem {
-  foodName: string;
-  servingSize: string;
-  numberOfServings: number;
-  oxalatePerServing: number;
-  solubleOxalatePerServing: number;
-  isExpanded?: boolean;
-}
+/** A meal row: a food or a logged recipe, plus UI state. */
+export type FoodItem = DayItem & { isExpanded?: boolean };
 
 type MealKey = 'breakfast' | 'lunch' | 'dinner' | 'snacks';
 
@@ -41,6 +41,8 @@ type MealKey = 'breakfast' | 'lunch' | 'dinner' | 'snacks';
     DateSwitcherComponent,
     DialogDirective,
     IconComponent,
+    RecipeEntryComponent,
+    RecipePickerComponent,
   ],
   templateUrl: './food-entry.component.html',
   styleUrls: ['./food-entry.component.css'],
@@ -70,10 +72,30 @@ export class FoodEntryComponent implements OnInit, OnDestroy {
     private foodEntryService: FoodEntryService,
     private themeService: ThemeService,
     private authService: AuthService,
-    private afAuth: AngularFireAuth
+    private afAuth: AngularFireAuth,
+    private recipes: RecipeService,
+    private route: ActivatedRoute,
+    private recipeLogs: RecipeLogService
   ) {}
 
+  /** Add Food: "Foods" is the original dialog; "Recipes" logs one of your recipes. */
+  readonly addTabs: { key: 'foods' | 'recipes'; label: string }[] = [
+    { key: 'foods', label: 'Foods' },
+    { key: 'recipes', label: 'Recipes' },
+  ];
+  addTab: 'foods' | 'recipes' = 'foods';
+  recipeSaving = false;
+  recipeError = false;
+
+  /** Ids of the user's recipes, to mark logged recipes that were deleted. Null until known. */
+  existingRecipeIds: Set<string> | null = null;
+  private recipeIdsRequested = false;
+
   ngOnInit() {
+    // "View day" from a logged recipe links here with ?date=yyyy-mm-dd.
+    const fromLink = dayFromParam(this.route.snapshot.queryParamMap.get('date'));
+    if (fromLink) this.currentDate = fromLink;
+
     // Subscribe to theme changes
     this.themeService.isDarkTheme$.subscribe((isDark) => {
       this.isDarkTheme = isDark;
@@ -153,6 +175,7 @@ export class FoodEntryComponent implements OnInit, OnDestroy {
               ...item,
               isExpanded: false,
             }));
+            this.loadRecipeIdsIfNeeded();
           }
         },
         error: (error) => {
@@ -189,6 +212,8 @@ export class FoodEntryComponent implements OnInit, OnDestroy {
     // Saving rewrites the whole meal list, so adding before the day has
     // loaded would replace the saved foods with just the new one.
     if (this.isLoading) return;
+    this.addTab = 'foods';
+    this.recipeError = false;
     this.selectedMealType = mealType as
       | 'breakfast'
       | 'lunch'
@@ -273,6 +298,75 @@ export class FoodEntryComponent implements OnInit, OnDestroy {
     }
   }
 
+  isRecipe(item: FoodItem): item is RecipeEntry & { isExpanded?: boolean } {
+    return isRecipeEntry(item);
+  }
+
+  /** True only once we know the recipe is gone; until then it stays a link. */
+  isDeletedRecipe(item: RecipeEntry): boolean {
+    return !!this.existingRecipeIds && !this.existingRecipeIds.has(item.snapshot.recipeId);
+  }
+
+  /** Loads the user's recipe ids once, and only when a logged recipe is on screen. */
+  private loadRecipeIdsIfNeeded(): void {
+    if (this.recipeIdsRequested) return;
+    const all = [...this.breakfastItems, ...this.lunchItems, ...this.dinnerItems, ...this.snackItems];
+    if (!all.some((i) => isRecipeEntry(i))) return;
+    this.recipeIdsRequested = true;
+    this.recipes
+      .list()
+      .then((list) => (this.existingRecipeIds = new Set(list.map((r) => r.id))))
+      .catch(() => (this.recipeIdsRequested = false));
+  }
+
+  /** ←/→ (and Home/End) switch tabs; focus follows. */
+  onAddTabKey(event: KeyboardEvent): void {
+    const keys = this.addTabs.map((t) => t.key);
+    const i = keys.indexOf(this.addTab);
+    const next = { ArrowRight: (i + 1) % keys.length, ArrowLeft: (i - 1 + keys.length) % keys.length, Home: 0, End: keys.length - 1 }[
+      event.key
+    ];
+    if (next === undefined) return;
+    event.preventDefault();
+    this.addTab = keys[next];
+    document.getElementById('add-tab-' + keys[next])?.focus();
+  }
+
+  /** The open day's totals (foods + logged recipes). */
+  get currentDayTotals(): Totals {
+    return dayTotals({
+      breakfast: this.breakfastItems,
+      lunch: this.lunchItems,
+      dinner: this.dinnerItems,
+      snacks: this.snackItems,
+    });
+  }
+
+  /** The open day, when it's after today. */
+  get plannedFor(): Date | null {
+    return localDayKey(this.currentDate) > localDayKey(new Date()) ? this.currentDate : null;
+  }
+
+  /** Recipes tab: the same snapshot, toast and Undo as "Log a serving". */
+  async onRecipePicked(pick: RecipePick) {
+    if (this.recipeSaving) return;
+    this.recipeSaving = true;
+    this.recipeError = false;
+    try {
+      const logged = await this.recipeLogs.log(pick.recipe, pick.result, {
+        dayKey: localDayKey(this.currentDate),
+        meal: this.selectedMealType,
+        multiplier: pick.multiplier,
+      });
+      this.closeCalculator();
+      this.recipeLogs.announce(logged);
+    } catch {
+      this.recipeError = true;
+    } finally {
+      this.recipeSaving = false;
+    }
+  }
+
   closeCalculator() {
     this.showCalculator = false;
   }
@@ -294,20 +388,25 @@ export class FoodEntryComponent implements OnInit, OnDestroy {
     );
   }
 
+  /** Meal totals: foods as before, logged recipes from their snapshot. */
+  mealTotals(items: FoodItem[]): Totals {
+    return mealTotals(items as unknown as DayItem[]);
+  }
+
   calculateTotalOxalate(items: FoodItem[]): number {
-    return items.reduce(
-      (total, food) =>
-        total + (food.oxalatePerServing || 0) * (food.numberOfServings || 0),
-      0
-    );
+    return this.mealTotals(items).mg;
   }
 
   calculateTotalSolubleOxalate(items: FoodItem[]): number {
-    return items.reduce(
-      (total, food) =>
-        total +
-        (food.solubleOxalatePerServing || 0) * (food.numberOfServings || 0),
-      0
-    );
+    return this.mealTotals(items).solubleMg;
   }
+}
+
+/** "2026-11-19" → that local day; anything else → null. */
+export function dayFromParam(value: string | null): Date | null {
+  const match = /^(\d{4})-(\d{2})-(\d{2})$/.exec(value ?? '');
+  if (!match) return null;
+  const [y, m, d] = match.slice(1).map(Number);
+  const date = new Date(y, m - 1, d);
+  return date.getMonth() === m - 1 && date.getDate() === d ? date : null;
 }

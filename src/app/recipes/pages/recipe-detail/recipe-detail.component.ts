@@ -8,6 +8,7 @@ import { firstValueFrom } from 'rxjs';
 import { IconComponent } from 'src/app/shared/components/icon/icon.component';
 import { NotificationService } from 'src/app/landing-page/dialog-service/oxalate/service/notification.service';
 import { RecipeDraftService } from '../../data/recipe-draft.service';
+import { RecipeLogService } from '../../data/recipe-log.service';
 import { RecipeFoodsService } from '../../data/recipe-foods.service';
 import { RecipeService } from '../../data/recipe.service';
 import { formatMg } from '../../engine/format';
@@ -18,9 +19,12 @@ import { LevelPillComponent } from '../../shared/level-pill/level-pill.component
 import { BreakdownComponent } from './breakdown/breakdown.component';
 import { BreakdownRowView, breakdownRows } from './breakdown/breakdown-view';
 import { DeleteDialogComponent } from './delete-dialog/delete-dialog.component';
+import { LogServingChoice, LogServingComponent } from './log-serving/log-serving.component';
 import { IncompleteBadgeComponent } from './incomplete-badge/incomplete-badge.component';
 
 const WIDE = '(min-width: 1024px)';
+/** Height of the pinned phone bar: 52px button + 24px padding + 1px border, and the iPhone home bar. */
+const LOG_BAR_ROOM = 'calc(77px + env(safe-area-inset-bottom, 0px))';
 const PHONE = '(max-width: 640px)';
 
 /** Levels that get the calm "higher side" note. */
@@ -31,7 +35,7 @@ const HIGHER_LEVELS = new Set(['high', 'very high', 'extremely high']);
   selector: 'app-recipe-detail',
   standalone: true,
   imports: [RouterLink, IconComponent, LevelPillComponent, IncompleteBadgeComponent, BreakdownComponent, DeleteDialogComponent,
-    CdkMenuTrigger, CdkMenu, CdkMenuItem],
+    CdkMenuTrigger, CdkMenu, CdkMenuItem, LogServingComponent],
   templateUrl: './recipe-detail.component.html',
   styleUrl: './recipe-detail.component.css',
 })
@@ -44,6 +48,7 @@ export class RecipeDetailComponent implements OnInit {
   private notifications = inject(NotificationService);
   private destroyRef = inject(DestroyRef);
   private breakpoints = inject(BreakpointObserver);
+  private logs = inject(RecipeLogService);
   private locale = inject(LOCALE_ID);
 
   state: 'loading' | 'not-found' | 'error' | 'ready' = 'loading';
@@ -60,10 +65,18 @@ export class RecipeDetailComponent implements OnInit {
   duplicateError = false;
   /** full ≥ 1024px · menu 641–1023px (Edit + More) · icons ≤ 640px. */
   actionsMode: 'full' | 'menu' | 'icons' = 'full';
+  logOpen = false;
+  logSaving = false;
+  logError = false;
+  @ViewChild('logButton') private logButton?: ElementRef<HTMLButtonElement>;
   deleteOpen = false;
   deleting = false;
   deleteError = false;
   @ViewChild('deleteButton') private deleteButton?: ElementRef<HTMLButtonElement>;
+
+  constructor() {
+    this.destroyRef.onDestroy(() => this.makeRoomForLogBar(false));
+  }
 
   ngOnInit(): void {
     this.breakpoints
@@ -71,6 +84,7 @@ export class RecipeDetailComponent implements OnInit {
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe((state) => {
         this.actionsMode = state.breakpoints[WIDE] ? 'full' : state.breakpoints[PHONE] ? 'icons' : 'menu';
+        this.makeRoomForLogBar(this.actionsMode === 'icons');
       });
     // The same page shows the copy after Duplicate, so follow :id changes.
     this.route.paramMap.pipe(takeUntilDestroyed(this.destroyRef)).subscribe((params) => {
@@ -142,6 +156,40 @@ export class RecipeDetailComponent implements OnInit {
       this.duplicateError = true;
     } finally {
       this.duplicating = false;
+    }
+  }
+
+  /**
+   * The phone bar is pinned over the bottom of the screen; pad the page's
+   * <body> so the last content (the site footer too) can scroll above it.
+   */
+  private makeRoomForLogBar(on: boolean): void {
+    document.body.style.paddingBottom = on ? LOG_BAR_ROOM : '';
+  }
+
+  openLog(): void {
+    this.logError = false;
+    this.logOpen = true;
+  }
+
+  closeLog(): void {
+    this.logOpen = false;
+    setTimeout(() => this.logButton?.nativeElement.focus());
+  }
+
+  /** Saves a frozen snapshot into Daily Intake; on success: close, then the toast. */
+  async onLogAdd(choice: LogServingChoice): Promise<void> {
+    if (!this.recipe || !this.result || this.logSaving) return;
+    this.logSaving = true;
+    this.logError = false;
+    try {
+      const logged = await this.logs.log(this.recipe, this.result, choice);
+      this.closeLog();
+      this.logs.announce(logged);
+    } catch {
+      this.logError = true;
+    } finally {
+      this.logSaving = false;
     }
   }
 

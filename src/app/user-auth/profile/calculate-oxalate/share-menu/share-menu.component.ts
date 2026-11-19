@@ -15,6 +15,7 @@ import {
 import { ThemeService } from 'src/app/shared/services/theme.service';
 import { DialogDirective } from 'src/app/shared/directives/dialog.directive';
 import { Subscription } from 'rxjs';
+import { shareRecipeLine } from '../../food-entry/model/report-lines';
 
 @Component({
   selector: 'app-share-menu',
@@ -31,7 +32,8 @@ export class ShareMenuComponent implements OnInit, OnDestroy {
 
   @Input() dailyMeals: any[] = [];
   @Output() close = new EventEmitter<void>();
-  @Input() dailyTotal: { totalOxalate: number; totalSolubleOxalate: number } = {
+  /** `atLeast`: a logged recipe has an ingredient with no value, so the real total is higher. */
+  @Input() dailyTotal: { totalOxalate: number; totalSolubleOxalate: number; atLeast?: boolean } = {
     totalOxalate: 0,
     totalSolubleOxalate: 0,
   };
@@ -57,14 +59,16 @@ export class ShareMenuComponent implements OnInit, OnDestroy {
     const dailyMeals = this.dailyMeals;
 
     let text = `📅 Daily Oxalate Summary\n\n`;
-    text += `🔹 Total Oxalate for the Day: ${dailyTotal.totalOxalate}mg\n\n`;
+    text += `🔹 Total Oxalate for the Day: ${dailyTotal.atLeast ? 'at least ' : ''}${dailyTotal.totalOxalate}mg\n\n`;
 
     if (dailyMeals.length > 0) {
       text += `🍽️ Meals Breakdown:\n`;
       dailyMeals.forEach((meal) => {
         text += `  🥄 ${meal.title}:\n`;
         meal.items.forEach((item: any) => {
-          text += `    - 🌿 ${item.foodName}: ${item.oxalatePerServing}mg oxalate, ${item.solubleOxalatePerServing}mg soluble oxalate\n`;
+          text +=
+            shareRecipeLine(item) ??
+            `    - 🌿 ${item.foodName}: ${item.oxalatePerServing}mg oxalate, ${item.solubleOxalatePerServing}mg soluble oxalate\n`;
         });
       });
       text += `\n`;
