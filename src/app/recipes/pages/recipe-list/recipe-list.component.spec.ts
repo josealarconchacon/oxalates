@@ -81,4 +81,55 @@ describe('RecipeListComponent', () => {
     expect(list).toHaveBeenCalledTimes(2);
     expect(text()).toContain('Cook it once');
   });
+
+  describe('toolbar and count', () => {
+    const two = () => [
+      { ...recipe([grams('carrot', 200)], 4), id: 'r1', name: 'Carrot soup' },
+      { ...recipe([grams('carrot', 100)], 1), id: 'r2', name: 'Carrot salad' },
+    ];
+
+    it('has a labelled search and a sort select (Lowest oxalate first by default)', async () => {
+      list.and.resolveTo(two());
+      await render();
+      const search = el().querySelector<HTMLInputElement>('.search-input')!;
+      expect(search.closest('label')!.textContent!.trim()).toBe('Search your recipes');
+      expect(search.placeholder).toBe('Search your recipes');
+      const select = el().querySelector<HTMLSelectElement>('.sort-select')!;
+      expect(select.closest('label')!.textContent!.trim()).toContain('Sort recipes');
+      expect(Array.from(select.options).map((o) => o.textContent!.trim())).toEqual([
+        'Lowest oxalate first',
+        'Highest oxalate first',
+        'Recently edited',
+        'Name A–Z',
+      ]);
+      expect(select.value).toBe('lowest');
+    });
+
+    it('the count line names the sort, and is a polite live region', async () => {
+      list.and.resolveTo(two());
+      await render();
+      const count = el().querySelector('.count')!;
+      expect(count.getAttribute('aria-live')).toBe('polite');
+      expect(count.textContent!.trim()).toBe('2 recipes · sorted by oxalate per serving');
+
+      const select = el().querySelector<HTMLSelectElement>('.sort-select')!;
+      select.value = 'edited';
+      select.dispatchEvent(new Event('change'));
+      fixture.detectChanges();
+      expect(count.textContent!.trim()).toBe('2 recipes · sorted by last edited');
+    });
+
+    it('one recipe reads "1 recipe"', async () => {
+      list.and.resolveTo(two().slice(0, 1));
+      await render();
+      expect(el().querySelector('.count')!.textContent!.trim()).toBe('1 recipe · sorted by oxalate per serving');
+    });
+
+    it('no toolbar or count on the first-time page or the error', async () => {
+      list.and.resolveTo([]);
+      await render();
+      expect(el().querySelector('.toolbar')).toBeNull();
+      expect(el().querySelector('.count')).toBeNull();
+    });
+  });
 });

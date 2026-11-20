@@ -1,11 +1,11 @@
-/* Minimal recipe list (temporary; PR 5 replaces it). Rows are .rl-row, not
-   .row: the global .row in styles.css adds negative side margins. */
+/* Recipes list. Rows are .rl-row, not .row: the global .row in styles.css
+   adds negative side margins. */
 :host {
   display: block;
 }
 
 .page {
-  max-width: 880px;
+  max-width: 1200px;
   margin: 0 auto;
   padding: calc(var(--header-height, 72px) + 32px) 24px 64px;
   font-family: var(--font-family-sans);
@@ -24,9 +24,83 @@
 .title {
   margin: 0;
   font-family: var(--font-family-display);
-  font-size: 2.25rem;
+  font-size: 2.75rem; /* 44px */
   font-weight: 700;
+  line-height: 1.1;
   letter-spacing: -0.02em;
+}
+
+/* ---- Toolbar: search + sort ---- */
+.toolbar {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 240px;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+
+.search,
+.sort {
+  position: relative;
+  display: block;
+}
+
+.search-icon,
+.sort-icon {
+  position: absolute;
+  top: 50%;
+  color: var(--color-muted);
+  transform: translateY(-50%);
+  pointer-events: none;
+  --icon-stroke: 2;
+}
+
+.search-icon {
+  left: 16px;
+}
+
+.sort-icon {
+  right: 14px;
+}
+
+.search-input,
+.sort-select {
+  width: 100%;
+  min-height: 48px;
+  border: 1px solid var(--color-line);
+  border-radius: 14px;
+  background: var(--rl-input);
+  color: var(--color-ink);
+  font: inherit;
+  font-size: 1rem;
+}
+
+.search-input {
+  padding: 0 16px 0 48px;
+}
+
+.search-input::placeholder {
+  color: var(--color-muted);
+}
+
+.sort-select {
+  padding: 0 44px 0 16px;
+  appearance: none;
+  cursor: pointer;
+}
+
+.count {
+  margin: 0 0 20px;
+  color: var(--color-muted);
+  font-size: 0.875rem;
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
 }
 
 .btn-accent,
@@ -228,6 +302,8 @@ a.rl-row:hover {
 
 .btn-accent:focus-visible,
 .btn-outline:focus-visible,
+.search-input:focus-visible,
+.sort-select:focus-visible,
 .rl-row:focus-visible {
   outline: var(--focus-ring);
   outline-offset: 2px;
@@ -236,11 +312,13 @@ a.rl-row:hover {
 :host {
   --rc-warning-bg: #fff4db;
   --rc-warning-text: #6b4e00;
+  --rl-input: #ffffff;
 }
 
 :host-context(.dark-theme) {
   --rc-warning-bg: #33290e;
   --rc-warning-text: #f2c94c;
+  --rl-input: #0e1411;
 }
 
 @media (max-width: 640px) {
@@ -249,7 +327,12 @@ a.rl-row:hover {
   }
 
   .title {
-    font-size: 1.875rem;
+    font-size: 1.875rem; /* 30px */
+  }
+
+  /* Sort goes full width under the search. */
+  .toolbar {
+    grid-template-columns: 1fr;
   }
 
   .rl-row {

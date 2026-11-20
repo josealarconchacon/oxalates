@@ -8,6 +8,31 @@
     }
   </header>
 
+  <!-- Hidden on the first-time empty page and on the error. -->
+  @if (state === 'loading' || (state === 'ready' && rows.length)) {
+    <div class="toolbar">
+      <label class="search">
+        <span class="sr-only">Search your recipes</span>
+        <app-icon class="search-icon" name="search" [size]="20" />
+        <input type="search" class="search-input" placeholder="Search your recipes" autocomplete="off"
+          [value]="query" (input)="onSearch($any($event.target).value)" />
+      </label>
+      <label class="sort">
+        <span class="sr-only">Sort recipes</span>
+        <select class="sort-select" [value]="sort" (change)="onSort($any($event.target).value)">
+          @for (o of sortOptions; track o.key) {
+            <option [value]="o.key" [selected]="o.key === sort">{{ o.label }}</option>
+          }
+        </select>
+        <app-icon class="sort-icon" name="chevron-down" [size]="18" />
+      </label>
+    </div>
+  }
+
+  @if (state === 'ready' && rows.length) {
+    <p class="count" aria-live="polite">{{ count }}</p>
+  }
+
   @switch (state) {
     @case ('loading') {
       <ul class="list" aria-busy="true" aria-label="Loading your recipes">

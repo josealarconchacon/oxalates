@@ -8,6 +8,7 @@ import { formatMg } from '../../engine/format';
 import { calculateRecipe } from '../../engine/recipe-calculator';
 import { levelForMgPerServing } from '../../engine/recipe-level';
 import { LevelPillComponent } from '../../shared/level-pill/level-pill.component';
+import { DEFAULT_SORT, SORT_OPTIONS, SortKey, countLine, isSortKey } from './list-query';
 
 interface RecipeRow {
   id: string;
@@ -18,7 +19,7 @@ interface RecipeRow {
   incomplete: boolean;
 }
 
-/** Temporary list of the user's recipes (PR 5 replaces it). */
+/** /recipes: your recipes, with search, sort and tag filters. */
 @Component({
   selector: 'app-recipe-list',
   standalone: true,
@@ -33,6 +34,11 @@ export class RecipeListComponent implements OnInit {
   state: 'loading' | 'error' | 'ready' = 'loading';
   rows: RecipeRow[] = [];
   readonly skeletons = [1, 2, 3];
+  readonly sortOptions = SORT_OPTIONS;
+
+  /** What's typed in the search box. */
+  query = '';
+  sort: SortKey = DEFAULT_SORT;
 
   ngOnInit(): void {
     void this.load();
@@ -60,5 +66,18 @@ export class RecipeListComponent implements OnInit {
     } catch {
       this.state = 'error';
     }
+  }
+
+  /** "6 recipes · sorted by oxalate per serving" (announced politely as it changes). */
+  get count(): string {
+    return countLine(this.rows.length, this.sort);
+  }
+
+  onSearch(text: string): void {
+    this.query = text;
+  }
+
+  onSort(value: string): void {
+    if (isSortKey(value)) this.sort = value;
   }
 }
