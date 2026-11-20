@@ -15,6 +15,7 @@ import {
   SortKey,
   countLine,
   isSortKey,
+  tagOptions,
   toListItem,
   visibleItems,
 } from './list-query';
@@ -52,6 +53,10 @@ export class RecipeListComponent implements OnInit {
   query = '';
   appliedQuery = '';
   sort: SortKey = DEFAULT_SORT;
+  /** Chosen tag chips; a recipe must have ALL of them. Empty = "All". */
+  selectedTags: string[] = [];
+  /** The six suggested tags, then your own (worked out once per load). */
+  tags: string[] = [];
   private typed$ = new Subject<string>();
 
   ngOnInit(): void {
@@ -74,6 +79,7 @@ export class RecipeListComponent implements OnInit {
         firstValueFrom(this.foods.lookup$),
       ]);
       this.items = recipes.map((recipe) => toListItem(recipe, calculateRecipe(recipe, getFood, levelForMgPerServing)));
+      this.tags = tagOptions(this.items);
       this.refresh();
       this.state = 'ready';
     } catch {
@@ -97,7 +103,22 @@ export class RecipeListComponent implements OnInit {
     this.refresh();
   }
 
+  isSelected(tag: string): boolean {
+    return this.selectedTags.includes(tag);
+  }
+
+  toggleTag(tag: string): void {
+    this.selectedTags = this.isSelected(tag) ? this.selectedTags.filter((t) => t !== tag) : [...this.selectedTags, tag];
+    this.refresh();
+  }
+
+  /** "All" clears the tag filters. */
+  clearTags(): void {
+    this.selectedTags = [];
+    this.refresh();
+  }
+
   private refresh(): void {
-    this.visible = visibleItems(this.items, this.appliedQuery, this.sort);
+    this.visible = visibleItems(this.items, this.appliedQuery, this.sort, this.selectedTags);
   }
 }

@@ -250,4 +250,64 @@ describe('RecipeListComponent', () => {
       expect(names()).toEqual(['Carrot soup']);
     }));
   });
+
+  describe('tag chips', () => {
+    const chips = () => Array.from(el().querySelectorAll<HTMLButtonElement>('[role="group"] .chip'));
+    const chip = (label: string) => chips().find((c) => c.textContent!.trim() === label)!;
+    const names = () => Array.from(el().querySelectorAll('app-recipe-card .name')).map((n) => n.textContent!.trim());
+
+    beforeEach(async () => {
+      list.and.resolveTo([
+        { ...recipe([grams('carrot', 100)]), id: 'a', name: 'Soup', tags: ['Gluten-free', 'Holiday'] },
+        { ...recipe([grams('carrot', 200)]), id: 'b', name: 'Stew', tags: ['Gluten-free', 'Party'] },
+        { ...recipe([grams('carrot', 300)]), id: 'c', name: 'Salad', tags: [] },
+      ]);
+      await render();
+    });
+
+    it('a labelled group: All, the six suggestions, then your own tags', () => {
+      expect(el().querySelector('[role="group"]')!.getAttribute('aria-label')).toBe('Filter by tag');
+      expect(chips().map((c) => c.textContent!.trim())).toEqual([
+        'All',
+        'Low histamine',
+        'Gluten-free',
+        'Dairy-free',
+        'Low FODMAP',
+        'Drink/Smoothie',
+        'Holiday',
+        'Party',
+      ]);
+      expect(chip('All').getAttribute('aria-pressed')).toBe('true');
+      expect(chip('Holiday').getAttribute('aria-pressed')).toBe('false');
+    });
+
+    it('toggling chips filters to recipes with ALL of them; All clears', () => {
+      chip('Gluten-free').click();
+      fixture.detectChanges();
+      expect(chip('Gluten-free').getAttribute('aria-pressed')).toBe('true');
+      expect(chip('All').getAttribute('aria-pressed')).toBe('false');
+      expect(names()).toEqual(['Soup', 'Stew']);
+      expect(el().querySelector('.count')!.textContent!.trim()).toBe('2 recipes · sorted by oxalate per serving');
+
+      chip('Holiday').click();
+      fixture.detectChanges();
+      expect(names()).toEqual(['Soup']);
+
+      chip('Holiday').click(); // toggles off again
+      fixture.detectChanges();
+      expect(names()).toEqual(['Soup', 'Stew']);
+
+      chip('All').click();
+      fixture.detectChanges();
+      expect(names()).toEqual(['Soup', 'Stew', 'Salad']);
+      expect(chips().filter((c) => c.getAttribute('aria-pressed') === 'true').map((c) => c.textContent!.trim())).toEqual(['All']);
+    });
+
+    it('a chosen chip shows a check icon', () => {
+      chip('Party').click();
+      fixture.detectChanges();
+      expect(chip('Party').querySelector('app-icon')).not.toBeNull();
+      expect(chip('All').querySelector('app-icon')).toBeNull();
+    });
+  });
 });

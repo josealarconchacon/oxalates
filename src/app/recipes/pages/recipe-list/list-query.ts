@@ -1,5 +1,6 @@
 import { formatMg } from '../../engine/format';
 import { Recipe, RecipeResult } from '../../model/recipe';
+import { SUGGESTED_TAGS } from '../../model/recipe-tags';
 
 /** How the Recipes list is ordered. The first one is the default. */
 export type SortKey = 'lowest' | 'highest' | 'edited' | 'name';
@@ -96,9 +97,33 @@ export function sortItems(items: ListItem[], sort: SortKey): ListItem[] {
   }
 }
 
-/** What the list shows: matches for the query, in the chosen order. */
-export function visibleItems(items: ListItem[], query: string, sort: SortKey): ListItem[] {
-  const matching = query.trim() ? items.filter((i) => matchesQuery(i, query)) : items;
+/**
+ * The tag chips: the six suggested tags (always), then every other tag used
+ * on your recipes, A–Z. Tags that differ only in case count as one.
+ */
+export function tagOptions(items: ListItem[]): string[] {
+  const seen = new Set(SUGGESTED_TAGS.map((t) => t.toLowerCase()));
+  const custom = new Map<string, string>();
+  for (const item of items) {
+    for (const tag of item.recipe.tags ?? []) {
+      const key = tag.trim().toLowerCase();
+      if (key && !seen.has(key) && !custom.has(key)) custom.set(key, tag.trim());
+    }
+  }
+  const mine = [...custom.values()].sort((a, b) => a.localeCompare(b, undefined, { sensitivity: 'base' }));
+  return [...SUGGESTED_TAGS, ...mine];
+}
+
+/** The recipe has ALL the chosen tags (none chosen: every recipe). */
+export function matchesTags(item: ListItem, tags: string[]): boolean {
+  if (!tags.length) return true;
+  const own = new Set((item.recipe.tags ?? []).map((t) => t.trim().toLowerCase()));
+  return tags.every((t) => own.has(t.toLowerCase()));
+}
+
+/** What the list shows: matches for the query and tags, in the chosen order. */
+export function visibleItems(items: ListItem[], query: string, sort: SortKey, tags: string[] = []): ListItem[] {
+  const matching = items.filter((i) => (!query.trim() || matchesQuery(i, query)) && matchesTags(i, tags));
   return sortItems(matching, sort);
 }
 

@@ -8,7 +8,9 @@ import {
   countLine,
   isSortKey,
   matchesQuery,
+  matchesTags,
   normalize,
+  tagOptions,
   sortItems,
   toListItem,
   visibleItems,
@@ -137,5 +139,39 @@ describe('list query: 500 recipes', () => {
       expect(lowest[k].result.perServingMg).toBeGreaterThanOrEqual(lowest[k - 1].result.perServingMg);
     }
     expect(elapsed).toBeLessThan(250);
+  });
+});
+
+describe('list query: tags', () => {
+  const a = item('A', 1, { tags: ['Gluten-free', 'Holiday', 'party food'] });
+  const b = item('B', 2, { tags: ['gluten-free', 'Zesty'] });
+  const c = item('C', 3, { tags: [] });
+
+  it('chips: the six suggested tags always, then your own A–Z, one per spelling', () => {
+    expect(tagOptions([a, b, c])).toEqual([
+      'Low histamine',
+      'Gluten-free',
+      'Dairy-free',
+      'Low FODMAP',
+      'Drink/Smoothie',
+      'Holiday',
+      'party food',
+      'Zesty',
+    ]);
+    expect(tagOptions([])).toEqual(['Low histamine', 'Gluten-free', 'Dairy-free', 'Low FODMAP', 'Drink/Smoothie', 'Holiday']);
+  });
+
+  it('several chosen tags: the recipe must have ALL of them (any case)', () => {
+    expect(matchesTags(a, ['Gluten-free'])).toBeTrue();
+    expect(matchesTags(b, ['Gluten-free'])).toBeTrue();
+    expect(matchesTags(a, ['Gluten-free', 'Holiday'])).toBeTrue();
+    expect(matchesTags(b, ['Gluten-free', 'Holiday'])).toBeFalse();
+    expect(matchesTags(c, [])).toBeTrue();
+  });
+
+  it('tags and search work together', () => {
+    expect(names(visibleItems([a, b, c], '', 'name', ['Gluten-free']))).toEqual(['A', 'B']);
+    expect(names(visibleItems([a, b, c], 'b', 'name', ['Gluten-free']))).toEqual(['B']);
+    expect(names(visibleItems([a, b, c], '', 'name', ['Gluten-free', 'Zesty']))).toEqual(['B']);
   });
 });
