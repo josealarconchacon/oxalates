@@ -1,25 +1,26 @@
 <div class="page">
-  <header class="page-head">
+  <!-- A div, not <header>: inside <main> a header can read as a second page banner. -->
+  <div class="page-head">
     <h1 class="title">Recipes</h1>
     @if (state !== 'ready' || items.length) {
       <a class="btn-accent" routerLink="/recipes/new">
         <app-icon name="plus" [size]="18" /> New recipe
       </a>
     }
-  </header>
+  </div>
 
   <!-- Hidden on the first-time empty page and on the error. -->
   @if (state === 'loading' || (state === 'ready' && items.length)) {
     <div class="toolbar">
-      <label class="search">
+      <label class="search" for="recipe-list-search">
         <span class="sr-only">Search your recipes</span>
         <app-icon class="search-icon" name="search" [size]="20" />
-        <input type="search" class="search-input" placeholder="Search your recipes" autocomplete="off"
+        <input id="recipe-list-search" type="search" class="search-input" placeholder="Search your recipes" autocomplete="off"
           [value]="query" (input)="onSearch($any($event.target).value)" />
       </label>
-      <label class="sort">
+      <label class="sort" for="recipe-list-sort">
         <span class="sr-only">Sort recipes</span>
-        <select class="sort-select" [value]="sort" (change)="onSort($any($event.target).value)">
+        <select id="recipe-list-sort" class="sort-select" [value]="sort" (change)="onSort($any($event.target).value)">
           @for (o of sortOptions; track o.key) {
             <option [value]="o.key" [selected]="o.key === sort">{{ o.label }}</option>
           }
