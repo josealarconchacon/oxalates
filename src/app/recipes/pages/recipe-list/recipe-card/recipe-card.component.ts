@@ -13,7 +13,7 @@ import { ListItem, visibleTags } from '../list-query';
   standalone: true,
   imports: [RouterLink, IconComponent, LevelPillComponent],
   template: `
-    <a class="card" [routerLink]="['/recipes', item.recipe.id]" [attr.aria-label]="item.label">
+    <a class="rc-card" [routerLink]="['/recipes', item.recipe.id]" [attr.aria-label]="item.label">
       <span class="photo" role="img" aria-label="Recipe photo">
         <app-icon name="utensils" [size]="32" />
       </span>

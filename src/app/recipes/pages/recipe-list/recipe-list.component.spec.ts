@@ -41,25 +41,40 @@ describe('RecipeListComponent', () => {
     });
   });
 
-  it('shows skeleton rows while loading', () => {
+  it('loading: 6 card skeletons (3 rows on phones), the toolbar, and one line for screen readers', () => {
     list.and.returnValue(new Promise(() => {}));
     fixture = TestBed.createComponent(RecipeListComponent);
     fixture.detectChanges();
     expect(el().querySelector('[aria-busy="true"]')).not.toBeNull();
-    expect(el().querySelectorAll('.rl-row--skeleton').length).toBe(3);
+    expect(el().querySelector('[role="status"]')!.textContent!.trim()).toBe('Loading your recipes');
+    expect(el().querySelectorAll('.sk-card').length).toBe(6);
+    expect(el().querySelector('.toolbar')).not.toBeNull();
+    expect(el().querySelector('.count')).toBeNull();
+
+    phone.next({ matches: true, breakpoints: {} });
+    fixture.detectChanges();
+    expect(el().querySelectorAll('.sk-row').length).toBe(3);
+    expect(el().querySelectorAll('.sk-card').length).toBe(0);
   });
 
-  it('empty state invites the first recipe', async () => {
+  it('first time: a warm circle, the invitation, and no toolbar, chips or New recipe', async () => {
     list.and.resolveTo([]);
     await render();
-    expect(text()).toContain('Cook it once, count it every time.');
+    expect(el().querySelector('.empty-icon')).not.toBeNull();
+    expect(el().querySelector('.empty-title')!.textContent!.trim()).toBe('Cook it once, count it every time.');
+    expect(el().querySelector('.empty-text')!.textContent!.replace(/\s+/g, ' ').trim()).toBe(
+      'Build a recipe from foods you already know, and see the oxalate in each serving.'
+    );
+    expect(el().querySelector('.toolbar')).toBeNull();
+    expect(el().querySelector('.chips')).toBeNull();
+    expect(el().querySelector('.page-head .btn-accent')).toBeNull();
     const cta = el().querySelector<HTMLAnchorElement>('.empty .btn-accent')!;
     expect(cta.textContent!.trim()).toBe('Create your first recipe');
     expect(cta.getAttribute('href')).toBe('/recipes/new');
   });
 
   describe('cards (641px and up)', () => {
-    const card = () => el().querySelector<HTMLAnchorElement>('app-recipe-card a.card')!;
+    const card = () => el().querySelector<HTMLAnchorElement>('app-recipe-card a.rc-card')!;
     const squash = (n: Element | null) => (n?.textContent ?? '').replace(/\s+/g, ' ').trim();
     /** The value's pieces are separate elements spaced by CSS; read them as words. */
     const value = () => Array.from(card().querySelector('.value')!.children).map((c) => squash(c)).join(' ');
@@ -394,6 +409,45 @@ describe('RecipeListComponent', () => {
 
       await open('/recipes?sort=highest');
       expect(page().querySelector<HTMLSelectElement>('.sort-select')!.value).toBe('highest');
+    });
+  });
+
+  describe('no matches', () => {
+    beforeEach(async () => {
+      list.and.resolveTo([
+        { ...recipe([grams('carrot', 100)]), id: 'a', name: 'Soup', tags: ['Holiday'] },
+        { ...recipe([grams('carrot', 200)]), id: 'b', name: 'Stew', tags: [] },
+      ]);
+      await render();
+    });
+
+    it('a search with no results names it, and Clear filters brings everything back', fakeAsync(() => {
+      const input = el().querySelector<HTMLInputElement>('.search-input')!;
+      input.value = 'pizza';
+      input.dispatchEvent(new Event('input'));
+      tick(200);
+      fixture.detectChanges();
+      expect(el().querySelector('.message-title')!.textContent!.trim()).toBe('No recipes match “pizza”.');
+      expect(el().querySelector('.empty')).toBeNull(); // never the first-time page
+      expect(el().querySelector('.count')!.textContent!.trim()).toBe('0 recipes · sorted by oxalate per serving');
+
+      el().querySelector<HTMLButtonElement>('.message .btn-outline')!.click();
+      fixture.detectChanges();
+      expect(el().querySelectorAll('app-recipe-card').length).toBe(2);
+      expect(el().querySelector<HTMLInputElement>('.search-input')!.value).toBe('');
+    }));
+
+    it('tags with no results say "these tags"', () => {
+      const chip = (label: string) =>
+        Array.from(el().querySelectorAll<HTMLButtonElement>('.chip')).find((c) => c.textContent!.trim() === label)!;
+      chip('Holiday').click();
+      chip('Dairy-free').click();
+      fixture.detectChanges();
+      expect(el().querySelector('.message-title')!.textContent!.trim()).toBe('No recipes match these tags.');
+      el().querySelector<HTMLButtonElement>('.message .btn-outline')!.click();
+      fixture.detectChanges();
+      expect(chip('All').getAttribute('aria-pressed')).toBe('true');
+      expect(el().querySelectorAll('app-recipe-card').length).toBe(2);
     });
   });
 });

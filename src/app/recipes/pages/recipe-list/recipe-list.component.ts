@@ -53,7 +53,8 @@ export class RecipeListComponent implements OnInit {
   visible: ListItem[] = [];
   /** ≤ 640px: compact rows instead of cards (only one of them is in the page). */
   phone = false;
-  readonly skeletons = [1, 2, 3];
+  readonly cardSkeletons = [1, 2, 3, 4, 5, 6];
+  readonly rowSkeletons = [1, 2, 3];
   readonly sortOptions = SORT_OPTIONS;
 
   /** What's typed in the search box; `appliedQuery` is what the list uses (debounced). */
@@ -138,6 +139,14 @@ export class RecipeListComponent implements OnInit {
 
   toggleTag(tag: string): void {
     this.selectedTags = this.isSelected(tag) ? this.selectedTags.filter((t) => t !== tag) : [...this.selectedTags, tag];
+    this.refresh();
+    this.writeUrl();
+  }
+
+  /** No matches → "Clear filters": empties the search and the tags (the sort stays). */
+  clearFilters(): void {
+    this.query = this.appliedQuery = '';
+    this.selectedTags = [];
     this.refresh();
     this.writeUrl();
   }

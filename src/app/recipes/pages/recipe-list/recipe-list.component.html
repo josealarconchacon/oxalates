@@ -47,13 +47,27 @@
 
   @switch (state) {
     @case ('loading') {
-      <ul class="list" aria-busy="true" aria-label="Loading your recipes">
-        @for (s of skeletons; track s) {
-          <li class="rl-row rl-row--skeleton" aria-hidden="true">
-            <span class="sk sk--name"></span><span class="sk sk--meta"></span>
-          </li>
+      <!-- Shaped like the cards (or rows on phones); screen readers hear one line. -->
+      <div aria-busy="true">
+        <p class="sr-only" role="status">Loading your recipes</p>
+        @if (phone) {
+          <ul class="rows" aria-hidden="true">
+            @for (s of rowSkeletons; track s) {
+              <li class="sk-row"><span class="sk sk--thumb"></span>
+                <span class="sk-lines"><span class="sk sk--name"></span><span class="sk sk--meta"></span><span class="sk sk--pill"></span></span>
+              </li>
+            }
+          </ul>
+        } @else {
+          <ul class="grid" aria-hidden="true">
+            @for (s of cardSkeletons; track s) {
+              <li class="sk-card"><span class="sk sk--photo"></span>
+                <span class="sk-lines"><span class="sk sk--name"></span><span class="sk sk--meta"></span><span class="sk sk--big"></span><span class="sk sk--pill"></span></span>
+              </li>
+            }
+          </ul>
         }
-      </ul>
+      </div>
     }
     @case ('error') {
       <div class="message" role="alert">
@@ -62,7 +76,15 @@
       </div>
     }
     @default {
-      @if (items.length) {
+      @if (items.length && !visible.length) {
+        <!-- No matches (never the first-time page). -->
+        <div class="message">
+          <p class="message-title">
+            @if (appliedQuery.trim()) {No recipes match “{{ appliedQuery.trim() }}”.} @else {No recipes match these tags.}
+          </p>
+          <button type="button" class="btn-outline" (click)="clearFilters()">Clear filters</button>
+        </div>
+      } @else if (items.length) {
         @if (phone) {
           <ul class="rows">
             @for (item of visible; track item.recipe.id) {
@@ -78,7 +100,7 @@
         }
       } @else {
         <div class="empty">
-          <span class="empty-icon" aria-hidden="true"><app-icon name="utensils" [size]="28" /></span>
+          <span class="empty-icon" aria-hidden="true"><app-icon name="utensils" [size]="52" /></span>
           <h2 class="empty-title">Cook it once, count it every time.</h2>
           <p class="empty-text">
             Build a recipe from foods you already know, and see the oxalate in each serving.

@@ -1,5 +1,5 @@
-/* Recipes list. Rows are .rl-row, not .row: the global .row in styles.css
-   adds negative side margins. */
+/* Recipes list. Avoid class names .row and .card: global styles in styles.css
+   change their layout. */
 :host {
   display: block;
 }
@@ -213,51 +213,78 @@
   gap: 12px;
 }
 
-/* ---- Loading rows (step 7 reshapes these) ---- */
-.list {
-  display: grid;
-  gap: 10px;
-  margin: 0;
-  padding: 0;
-  list-style: none;
-}
-
-.rl-row {
-  display: flex;
-  align-items: center;
-  gap: 16px;
-  min-height: 72px;
-  padding: 14px 18px;
+/* ---- Loading: card- and row-shaped placeholders ---- */
+.sk-card,
+.sk-row {
+  overflow: hidden;
   border: 1px solid var(--color-line);
-  border-radius: 18px;
   background: var(--color-surface);
-  color: var(--color-ink);
-  text-decoration: none;
 }
 
-/* ---- Loading ---- */
-.rl-row--skeleton {
+.sk-card {
+  display: flex;
   flex-direction: column;
-  align-items: flex-start;
-  justify-content: center;
+  border-radius: 22px;
+}
+
+.sk-row {
+  display: flex;
+  gap: 14px;
+  padding: 12px;
+  border-radius: 18px;
+}
+
+.sk-lines {
+  display: grid;
+  flex: 1;
+  gap: 10px;
+  align-content: start;
+  padding: 18px;
+}
+
+.sk-row .sk-lines {
+  padding: 4px 0;
 }
 
 .sk {
   display: block;
   height: 12px;
   border-radius: 6px;
-  background: var(--color-line);
+  background: var(--rl-skeleton);
   animation: pulse 1.2s ease-in-out infinite;
 }
 
+.sk--photo {
+  height: auto;
+  aspect-ratio: 16 / 10;
+  border-radius: 0;
+}
+
+.sk--thumb {
+  flex: none;
+  width: 72px;
+  height: 72px;
+  border-radius: 14px;
+}
+
 .sk--name {
-  width: 45%;
-  height: 14px;
+  width: 70%;
+  height: 16px;
 }
 
 .sk--meta {
-  width: 20%;
-  margin-top: 8px;
+  width: 35%;
+}
+
+.sk--big {
+  width: 45%;
+  height: 26px;
+}
+
+.sk--pill {
+  width: 30%;
+  height: 22px;
+  border-radius: 999px;
 }
 
 @keyframes pulse {
@@ -282,18 +309,19 @@
 .empty-icon {
   display: grid;
   place-items: center;
-  width: 56px;
-  height: 56px;
-  border-radius: 16px;
-  background: var(--color-accent-soft, var(--color-bg));
-  color: var(--color-accent-fg);
-  --icon-stroke: 2;
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  background: var(--rl-warm-bg);
+  color: var(--rl-warm-icon);
+  --icon-stroke: 1.75;
 }
 
 .empty-title {
-  margin: 4px 0 0;
+  margin: 8px 0 0;
   font-family: var(--font-family-display);
-  font-size: 1.5rem;
+  font-size: 1.75rem;
+  line-height: 1.2;
   font-weight: 700;
 }
 
@@ -320,10 +348,16 @@
 
 :host {
   --rl-input: #ffffff;
+  --rl-warm-bg: #f3e7da;
+  --rl-warm-icon: #8a5a2b;
+  --rl-skeleton: #f1f4f0;
 }
 
 :host-context(.dark-theme) {
   --rl-input: #0e1411;
+  --rl-warm-bg: #2b231b;
+  --rl-warm-icon: #d8b28a;
+  --rl-skeleton: #1d2621;
 }
 
 @media (max-width: 640px) {
@@ -333,6 +367,12 @@
 
   .title {
     font-size: 1.875rem; /* 30px */
+  }
+
+  /* First-time button spans the card, as in the mockup. */
+  .empty .btn-accent {
+    width: 100%;
+    min-height: 52px;
   }
 
   /* Sort goes full width under the search. */
