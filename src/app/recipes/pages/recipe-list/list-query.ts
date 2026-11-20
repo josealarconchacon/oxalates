@@ -38,6 +38,8 @@ export interface ListItem {
   level: string | null;
   /** The link's accessible name, e.g. "Lemon herb chicken, 5.6 mg per serving, Low". */
   label: string;
+  /** Name, tags and ingredient names, normalized once for search. */
+  searchText: string;
 }
 
 export function toListItem(recipe: Recipe, result: RecipeResult): ListItem {
@@ -51,7 +53,53 @@ export function toListItem(recipe: Recipe, result: RecipeResult): ListItem {
   const parts = [recipe.name, amount];
   if (level) parts.push(`${incomplete ? 'at least ' : ''}${level}`);
   if (incomplete) parts.push('incomplete');
-  return { recipe, result, perServing, allUnknown, incomplete, level, label: parts.join(', ') };
+  const searchText = normalize(
+    [recipe.name, ...(recipe.tags ?? []), ...(recipe.ingredients ?? []).map((i) => i.name)].join('\n')
+  );
+  return { recipe, result, perServing, allUnknown, incomplete, level, label: parts.join(', '), searchText };
+}
+
+/** Lower case, accents removed: "Crème Brûlée" → "creme brulee". */
+export function normalize(text: string): string {
+  return text.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase();
+}
+
+/** Every word of the query appears in the name, a tag or an ingredient. */
+export function matchesQuery(item: ListItem, query: string): boolean {
+  const words = normalize(query).split(/\s+/).filter(Boolean);
+  return words.every((w) => item.searchText.includes(w));
+}
+
+const byName = (a: ListItem, b: ListItem) =>
+  a.recipe.name.localeCompare(b.recipe.name, undefined, { sensitivity: 'base', numeric: true });
+
+/**
+ * A sorted copy. Oxalate sorts use the engine's per-serving mg (the known,
+ * "at least" value for incomplete recipes); recipes with no known value at
+ * all always go last. Ties: name A–Z.
+ */
+export function sortItems(items: ListItem[], sort: SortKey): ListItem[] {
+  const copy = [...items];
+  const mg = (i: ListItem) => i.result.perServingMg;
+  switch (sort) {
+    case 'lowest':
+    case 'highest': {
+      const dir = sort === 'lowest' ? 1 : -1;
+      return copy.sort(
+        (a, b) => Number(a.allUnknown) - Number(b.allUnknown) || (a.allUnknown ? 0 : dir * (mg(a) - mg(b))) || byName(a, b)
+      );
+    }
+    case 'edited':
+      return copy.sort((a, b) => (b.recipe.updatedAt ?? '').localeCompare(a.recipe.updatedAt ?? '') || byName(a, b));
+    case 'name':
+      return copy.sort(byName);
+  }
+}
+
+/** What the list shows: matches for the query, in the chosen order. */
+export function visibleItems(items: ListItem[], query: string, sort: SortKey): ListItem[] {
+  const matching = query.trim() ? items.filter((i) => matchesQuery(i, query)) : items;
+  return sortItems(matching, sort);
 }
 
 /** The first `max` tags, and how many more there are ("+2"). */

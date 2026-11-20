@@ -53,13 +53,13 @@
       @if (items.length) {
         @if (phone) {
           <ul class="rows">
-            @for (item of items; track item.recipe.id) {
+            @for (item of visible; track item.recipe.id) {
               <li><app-recipe-row [item]="item" /></li>
             }
           </ul>
         } @else {
           <ul class="grid">
-            @for (item of items; track item.recipe.id) {
+            @for (item of visible; track item.recipe.id) {
               <li><app-recipe-card [item]="item" /></li>
             }
           </ul>

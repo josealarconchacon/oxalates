@@ -1,4 +1,4 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed, fakeAsync, tick } from '@angular/core/testing';
 import { provideRouter } from '@angular/router';
 import { BreakpointObserver, BreakpointState } from '@angular/cdk/layout';
 import { BehaviorSubject, of } from 'rxjs';
@@ -188,5 +188,66 @@ describe('RecipeListComponent', () => {
       expect(el().querySelector('.toolbar')).toBeNull();
       expect(el().querySelector('.count')).toBeNull();
     });
+  });
+
+  describe('search and sort on the page', () => {
+    const names = () =>
+      Array.from(el().querySelectorAll('app-recipe-card .name')).map((n) => n.textContent!.trim());
+    const recipes = () => [
+      { ...recipe([grams('carrot', 300)]), id: 'a', name: 'Carrot soup', tags: ['Holiday'], updatedAt: '2026-11-01T00:00:00.000Z' },
+      { ...recipe([grams('carrot', 100)]), id: 'b', name: 'Crème brûlée', tags: [], updatedAt: '2026-11-18T00:00:00.000Z' },
+      { ...recipe([custom('Mystery', 10)]), id: 'c', name: 'Apple mystery', tags: [], updatedAt: '2026-11-10T00:00:00.000Z' },
+    ];
+
+    function renderSync() {
+      list.and.resolveTo(recipes());
+      fixture = TestBed.createComponent(RecipeListComponent);
+      fixture.detectChanges();
+      tick();
+      fixture.detectChanges();
+    }
+
+    it('starts lowest first, unknown last', fakeAsync(() => {
+      renderSync();
+      expect(names()).toEqual(['Crème brûlée', 'Carrot soup', 'Apple mystery']);
+    }));
+
+    it('sort changes the order and the count', fakeAsync(() => {
+      renderSync();
+      const select = el().querySelector<HTMLSelectElement>('.sort-select')!;
+      select.value = 'name';
+      select.dispatchEvent(new Event('change'));
+      fixture.detectChanges();
+      expect(names()).toEqual(['Apple mystery', 'Carrot soup', 'Crème brûlée']);
+      select.value = 'edited';
+      select.dispatchEvent(new Event('change'));
+      fixture.detectChanges();
+      expect(names()).toEqual(['Crème brûlée', 'Apple mystery', 'Carrot soup']);
+    }));
+
+    it('search waits 200 ms, ignores accents, and updates the count', fakeAsync(() => {
+      renderSync();
+      const input = el().querySelector<HTMLInputElement>('.search-input')!;
+      input.value = 'creme';
+      input.dispatchEvent(new Event('input'));
+      fixture.detectChanges();
+      tick(199);
+      fixture.detectChanges();
+      expect(names().length).toBe(3);
+      tick(1);
+      fixture.detectChanges();
+      expect(names()).toEqual(['Crème brûlée']);
+      expect(el().querySelector('.count')!.textContent!.trim()).toBe('1 recipe · sorted by oxalate per serving');
+    }));
+
+    it('search also finds tags', fakeAsync(() => {
+      renderSync();
+      const input = el().querySelector<HTMLInputElement>('.search-input')!;
+      input.value = 'holiday';
+      input.dispatchEvent(new Event('input'));
+      tick(200);
+      fixture.detectChanges();
+      expect(names()).toEqual(['Carrot soup']);
+    }));
   });
 });
