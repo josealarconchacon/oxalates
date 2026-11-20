@@ -7,7 +7,10 @@ import {
   SORT_OPTIONS,
   countLine,
   isSortKey,
+  matchTagOptions,
   matchesQuery,
+  paramsFromView,
+  viewFromParams,
   matchesTags,
   normalize,
   tagOptions,
@@ -173,5 +176,44 @@ describe('list query: tags', () => {
     expect(names(visibleItems([a, b, c], '', 'name', ['Gluten-free']))).toEqual(['A', 'B']);
     expect(names(visibleItems([a, b, c], 'b', 'name', ['Gluten-free']))).toEqual(['B']);
     expect(names(visibleItems([a, b, c], '', 'name', ['Gluten-free', 'Zesty']))).toEqual(['B']);
+  });
+});
+
+describe('list query: URL', () => {
+  const read = (params: Record<string, string | string[]>) =>
+    viewFromParams(
+      (k) => {
+        const v = params[k];
+        return Array.isArray(v) ? v[0] : v ?? null;
+      },
+      (k) => {
+        const v = params[k];
+        return v === undefined ? [] : Array.isArray(v) ? v : [v];
+      }
+    );
+
+  it('reads q, sort and tags; ignores unknown sorts and empty tags', () => {
+    expect(read({ q: 'soup', sort: 'name', tags: ['Holiday', ' ', 'Party'] })).toEqual({
+      q: 'soup',
+      sort: 'name',
+      tags: ['Holiday', 'Party'],
+    });
+    expect(read({ sort: 'random' })).toEqual({ q: '', sort: null, tags: [] });
+  });
+
+  it('writes only what differs from the defaults', () => {
+    expect(paramsFromView({ q: '  ', sort: 'lowest', tags: [] })).toEqual({ q: null, sort: null, tags: null });
+    expect(paramsFromView({ q: 'soup', sort: 'edited', tags: ['Holiday'] })).toEqual({
+      q: 'soup',
+      sort: 'edited',
+      tags: ['Holiday'],
+    });
+  });
+
+  it('URL tags take the chips’ spelling; unknown ones are dropped', () => {
+    expect(matchTagOptions(['holiday', 'Nope', 'HOLIDAY', 'gluten-free'], ['Gluten-free', 'Holiday'])).toEqual([
+      'Holiday',
+      'Gluten-free',
+    ]);
   });
 });

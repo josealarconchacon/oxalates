@@ -132,3 +132,41 @@ export function visibleTags(tags: string[] | undefined, max: number): { shown: s
   const all = tags ?? [];
   return { shown: all.slice(0, max), more: Math.max(0, all.length - max) };
 }
+
+/** The list's view as it lives in the URL: ?q=&sort=&tags=a&tags=b. */
+export interface ListView {
+  q: string;
+  /** Null when the URL doesn't say (then the remembered sort, or the default, applies). */
+  sort: SortKey | null;
+  tags: string[];
+}
+
+/** Reads the view from query params (unknown sorts and empty values are ignored). */
+export function viewFromParams(get: (key: string) => string | null, getAll: (key: string) => string[]): ListView {
+  const sort = get('sort');
+  return {
+    q: get('q') ?? '',
+    sort: isSortKey(sort) ? sort : null,
+    tags: getAll('tags').map((t) => t.trim()).filter(Boolean),
+  };
+}
+
+/** Query params for the view; defaults are left out so plain /recipes stays plain. */
+export function paramsFromView(view: { q: string; sort: SortKey; tags: string[] }): Record<string, string | string[] | null> {
+  return {
+    q: view.q.trim() || null,
+    sort: view.sort === DEFAULT_SORT ? null : view.sort,
+    tags: view.tags.length ? view.tags : null,
+  };
+}
+
+/** URL tags in the chips' own spelling ("holiday" → "Holiday"); tags with no chip are dropped. */
+export function matchTagOptions(tags: string[], options: string[]): string[] {
+  const byKey = new Map(options.map((o) => [o.toLowerCase(), o]));
+  const out: string[] = [];
+  for (const t of tags) {
+    const match = byKey.get(t.toLowerCase());
+    if (match && !out.includes(match)) out.push(match);
+  }
+  return out;
+}

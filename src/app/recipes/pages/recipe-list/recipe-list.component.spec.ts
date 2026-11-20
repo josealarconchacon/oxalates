@@ -1,11 +1,12 @@
 import { ComponentFixture, TestBed, fakeAsync, tick } from '@angular/core/testing';
-import { provideRouter } from '@angular/router';
+import { Router, provideRouter } from '@angular/router';
+import { RouterTestingHarness } from '@angular/router/testing';
 import { BreakpointObserver, BreakpointState } from '@angular/cdk/layout';
 import { BehaviorSubject, of } from 'rxjs';
 import { RecipeFoodsService } from '../../data/recipe-foods.service';
 import { RecipeService } from '../../data/recipe.service';
 import { custom, food, grams, lookup, recipe } from '../../engine/testing/fixtures';
-import { RecipeListComponent } from './recipe-list.component';
+import { RecipeListComponent, SORT_STORAGE_KEY } from './recipe-list.component';
 
 describe('RecipeListComponent', () => {
   let fixture: ComponentFixture<RecipeListComponent>;
@@ -22,6 +23,8 @@ describe('RecipeListComponent', () => {
   }
 
   beforeEach(() => {
+    // The page remembers the last sort per user; start every test without one.
+    localStorage.removeItem(SORT_STORAGE_KEY + 'u1');
     list = jasmine.createSpy('list');
     phone = new BehaviorSubject<BreakpointState>({ matches: false, breakpoints: {} });
     TestBed.configureTestingModule({
@@ -308,6 +311,89 @@ describe('RecipeListComponent', () => {
       fixture.detectChanges();
       expect(chip('Party').querySelector('app-icon')).not.toBeNull();
       expect(chip('All').querySelector('app-icon')).toBeNull();
+    });
+  });
+
+  describe('URL and remembered sort', () => {
+    let harness: RouterTestingHarness;
+    const page = () => harness.routeNativeElement as HTMLElement;
+    const names = () => Array.from(page().querySelectorAll('app-recipe-card .name')).map((n) => n.textContent!.trim());
+    const url = () => TestBed.inject(Router).url;
+    const data = () => [
+      { ...recipe([grams('carrot', 100)]), id: 'a', name: 'Soup', tags: ['Holiday'] },
+      { ...recipe([grams('carrot', 200)]), id: 'b', name: 'Bread', tags: ['Gluten-free', 'Holiday'] },
+      { ...recipe([grams('carrot', 300)]), id: 'c', name: 'Apple pie', tags: [] },
+    ];
+
+    beforeEach(async () => {
+      TestBed.resetTestingModule();
+      localStorage.removeItem(SORT_STORAGE_KEY + 'u1');
+      list = jasmine.createSpy('list').and.resolveTo(data());
+      TestBed.configureTestingModule({
+        providers: [
+          provideRouter([{ path: 'recipes', component: RecipeListComponent }]),
+          { provide: RecipeService, useValue: { list } },
+          { provide: BreakpointObserver, useValue: { observe: () => phone } },
+          {
+            provide: RecipeFoodsService,
+            useValue: { lookup$: of(lookup(food({ id: 'carrot', total_oxalate_mg_per_100g: '10.00' }))) },
+          },
+        ],
+      });
+      harness = await RouterTestingHarness.create();
+    });
+
+    afterEach(() => localStorage.removeItem(SORT_STORAGE_KEY + 'u1'));
+
+    async function open(path: string) {
+      await harness.navigateByUrl(path);
+      await harness.fixture.whenStable();
+      harness.detectChanges();
+    }
+
+    it('a shared link opens with its search, sort and tags', async () => {
+      await open('/recipes?q=o&sort=name&tags=holiday');
+      expect(page().querySelector<HTMLInputElement>('.search-input')!.value).toBe('o');
+      expect(page().querySelector<HTMLSelectElement>('.sort-select')!.value).toBe('name');
+      const pressed = Array.from(page().querySelectorAll('.chip[aria-pressed="true"]')).map((c) => c.textContent!.trim());
+      expect(pressed).toEqual(['Holiday']); // the chip's own spelling
+      expect(names()).toEqual(['Bread', 'Soup']);
+    });
+
+    it('changing the sort and chips writes them to the URL (defaults left out)', async () => {
+      await open('/recipes');
+      const select = page().querySelector<HTMLSelectElement>('.sort-select')!;
+      select.value = 'edited';
+      select.dispatchEvent(new Event('change'));
+      await harness.fixture.whenStable();
+      expect(url()).toBe('/recipes?sort=edited');
+
+      const chip = Array.from(page().querySelectorAll<HTMLButtonElement>('.chip')).find((c) => c.textContent!.trim() === 'Gluten-free')!;
+      chip.click();
+      await harness.fixture.whenStable();
+      expect(url()).toBe('/recipes?sort=edited&tags=Gluten-free');
+
+      select.value = 'lowest';
+      select.dispatchEvent(new Event('change'));
+      await harness.fixture.whenStable();
+      expect(url()).toBe('/recipes?tags=Gluten-free');
+    });
+
+    it('remembers the last sort for next time; the URL still wins', async () => {
+      await open('/recipes');
+      const select = page().querySelector<HTMLSelectElement>('.sort-select')!;
+      select.value = 'name';
+      select.dispatchEvent(new Event('change'));
+      await harness.fixture.whenStable();
+      expect(localStorage.getItem(SORT_STORAGE_KEY + 'u1')).toBe('name');
+
+      await open('/');
+      await open('/recipes');
+      expect(page().querySelector<HTMLSelectElement>('.sort-select')!.value).toBe('name');
+      expect(names()).toEqual(['Apple pie', 'Bread', 'Soup']);
+
+      await open('/recipes?sort=highest');
+      expect(page().querySelector<HTMLSelectElement>('.sort-select')!.value).toBe('highest');
     });
   });
 });
