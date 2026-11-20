@@ -140,7 +140,32 @@
   border-color: var(--color-muted);
 }
 
-/* ---- Rows ---- */
+/* ---- Cards (641px and up) and rows (phones) ---- */
+.grid,
+.rows {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 20px;
+}
+
+@media (min-width: 1024px) {
+  .grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+.rows {
+  display: grid;
+  gap: 12px;
+}
+
+/* ---- Loading rows (step 7 reshapes these) ---- */
 .list {
   display: grid;
   gap: 10px;
@@ -160,70 +185,6 @@
   background: var(--color-surface);
   color: var(--color-ink);
   text-decoration: none;
-}
-
-a.rl-row:hover {
-  border-color: var(--color-muted);
-}
-
-.row-main {
-  display: grid;
-  flex: 1;
-  gap: 2px;
-  min-width: 0;
-}
-
-.row-name {
-  overflow: hidden;
-  font-size: 1rem;
-  font-weight: 700;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-
-.row-meta {
-  font-size: 0.8125rem;
-  color: var(--color-muted);
-}
-
-.row-numbers {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  justify-content: flex-end;
-  gap: 8px;
-}
-
-.row-mg {
-  font-weight: 700;
-  font-variant-numeric: tabular-nums;
-  white-space: nowrap;
-}
-
-.at-least,
-.per {
-  font-size: 0.8125rem;
-  font-weight: 500;
-  color: var(--color-muted);
-}
-
-/* Warning badge: icon + word, not color alone. */
-.badge {
-  display: inline-flex;
-  align-items: center;
-  gap: 4px;
-  padding: 2px 8px;
-  border-radius: 999px;
-  background: var(--rc-warning-bg);
-  color: var(--rc-warning-text);
-  font-size: 0.75rem;
-  font-weight: 700;
-  --icon-stroke: 2.25;
-}
-
-.chevron {
-  flex-shrink: 0;
-  color: var(--color-muted);
 }
 
 /* ---- Loading ---- */
@@ -303,21 +264,16 @@ a.rl-row:hover {
 .btn-accent:focus-visible,
 .btn-outline:focus-visible,
 .search-input:focus-visible,
-.sort-select:focus-visible,
-.rl-row:focus-visible {
+.sort-select:focus-visible {
   outline: var(--focus-ring);
   outline-offset: 2px;
 }
 
 :host {
-  --rc-warning-bg: #fff4db;
-  --rc-warning-text: #6b4e00;
   --rl-input: #ffffff;
 }
 
 :host-context(.dark-theme) {
-  --rc-warning-bg: #33290e;
-  --rc-warning-text: #f2c94c;
   --rl-input: #0e1411;
 }
 
@@ -335,20 +291,6 @@ a.rl-row:hover {
     grid-template-columns: 1fr;
   }
 
-  .rl-row {
-    flex-wrap: wrap;
-    gap: 8px 12px;
-  }
-
-  .row-numbers {
-    justify-content: flex-start;
-    order: 3;
-    width: 100%;
-  }
-
-  .per {
-    display: none;
-  }
 }
 
 @media (prefers-reduced-motion: reduce) {

@@ -1,7 +1,7 @@
 <div class="page">
   <header class="page-head">
     <h1 class="title">Recipes</h1>
-    @if (state !== 'ready' || rows.length) {
+    @if (state !== 'ready' || items.length) {
       <a class="btn-accent" routerLink="/recipes/new">
         <app-icon name="plus" [size]="18" /> New recipe
       </a>
@@ -9,7 +9,7 @@
   </header>
 
   <!-- Hidden on the first-time empty page and on the error. -->
-  @if (state === 'loading' || (state === 'ready' && rows.length)) {
+  @if (state === 'loading' || (state === 'ready' && items.length)) {
     <div class="toolbar">
       <label class="search">
         <span class="sr-only">Search your recipes</span>
@@ -29,7 +29,7 @@
     </div>
   }
 
-  @if (state === 'ready' && rows.length) {
+  @if (state === 'ready' && items.length) {
     <p class="count" aria-live="polite">{{ count }}</p>
   }
 
@@ -50,34 +50,20 @@
       </div>
     }
     @default {
-      @if (rows.length) {
-        <ul class="list">
-          @for (row of rows; track row.id) {
-            <li>
-              <a class="rl-row" [routerLink]="['/recipes', row.id]">
-                <span class="row-main">
-                  <span class="row-name">{{ row.name }}</span>
-                  <span class="row-meta">Serves {{ row.serves }}</span>
-                </span>
-                <span class="row-numbers">
-                  <span class="row-mg">
-                    @if (row.incomplete) {<span class="at-least">at least </span>}
-                    {{ row.perServing }} mg<span class="per"> per serving</span>
-                  </span>
-                  @if (row.level) {
-                    <app-level-pill [level]="row.level" [prefix]="row.incomplete ? 'At least ' : ''" />
-                  }
-                  @if (row.incomplete) {
-                    <span class="badge">
-                      <app-icon name="alert-triangle" [size]="14" /> Incomplete
-                    </span>
-                  }
-                </span>
-                <app-icon class="chevron" name="chevron-right" [size]="18" />
-              </a>
-            </li>
-          }
-        </ul>
+      @if (items.length) {
+        @if (phone) {
+          <ul class="rows">
+            @for (item of items; track item.recipe.id) {
+              <li><app-recipe-row [item]="item" /></li>
+            }
+          </ul>
+        } @else {
+          <ul class="grid">
+            @for (item of items; track item.recipe.id) {
+              <li><app-recipe-card [item]="item" /></li>
+            }
+          </ul>
+        }
       } @else {
         <div class="empty">
           <span class="empty-icon" aria-hidden="true"><app-icon name="utensils" [size]="28" /></span>

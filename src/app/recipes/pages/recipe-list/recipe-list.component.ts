@@ -1,38 +1,36 @@
-import { Component, OnInit, inject } from '@angular/core';
+import { Component, DestroyRef, OnInit, inject } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { BreakpointObserver } from '@angular/cdk/layout';
 import { RouterLink } from '@angular/router';
 import { firstValueFrom } from 'rxjs';
 import { IconComponent } from 'src/app/shared/components/icon/icon.component';
 import { RecipeFoodsService } from '../../data/recipe-foods.service';
 import { RecipeService } from '../../data/recipe.service';
-import { formatMg } from '../../engine/format';
 import { calculateRecipe } from '../../engine/recipe-calculator';
 import { levelForMgPerServing } from '../../engine/recipe-level';
-import { LevelPillComponent } from '../../shared/level-pill/level-pill.component';
-import { DEFAULT_SORT, SORT_OPTIONS, SortKey, countLine, isSortKey } from './list-query';
-
-interface RecipeRow {
-  id: string;
-  name: string;
-  serves: number;
-  perServing: string;
-  level: string | null;
-  incomplete: boolean;
-}
+import { DEFAULT_SORT, ListItem, SORT_OPTIONS, SortKey, countLine, isSortKey, toListItem } from './list-query';
+import { RecipeCardComponent } from './recipe-card/recipe-card.component';
+import { RecipeRowComponent } from './recipe-row/recipe-row.component';
 
 /** /recipes: your recipes, with search, sort and tag filters. */
 @Component({
   selector: 'app-recipe-list',
   standalone: true,
-  imports: [RouterLink, IconComponent, LevelPillComponent],
+  imports: [RouterLink, IconComponent, RecipeCardComponent, RecipeRowComponent],
   templateUrl: './recipe-list.component.html',
   styleUrl: './recipe-list.component.css',
 })
 export class RecipeListComponent implements OnInit {
   private recipes = inject(RecipeService);
   private foods = inject(RecipeFoodsService);
+  private breakpoints = inject(BreakpointObserver);
+  private destroyRef = inject(DestroyRef);
 
   state: 'loading' | 'error' | 'ready' = 'loading';
-  rows: RecipeRow[] = [];
+  /** Every recipe, with its engine result worked out once per load. */
+  items: ListItem[] = [];
+  /** ≤ 640px: compact rows instead of cards (only one of them is in the page). */
+  phone = false;
   readonly skeletons = [1, 2, 3];
   readonly sortOptions = SORT_OPTIONS;
 
@@ -41,6 +39,10 @@ export class RecipeListComponent implements OnInit {
   sort: SortKey = DEFAULT_SORT;
 
   ngOnInit(): void {
+    this.breakpoints
+      .observe('(max-width: 640px)')
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe((state) => (this.phone = state.matches));
     void this.load();
   }
 
@@ -51,17 +53,7 @@ export class RecipeListComponent implements OnInit {
         this.recipes.list(),
         firstValueFrom(this.foods.lookup$),
       ]);
-      this.rows = recipes.map((recipe) => {
-        const result = calculateRecipe(recipe, getFood, levelForMgPerServing);
-        return {
-          id: recipe.id,
-          name: recipe.name,
-          serves: recipe.serves,
-          perServing: formatMg(result.perServingMg),
-          level: result.level,
-          incomplete: result.incomplete,
-        };
-      });
+      this.items = recipes.map((recipe) => toListItem(recipe, calculateRecipe(recipe, getFood, levelForMgPerServing)));
       this.state = 'ready';
     } catch {
       this.state = 'error';
@@ -70,7 +62,7 @@ export class RecipeListComponent implements OnInit {
 
   /** "6 recipes · sorted by oxalate per serving" (announced politely as it changes). */
   get count(): string {
-    return countLine(this.rows.length, this.sort);
+    return countLine(this.items.length, this.sort);
   }
 
   onSearch(text: string): void {

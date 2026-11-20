@@ -1,6 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { provideRouter } from '@angular/router';
-import { of } from 'rxjs';
+import { BreakpointObserver, BreakpointState } from '@angular/cdk/layout';
+import { BehaviorSubject, of } from 'rxjs';
 import { RecipeFoodsService } from '../../data/recipe-foods.service';
 import { RecipeService } from '../../data/recipe.service';
 import { custom, food, grams, lookup, recipe } from '../../engine/testing/fixtures';
@@ -9,6 +10,7 @@ import { RecipeListComponent } from './recipe-list.component';
 describe('RecipeListComponent', () => {
   let fixture: ComponentFixture<RecipeListComponent>;
   let list: jasmine.Spy;
+  let phone: BehaviorSubject<BreakpointState>;
   const el = () => fixture.nativeElement as HTMLElement;
   const text = () => el().textContent!.replace(/\s+/g, ' ');
 
@@ -21,11 +23,13 @@ describe('RecipeListComponent', () => {
 
   beforeEach(() => {
     list = jasmine.createSpy('list');
+    phone = new BehaviorSubject<BreakpointState>({ matches: false, breakpoints: {} });
     TestBed.configureTestingModule({
       imports: [RecipeListComponent],
       providers: [
         provideRouter([]),
         { provide: RecipeService, useValue: { list } },
+        { provide: BreakpointObserver, useValue: { observe: () => phone } },
         {
           provide: RecipeFoodsService,
           useValue: { lookup$: of(lookup(food({ id: 'carrot', total_oxalate_mg_per_100g: '10.00' }))) },
@@ -51,23 +55,76 @@ describe('RecipeListComponent', () => {
     expect(cta.getAttribute('href')).toBe('/recipes/new');
   });
 
-  it('a row shows name, serves and per-serving mg, and links to its detail page', async () => {
-    list.and.resolveTo([{ ...recipe([grams('carrot', 200)], 4), id: 'r9', name: 'Carrot soup' }]);
-    await render();
-    const row = el().querySelector<HTMLAnchorElement>('a.rl-row')!;
-    expect(row.getAttribute('href')).toBe('/recipes/r9');
-    expect(row.textContent).toContain('Carrot soup');
-    expect(row.textContent).toContain('Serves 4');
-    expect(row.textContent!.replace(/\s+/g, ' ')).toContain('5.0 mg per serving');
-    expect(row.querySelector('.badge')).toBeNull();
+  describe('cards (641px and up)', () => {
+    const card = () => el().querySelector<HTMLAnchorElement>('app-recipe-card a.card')!;
+    const squash = (n: Element | null) => (n?.textContent ?? '').replace(/\s+/g, ' ').trim();
+    /** The value's pieces are separate elements spaced by CSS; read them as words. */
+    const value = () => Array.from(card().querySelector('.value')!.children).map((c) => squash(c)).join(' ');
+
+    it('one link per recipe, named with the per-serving value and level', async () => {
+      list.and.resolveTo([{ ...recipe([grams('carrot', 200)], 4), id: 'r9', name: 'Carrot soup', tags: [] }]);
+      await render();
+      expect(el().querySelectorAll('app-recipe-card').length).toBe(1);
+      expect(el().querySelector('app-recipe-row')).toBeNull();
+      expect(card().getAttribute('href')).toBe('/recipes/r9');
+      expect(card().getAttribute('aria-label')).toBe('Carrot soup, 5.0 mg per serving, Medium');
+      expect(card().querySelector('[role="img"]')!.getAttribute('aria-label')).toBe('Recipe photo');
+      expect(squash(card().querySelector('.name'))).toBe('Carrot soup');
+      expect(squash(card().querySelector('.serves'))).toBe('Serves 4');
+      expect(value()).toBe('5.0 mg per serving');
+      expect(squash(card().querySelector('app-level-pill'))).toBe('Medium');
+      expect(card().querySelector('.incomplete')).toBeNull();
+    });
+
+    it('incomplete: "at least", "At least" pill and the Incomplete badge', async () => {
+      list.and.resolveTo([{ ...recipe([grams('carrot', 100), custom('Tapioca', 20)]), id: 'r1', name: 'Stew' }]);
+      await render();
+      expect(value()).toBe('at least 10.0 mg per serving');
+      expect(squash(card().querySelector('app-level-pill'))).toBe('At least Medium');
+      expect(squash(card().querySelector('.incomplete'))).toBe('Incomplete');
+      expect(card().getAttribute('aria-label')).toBe('Stew, at least 10.0 mg per serving, at least Medium, incomplete');
+    });
+
+    it('all ingredients unknown: "Unknown", no pill, still Incomplete', async () => {
+      list.and.resolveTo([{ ...recipe([custom('Tapioca', 20)]), id: 'r1', name: 'Mystery' }]);
+      await render();
+      expect(value()).toBe('Unknown per serving');
+      expect(card().querySelector('app-level-pill')).toBeNull();
+      expect(card().querySelector('.incomplete')).not.toBeNull();
+      expect(card().getAttribute('aria-label')).toBe('Mystery, oxalate per serving unknown, incomplete');
+    });
+
+    it('tags: the first 3, then "+N"', async () => {
+      list.and.resolveTo([
+        { ...recipe([grams('carrot', 100)]), id: 'r1', name: 'Soup', tags: ['Holiday', 'Gluten-free', 'Dairy-free', 'Low FODMAP', 'Mine'] },
+      ]);
+      await render();
+      expect(Array.from(card().querySelectorAll('.tag')).map((t) => squash(t))).toEqual([
+        'Holiday',
+        'Gluten-free',
+        'Dairy-free',
+        '+2',
+      ]);
+    });
   });
 
-  it('an incomplete recipe says "at least" and shows the Incomplete badge', async () => {
-    list.and.resolveTo([{ ...recipe([grams('carrot', 100), custom('Tapioca', 20)]), id: 'r1' }]);
+  it('phones (640px and below): rows instead of cards, with 2 tags + "+N"', async () => {
+    phone.next({ matches: true, breakpoints: {} });
+    list.and.resolveTo([
+      { ...recipe([grams('carrot', 200)], 4), id: 'r9', name: 'Carrot soup', tags: ['Holiday', 'Gluten-free', 'Dairy-free'] },
+    ]);
     await render();
-    const row = el().querySelector('a.rl-row')!;
-    expect(row.textContent).toContain('at least');
-    expect(row.querySelector('.badge')!.textContent!.trim()).toBe('Incomplete');
+    expect(el().querySelector('app-recipe-card')).toBeNull();
+    const row = el().querySelector<HTMLAnchorElement>('app-recipe-row a')!;
+    expect(row.getAttribute('href')).toBe('/recipes/r9');
+    expect(row.getAttribute('aria-label')).toBe('Carrot soup, 5.0 mg per serving, Medium');
+    expect(row.querySelector('.mg')!.textContent!.trim()).toBe('5.0 mg');
+    expect(row.querySelector('.meta')!.textContent!.trim()).toBe('per serving · Serves 4');
+    expect(Array.from(row.querySelectorAll('.tag')).map((t) => t.textContent!.trim())).toEqual([
+      'Holiday',
+      'Gluten-free',
+      '+1',
+    ]);
   });
 
   it('a load error offers "Try again", which reloads', async () => {
