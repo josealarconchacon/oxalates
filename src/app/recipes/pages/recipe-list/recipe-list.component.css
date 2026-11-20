@@ -1,11 +1,11 @@
-/* Minimal recipe list (temporary; PR 5 replaces it). Rows are .rl-row, not
-   .row: the global .row in styles.css adds negative side margins. */
+/* Recipes list. Avoid class names .row and .card: global styles in styles.css
+   change their layout. */
 :host {
   display: block;
 }
 
 .page {
-  max-width: 880px;
+  max-width: 1200px;
   margin: 0 auto;
   padding: calc(var(--header-height, 72px) + 32px) 24px 64px;
   font-family: var(--font-family-sans);
@@ -24,9 +24,131 @@
 .title {
   margin: 0;
   font-family: var(--font-family-display);
-  font-size: 2.25rem;
+  font-size: 2.75rem; /* 44px */
   font-weight: 700;
+  line-height: 1.1;
   letter-spacing: -0.02em;
+}
+
+/* ---- Toolbar: search + sort ---- */
+.toolbar {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 240px;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+
+.search,
+.sort {
+  position: relative;
+  display: block;
+}
+
+.search-icon,
+.sort-icon {
+  position: absolute;
+  top: 50%;
+  color: var(--color-muted);
+  transform: translateY(-50%);
+  pointer-events: none;
+  --icon-stroke: 2;
+}
+
+.search-icon {
+  left: 16px;
+}
+
+.sort-icon {
+  right: 14px;
+}
+
+.search-input,
+.sort-select {
+  width: 100%;
+  min-height: 48px;
+  border: 1px solid var(--color-line);
+  border-radius: 14px;
+  background: var(--rl-input);
+  color: var(--color-ink);
+  font: inherit;
+  font-size: 1rem;
+}
+
+.search-input {
+  padding: 0 16px 0 48px;
+}
+
+.search-input::placeholder {
+  color: var(--color-muted);
+}
+
+.sort-select {
+  padding: 0 44px 0 16px;
+  appearance: none;
+  cursor: pointer;
+}
+
+/* ---- Tag filter chips: neutral outlines; chosen = ink fill + check ---- */
+.chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 14px;
+}
+
+.chip {
+  display: inline-flex;
+  flex: none;
+  align-items: center;
+  gap: 6px;
+  min-height: 40px;
+  padding: 0 14px;
+  border: 1px solid var(--color-line);
+  border-radius: 999px;
+  background: transparent;
+  color: var(--color-ink);
+  font: inherit;
+  font-size: 0.875rem;
+  font-weight: 600;
+  white-space: nowrap;
+  cursor: pointer;
+  --icon-stroke: 2.5;
+}
+
+.chip:hover {
+  border-color: var(--color-muted);
+}
+
+.chip[aria-pressed='true'] {
+  border-color: var(--color-ink);
+  background: var(--color-ink);
+  color: var(--color-surface);
+}
+
+/* A 44px tap target around the 40px chip. */
+.chip {
+  position: relative;
+}
+
+.chip::after {
+  content: '';
+  position: absolute;
+  inset: -2px 0;
+}
+
+.count {
+  margin: 0 0 20px;
+  color: var(--color-muted);
+  font-size: 0.875rem;
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
 }
 
 .btn-accent,
@@ -66,115 +188,103 @@
   border-color: var(--color-muted);
 }
 
-/* ---- Rows ---- */
-.list {
-  display: grid;
-  gap: 10px;
+/* ---- Cards (641px and up) and rows (phones) ---- */
+.grid,
+.rows {
   margin: 0;
   padding: 0;
   list-style: none;
 }
 
-.rl-row {
-  display: flex;
-  align-items: center;
-  gap: 16px;
-  min-height: 72px;
-  padding: 14px 18px;
+.grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 20px;
+}
+
+@media (min-width: 1024px) {
+  .grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+.rows {
+  display: grid;
+  gap: 12px;
+}
+
+/* ---- Loading: card- and row-shaped placeholders ---- */
+.sk-card,
+.sk-row {
+  overflow: hidden;
   border: 1px solid var(--color-line);
-  border-radius: 18px;
   background: var(--color-surface);
-  color: var(--color-ink);
-  text-decoration: none;
 }
 
-a.rl-row:hover {
-  border-color: var(--color-muted);
+.sk-card {
+  display: flex;
+  flex-direction: column;
+  border-radius: 22px;
 }
 
-.row-main {
+.sk-row {
+  display: flex;
+  gap: 14px;
+  padding: 12px;
+  border-radius: 18px;
+}
+
+.sk-lines {
   display: grid;
   flex: 1;
-  gap: 2px;
-  min-width: 0;
+  gap: 10px;
+  align-content: start;
+  padding: 18px;
 }
 
-.row-name {
-  overflow: hidden;
-  font-size: 1rem;
-  font-weight: 700;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-
-.row-meta {
-  font-size: 0.8125rem;
-  color: var(--color-muted);
-}
-
-.row-numbers {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  justify-content: flex-end;
-  gap: 8px;
-}
-
-.row-mg {
-  font-weight: 700;
-  font-variant-numeric: tabular-nums;
-  white-space: nowrap;
-}
-
-.at-least,
-.per {
-  font-size: 0.8125rem;
-  font-weight: 500;
-  color: var(--color-muted);
-}
-
-/* Warning badge: icon + word, not color alone. */
-.badge {
-  display: inline-flex;
-  align-items: center;
-  gap: 4px;
-  padding: 2px 8px;
-  border-radius: 999px;
-  background: var(--rc-warning-bg);
-  color: var(--rc-warning-text);
-  font-size: 0.75rem;
-  font-weight: 700;
-  --icon-stroke: 2.25;
-}
-
-.chevron {
-  flex-shrink: 0;
-  color: var(--color-muted);
-}
-
-/* ---- Loading ---- */
-.rl-row--skeleton {
-  flex-direction: column;
-  align-items: flex-start;
-  justify-content: center;
+.sk-row .sk-lines {
+  padding: 4px 0;
 }
 
 .sk {
   display: block;
   height: 12px;
   border-radius: 6px;
-  background: var(--color-line);
+  background: var(--rl-skeleton);
   animation: pulse 1.2s ease-in-out infinite;
 }
 
+.sk--photo {
+  height: auto;
+  aspect-ratio: 16 / 10;
+  border-radius: 0;
+}
+
+.sk--thumb {
+  flex: none;
+  width: 72px;
+  height: 72px;
+  border-radius: 14px;
+}
+
 .sk--name {
-  width: 45%;
-  height: 14px;
+  width: 70%;
+  height: 16px;
 }
 
 .sk--meta {
-  width: 20%;
-  margin-top: 8px;
+  width: 35%;
+}
+
+.sk--big {
+  width: 45%;
+  height: 26px;
+}
+
+.sk--pill {
+  width: 30%;
+  height: 22px;
+  border-radius: 999px;
 }
 
 @keyframes pulse {
@@ -199,18 +309,19 @@ a.rl-row:hover {
 .empty-icon {
   display: grid;
   place-items: center;
-  width: 56px;
-  height: 56px;
-  border-radius: 16px;
-  background: var(--color-accent-soft, var(--color-bg));
-  color: var(--color-accent-fg);
-  --icon-stroke: 2;
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  background: var(--rl-warm-bg);
+  color: var(--rl-warm-icon);
+  --icon-stroke: 1.75;
 }
 
 .empty-title {
-  margin: 4px 0 0;
+  margin: 8px 0 0;
   font-family: var(--font-family-display);
-  font-size: 1.5rem;
+  font-size: 1.75rem;
+  line-height: 1.2;
   font-weight: 700;
 }
 
@@ -228,19 +339,25 @@ a.rl-row:hover {
 
 .btn-accent:focus-visible,
 .btn-outline:focus-visible,
-.rl-row:focus-visible {
+.search-input:focus-visible,
+.sort-select:focus-visible,
+.chip:focus-visible {
   outline: var(--focus-ring);
   outline-offset: 2px;
 }
 
 :host {
-  --rc-warning-bg: #fff4db;
-  --rc-warning-text: #6b4e00;
+  --rl-input: #ffffff;
+  --rl-warm-bg: #f3e7da;
+  --rl-warm-icon: #8a5a2b;
+  --rl-skeleton: #f1f4f0;
 }
 
 :host-context(.dark-theme) {
-  --rc-warning-bg: #33290e;
-  --rc-warning-text: #f2c94c;
+  --rl-input: #0e1411;
+  --rl-warm-bg: #2b231b;
+  --rl-warm-icon: #d8b28a;
+  --rl-skeleton: #1d2621;
 }
 
 @media (max-width: 640px) {
@@ -249,23 +366,33 @@ a.rl-row:hover {
   }
 
   .title {
-    font-size: 1.875rem;
+    font-size: 1.875rem; /* 30px */
   }
 
-  .rl-row {
-    flex-wrap: wrap;
-    gap: 8px 12px;
-  }
-
-  .row-numbers {
-    justify-content: flex-start;
-    order: 3;
+  /* First-time button spans the card, as in the mockup. */
+  .empty .btn-accent {
     width: 100%;
+    min-height: 52px;
   }
 
-  .per {
+  /* Sort goes full width under the search. */
+  .toolbar {
+    grid-template-columns: 1fr;
+  }
+
+  /* Chips: one row that scrolls sideways, edge to edge. */
+  .chips {
+    flex-wrap: nowrap;
+    margin-inline: -16px;
+    padding: 2px 16px;
+    overflow-x: auto;
+    scrollbar-width: none;
+  }
+
+  .chips::-webkit-scrollbar {
     display: none;
   }
+
 }
 
 @media (prefers-reduced-motion: reduce) {

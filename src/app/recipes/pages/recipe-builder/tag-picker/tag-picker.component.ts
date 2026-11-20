@@ -9,15 +9,10 @@ import {
   inject,
 } from '@angular/core';
 import { IconComponent } from 'src/app/shared/components/icon/icon.component';
+import { SUGGESTED_TAGS } from '../../../model/recipe-tags';
 
-export const SUGGESTED_TAGS = [
-  'Low histamine',
-  'Gluten-free',
-  'Dairy-free',
-  'Low FODMAP',
-  'Drink/Smoothie',
-  'Holiday',
-];
+// The suggested tags live in the model so the Recipes list can use them too.
+export { SUGGESTED_TAGS };
 export const MAX_TAGS = 8;
 export const MAX_TAG_LENGTH = 24;
 
