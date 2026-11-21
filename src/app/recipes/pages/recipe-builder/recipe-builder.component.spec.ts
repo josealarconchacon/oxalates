@@ -7,6 +7,7 @@ import { RecipeFoodsService } from '../../data/recipe-foods.service';
 import { RecipeService } from '../../data/recipe.service';
 import { custom, food, grams, lookup, recipe, servings } from '../../engine/testing/fixtures';
 import { RecipeBuilderComponent, SAVE_TIMEOUT_MS } from './recipe-builder.component';
+import { ListViewMemoryService } from '../recipe-list/list-view-memory.service';
 
 const foods = lookup(
   food({ id: 'carrot', item: 'Carrot', total_oxalate_mg_per_100g: '10.00', total_soluble_oxalate_mg_per_100g: '4.00', reference: 'LO Cookbook 2' }),
@@ -139,9 +140,19 @@ describe('RecipeBuilderComponent', () => {
       expect(el().querySelector('.summary .btn-ghost')!.getAttribute('href')).toBe('/recipes');
     });
 
+    it('new recipe: back to the list as you left it', async () => {
+      await render();
+      TestBed.inject(ListViewMemoryService).remember({ q: ['soup'], tags: ['Holiday'] });
+      fixture.detectChanges();
+      expect(el().querySelector('.back')!.getAttribute('href')).toBe('/recipes?q=soup&tags=Holiday');
+      expect(el().querySelector('.summary .btn-ghost')!.getAttribute('href')).toBe('/recipes?q=soup&tags=Holiday');
+    });
+
     it("editing: back to the recipe's page", async () => {
       service.get.and.resolveTo({ ...recipe([grams('carrot', 100, 'Carrot')]), id: 'r1' });
       await render('r1');
+      TestBed.inject(ListViewMemoryService).remember({ q: ['soup'] });
+      fixture.detectChanges();
       expect(el().querySelector('.back')!.getAttribute('href')).toBe('/recipes/r1');
       expect(el().querySelector('.back')!.textContent!.trim()).toBe('Recipe');
       expect(el().querySelector('.summary .btn-ghost')!.getAttribute('href')).toBe('/recipes/r1');

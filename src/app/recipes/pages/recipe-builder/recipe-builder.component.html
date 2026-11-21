@@ -1,5 +1,5 @@
 <div class="page">
-  <a class="back" [routerLink]="backLink">
+  <a class="back" [routerLink]="backLink" [queryParams]="backParams">
     <app-icon name="arrow-left" [size]="16" /> {{ backLabel }}
   </a>
   <h1 class="title">{{ mode === 'edit' ? 'Edit recipe' : 'New recipe' }}</h1>
@@ -16,7 +16,7 @@
     @case ('not-found') {
       <div class="rb-card message" role="alert">
         <p class="message-title">We couldn't find that recipe.</p>
-        <a class="btn-outline" routerLink="/recipes">Back to recipes</a>
+        <a class="btn-outline" routerLink="/recipes" [queryParams]="listView.params">Back to recipes</a>
       </div>
     }
     @default {
@@ -132,7 +132,7 @@
           <button type="submit" form="recipe-form" class="btn-accent btn-block" [disabled]="saving">
             {{ saving ? 'Saving…' : mode === 'edit' ? 'Save changes' : 'Save recipe' }}
           </button>
-          <a class="btn-ghost btn-block" [routerLink]="backLink">Cancel</a>
+          <a class="btn-ghost btn-block" [routerLink]="backLink" [queryParams]="backParams">Cancel</a>
           @if (mode === 'edit') {
             <p class="summary-note">Past days keep the numbers they were logged with.</p>
           }

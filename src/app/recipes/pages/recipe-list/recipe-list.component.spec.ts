@@ -6,6 +6,7 @@ import { BehaviorSubject, of } from 'rxjs';
 import { RecipeFoodsService } from '../../data/recipe-foods.service';
 import { RecipeService } from '../../data/recipe.service';
 import { custom, food, grams, lookup, recipe } from '../../engine/testing/fixtures';
+import { ListViewMemoryService } from './list-view-memory.service';
 import { RecipeListComponent, SORT_STORAGE_KEY } from './recipe-list.component';
 
 describe('RecipeListComponent', () => {
@@ -327,6 +328,27 @@ describe('RecipeListComponent', () => {
       expect(chip('Party').querySelector('app-icon')).not.toBeNull();
       expect(chip('All').querySelector('app-icon')).toBeNull();
     });
+
+    it('phones: a tapped chip scrolls fully into view (sideways only)', fakeAsync(() => {
+      const scroll = spyOn(HTMLElement.prototype, 'scrollIntoView');
+      phone.next({ matches: true, breakpoints: {} });
+      fixture.detectChanges();
+      chip('Party').click();
+      tick();
+      expect(scroll).toHaveBeenCalledTimes(1);
+      expect(scroll.calls.mostRecent().object).toBe(chip('Party'));
+      expect(scroll.calls.mostRecent().args[0]).toEqual(jasmine.objectContaining({ block: 'nearest', inline: 'nearest' }));
+      chip('All').click();
+      tick();
+      expect(scroll).toHaveBeenCalledTimes(2);
+    }));
+
+    it('cards (641px and up): chips wrap, so nothing scrolls', fakeAsync(() => {
+      const scroll = spyOn(HTMLElement.prototype, 'scrollIntoView');
+      chip('Party').click();
+      tick();
+      expect(scroll).not.toHaveBeenCalled();
+    }));
   });
 
   describe('URL and remembered sort', () => {
@@ -392,6 +414,20 @@ describe('RecipeListComponent', () => {
       select.dispatchEvent(new Event('change'));
       await harness.fixture.whenStable();
       expect(url()).toBe('/recipes?tags=Gluten-free');
+    });
+
+    it('remembers the view for "← Recipes" on a recipe page', async () => {
+      const memory = TestBed.inject(ListViewMemoryService);
+      await open('/recipes?q=o&sort=name&tags=Holiday&tags=Gluten-free');
+      expect(memory.params).toEqual({ q: ['o'], sort: ['name'], tags: ['Holiday', 'Gluten-free'] });
+
+      const chip = Array.from(page().querySelectorAll<HTMLButtonElement>('.chip')).find((c) => c.textContent!.trim() === 'All')!;
+      chip.click();
+      await harness.fixture.whenStable();
+      expect(memory.params).toEqual({ q: ['o'], sort: ['name'] });
+
+      await open('/recipes');
+      expect(memory.params).toEqual({});
     });
 
     it('remembers the last sort for next time; the URL still wins', async () => {

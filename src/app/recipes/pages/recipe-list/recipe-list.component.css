@@ -387,12 +387,13 @@
     padding: 2px 16px;
     overflow-x: auto;
     scrollbar-width: none;
+    /* A chip scrolled into view stops clear of the screen edge. */
+    scroll-padding-inline: 16px;
   }
 
   .chips::-webkit-scrollbar {
     display: none;
   }
-
 }
 
 @media (prefers-reduced-motion: reduce) {

@@ -15,6 +15,7 @@ import { formatMg } from '../../engine/format';
 import { calculateRecipe } from '../../engine/recipe-calculator';
 import { levelForMgPerServing } from '../../engine/recipe-level';
 import { FOOD_DATA_UPDATED_AT, Recipe, RecipeResult } from '../../model/recipe';
+import { ListViewMemoryService } from '../recipe-list/list-view-memory.service';
 import { LevelPillComponent } from '../../shared/level-pill/level-pill.component';
 import { BreakdownComponent } from './breakdown/breakdown.component';
 import { BreakdownRowView, breakdownRows } from './breakdown/breakdown-view';
@@ -50,6 +51,8 @@ export class RecipeDetailComponent implements OnInit {
   private breakpoints = inject(BreakpointObserver);
   private logs = inject(RecipeLogService);
   private locale = inject(LOCALE_ID);
+  /** "← Recipes" goes back to the list as you left it (search, sort, tags). */
+  readonly listView = inject(ListViewMemoryService);
 
   state: 'loading' | 'not-found' | 'error' | 'ready' = 'loading';
   recipe: Recipe | null = null;
@@ -212,7 +215,7 @@ export class RecipeDetailComponent implements OnInit {
       this.drafts.clear(this.recipe.id);
       this.deleteOpen = false;
       this.notifications.show('Recipe deleted.', 'Close', ['success-snackbar']);
-      await this.router.navigate(['/recipes']);
+      await this.router.navigate(['/recipes'], { queryParams: this.listView.params });
     } catch {
       this.deleteError = true;
     } finally {

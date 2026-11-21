@@ -4,7 +4,7 @@ import { Subject, debounceTime, fromEvent, merge } from 'rxjs';
 import { A11yModule } from '@angular/cdk/a11y';
 import { BreakpointObserver } from '@angular/cdk/layout';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
-import { ActivatedRoute, Router, RouterLink } from '@angular/router';
+import { ActivatedRoute, Params, Router, RouterLink } from '@angular/router';
 import { NotificationService } from 'src/app/landing-page/dialog-service/oxalate/service/notification.service';
 import { IconComponent } from 'src/app/shared/components/icon/icon.component';
 import { RecipeFoodsService } from '../../data/recipe-foods.service';
@@ -26,6 +26,7 @@ import { ServesStepperComponent } from './serves-stepper/serves-stepper.componen
 import { TagPickerComponent } from './tag-picker/tag-picker.component';
 import { LeaveDialogComponent } from './leave-dialog/leave-dialog.component';
 import { LeavesSafely } from '../../guards/unsaved-changes.guard';
+import { ListViewMemoryService } from '../recipe-list/list-view-memory.service';
 
 /** A save that hasn't answered by then counts as failed (e.g. lost connection). */
 export const SAVE_TIMEOUT_MS = 15_000;
@@ -60,6 +61,7 @@ export class RecipeBuilderComponent implements OnInit, LeavesSafely {
   private destroyRef = inject(DestroyRef);
   private breakpoints = inject(BreakpointObserver);
   private drafts = inject(RecipeDraftService);
+  readonly listView = inject(ListViewMemoryService);
 
   @ViewChild('nameInput') private nameInput?: ElementRef<HTMLInputElement>;
 
@@ -198,6 +200,11 @@ export class RecipeBuilderComponent implements OnInit, LeavesSafely {
   /** Back and Cancel: the recipe's page when editing, the list when new. */
   get backLink(): string[] {
     return this.mode === 'edit' && this.recipeId ? ['/recipes', this.recipeId] : ['/recipes'];
+  }
+
+  /** New recipe: back to the list as you left it (search, sort, tags). */
+  get backParams(): Params | null {
+    return this.mode === 'edit' && this.recipeId ? null : this.listView.params;
   }
 
   get backLabel(): string {

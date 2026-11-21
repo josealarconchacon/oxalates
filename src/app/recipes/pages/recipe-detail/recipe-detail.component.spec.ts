@@ -10,6 +10,7 @@ import { RecipeFoodsService } from '../../data/recipe-foods.service';
 import { RecipeService } from '../../data/recipe.service';
 import { custom, food, grams, lookup, recipe } from '../../engine/testing/fixtures';
 import { Recipe } from '../../model/recipe';
+import { ListViewMemoryService } from '../recipe-list/list-view-memory.service';
 import { RecipeDetailComponent } from './recipe-detail.component';
 
 describe('RecipeDetailComponent', () => {
@@ -81,6 +82,13 @@ describe('RecipeDetailComponent', () => {
     expect(h1s.length).toBe(1);
     expect(h1s[0].textContent!.trim()).toBe('Carrot soup');
     expect(el().querySelector('.back')!.getAttribute('href')).toBe('/recipes');
+  });
+
+  it('"← Recipes" returns to the list as you left it (search, sort, tags)', async () => {
+    TestBed.inject(ListViewMemoryService).remember({ q: ['soup'], sort: ['name'], tags: ['Holiday', 'Gluten-free'] });
+    get.and.resolveTo({ ...recipe([grams('carrot', 100)]), id: 'r1', name: 'Carrot soup' });
+    await render();
+    expect(el().querySelector('.back')!.getAttribute('href')).toBe('/recipes?q=soup&sort=name&tags=Holiday&tags=Gluten-free');
   });
 
   it("not found (or not yours): says so and links back", async () => {
@@ -399,7 +407,17 @@ describe('RecipeDetailComponent', () => {
       await fixture.whenStable();
       expect(remove).toHaveBeenCalledWith('r1');
       expect(toast).toHaveBeenCalledWith('Recipe deleted.', 'Close', ['success-snackbar']);
-      expect(navigate).toHaveBeenCalledWith(['/recipes']);
+      expect(navigate).toHaveBeenCalledWith(['/recipes'], { queryParams: {} });
+    });
+
+    it('after Delete, the list opens as you left it', async () => {
+      TestBed.inject(ListViewMemoryService).remember({ tags: ['Holiday'] });
+      remove.and.resolveTo();
+      button('Delete').click();
+      fixture.detectChanges();
+      dialog()!.querySelector<HTMLButtonElement>('.btn--danger')!.click();
+      await fixture.whenStable();
+      expect(navigate).toHaveBeenCalledWith(['/recipes'], { queryParams: { tags: ['Holiday'] } });
     });
 
     it('Delete error: the dialog stays open and says so', async () => {
