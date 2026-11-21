@@ -9,16 +9,25 @@ import { Router } from '@angular/router';
  * The prompt never closes or navigates on its own: the visitor chooses to sign
  * in or to stay where they are.
  */
+/** Which feature the visitor picked; the prompt's wording follows it. */
+export type AuthMessageTopic = 'intake' | 'recipes';
+
 @Injectable({
   providedIn: 'root',
 })
 export class AuthMessageService {
   private showMessageSubject = new BehaviorSubject<boolean>(false);
   readonly showMessage$ = this.showMessageSubject.asObservable();
+  private currentTopic: AuthMessageTopic = 'intake';
+
+  get topic(): AuthMessageTopic {
+    return this.currentTopic;
+  }
 
   constructor(private router: Router) {}
 
-  showAuthMessage(): void {
+  showAuthMessage(topic: AuthMessageTopic = 'intake'): void {
+    this.currentTopic = topic;
     this.showMessageSubject.next(true);
   }
 

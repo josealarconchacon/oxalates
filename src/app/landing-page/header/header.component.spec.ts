@@ -5,9 +5,14 @@ import { of } from 'rxjs';
 import { MatIconModule } from '@angular/material/icon';
 import { Router, provideRouter } from '@angular/router';
 import { ProfileImageService } from 'src/app/user-auth/service/profile-image.service';
+import { AuthMessageService } from 'src/app/shared/services/auth-message.service';
 
 class MockAuthService {
   userProfile$ = of<null | {}>(null);
+  signedIn = false;
+  isAuthenticated() {
+    return this.signedIn;
+  }
 }
 
 describe('HeaderComponent', () => {
@@ -35,12 +40,47 @@ describe('HeaderComponent', () => {
     fixture = TestBed.createComponent(HeaderComponent);
     component = fixture.componentInstance;
     router = TestBed.inject(Router);
-    authService = TestBed.inject(AuthService);
+    authService = TestBed.inject(AuthService) as unknown as MockAuthService;
     fixture.detectChanges();
   });
 
   it('should create', () => {
     expect(component).toBeTruthy();
+  });
+
+  describe('Recipes links (top bar and menu)', () => {
+    const links = () =>
+      Array.from<HTMLAnchorElement>(fixture.nativeElement.querySelectorAll('a')).filter(
+        (a) => a.textContent!.trim() === 'Recipes'
+      );
+    const click = (link: HTMLAnchorElement, init: MouseEventInit = {}) => {
+      const event = new MouseEvent('click', { bubbles: true, cancelable: true, button: 0, ...init });
+      link.dispatchEvent(event);
+      return event;
+    };
+
+    it('every Recipes link points at /recipes', () => {
+      expect(links().length).toBeGreaterThan(0);
+      links().forEach((l) => expect(l.getAttribute('href')).toBe('/recipes'));
+    });
+
+    it('signed out: shows the Recipes sign-in prompt and stays put', () => {
+      const navigate = spyOn(router, 'navigate').and.resolveTo(true);
+      const show = spyOn(TestBed.inject(AuthMessageService), 'showAuthMessage');
+      links().forEach((l) => expect(click(l).defaultPrevented).toBeTrue());
+      expect(show).toHaveBeenCalledWith('recipes');
+      expect(show).toHaveBeenCalledTimes(links().length);
+      expect(navigate).not.toHaveBeenCalled();
+    });
+
+    it('signed in: opens the Recipes list', () => {
+      authService.signedIn = true;
+      const navigate = spyOn(router, 'navigate').and.resolveTo(true);
+      const show = spyOn(TestBed.inject(AuthMessageService), 'showAuthMessage');
+      click(links()[0]);
+      expect(navigate).toHaveBeenCalledWith(['/recipes']);
+      expect(show).not.toHaveBeenCalled();
+    });
   });
 
   describe('onProfileImageChange', () => {

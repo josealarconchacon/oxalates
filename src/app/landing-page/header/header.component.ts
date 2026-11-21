@@ -219,6 +219,21 @@ export class HeaderComponent implements OnInit {
     }
   }
 
+  /**
+   * Recipes need an account. Signed in: go to the list. Signed out: explain
+   * why with the sign-in prompt instead of jumping to the sign-in page.
+   * Ctrl/Cmd/Shift/middle clicks keep the browser's own new-tab behaviour.
+   */
+  openRecipes(event: MouseEvent): void {
+    if (event.button !== 0 || event.ctrlKey || event.metaKey || event.shiftKey || event.altKey) return;
+    event.preventDefault();
+    if (this.authService.isAuthenticated()) {
+      this.router.navigate(['/recipes']);
+    } else {
+      this.authMessageService.showAuthMessage('recipes');
+    }
+  }
+
   navigateToSavedItems(): void {
     this.router.navigate(['/profile'], {
       queryParams: { section: 'saveItem' },
