@@ -1126,7 +1126,9 @@ main:focus {
 /* Material date picker popup (Daily Intake date switcher, Recipes "Log a serving").
    The popup lives in the overlay, outside any component, so its styles are global.
    Components add .dark-theme to .mat-datepicker-popup when it opens. */
-.mat-datepicker-content {
+/* Scoped to the popup so the corners beat Material's own rule, which loads later. */
+.mat-datepicker-popup .mat-datepicker-content {
+  overflow: hidden;
   background: var(--background-color);
   border-radius: var(--radius-lg);
   box-shadow: var(--shadow-lg) !important;
@@ -1152,6 +1154,7 @@ main:focus {
 }
 
 .mat-datepicker-popup.dark-theme {
+  border-radius: var(--radius-lg);
   background: var(--card-background);
   color: var(--text-secondary);
 }

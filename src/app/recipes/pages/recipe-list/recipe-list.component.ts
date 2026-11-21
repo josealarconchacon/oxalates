@@ -119,7 +119,7 @@ export class RecipeListComponent implements OnInit {
     }
   }
 
-  /** "6 recipes · sorted by oxalate per serving" (announced politely as it changes). */
+  /** "6 recipes · sorted by oxalate per serving, lowest first" (announced politely as it changes). */
   get count(): string {
     return countLine(this.visible.length, this.sort);
   }
