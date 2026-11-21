@@ -53,10 +53,19 @@ describe('HeaderComponent', () => {
       Array.from<HTMLAnchorElement>(fixture.nativeElement.querySelectorAll('a')).filter(
         (a) => a.textContent!.trim() === 'Recipes'
       );
+    /** Clicks a link; a document listener then cancels any real navigation (see the footer spec). */
     const click = (link: HTMLAnchorElement, init: MouseEventInit = {}) => {
-      const event = new MouseEvent('click', { bubbles: true, cancelable: true, button: 0, ...init });
-      link.dispatchEvent(event);
-      return event;
+      let prevented = false;
+      const stop = (e: Event) => {
+        prevented = e.defaultPrevented;
+        e.preventDefault();
+      };
+      // The link's root (the document, or the fixture's tree if detached) hears it last.
+      const root = link.getRootNode();
+      root.addEventListener('click', stop);
+      link.dispatchEvent(new MouseEvent('click', { bubbles: true, cancelable: true, button: 0, ...init }));
+      root.removeEventListener('click', stop);
+      return { defaultPrevented: prevented };
     };
 
     it('every Recipes link points at /recipes', () => {

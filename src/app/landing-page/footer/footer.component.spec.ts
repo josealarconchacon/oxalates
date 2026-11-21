@@ -181,10 +181,23 @@ describe('FooterComponent', () => {
       Array.from<HTMLAnchorElement>(fixture.nativeElement.querySelectorAll('a.footer-link')).find((a) =>
         a.textContent!.includes('Recipes')
       )!;
+    /**
+     * Clicks the link and reports whether the app cancelled the browser's own
+     * navigation. A listener on document (after the app's handler) then cancels
+     * it anyway, so the test page itself never navigates away or reloads.
+     */
     const click = (init: MouseEventInit = {}) => {
-      const event = new MouseEvent('click', { bubbles: true, cancelable: true, button: 0, ...init });
-      link().dispatchEvent(event);
-      return event;
+      let prevented = false;
+      const stop = (e: Event) => {
+        prevented = e.defaultPrevented;
+        e.preventDefault();
+      };
+      // The link's root (the document, or the fixture's tree if detached) hears it last.
+      const root = link().getRootNode();
+      root.addEventListener('click', stop);
+      link().dispatchEvent(new MouseEvent('click', { bubbles: true, cancelable: true, button: 0, ...init }));
+      root.removeEventListener('click', stop);
+      return { defaultPrevented: prevented };
     };
 
     it('is a real link to /recipes', () => {
