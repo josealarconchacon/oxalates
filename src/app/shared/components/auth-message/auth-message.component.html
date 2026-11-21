@@ -17,14 +17,14 @@
       </button>
 
       <h2 id="auth-prompt-title" class="auth-prompt-title">
-        Track your daily oxalate intake
+        {{ content.title }}
       </h2>
       <p id="auth-prompt-text" class="auth-prompt-text">
-        This needs a free account, so your log is saved and ready on any device.
+        {{ content.text }}
       </p>
 
       <ul class="auth-prompt-benefits">
-        @for (benefit of benefits; track benefit.title) {
+        @for (benefit of content.benefits; track benefit.title) {
           <li class="auth-prompt-benefit">
             <span class="auth-prompt-icon" aria-hidden="true">
               <i class="material-icons">{{ benefit.icon }}</i>

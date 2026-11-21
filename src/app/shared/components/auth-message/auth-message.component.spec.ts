@@ -41,6 +41,30 @@ describe('AuthMessageComponent', () => {
     expect(el('[role="dialog"]')).toBeNull();
   });
 
+  describe('opened from Recipes', () => {
+    beforeEach(() => {
+      service.showAuthMessage('recipes');
+      fixture.detectChanges();
+    });
+
+    it('talks about recipes, not the daily log', () => {
+      const dialog = el('[role="dialog"]')!;
+      expect(el('#' + dialog.getAttribute('aria-labelledby'))!.textContent).toContain('Save your own recipes');
+      expect(el('#' + dialog.getAttribute('aria-describedby'))!.textContent).toContain('your recipes are saved');
+      const items = Array.from(fixture.nativeElement.querySelectorAll('.auth-prompt-benefit strong')).map((s: any) =>
+        s.textContent.trim()
+      );
+      expect(items).toEqual(['Build a recipe', 'Find them fast', 'Log a serving']);
+    });
+
+    it('goes back to the Daily Intake wording the next time it opens without a topic', () => {
+      service.dismiss();
+      fixture.detectChanges();
+      open();
+      expect(el('.auth-prompt-title')!.textContent).toContain('Track your daily oxalate intake');
+    });
+  });
+
   describe('when open', () => {
     beforeEach(() => open());
 

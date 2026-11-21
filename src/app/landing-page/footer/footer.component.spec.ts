@@ -176,6 +176,59 @@ describe('FooterComponent', () => {
     });
   });
 
+  describe('Recipes link', () => {
+    const link = () =>
+      Array.from<HTMLAnchorElement>(fixture.nativeElement.querySelectorAll('a.footer-link')).find((a) =>
+        a.textContent!.includes('Recipes')
+      )!;
+    /**
+     * Clicks the link and reports whether the app cancelled the browser's own
+     * navigation. A listener on document (after the app's handler) then cancels
+     * it anyway, so the test page itself never navigates away or reloads.
+     */
+    const click = (init: MouseEventInit = {}) => {
+      let prevented = false;
+      const stop = (e: Event) => {
+        prevented = e.defaultPrevented;
+        e.preventDefault();
+      };
+      // The link's root (the document, or the fixture's tree if detached) hears it last.
+      const root = link().getRootNode();
+      root.addEventListener('click', stop);
+      link().dispatchEvent(new MouseEvent('click', { bubbles: true, cancelable: true, button: 0, ...init }));
+      root.removeEventListener('click', stop);
+      return { defaultPrevented: prevented };
+    };
+
+    it('is a real link to /recipes', () => {
+      expect(link().getAttribute('href')).toBe('/recipes');
+    });
+
+    it('signed in: opens the Recipes list', () => {
+      authService.isAuthenticated.and.returnValue(true);
+      const event = click();
+      expect(event.defaultPrevented).toBeTrue();
+      expect(router.navigate).toHaveBeenCalledWith(['/recipes']);
+      expect(authMessageService.showAuthMessage).not.toHaveBeenCalled();
+    });
+
+    it('signed out: explains with the Recipes sign-in prompt instead', () => {
+      authService.isAuthenticated.and.returnValue(false);
+      const event = click();
+      expect(event.defaultPrevented).toBeTrue();
+      expect(authMessageService.showAuthMessage).toHaveBeenCalledWith('recipes');
+      expect(router.navigate).not.toHaveBeenCalled();
+    });
+
+    it('Ctrl/Cmd-click is left to the browser (new tab)', () => {
+      authService.isAuthenticated.and.returnValue(false);
+      const event = click({ metaKey: true });
+      expect(event.defaultPrevented).toBeFalse();
+      expect(authMessageService.showAuthMessage).not.toHaveBeenCalled();
+      expect(router.navigate).not.toHaveBeenCalled();
+    });
+  });
+
   describe('navigateToSuggestions', () => {
     it('should navigate to /suggestions when called', () => {
       component.navigateToSuggestions();

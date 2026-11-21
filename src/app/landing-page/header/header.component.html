@@ -55,7 +55,7 @@
         >
           Calculate Daily Intake
         </button>
-        <a routerLink="/recipes" class="header-link" (click)="closeNav()">Recipes</a>
+        <a href="/recipes" class="header-link" (click)="openRecipes($event); closeNav()">Recipes</a>
         <button
           type="button"
           class="header-link"
@@ -182,7 +182,7 @@
             <app-icon name="calculator" />
             <span>Calculate Daily Intake</span>
           </a>
-          <a class="nav-link" routerLink="/recipes" (click)="closeNav()">
+          <a class="nav-link" href="/recipes" (click)="openRecipes($event); closeNav()">
             <app-icon name="utensils" />
             <span>Recipes</span>
           </a>
