@@ -32,12 +32,12 @@
 
   @if (state === 'ready' && items.length) {
     <div class="chips" role="group" aria-label="Filter by tag">
-      <button type="button" class="chip" [attr.aria-pressed]="!selectedTags.length" (click)="clearTags()">
+      <button type="button" class="chip" [attr.aria-pressed]="!selectedTags.length" (click)="clearTags(); revealChip($event)">
         @if (!selectedTags.length) {<app-icon name="check" [size]="16" />}
         All
       </button>
       @for (tag of tags; track tag) {
-        <button type="button" class="chip" [attr.aria-pressed]="isSelected(tag)" (click)="toggleTag(tag)">
+        <button type="button" class="chip" [attr.aria-pressed]="isSelected(tag)" (click)="toggleTag(tag); revealChip($event)">
           @if (isSelected(tag)) {<app-icon name="check" [size]="16" />}
           {{ tag }}
         </button>

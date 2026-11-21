@@ -1,5 +1,5 @@
 <div class="page">
-  <a class="back" routerLink="/recipes">
+  <a class="back" routerLink="/recipes" [queryParams]="listView.params">
     <app-icon name="arrow-left" [size]="16" /> Recipes
   </a>
 
@@ -30,7 +30,7 @@
     @case ('not-found') {
       <div class="rd-card message" role="alert">
         <p class="message-title">We couldn't find that recipe.</p>
-        <a class="btn-outline" routerLink="/recipes">Back to Recipes</a>
+        <a class="btn-outline" routerLink="/recipes" [queryParams]="listView.params">Back to Recipes</a>
       </div>
     }
     @case ('error') {

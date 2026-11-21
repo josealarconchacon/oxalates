@@ -22,6 +22,7 @@ import {
   viewFromParams,
   visibleItems,
 } from './list-query';
+import { ListViewMemoryService } from './list-view-memory.service';
 import { RecipeCardComponent } from './recipe-card/recipe-card.component';
 import { RecipeRowComponent } from './recipe-row/recipe-row.component';
 
@@ -45,6 +46,7 @@ export class RecipeListComponent implements OnInit {
   private destroyRef = inject(DestroyRef);
   private route = inject(ActivatedRoute);
   private router = inject(Router);
+  private memory = inject(ListViewMemoryService);
 
   state: 'loading' | 'error' | 'ready' = 'loading';
   /** Every recipe, with its engine result worked out once per load. */
@@ -84,6 +86,8 @@ export class RecipeListComponent implements OnInit {
     // The URL holds the view (?q=&sort=&tags=), so Back, refresh and shared links keep it.
     this.route.queryParamMap.pipe(takeUntilDestroyed(this.destroyRef)).subscribe((params) => {
       const view = viewFromParams((k) => params.get(k), (k) => params.getAll(k));
+      // "← Recipes" on a recipe page comes back to this exact view.
+      this.memory.remember(Object.fromEntries(params.keys.map((k) => [k, params.getAll(k)])));
       this.query = this.appliedQuery = view.q;
       this.urlHasSort = view.sort !== null;
       if (view.sort) this.sort = view.sort;
@@ -156,6 +160,18 @@ export class RecipeListComponent implements OnInit {
     this.selectedTags = [];
     this.refresh();
     this.writeUrl();
+  }
+
+  /**
+   * Phones: the chips are one sideways-scrolling row, so a chip tapped at the
+   * edge (and now a bit wider, with its check) slides fully into view.
+   */
+  revealChip(event: Event): void {
+    const chip = event.currentTarget;
+    if (!this.phone || !(chip instanceof HTMLElement)) return;
+    const reduce = window.matchMedia?.('(prefers-reduced-motion: reduce)').matches;
+    // After the check icon renders, so the chip's new width counts.
+    setTimeout(() => chip.scrollIntoView({ block: 'nearest', inline: 'nearest', behavior: reduce ? 'auto' : 'smooth' }));
   }
 
   private refresh(): void {
