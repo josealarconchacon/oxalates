@@ -186,19 +186,24 @@ describe('RecipeListComponent', () => {
       await render();
       const count = el().querySelector('.count')!;
       expect(count.getAttribute('aria-live')).toBe('polite');
-      expect(count.textContent!.trim()).toBe('2 recipes · sorted by oxalate per serving');
+      expect(count.textContent!.trim()).toBe('2 recipes · sorted by oxalate per serving, lowest first');
 
       const select = el().querySelector<HTMLSelectElement>('.sort-select')!;
       select.value = 'edited';
       select.dispatchEvent(new Event('change'));
       fixture.detectChanges();
       expect(count.textContent!.trim()).toBe('2 recipes · sorted by last edited');
+
+      select.value = 'highest';
+      select.dispatchEvent(new Event('change'));
+      fixture.detectChanges();
+      expect(count.textContent!.trim()).toBe('2 recipes · sorted by oxalate per serving, highest first');
     });
 
     it('one recipe reads "1 recipe"', async () => {
       list.and.resolveTo(two().slice(0, 1));
       await render();
-      expect(el().querySelector('.count')!.textContent!.trim()).toBe('1 recipe · sorted by oxalate per serving');
+      expect(el().querySelector('.count')!.textContent!.trim()).toBe('1 recipe · sorted by oxalate per serving, lowest first');
     });
 
     it('no toolbar or count on the first-time page or the error', async () => {
@@ -256,7 +261,7 @@ describe('RecipeListComponent', () => {
       tick(1);
       fixture.detectChanges();
       expect(names()).toEqual(['Crème brûlée']);
-      expect(el().querySelector('.count')!.textContent!.trim()).toBe('1 recipe · sorted by oxalate per serving');
+      expect(el().querySelector('.count')!.textContent!.trim()).toBe('1 recipe · sorted by oxalate per serving, lowest first');
     }));
 
     it('search also finds tags', fakeAsync(() => {
@@ -306,7 +311,7 @@ describe('RecipeListComponent', () => {
       expect(chip('Gluten-free').getAttribute('aria-pressed')).toBe('true');
       expect(chip('All').getAttribute('aria-pressed')).toBe('false');
       expect(names()).toEqual(['Soup', 'Stew']);
-      expect(el().querySelector('.count')!.textContent!.trim()).toBe('2 recipes · sorted by oxalate per serving');
+      expect(el().querySelector('.count')!.textContent!.trim()).toBe('2 recipes · sorted by oxalate per serving, lowest first');
 
       chip('Holiday').click();
       fixture.detectChanges();
@@ -465,7 +470,7 @@ describe('RecipeListComponent', () => {
       fixture.detectChanges();
       expect(el().querySelector('.message-title')!.textContent!.trim()).toBe('No recipes match “pizza”.');
       expect(el().querySelector('.empty')).toBeNull(); // never the first-time page
-      expect(el().querySelector('.count')!.textContent!.trim()).toBe('0 recipes · sorted by oxalate per serving');
+      expect(el().querySelector('.count')!.textContent!.trim()).toBe('0 recipes · sorted by oxalate per serving, lowest first');
 
       el().querySelector<HTMLButtonElement>('.message .btn-outline')!.click();
       fixture.detectChanges();

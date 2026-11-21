@@ -19,30 +19,38 @@ import { ListItem, visibleTags } from '../list-query';
       </span>
       <span class="body" aria-hidden="true">
         <span class="name">{{ item.recipe.name }}</span>
-        <span class="serves">Serves {{ item.recipe.serves }}</span>
-        <span class="value">
-          @if (item.allUnknown) {
-            <span class="big big--unknown">Unknown</span>
-          } @else {
-            @if (item.incomplete) {<span class="at-least">at least </span>}
-            <span class="big">{{ item.perServing }}</span>
-          }
-          <span class="unit">{{ item.allUnknown ? 'per serving' : 'mg per serving' }}</span>
-        </span>
-        <span class="badges">
-          @if (item.level) {
-            <app-level-pill [level]="item.level" [prefix]="item.incomplete ? 'At least ' : ''" />
-          }
-          @if (item.incomplete) {
-            <span class="incomplete"><app-icon name="alert-triangle" [size]="12" /> Incomplete</span>
-          }
-        </span>
-        @if (tags.shown.length) {
-          <span class="tags">
-            @for (t of tags.shown; track t) {<span class="tag">{{ t }}</span>}
-            @if (tags.more) {<span class="tag tag--more">+{{ tags.more }}</span>}
+        <!-- The amount on the left, its level (and Incomplete) on the right. -->
+        <span class="stats">
+          <span class="value">
+            <span class="amount">
+              @if (item.allUnknown) {
+                <span class="big big--unknown">Unknown</span>
+              } @else {
+                @if (item.incomplete) {<span class="at-least">at least </span>}
+                <span class="big">{{ item.perServing }}</span>
+              }
+            </span>
+            <span class="unit">{{ item.allUnknown ? 'per serving' : 'mg per serving' }}</span>
           </span>
-        }
+          <span class="badges">
+            @if (item.level) {
+              <app-level-pill [level]="item.level" [prefix]="item.incomplete ? 'At least ' : ''" />
+            }
+            @if (item.incomplete) {
+              <span class="incomplete"><app-icon name="alert-triangle" [size]="12" /> Incomplete</span>
+            }
+          </span>
+        </span>
+        <!-- Serves and tags share the bottom row. -->
+        <span class="foot">
+          <span class="serves">Serves {{ item.recipe.serves }}</span>
+          @if (tags.shown.length) {
+            <span class="tags">
+              @for (t of tags.shown; track t) {<span class="tag">{{ t }}</span>}
+              @if (tags.more) {<span class="tag tag--more">+{{ tags.more }}</span>}
+            </span>
+          }
+        </span>
       </span>
     </a>
   `,

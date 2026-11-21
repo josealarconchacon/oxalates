@@ -54,8 +54,8 @@ describe('list query: sort options and count', () => {
 
   it('count line', () => {
     expect(countLine(0, 'name')).toBe('0 recipes · sorted by name');
-    expect(countLine(1, 'lowest')).toBe('1 recipe · sorted by oxalate per serving');
-    expect(countLine(12, 'highest')).toBe('12 recipes · sorted by oxalate per serving');
+    expect(countLine(1, 'lowest')).toBe('1 recipe · sorted by oxalate per serving, lowest first');
+    expect(countLine(12, 'highest')).toBe('12 recipes · sorted by oxalate per serving, highest first');
     expect(countLine(3, 'edited')).toBe('3 recipes · sorted by last edited');
   });
 
